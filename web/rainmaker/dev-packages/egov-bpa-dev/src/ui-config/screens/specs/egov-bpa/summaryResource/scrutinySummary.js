@@ -5,9 +5,7 @@ import {
     getCommonSubHeader,
     getLabel,
     getLabelWithValue,
-    convertEpochToDate,
-    getCommonCard,
-    getSelectField
+    convertEpochToDate
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { gotoApplyWithStep, checkValueForNA } from "../../utils/index";
 import { getTransformedLocale } from "egov-ui-framework/ui-utils/commons";
@@ -145,78 +143,43 @@ export const scrutinySummary = getCommonGrayCard({
         },
         type: "array"
     },
-    proposedBuildingDetailsHeadr:getHeader({
-        labelName: "Proposed Building Details",
-        labelKey: "BPA_APPLICATION_PROPOSED_BUILDING_LABEL"
+    BlockWiseOccupancyAndUsageDetails: getHeader({
+        labelName: "Block wise occupancy /sub occupancy and usage details",
+        labelKey: "BPA_APPLICATION_BLOCK_WISE_OCCUPANCY_SUB_OCCUPANCY_USAGE_TITLE"
     }),
-    break3: getBreak(),
-    proposedBuildingDetails: getCommonCard({
-        header: {
-          uiFramework: "custom-atoms",
-          componentPath: "Container",
-          props: {
-            style: {
-              width: "50%",
-              display: "inline-block",
-              fontSize: "18px",
-              paddingLeft: "10px"
-            }
-          },
-          children: {
-            proposedLabel: getLabel({
-              labelName: "Proposed Building Details",
-              labelKey: "BPA_APPLICATION_PROPOSED_BUILDING_LABEL"
-            })
-          }
-        },
-        occupancy: {
-          uiFramework: "custom-atoms",
-          componentPath: "Container",
-          props: {
-            className: "occupancytypeblock",
-          },
-          children: {
-            occupancyType: getLabelWithValue(
-                {
-                    labelName: "Occupancy Type",
-                    labelKey: "BPA_OCCUPANCY_TYPE"
-                },
-                {
-                    jsonPath: "BPA.occupancyType",
-                    localePrefix: {
-                        moduleName: "BPA",
-                        masterName: "OCCUPANCYTYPE"
-                      },
-                    callBack: checkValueForNA
-                }
-            ),
-          }
-        },
-        proposedContainer: {
-          uiFramework: "custom-atoms",
-          componentPath: "Div",
-          visible: true,
-          props: {
-            className: "mymuicontainer",
-          },
-          children: {
-            component: {
-              uiFramework: "custom-containers",
-              componentPath: "MultiItem",
-              props: {
-                hasAddItem: false,
-                scheama: getCommonGrayCard({
-                  blocksContainer: getCommonContainer({
-                    header: getLabel(
-                      "Block",
-                      "",
-                      {
-                        jsonPath: "edcr.blockDetail[0].titleData",
-                        style: {
-                          width: "50%",
-                          marginTop: "5px"
+    break1: getBreak(),
+    cardTwo: {
+        uiFramework: "custom-containers",
+        componentPath: "MultiItem",
+        props: {
+            className: "applicant-summary",
+            scheama: getCommonGrayCard({
+                blockWiseOccupancyAndUsageDetailscontainer: getCommonContainer({
+
+                    // buildingplanscrutinyapplicationnumber: getLabelWithValue(
+                    //     {
+                    //         labelName: "Residential",
+                    //         labelKey: "BPA_APPLICATION_RESIDENTIAL_LABEL"
+                    //     },
+                    //     {
+                    //         jsonPath: "bpa.summary.residential",
+                    //         callBack: checkValueForNA
+                    //     }
+                    // ),
+
+                    occupancyType: getLabelWithValue(
+                        {
+                            labelName: "Occupancy Type",
+                            labelKey: "BPA_OCCUPANCY_TYPE"
+                        },
+                        {
+                            jsonPath: "BPA.occupancyType",
+                            localePrefix: {
+                                moduleName: "BPA",
+                                masterName: "OCCUPANCYTYPE"
+                              },
+                            callBack: checkValueForNA
                         }
-                      }
                     ),
                     subOccupancyType: getLabelWithValue(
                         {
@@ -224,76 +187,57 @@ export const scrutinySummary = getCommonGrayCard({
                             labelKey: "BPA_SUB_OCCUP_TYPE_LABEL"
                         },
                         {
-                            jsonPath: `edcr.blockDetail[0]`,
+                            jsonPath: "BPA.subOccupancyType",
                             localePrefix: {
                                 moduleName: "BPA",
                                 masterName: "SUBOCCUPANCYTYPE"
-                            },
-                            callBack: value => {
-                                let returnVAlue;
-                                if (value && value.occupancyType && value.occupancyType.length) {
-                                    returnVAlue = "";
-                                    let occupancy = value.occupancyType;
-                                    for (let tp = 0; tp < occupancy.length; tp++) {
-                                        if (tp === (occupancy.length - 1)) {
-                                            returnVAlue += getTransformedLocale(`BPA_SUBOCCUPANCYTYPE_${occupancy[tp].value}`)
-                                        } else {
-                                            returnVAlue += getTransformedLocale(`BPA_SUBOCCUPANCYTYPE_${occupancy[tp].value}`) + ","
-                                        }
-                                    }
-                                }
-                                return returnVAlue || checkValueForNA;
-                            },
+                              },
+                            callBack: checkValueForNA
                         }
                     ),
-                    proposedBuildingDetailsContainer: {
-                      uiFramework: "custom-molecules-local",
-                      moduleName: "egov-bpa",
-                      componentPath: "Table",
-                      props: {
-                        className: "mymuitable",
-                        jsonPath: "edcr.blockDetail[0].blocks",
-                        style: { marginBottom: 20 },
-                        columns: {
-                          "Floor Description": {},
-                          "Level": {},
-                          "Occupancy/Sub Occupancy": {},
-                          "Buildup Area": {},
-                          "Floor Area": {},
-                          "Carpet Area": {},
-                        },
-                        title: "",
-                        options: {
-                          filterType: "dropdown",
-                          responsive: "stacked",
-                          selectableRows: false,
-                          pagination: false,
-                          selectableRowsHeader: false,
-                          sortFilterList: false,
-                          sort: false,
-                          filter: false,
-                          search: false,
-                          print: false,
-                          download: false,
-                          viewColumns: false,
-                        }
-                      }
-                    },
-                  }),
-                }),
-                items: [],
-                isReviewPage: true,
-                prefixSourceJsonPath: "children.cardContent.children.blocksContainer.children",
-                sourceJsonPath: "edcr.blockDetail",
-                afterPrefixJsonPath: "children.value.children.key"
-              },
-              type: "array"
-            },
-            breakP: getBreak(),
-            breakq: getBreak()
-          }
-        }
-      }),
+                    // annualExpectedExpenditure: getLabelWithValue(
+                    //     {
+                    //         labelName: "Annual Expected Expenditure",
+                    //         labelKey: "BPA_ANNUAL_EXPECTED_EXPENDITURE_LABEL"
+                    //     },
+                    //     {
+                    //         jsonPath: "BPA.additionalDetails.annualExpectedExpenditure",
+                    //         callBack: checkValueForNA
+                    //     }
+                    // ),
+                    // isCharitableTrustBuilding: getLabelWithValue(
+                    //     {
+                    //         labelName: "Is Charitable TrustBuilding ?",
+                    //         labelKey: "BPA_IS_CHARITABLE_TRUSTBUILDING_LABEL"
+                    //     },
+                    //     {
+                    //         jsonPath: "BPA.additionalDetails.isCharitableTrustBuilding",
+                    //         callBack: checkValueForNA
+                    //     }
+                    // ),
+                    // isAffordableHousingScheme: getLabelWithValue(
+                    //     {
+                    //         labelName: "Is Affordable Housing Scheme ?",
+                    //         labelKey: "BPA_IS_AFFRORADABLE_HOUSING_LABEL"
+                    //     },
+                    //     {
+                    //         jsonPath: "BPA.additionalDetails.isAffordableHousingScheme",
+                    //         callBack: checkValueForNA
+                    //     }
+                    // )
+                })
+            }),
+            items: [],
+            hasAddItem: false,
+            isReviewPage: true,
+            // sourceJsonPath: "BPAs[0].BPADetails.blockwiseusagedetails",
+            sourceJsonPath: "BPA",            
+            prefixSourceJsonPath:
+                "children.cardContent.children.applicantContainer.children",
+            afterPrefixJsonPath: "children.value.children.key"
+        },
+        type: "array"
+    },
     DemolitionDetails: getHeader({
         labelName: "Demolition Details",
         labelKey: "BPA_APP_DETAILS_DEMOLITION_DETAILS_LABEL"
@@ -328,11 +272,114 @@ export const scrutinySummary = getCommonGrayCard({
         },
         type: "array"
     },
-    proposedBuildingDetails1:getHeader({
-        labelName: "Proposed Building Abstract",
-        labelKey: "BPA_PROPOSED_BUILDING_ABSTRACT_HEADER"
+    proposedBuildingDetails:getHeader({
+        labelName: "Proposed Building Details",
+        labelKey: "BPA_APP_DETAILS_PROPOSED_BUILDING_DETAILS_LABEL"
     }),
-    brk: getBreak(),
+    break3: getBreak(),
+    cardFour: {
+        uiFramework: "custom-containers",
+        componentPath: "MultiItem",
+        props: {
+          className: "building-summary",
+          scheama: getCommonGrayCard({
+            buildingContainer: getCommonContainer({
+                floorDescription: getLabelWithValue(
+                    {
+                      labelName: "Floor Description",
+                      labelKey: "Floor Description"
+                    },
+                    {
+                      jsonPath:
+                        "scrutinyDetails.planDetail.blocks[0].building.floors[0]",
+                        callBack: value => {
+                        let floorNo = ['', 'Ground', 'First', 'Second', 'Third', 'Forth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth']
+                        if(value) {
+                            return `${floorNo[value.number+1]} floor` || "NA";
+                        }
+                        else {
+                            return "NA"
+                            }
+                        }
+                    }
+                ),
+                level: getLabelWithValue(
+                    {
+                      labelName: "Level",
+                      labelKey: "Level"
+                    },
+                    {
+                      jsonPath:
+                        "scrutinyDetails.planDetail.blocks[0].building.floors[0]",
+                      callBack: value => {
+                        return value && (value.number).toString() || "NA";
+                    }
+                }
+              ),
+              occupancySubOccupancy: getLabelWithValue(
+                {
+                  labelName: "Occupancy/Sub Occupancy",
+                  labelKey: "Occupancy/Sub Occupancy"
+                },
+                {
+                  jsonPath:
+                    "scrutinyDetails.planDetail.blocks[0].building.floors[0]",
+                    callBack: value => {
+                      return value && value.occupancies[0] && value.occupancies[0].type || "NA";
+                    }
+                }
+              ),
+              buildupArea: getLabelWithValue(
+                  {
+                    labelName: "Buildup Area",
+                    labelKey: "Buildup Area"
+                  },
+                  {
+                    jsonPath:
+                      "scrutinyDetails.planDetail.blocks[0].building.floors[0]",
+                      callBack: value => {
+                        return value && value.occupancies[0] && value.occupancies[0].builtUpArea || "NA";
+                      }
+                  }
+                ),
+                floorArea: getLabelWithValue(
+                  {
+                    labelName: "Floor Area",
+                    labelKey: "Floor Area"
+                  },
+                  {
+                    jsonPath:
+                      "scrutinyDetails.planDetail.blocks[0].building.floors[0]",
+                      callBack: value => {
+                          return value && (value.occupancies[0] && value.occupancies[0].floorArea).toString() || "NA";
+                        }
+                  }
+                ),
+                carpetArea: getLabelWithValue(
+                  {
+                    labelName: "Carpet Area",
+                    labelKey: "Carpet Area"
+                  },
+                  {
+                    jsonPath:
+                      "scrutinyDetails.planDetail.blocks[0].building.floors[0]",
+                      callBack: value => {
+                          return (value && value.occupancies[0] && (value.occupancies[0].carpetArea).toString()) || "NA";
+                        }
+                  }
+                )
+            })
+          }),
+          items: [],
+          hasAddItem: false,
+          isReviewPage: true,
+          sourceJsonPath: "scrutinyDetails.planDetail.blocks[0].building.floors",
+          prefixSourceJsonPath:
+            "children.cardContent.children.buildingContainer.children",
+          afterPrefixJsonPath: "children.value.children.key"
+        },
+        type: "array"
+      },
     cardFive:{
         uiFramework: "custom-containers",
         componentPath: "MultiItem",
@@ -340,7 +387,7 @@ export const scrutinySummary = getCommonGrayCard({
             className: "applicant-summary",
             scheama: getCommonGrayCard({
                 totalBuildUpAreaDetailsContainer: getCommonContainer({
-                    buitUpArea: getLabelWithValue(
+                    buildingplanscrutinyapplicationnumber: getLabelWithValue(
                         {
                             labelName: "Total Buildup Area (sq.mtrs)",
                             labelKey: "BPA_APPLICATION_TOTAL_BUILDUP_AREA"
@@ -350,7 +397,7 @@ export const scrutinySummary = getCommonGrayCard({
                             callBack: checkValueForNA
                         }
                     ),
-                    totalFloors: getLabelWithValue(
+                    uploadedfile: getLabelWithValue(
                         {
                             labelName: "Number Of Floors",
                             labelKey: "BPA_APPLICATION_NO_OF_FLOORS"
@@ -361,7 +408,7 @@ export const scrutinySummary = getCommonGrayCard({
                                 callBack: checkValueForNA
                         }
                     ),
-                    buildingHeight: getLabelWithValue(
+                    scrutinyreport: getLabelWithValue(
                         {
                             labelName: "High From Ground Level From Mumty (In Mtrs)",
                             labelKey: "BPA_APPLICATION_HIGH_FROM_GROUND"
@@ -371,37 +418,7 @@ export const scrutinySummary = getCommonGrayCard({
                                 "scrutinyDetails.planDetail.blocks[0].building.buildingHeight",
                                 callBack: checkValueForNA
                         }
-                    ),
-                    isCharitableTrustBuilding: getLabelWithValue(
-                        {
-                            labelName: "Is Charitable TrustBuilding ?",
-                            labelKey: "BPA_IS_CHARITABLE_TRUSTBUILDING_LABEL"
-                        },
-                        {
-                            jsonPath: "BPA.additionalDetails.isCharitableTrustBuilding",
-                            callBack: checkValueForNA
-                        }
-                    ),
-                    isAffordableHousingScheme: getLabelWithValue(
-                        {
-                            labelName: "Is Affordable Housing Scheme ?",
-                            labelKey: "BPA_IS_AFFRORADABLE_HOUSING_LABEL"
-                        },
-                        {
-                            jsonPath: "BPA.additionalDetails.isAffordableHousingScheme",
-                            callBack: checkValueForNA
-                        }
-                    ),
-                    annualExpectedExpenditure: getLabelWithValue(
-                        {
-                            labelName: "Annual Expected Expenditure",
-                            labelKey: "BPA_ANNUAL_EXPECTED_EXPENDITURE_LABEL"
-                        },
-                        {
-                            jsonPath: "BPA.additionalDetails.annualExpectedExpenditure",
-                            callBack: checkValueForNA
-                        }
-                    ),
+                    )
                 })
             }),
             items: [],

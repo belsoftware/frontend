@@ -13,8 +13,7 @@ import {
   buildingPlanScrutinyDetails,
   blockWiseOccupancyAndUsageDetails,
   demolitiondetails,
-  proposedBuildingDetails,
-  abstractProposedBuildingDetails
+  proposedBuildingDetails
 } from "./applyResource/scrutinyDetails";
 import { applicantDetails } from "./applyResource/applicantDetails";
 import {
@@ -96,10 +95,9 @@ export const formwizardSecondStep = {
   },
   children: {
     buildingPlanScrutinyDetails,
-   // blockWiseOccupancyAndUsageDetails,    
-    proposedBuildingDetails,
+    blockWiseOccupancyAndUsageDetails,
     demolitiondetails,
-    abstractProposedBuildingDetails
+    proposedBuildingDetails
   },
   visible: false
 };
