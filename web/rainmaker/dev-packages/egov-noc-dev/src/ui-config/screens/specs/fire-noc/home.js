@@ -2,7 +2,7 @@ import React from "react";
 import { getCommonHeader } from "egov-ui-framework/ui-config/screens/specs/utils";
 import FireNocIcon from "../../../../ui-atoms-local/Icons/FireNocIcon";
 import MyApplicationIcon from "../../../../ui-atoms-local/Icons/MyApplicationIcon";
-import { getRequiredDocData } from "../utils";
+import { getMdmsData } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
 import set from "lodash/set";
 import { getRequiredDocuments } from "./requiredDocuments/reqDocs";
@@ -46,7 +46,15 @@ const tradeLicenseSearchAndResult = {
   uiFramework: "material-ui",
   name: "home",
   beforeInitScreen: (action, state, dispatch) => {
-    getRequiredDocData(action, state, dispatch).then(() => {
+    const moduleDetails=[
+      {
+        moduleName:"FireNoc",
+        masterDetails: [{ name: "Documents" }]
+      }
+    ];
+    getMdmsData(action, state, dispatch, moduleDetails).then((payload) => {
+      debugger;
+      dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
       let documents = get(
         state,
         "screenConfiguration.preparedFinalObject.searchScreenMdmsData.FireNoc.Documents",
@@ -100,8 +108,7 @@ const tradeLicenseSearchAndResult = {
     //   }
     // }
     adhocDialog: {
-      uiFramework: "custom-containers-local",
-      moduleName: "egov-noc",
+      uiFramework: "custom-containers",
       componentPath: "DialogContainer",
       props: {
         open: false,

@@ -4,8 +4,8 @@ import {
   getBreak
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { NOCApplication } from "./searchResource/fireNocApplication";
-import { showHideAdhocPopup, resetFields, getRequiredDocData } from "../utils";
-import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import { resetFields } from "../utils";
+import { getQueryArg, fetchFromLocalStorage, getMdmsData, showHideAdhocPopup } from "egov-ui-framework/ui-utils/commons";
 import { pendingApprovals } from "./searchResource/pendingApprovals";
 import { searchResults } from "./searchResource/searchResults";
 import { setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
@@ -22,6 +22,7 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getRequiredDocuments } from "./requiredDocuments/reqDocs";
 
+ 
 const hasButton = getQueryArg(window.location.href, "hasButton");
 let enableButton = true;
 enableButton = hasButton && hasButton === "false" ? false : true;
@@ -67,7 +68,15 @@ const NOCSearchAndResult = {
         )
       );
     }
-    getRequiredDocData(action, state, dispatch).then(() => {
+    const moduleDetails=[
+      {
+        moduleName:"FireNoc",
+        masterDetails: [{ name: "Documents" }]
+      }
+    ];
+    getMdmsData(action, state, dispatch, moduleDetails).then((payload) => {  
+      debugger;
+      dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
       let documents = get(
         state,
         "screenConfiguration.preparedFinalObject.searchScreenMdmsData.FireNoc.Documents",
@@ -160,8 +169,7 @@ const NOCSearchAndResult = {
       }
     },
     adhocDialog: {
-      uiFramework: "custom-containers-local",
-      moduleName: "egov-noc",
+      uiFramework: "custom-containers",
       componentPath: "DialogContainer",
       props: {
         open: false,

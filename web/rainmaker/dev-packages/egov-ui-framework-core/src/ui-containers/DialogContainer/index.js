@@ -14,7 +14,7 @@ class DialogContainer extends React.Component {
       false
     );
   };
-
+// from Frame work
   render() {
     const { open, maxWidth, children } = this.props;
     return (

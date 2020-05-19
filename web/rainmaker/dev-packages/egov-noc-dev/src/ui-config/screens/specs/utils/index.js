@@ -203,17 +203,6 @@ export const gotoApplyWithStep = (state, dispatch, step) => {
   dispatch(setRoute(applyUrl));
 };
 
-export const showHideAdhocPopup = (state, dispatch, screenKey) => {
-  let toggle = get(
-    state.screenConfiguration.screenConfig[screenKey],
-    "components.adhocDialog.props.open",
-    false
-  );
-  dispatch(
-    handleField(screenKey, "components.adhocDialog", "props.open", !toggle)
-  );
-};
-
 export const getCommonGrayCard = children => {
   return {
     uiFramework: "custom-atoms",
@@ -678,35 +667,6 @@ export const resetFields = (state, dispatch) => {
       ""
     )
   );
-};
-
-export const getRequiredDocData = async (action, state, dispatch) => {
-  let tenantId =
-    process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
-  let mdmsBody = {
-    MdmsCriteria: {
-      tenantId: tenantId,
-      moduleDetails: [
-        {
-          moduleName: "FireNoc",
-          masterDetails: [{ name: "Documents" }]
-        }
-      ]
-    }
-  };
-  try {
-    let payload = null;
-    payload = await httpRequest(
-      "post",
-      "/egov-mdms-service/v1/_search",
-      "_search",
-      [],
-      mdmsBody
-    );
-    dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 export const getTextToLocalMapping = label => {
