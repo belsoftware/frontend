@@ -675,3 +675,45 @@ export const showHideAdhocPopup = (state, dispatch, screenKey) => {
     handleField(screenKey, "components.adhocDialog", "props.open", !toggle)
   );
 };
+export const getStatusKey = (status) => {
+  switch (status) {
+    case "ACTIVE":
+      return {labelName:"Active", labelKey:"ACTIVE"};
+    case "INITIATED":
+      return {labelName: "Initiated", labelKey:"INITIATED"};
+    case "APPLIED":
+      return {labelName:"Applied", labelKey:"APPLIED"};
+    case "PAID":
+      return {labelName: "Paid", labelKey: "PAID"};
+
+    case "APPROVED":
+      return {labelName:"Approved", labelKey:"APPROVED"};
+    case "REJECTED":
+      return {labelName:"Rejected", labelKey:"REJECTED"};
+    case "CANCELLED":
+      return {labelName:"Cancelled", labelKey:"CANCELLED"};
+    case "PENDINGAPPROVAL ":
+      return {labelName:
+        "Pending for Approval",
+        labelKey:
+        "PENDINGAPPROVAL"};
+    case "PENDINGPAYMENT":
+      return {labelName:
+        "Pending payment",
+        labelKey:
+        "PENDINGPAYMENT"};
+    case "DOCUMENTVERIFY":
+      return {labelName:
+        "Pending for Document Verification",
+        labelKey:"DOCUMENTVERIFY"};
+    case "FIELDINSPECTION":
+      return {labelKey:
+        "Pending for Field Inspection",labelName:
+        "FIELDINSPECTION"};
+      default:
+        return {
+          labelName:status, labelKey:status
+        }
+
+  }
+}
