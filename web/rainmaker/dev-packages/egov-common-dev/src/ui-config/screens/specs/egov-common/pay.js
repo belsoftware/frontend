@@ -135,14 +135,7 @@ const screenConfig = {
         let tenantId = getQueryArg(window.location.href, "tenantId");
         let businessService = getQueryArg(window.location.href, "businessService");
         fetchBill(action ,state, dispatch, consumerCode, tenantId, businessService);
-        // fetchBill(action,state, dispatch, consumerCode, tenantId, businessService).then(
-        //     response => {
-        //         let header = getHeader(state);
-        //         set(action, "screenConfig.components.div.children.headerDiv.children.header" ,header) 
-        //     }
-        // );
-        // const data = getPaymentCard(state);    
-        // set(action, "screenConfig.components.div.children.formwizardFirstStep", data);
+        
         return action;
     },
     components: {
