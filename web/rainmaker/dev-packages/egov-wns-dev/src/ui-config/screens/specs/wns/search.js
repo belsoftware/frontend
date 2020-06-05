@@ -21,7 +21,7 @@ const pageResetAndChange = (state, dispatch) => {
 };
 
 const queryObject = [
-  { key: "tenantId", value: 'pb.amritsar' },
+  { key: "tenantId", value: process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity:getTenantId() },
   { key: "businessServices", value: 'NewWS1' }
 ];
 
