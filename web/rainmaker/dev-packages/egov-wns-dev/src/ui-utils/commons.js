@@ -886,7 +886,7 @@ export const applyForWater = async (state, dispatch) => {
     let waterId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].id");
     let method = waterId ? "UPDATE" : "CREATE";
     try {
-        const tenantId = ifUserRoleExists("CITIZEN") ? "pb.amritsar" : getTenantId();
+        const tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
         let response;
         if (method === "UPDATE") {
             queryObject.additionalDetails.appCreatedDate = get(
@@ -923,7 +923,7 @@ export const applyForSewerage = async (state, dispatch) => {
     let sewerId = get(state, "screenConfiguration.preparedFinalObject.SewerageConnection[0].id");
     let method = sewerId ? "UPDATE" : "CREATE";
     try {
-        const tenantId = ifUserRoleExists("CITIZEN") ? "pb.amritsar" : getTenantId();
+        const tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
         let response;
         set(queryObject, "tenantId", tenantId);
         if (method === "UPDATE") {
@@ -962,7 +962,7 @@ export const applyForBothWaterAndSewerage = async (state, dispatch) => {
     let sewerId = get(state, "screenConfiguration.preparedFinalObject.SewerageConnection[0].id");
     if (waterId && sewerId) { method = "UPDATE" } else { method = "CREATE" };
     try {
-        const tenantId = ifUserRoleExists("CITIZEN") ? "pb.amritsar" : getTenantId();
+        const tenantId = process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
         let response;
         set(queryObject, "tenantId", tenantId);
         if (method === "UPDATE") {
@@ -1197,7 +1197,7 @@ export const getMeterReadingData = async (dispatch) => {
     let queryObject = [
         {
             key: "tenantId",
-            value: "pb.amritsar"
+            value: process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId()
         },
         {
             key: "connectionNos",
@@ -1225,7 +1225,7 @@ export const getPastPaymentsForWater = async (dispatch) => {
     let queryObject = [
         {
             key: "tenantId",
-            value: "pb.amritsar"
+            value: process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId()
         },
         {
             key: "businessServices",
@@ -1264,7 +1264,7 @@ export const getPastPaymentsForSewerage = async (dispatch) => {
     let queryObject = [
         {
             key: "tenantId",
-            value: "pb.amritsar"
+            value: process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId()
         },
         {
             key: "businessServices",

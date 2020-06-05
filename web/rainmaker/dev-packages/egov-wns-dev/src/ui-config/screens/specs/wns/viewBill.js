@@ -21,10 +21,11 @@ const processBills = async (data, viewBillTooltip, dispatch) => {
     bills.billAccountDetails.forEach(async element => {
       let cessKey = element.taxHeadCode
       let body;
+      let tenantId = process.env.REACT_APP_NAME === "Citizen"?JSON.parse(getUserInfo()).permanentCity:getTenantId();
       if (service === "WATER") {
-        body = { "MdmsCriteria": { "tenantId": "pb.amritsar", "moduleDetails": [{ "moduleName": "ws-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
+        body = { "MdmsCriteria": { "tenantId": tenantId, "moduleDetails": [{ "moduleName": "ws-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
       } else {
-        body = { "MdmsCriteria": { "tenantId": "pb.amritsar", "moduleDetails": [{ "moduleName": "sw-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
+        body = { "MdmsCriteria": { "tenantId": tenantId, "moduleDetails": [{ "moduleName": "sw-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
       }
       let res = await getDescriptionFromMDMS(body, dispatch)
       if (res !== null && res !== undefined && res.MdmsRes !== undefined && res.MdmsRes !== null) {
