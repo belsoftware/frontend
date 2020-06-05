@@ -10,6 +10,7 @@ import { getProperty } from "./viewBillResource/propertyDetails";
 import { getOwner } from "./viewBillResource/ownerDetails";
 import { getService } from "./viewBillResource/serviceDetails";
 import { viewBillFooter } from "./viewBillResource/viewBillFooter";
+import { getTenantId, getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 
 let consumerCode = getQueryArg(window.location.href, "connectionNumber");
 const tenantId = getQueryArg(window.location.href, "tenantId")
