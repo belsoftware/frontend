@@ -76,7 +76,7 @@ const searchResults = async (action, state, dispatch, consumerCode) => {
     data = await fetchBill(queryObjectForFetchBill, dispatch);
     if (payload !== null && payload !== undefined && data !== null && data !== undefined) {
       if (payload.WaterConnection.length > 0 && data.Bill.length > 0) {
-        let propTenantId = payloadData.WaterConnection[0].property.tenantId.split(".")[0];
+        let propTenantId = payload.WaterConnection[0].property.tenantId.split(".")[0];
         payload.WaterConnection[0].service = service
         await processBills(data, viewBillTooltip, dispatch);
         if (meterReadingsData !== null && meterReadingsData !== undefined && meterReadingsData.meterReadings.length > 0) {
@@ -104,7 +104,7 @@ const searchResults = async (action, state, dispatch, consumerCode) => {
     let viewBillTooltip = []
     if (payload !== null && payload !== undefined && data !== null && data !== undefined) {
       if (payload.SewerageConnections.length > 0 && data.Bill.length > 0) {
-        let propTenantId = payloadData.SewerageConnections[0].property.tenantId.split(".")[0];
+        let propTenantId = payload.SewerageConnections[0].property.tenantId.split(".")[0];
         payload.SewerageConnections[0].service = service;
         await processBills(data, viewBillTooltip, dispatch);
         if (payload.SewerageConnections[0].property.usageCategory !== null && payload.SewerageConnections[0].property.usageCategory !== undefined) {
