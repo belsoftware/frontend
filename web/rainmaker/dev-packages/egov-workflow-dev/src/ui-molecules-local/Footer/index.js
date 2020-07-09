@@ -61,6 +61,7 @@ class Footer extends React.Component {
 
   openActionDialog = async item => {
     const { handleFieldChange, setRoute, dataPath } = this.props;
+    console.log("handleFieldChange",handleFieldChange)
     let employeeList = [];
 
     if (dataPath === "BPA") {
@@ -69,7 +70,9 @@ class Footer extends React.Component {
     } else {
       handleFieldChange(`${dataPath}[0].comment`, "");
       handleFieldChange(`${dataPath}[0].assignee`, []);
-      handleFieldChange(`${dataPath}.tradeLicenseDetail.surveyNo`, []);
+      handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.tradeSubType`, []);
+      handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnNumber`, []);
+      handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnDate`, []);
     }
 
     if (item.isLast) {
@@ -146,9 +149,9 @@ class Footer extends React.Component {
     );
     const renewedapplicationNo = get(response, `Licenses[0].applicationNumber`);
     const licenseNumber = get(response, `Licenses[0].licenseNumber`);
-    setRoute(
+   /* setRoute(
       `/tradelicence/acknowledgement?purpose=DIRECTRENEWAL&status=success&applicationNumber=${renewedapplicationNo}&licenseNumber=${licenseNumber}&FY=${nextFinancialYear}&tenantId=${tenantId}&action=${wfCode}`
-    );
+    );*/
   };
   render() {
     const {

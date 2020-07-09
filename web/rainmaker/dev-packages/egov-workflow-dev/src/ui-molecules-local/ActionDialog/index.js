@@ -20,8 +20,17 @@ import {
   getQueryArg,
 
 } from "egov-ui-framework/ui-utils/commons";
+import {
+
+  getDateField, getPattern
+
+} from "egov-ui-framework/ui-config/screens/specs/utils";
+//import { getTodaysDateInYMD } from "../../utils";
 //import { getTradeResults } from "egov-workflow/ui-utils/commons";
 import { getSearchResults } from "egov-tradelicence/ui-utils/commons";
+import DatePicker from "material-ui/DatePicker";
+import TextField from '@material-ui/core/TextField';
+
 const styles = theme => ({
 
   root: {
@@ -31,8 +40,8 @@ const styles = theme => ({
 });
 let userInfo1 = localStorage.getItem("user-info");
 userInfo1 = JSON.parse(userInfo1);
-console.log("im in",userInfo1); 
-console.log("im in",userInfo1.roles[1].code); 
+console.log("im in", userInfo1);
+console.log("im in", userInfo1.roles[1].code);
 
 const fieldConfig = {
   approverName: {
@@ -46,7 +55,7 @@ const fieldConfig = {
     },
     roleDefination: {
       rolePath: "user-info.roles",
-      roles: ["TL_FIELD_INSPECTOR","TL_DOC_VERIFIER"]
+      roles: ["TL_FIELD_INSPECTOR", "TL_DOC_VERIFIER"]
     },
   },
   comments: {
@@ -59,8 +68,8 @@ const fieldConfig = {
       labelKey: "WF_ADD_HOC_CHARGES_POPUP_COMMENT_LABEL"
     }
   },
-  
- tradeSubType: {
+
+  tradeSubType: {
     label: {
       labelName: "SubType",
       labelKey: "TL_NEW_TRADE_DETAILS_TRADE_SUBTYPE_LABEL"
@@ -71,10 +80,30 @@ const fieldConfig = {
     },
     roleDefination: {
       rolePath: "user-info.roles",
-      roles: ["TL_FIELD_INSPECTOR","TL_DOC_VERIFIER"]
+      roles: ["TL_FIELD_INSPECTOR", "TL_DOC_VERIFIER"]
     }
+  },
+  cbrnNumber: {
+    label: {
+      labelName: "cbrnNumber",
+      labelKey: "TL_NEW_TRADE_DETAILS_CBRNUMBER_LABEL"
+    },
+    placeholder: {
+      labelName: "Enter the cbrnNumber",
+      labelKey: "TL_NEW_TRADE_DETAILS_CBRNUMBER_PLACEHOLDER"
+    }
+
+  },
+  cbrnDate: {
+    // getDateField({
+    label: {
+      labelName: "cbrnDate",
+      labelKey: "TL_NEW_TRADE_DETAILS_CBRNDATE_LABEL"
+    }
+
+    //})
   }
- 
+
 };
 
 class ActionDialog extends React.Component {
@@ -104,8 +133,8 @@ class ActionDialog extends React.Component {
   };
 
   render() {
-  
-      // console.log("im in",localStorage.getItem("user-info").roles.code); 
+
+    // console.log("im in",localStorage.getItem("user-info").roles.code); 
     let {
       open,
       onClose,
@@ -131,35 +160,51 @@ class ActionDialog extends React.Component {
       dataPath = `${dataPath}[0].fireNOCDetails`
     } else if (dataPath === "BPA") {
       dataPath = `${dataPath}`;
-    } else if (dataPath === "Assessment"||dataPath === "Property") {
+    } else if (dataPath === "Assessment" || dataPath === "Property") {
       dataPath = `${dataPath}.workflow`;
     } else {
       dataPath = `${dataPath}[0]`;
     }
-    let assigneePath= '';
+    let assigneePath = '';
     /* The path for Assignee in Property and Assessment has latest workflow contract and it is Array of user object  */
-    if (dataPath.includes("Assessment")||dataPath.includes("Property")){
-      assigneePath=`${dataPath}.assignes[0].uuid`;
-    }else{
-      assigneePath=`${dataPath}.assignee[0]`;
+    if (dataPath.includes("Assessment") || dataPath.includes("Property")) {
+      assigneePath = `${dataPath}.assignes[0].uuid`;
+    } else {
+      assigneePath = `${dataPath}.assignee[0]`;
     }
     console.log("Assignee path ", assigneePath);
     let isFieldInspector = false;
-    for (var i =0 ; i < userInfo1.roles.length;i ++){
-      if(userInfo1.roles[i].code==='TL_APPROVER'){
-        isFieldInspector=true;
+    for (var i = 0; i < userInfo1.roles.length; i++) {
+      if (userInfo1.roles[i].code === 'TL_APPROVER') {
+        isFieldInspector = true;
       }
 
     }
     console.log("Is field inspector", isFieldInspector);
-    if(isFieldInspector){
+    console.log('getfield>>>>', getDateField({
+      label: {
+        labelName: "Date",
+        labelKey: "DATE_LABEL"
+      },
+      placeholder: {
+        labelName: "Enter Date",
+        labelKey: "DATE_PLACEHOLDER"
+      }
+      ,
+      required: true,
+      pattern: getPattern("Date"),
+
+      errorMessage: "TL_DOB_ERROR_MESSAGE",
+      jsonPath: "Licenses[0].tradeLicenseDetail.owners[0].dob"
+    }))
+    if (isFieldInspector) {
       return (
         <Dialog
           fullScreen={fullscreen}
           open={open}
           onClose={onClose}
           maxWidth={false}
-          style={{zIndex:2000}}
+          style={{ zIndex: 2000 }}
         >
           <DialogContent
             children={
@@ -205,6 +250,7 @@ class ActionDialog extends React.Component {
                           marginTop: 16
                         }}
                       >
+
                         <TextFieldContainer
                           select={true}
                           style={{ marginRight: "15px" }}
@@ -235,9 +281,44 @@ class ActionDialog extends React.Component {
                         jsonPath={`${dataPath}.comment`}
                         placeholder={fieldConfig.comments.placeholder}
                       />
+
                     </Grid>
-                    
-                   
+
+
+                    <Grid item sm="12">
+                      <TextFieldContainer
+                        InputLabelProps={{ shrink: true }}
+                        label={fieldConfig.cbrnNumber.label}
+
+                        onChange={(e, value) => {
+                          let num = JSON.stringify({ 'cbrnNumber': e.target.value })
+                          //console.log("num>>>>",e.target.value)
+                          handleFieldChange(`${dataPath}.tradeLicenseDetail.additionalDetail.cbrnNumber`, e.target.value)
+                        }
+                        }
+                        jsonPath={`${dataPath}.tradeLicenseDetail.additionalDetail.cbrnNumber`}
+                        placeholder={fieldConfig.cbrnNumber.placeholder}
+                      />
+                    </Grid>
+                    <Grid item sm="12">
+                      <TextFieldContainer
+                        id="datetime-local"
+                        label={fieldConfig.cbrnDate.label}
+                        //label="Date"
+                        type="date"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        onChange={(e, value) => {
+                          let num = JSON.stringify({ 'cbrnDate': e.target.value })
+                          //console.log("num>>>>", e.target.value)
+                          handleFieldChange(`${dataPath}.tradeLicenseDetail.additionalDetail.cbrnDate`, e.target.value)
+                        }
+                        }
+                        jsonPath={`${dataPath}.tradeLicenseDetail.additionalDetail.cbrnDate`}
+                      />
+                    </Grid>
+
                     <Grid item sm="12">
                       <Typography
                         component="h3"
@@ -280,7 +361,7 @@ class ActionDialog extends React.Component {
                         inputProps={{
                           accept: "image/*, .pdf, .png, .jpeg"
                         }}
-                        buttonLabel={{ labelName: "UPLOAD FILES",labelKey : "TL_UPLOAD_FILES_BUTTON" }}
+                        buttonLabel={{ labelName: "UPLOAD FILES", labelKey: "TL_UPLOAD_FILES_BUTTON" }}
                         jsonPath={`${dataPath}.wfDocuments`}
                         maxFileSize={5000}
                       />
@@ -316,15 +397,15 @@ class ActionDialog extends React.Component {
         </Dialog>
       );
     }
-   else{
-   // if((userInfo1.roles[2].code=== "TL_FIELD_INSPECTOR")||(userInfo1.roles[1].code=== "TL_DOC_VERIFIER")){
+    else {
+      // if((userInfo1.roles[2].code=== "TL_FIELD_INSPECTOR")||(userInfo1.roles[1].code=== "TL_DOC_VERIFIER")){
       return (
         <Dialog
           fullScreen={fullscreen}
           open={open}
           onClose={onClose}
           maxWidth={false}
-          style={{zIndex:2000}}
+          style={{ zIndex: 2000 }}
         >
           <DialogContent
             children={
@@ -406,16 +487,20 @@ class ActionDialog extends React.Component {
                         InputLabelProps={{ shrink: true }}
                         label={fieldConfig.tradeSubType.label}
                         onChange={e =>
-                         handleFieldChange(`${dataPath}.tradeLicenseDetail.surveyNo`,e.target.value)
-                         }
-  
+                          handleFieldChange(`${dataPath}.tradeLicenseDetail.additionalDetail.tradeSubType`, e.target.value)
+                        }
+
                         // roleDefination={{ rolePath: "user-info.roles", roles: ["TL_DOC_VERIFIER"] }} 
-                        jsonPath={`${dataPath}.tradeLicenseDetail.surveyNo`}
+                        jsonPath={`${dataPath}.tradeLicenseDetail.additionalDetail.tradeSubType`}
                         placeholder={fieldConfig.tradeSubType.placeholder}
-                        
+
                       />
                     </Grid>
-                 
+
+
+
+
+
                     <Grid item sm="12">
                       <Typography
                         component="h3"
@@ -458,7 +543,7 @@ class ActionDialog extends React.Component {
                         inputProps={{
                           accept: "image/*, .pdf, .png, .jpeg"
                         }}
-                        buttonLabel={{ labelName: "UPLOAD FILES",labelKey : "TL_UPLOAD_FILES_BUTTON" }}
+                        buttonLabel={{ labelName: "UPLOAD FILES", labelKey: "TL_UPLOAD_FILES_BUTTON" }}
                         jsonPath={`${dataPath}.wfDocuments`}
                         maxFileSize={5000}
                       />
@@ -494,8 +579,8 @@ class ActionDialog extends React.Component {
         </Dialog>
       );
     }
-  
- 
+
+
   }
 }
 export default withStyles(styles)(ActionDialog);
