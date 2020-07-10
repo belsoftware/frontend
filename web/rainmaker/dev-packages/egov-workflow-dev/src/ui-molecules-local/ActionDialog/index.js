@@ -31,6 +31,7 @@ import { getSearchResults } from "egov-tradelicence/ui-utils/commons";
 import DatePicker from "material-ui/DatePicker";
 import TextField from '@material-ui/core/TextField';
 
+
 const styles = theme => ({
 
   root: {
@@ -180,23 +181,9 @@ class ActionDialog extends React.Component {
       }
 
     }
+  
     console.log("Is field inspector", isFieldInspector);
-    console.log('getfield>>>>', getDateField({
-      label: {
-        labelName: "Date",
-        labelKey: "DATE_LABEL"
-      },
-      placeholder: {
-        labelName: "Enter Date",
-        labelKey: "DATE_PLACEHOLDER"
-      }
-      ,
-      required: true,
-      pattern: getPattern("Date"),
-
-      errorMessage: "TL_DOB_ERROR_MESSAGE",
-      jsonPath: "Licenses[0].tradeLicenseDetail.owners[0].dob"
-    }))
+   
     if (isFieldInspector) {
       return (
         <Dialog
@@ -273,8 +260,9 @@ class ActionDialog extends React.Component {
                     )}
                     <Grid item sm="12">
                       <TextFieldContainer
-                        InputLabelProps={{ shrink: true }}
+                        InputLabelProps={{ shrink: true}}
                         label={fieldConfig.comments.label}
+                        
                         onChange={e =>
                           handleFieldChange(`${dataPath}.comment`, e.target.value)
                         }
@@ -306,16 +294,22 @@ class ActionDialog extends React.Component {
                         label={fieldConfig.cbrnDate.label}
                         //label="Date"
                         type="date"
+                        //format={'DD/MM/YYYY'}
+                       // formatDate={(date) => moment(date).format('DD/MM/YYYY')}
                         InputLabelProps={{
                           shrink: true,
                         }}
                         onChange={(e, value) => {
-                          let num = JSON.stringify({ 'cbrnDate': e.target.value })
-                          //console.log("num>>>>", e.target.value)
-                          handleFieldChange(`${dataPath}.tradeLicenseDetail.additionalDetail.cbrnDate`, e.target.value)
+                         // let num = JSON.stringify({ 'cbrnDate': e.target.value })
+                         //let num = Date.parse(e.target.value)
+                         // console.log("num>>>>", Date.parse(e.target.value))
+                          //console.log("num>>>>", num.toString())
+
+                          handleFieldChange(`${dataPath}.tradeLicenseDetail.additionalDetail.cbrnDate`,Date.parse(e.target.value))
                         }
                         }
                         jsonPath={`${dataPath}.tradeLicenseDetail.additionalDetail.cbrnDate`}
+                       
                       />
                     </Grid>
 
