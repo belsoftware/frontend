@@ -149,9 +149,9 @@ class Footer extends React.Component {
     );
     const renewedapplicationNo = get(response, `Licenses[0].applicationNumber`);
     const licenseNumber = get(response, `Licenses[0].licenseNumber`);
-   /* setRoute(
+    setRoute(
       `/tradelicence/acknowledgement?purpose=DIRECTRENEWAL&status=success&applicationNumber=${renewedapplicationNo}&licenseNumber=${licenseNumber}&FY=${nextFinancialYear}&tenantId=${tenantId}&action=${wfCode}`
-    );*/
+    );
   };
   render() {
     const {
