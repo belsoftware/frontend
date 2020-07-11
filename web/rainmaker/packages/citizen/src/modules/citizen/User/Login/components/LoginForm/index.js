@@ -141,11 +141,11 @@ const LoginForm = ({ handleFieldChange, form, logoUrl,qrCodeURL,enableWhatsApp }
               startSMSRecevier();
             }}
           />
-          <Button Label="Payment Link"
+          {/* <Button Label="Payment Link"
             onClick={(e) => {
               goToPaymentPage();
             }}
-          />
+          /> */}
           {enableWhatsApp&&
            <Hidden mdUp>
           <div>
