@@ -350,10 +350,11 @@ export const applyTradeLicense = async (state, dispatch, activeIndex) => {
       "tradeLicenseDetail.address.tenantId",
       ""
     );
+    const workflowCode = get(queryObject[0], "workflowCode");
     const tenantId = ifUserRoleExists("CITIZEN") ? cityId : getTenantId();
     const BSqueryObject = [
       { key: "tenantId", value: tenantId },
-      { key: "businessServices", value: "NewTL" }
+      { key: "businessServices", value: workflowCode ? workflowCode : "NewTL" }
     ];
     if (process.env.REACT_APP_NAME === "Citizen") {
       // let currentFinancialYr = getCurrentFinancialYear();
@@ -439,6 +440,7 @@ export const applyTradeLicense = async (state, dispatch, activeIndex) => {
       const isEditFlow = getQueryArg(window.location.href, "action") === "edit";
       let updateResponse = [];
       if (!isEditFlow ) {
+        //Condition added to avoid multiple application number generation -- edit renewal flow
         if(isEditRenewal && queryObject[0].status === "INITIATED" && activeIndex === 1){
         }
         else{
