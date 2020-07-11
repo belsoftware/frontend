@@ -406,7 +406,6 @@ export const applyTradeLicense = async (state, dispatch, activeIndex) => {
         queryObject[0].tradeLicenseDetail.applicationDocuments
       ) {
 
-
         if (getQueryArg(window.location.href, "action") === "edit" || isEditRenewal) {
         } else if (activeIndex === 1) {
           set(queryObject[0], "tradeLicenseDetail.applicationDocuments", null);
@@ -439,10 +438,14 @@ export const applyTradeLicense = async (state, dispatch, activeIndex) => {
       set(queryObject[0], "action", action);
       const isEditFlow = getQueryArg(window.location.href, "action") === "edit";
       let updateResponse = [];
-      if (!isEditFlow) {
+      if (!isEditFlow ) {
+        if(isEditRenewal && queryObject[0].status === "INITIATED" && activeIndex === 1){
+        }
+        else{
         updateResponse = await httpRequest("post", "/tl-services/v1/_update", "", [], {
-          Licenses: queryObject
-        })
+             Licenses: queryObject
+           })
+        }
       }
       //Renewal flow
 
