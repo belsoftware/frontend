@@ -14,7 +14,7 @@ const LoginForm = ({ handleFieldChange, form, logoUrl,qrCodeURL,enableWhatsApp }
   const  goToPaymentPage =() =>{
     var newForm = $('<form>', {
       action: 'https://121.242.223.194/SurePayPayment/sp/processRequest',
-      methot: 'post',
+      method: 'post',
       target: '_top',
     }).append(
       $('<input>', {
