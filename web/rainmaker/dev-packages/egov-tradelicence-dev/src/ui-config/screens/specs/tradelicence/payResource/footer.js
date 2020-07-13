@@ -14,12 +14,13 @@ import {
   toggleSpinner
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getBill } from "../../utils";
+import $ from 'jquery';
 
 export const callPGService = async (state, dispatch) => {
   const tenantId = getQueryArg(window.location.href, "tenantId");
   let callbackUrl = `${document.location.origin}/${
     process.env.NODE_ENV === "production" ? "citizen" : ""
-  }/tradelicense-citizen/PaymentRedirectPage`;
+    }/tradelicense-citizen/PaymentRedirectPage`;
   try {
     const queryObj = [
       {
@@ -65,7 +66,7 @@ export const callPGService = async (state, dispatch) => {
             "billResponse.Bill[0].billDetails[0].consumerCode"
           ),
           productInfo: "Trade License Payment",
-          gateway: "AXIS",
+          gateway: "NIC",
           callbackUrl
         }
       };
@@ -77,7 +78,104 @@ export const callPGService = async (state, dispatch) => {
         requestBody
       );
       const redirectionUrl = get(goToPaymentGateway, "Transaction.redirectUrl");
-      window.location = redirectionUrl;
+      console.log("Redirection URL ", redirectionUrl);
+      try {
+        const gatewayParam = JSON.parse(redirectionUrl);
+        var newForm = $('<form>', {
+          action: gatewayParam.txURL,
+          method: 'post',
+          target: '_top',
+        }).append(
+          $('<input>', {
+            name: 'orderId',
+            value: gatewayParam.orderId,
+            type: 'hidden',
+          })).append(
+            $('<input>', {
+              name: 'requestDateTime',
+              value: gatewayParam.requestDateTime,
+              type: 'hidden',
+            })).append(
+              $('<input>', {
+                name: 'successUrl',
+                value: gatewayParam.successUrl,
+                type: 'hidden',
+              })).append(
+                $('<input>', {
+                  name: 'failUrl',
+                  value: gatewayParam.failUrl,
+                  type: 'hidden',
+                })).append(
+                  $('<input>', {
+                    name: 'messageType',
+                    value: gatewayParam.messageType,
+                    type: 'hidden',
+                  })).append(
+                    $('<input>', {
+                      name: 'merchantId',
+                      value: gatewayParam.merchantId,
+                      type: 'hidden',
+                    })).append(
+                      $('<input>', {
+                        name: 'customerId',
+                        value: gatewayParam.customerId,
+                        type: 'hidden',
+                      })).append(
+                        $('<input>', {
+                          name: 'serviceId',
+                          value: gatewayParam.serviceId,
+                          type: 'hidden',
+                        })).append(
+                          $('<input>', {
+                            name: 'currencyCode',
+                            value: gatewayParam.currencyCode,
+                            type: 'hidden',
+                          })).append(
+                            $('<input>', {
+                              name: 'transactionAmount',
+                              value: gatewayParam.transactionAmount,
+                              type: 'hidden',
+                            })).append(
+                              $('<input>', {
+                                name: 'additionalFeild1',
+                                value: gatewayParam.additionalFeild1,
+                                type: 'hidden',
+                              })).append(
+                                $('<input>', {
+                                  name: 'additionalFeild2',
+                                  value: gatewayParam.additionalFeild2,
+                                  type: 'hidden',
+                                })).append(
+                                  $('<input>', {
+                                    name: 'additionalFeild3',
+                                    value: gatewayParam.additionalFeild3,
+                                    type: 'hidden',
+                                  })).append(
+                                    $('<input>', {
+                                      name: 'additionalFeild4',
+                                      value: gatewayParam.additionalFeild4,
+                                      type: 'hidden',
+                                    })).append(
+                                      $('<input>', {
+                                        name: 'additionalFeild5',
+                                        value: gatewayParam.additionalFeild5,
+                                        type: 'hidden',
+                                      })).append(
+                                        $('<input>', {
+                                          name: 'checksum',
+                                          value: gatewayParam.checksum,
+                                          type: 'hidden',
+                                        }))
+        console.log("Form data", newForm);
+        $(document.body).append(newForm);
+        newForm.submit();
+
+      } catch (e) {
+        console.log("Error in payment redirect ", e);
+        window.location = redirectionUrl;
+      }
+
+
     } catch (e) {
       console.log(e);
     }

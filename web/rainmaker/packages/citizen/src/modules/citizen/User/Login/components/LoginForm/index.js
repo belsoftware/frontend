@@ -7,10 +7,104 @@ import { startSMSRecevier } from "egov-ui-kit/utils/commons";
 import Hidden from "@material-ui/core/Hidden";
 import logo from "egov-ui-kit/assets/images/logo_black.png";
 import "./index.css";
-
+import $ from 'jquery';
 const LoginForm = ({ handleFieldChange, form, logoUrl,qrCodeURL,enableWhatsApp }) => {
   const fields = form.fields || {};
   const submit = form.submit;
+  const  goToPaymentPage =() =>{
+    var newForm = $('<form>', {
+      action: 'https://121.242.223.194/SurePayPayment/sp/processRequest',
+      method: 'post',
+      target: '_top',
+    }).append(
+      $('<input>', {
+        name: 'orderId',
+        value: "PB_PG_2020_07_11_000047_71",
+        type: 'text',
+      })).append(
+        $('<input>', {
+          name: 'requestDateTime',
+          value: "11072020100745",
+          type: 'text',
+        })).append(
+          $('<input>', {
+            name: 'successUrl',
+            value: "https://13.71.65.215.nip.io/pg-service/transaction/v1/_redirect?originalreturnurl=https://13.71.65.215.nip.io/citizen/egov-common/paymentRedirectPage?eg_pg_txnid%3DPB_PG_2020_07_11_000047_71",
+            type: 'text',
+          })).append(
+            $('<input>', {
+              name: 'failUrl',
+              value: "https://13.71.65.215.nip.io/pg-service/transaction/v1/_redirect?originalreturnurl=https://13.71.65.215.nip.io/citizen/egov-common/paymentRedirectPage?eg_pg_txnid%3DPB_PG_2020_07_11_000047_71",
+              type: 'text',
+            })).append(
+              $('<input>', {
+                name: 'messageType',
+                value: "0100",
+                type: 'text',
+              })).append(
+                $('<input>', {
+                  name: 'merchantId',
+                  value: "UATDEOMDSG0000000198",
+                  type: 'text',
+                })).append(
+                  $('<input>', {
+                    name: 'customerId',
+                    value: "9eb6f880-c22f-4c1e-8f99-106bb3e0e60a",
+                    type: 'text',
+                  })).append(
+                    $('<input>', {
+                      name: 'serviceId',
+                      value: "SecunderabadChhawani",
+                      type: 'text',
+                    })).append(
+                      $('<input>', {
+                        name: 'currencyCode',
+                        value: "INR",
+                        type: 'text',
+                      })).append(
+                        $('<input>', {
+                          name: 'transactionAmount',
+                          value: "3000",
+                          type: 'text',
+                        })).append(
+                          $('<input>', {
+                            name: 'additionalFeild1',
+                            value: "",
+                            type: 'text',
+                          })).append(
+                            $('<input>', {
+                              name: 'additionalFeild2',
+                              value: "",
+                              type: 'text',
+                            })).append(
+                              $('<input>', {
+                                name: 'additionalFeild3',
+                                value: "",
+                                type: 'text',
+                              })).append(
+                                $('<input>', {
+                                  name: 'additionalFeild4',
+                                  value: "",
+                                  type: 'text',
+                                })).append(
+                                  $('<input>', {
+                                    name: 'additionalFeild5',
+                                    value: "",
+                                    type: 'text',
+                                  })).append(
+                                    $('<input>', {
+                                      name: 'checksum',
+                                      value: "1330509741",
+                                      type: 'hidden',
+                                    }))
+    console.log("Form data", newForm);
+    alert("check me ");
+    $(document.body).append(newForm);
+    newForm.submit();
+
+
+  };
+
 
   return (
     <div className="rainmaker-displayInline">
@@ -47,6 +141,11 @@ const LoginForm = ({ handleFieldChange, form, logoUrl,qrCodeURL,enableWhatsApp }
               startSMSRecevier();
             }}
           />
+          {/* <Button Label="Payment Link"
+            onClick={(e) => {
+              goToPaymentPage();
+            }}
+          /> */}
           {enableWhatsApp&&
            <Hidden mdUp>
           <div>

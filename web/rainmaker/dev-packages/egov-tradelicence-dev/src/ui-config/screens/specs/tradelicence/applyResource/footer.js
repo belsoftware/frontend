@@ -16,6 +16,8 @@ import {
   downloadAcknowledgementForm,
   downloadCertificateForm
 } from "../../utils";
+import {localStorageGet} from "egov-ui-kit/utils/localStorageUtils";
+import isEmpty from "lodash/isEmpty";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { httpRequest } from "egov-ui-framework/ui-utils/api";
@@ -36,11 +38,32 @@ const moveToSuccess = (LicenseData, dispatch) => {
   const financialYear = get(LicenseData, "financialYear");
   const purpose = "apply";
   const status = "success";
+   dispatch(
+     setRoute(
+       `/tradelicence/acknowledgement?purpose=${purpose}&status=${status}&applicationNumber=${applicationNo}&FY=${financialYear}&tenantId=${tenantId}`
+     )
+   );
+  
+
+};
+
+const moveToAppfeeSuccess = (LicenseData, dispatch) => {
+  const applicationNo = get(LicenseData, "applicationNumber");
+  const tenantId = get(LicenseData, "tenantId");
+  const financialYear = get(LicenseData, "financialYear");
+  const purpose = "apply";
+  const status = "success";
+  // dispatch(
+  //   setRoute(
+  //     `/tradelicence/acknowledgement?purpose=${purpose}&status=${status}&applicationNumber=${applicationNo}&FY=${financialYear}&tenantId=${tenantId}`
+  //   )
+  // );
   dispatch(
-    setRoute(
-      `/tradelicence/acknowledgement?purpose=${purpose}&status=${status}&applicationNumber=${applicationNo}&FY=${financialYear}&tenantId=${tenantId}`
-    )
-  );
+       setRoute(
+        `/egov-common/pay?consumerCode=${applicationNo}&tenantId=${tenantId}&businessService=TL`
+       )
+     );
+
 };
 const editRenewalMoveToSuccess = (LicenseData, dispatch) => {
   const applicationNo = get(LicenseData, "applicationNumber");
@@ -91,7 +114,25 @@ export const generatePdfFromDiv = (action, applicationNumber) => {
     }
   });
 };
-
+export const callBackForAppFee = async (state, dispatch) => {
+  let isFormValid = true;
+  let activeStep = get(
+    state.screenConfiguration.screenConfig["apply"],
+    "components.div.children.stepper.props.activeStep",
+    0
+  );
+  const LicenseData = get(
+    state.screenConfiguration.preparedFinalObject,
+    "Licenses[0]"
+  );
+  isFormValid = await applyTradeLicense(state, dispatch,activeStep);
+  if (isFormValid) {
+    if (getQueryArg(window.location.href, "action") === "EDITRENEWAL")
+    editRenewalMoveToSuccess(LicenseData, dispatch);
+    else
+    moveToAppfeeSuccess(LicenseData, dispatch);
+  }
+}
 export const callBackForNext = async (state, dispatch) => {
   let activeStep = get(
     state.screenConfiguration.screenConfig["apply"],
@@ -192,7 +233,9 @@ export const callBackForNext = async (state, dispatch) => {
           (owners[k].isDeleted === undefined ||
             owners[k].isDeleted !== false) &&
           !validateFields(
-            `${ownersJsonPath}[${k}].item${k}.children.cardContent.children.tradeUnitCardContainer.children`,
+           // `${ownersJsonPath}[${k}].item${k}.children.cardContent.children.tradeUnitCardContainer.children`,
+           //DC changed
+           `${ownersJsonPath}[${k}].item${k}.children.cardContent.children.tradeUnitCardContainerOwnerInfo.children`,
             state,
             dispatch
           )
@@ -201,7 +244,7 @@ export const callBackForNext = async (state, dispatch) => {
       }
     } else {
       let ownersJsonPath =
-        "components.div.children.formwizardSecondStep.children.tradeOwnerDetails.children.cardContent.children.ownerInfoInstitutional.children.cardContent.children.tradeUnitCardContainer.children";
+        "components.div.children.formwizardSecondStep.children.tradeOwnerDetails.children.cardContent.children.ownerInfoInstitutional.children.cardContent.children.tradeUnitCardContainerInstitutional.children";
       if (!validateFields(ownersJsonPath, state, dispatch)) isFormValid = false;
     }
 
@@ -391,7 +434,25 @@ export const changeStep = (
 
   const isPreviousButtonVisible = activeStep > 0 ? true : false;
   const isNextButtonVisible = activeStep < 3 ? true : false;
-  const isPayButtonVisible = activeStep === 3 ? true : false;
+ 
+  
+  const businessServiceData = JSON.parse(localStorageGet("businessServiceData"));
+  let isAppFeeReqd = false;
+  if (!isEmpty(businessServiceData)) {
+    const tlBusinessService = JSON.parse(localStorageGet("businessServiceData")).filter(item => item.businessService === "NewTL")
+    const states = tlBusinessService && tlBusinessService.length > 0 &&tlBusinessService[0].states;
+    for (var i = 0; i < states.length; i++) {
+      if (states[i].state === "PENDINGAPPLFEE") {
+        console.log("PENDINGAPPLFEE::::");
+        isAppFeeReqd = true;
+        break;
+      }
+     
+    }
+  } 
+  console.log("isAppFeeReqd::::",isAppFeeReqd);
+  const isPayButtonVisible = (activeStep===3 && !isAppFeeReqd) ? true : false;
+  const isAppPayButtonVisible = (activeStep===3 && isAppFeeReqd)  ? true : false;
   const actionDefination = [
     {
       path: "components.div.children.stepper.props",
@@ -412,6 +473,11 @@ export const changeStep = (
       path: "components.div.children.footer.children.payButton",
       property: "visible",
       value: isPayButtonVisible
+    },
+    {
+      path: "components.div.children.footer.children.appfeeButton",
+      property: "visible",
+      value: isAppPayButtonVisible
     }
   ];
   dispatchMultipleFieldChangeAction("apply", actionDefination, dispatch);
@@ -590,6 +656,37 @@ export const footer = getCommonApplyFooter({
     onClickDefination: {
       action: "condition",
       callBack: callBackForNext
+    },
+    visible: false
+  },
+  appfeeButton: {
+    componentPath: "Button",
+    props: {
+      variant: "contained",
+      color: "primary",
+      style: {
+        minWidth: "180px",
+        height: "48px",
+        marginRight: "45px",
+        borderRadius: "inherit"
+      }
+    },
+    children: {
+      submitButtonLabel: getLabel({
+        labelName: "Pay",
+        labelKey: "TL_COMMON_BUTTON_SUBMIT_PAY"
+      }),
+      submitButtonIcon: {
+        uiFramework: "custom-atoms",
+        componentPath: "Icon",
+        props: {
+          iconName: "keyboard_arrow_right"
+        }
+      }
+    },
+    onClickDefination: {
+      action: "condition",
+      callBack: callBackForAppFee
     },
     visible: false
   }

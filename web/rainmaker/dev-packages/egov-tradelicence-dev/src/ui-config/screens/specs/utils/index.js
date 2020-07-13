@@ -1165,15 +1165,17 @@ const getBillingSlabData = async (
         response.billingSlab.reduce(
           (result, item) => {
             if (item.tradeType) {
-              const count = tradeUnits.find(
+              let tradeUnit =tradeUnits.find(
                 tradeUnit =>
                   item.tradeType === tradeUnit.tradeType
-              ).uomValue;
-              const UOM = tradeUnits.find(
-                tradeUnit =>
-                  item.tradeType === tradeUnit.tradeType
-              ).uom;
-              tradeTotal = tradeTotal + item.rate * count;
+              );
+              let count ;
+              let UOM;
+              if(tradeUnit){
+               count = tradeUnit.uomValue;
+               UOM = tradeUnit.uom;
+            }
+              tradeTotal = count?(tradeTotal + item.rate * count):(tradeTotal + item.rate);
               result.tradeUnitData.push({
                 rate: item.rate,
                 tradeTotal:tradeTotal,
@@ -1241,8 +1243,8 @@ const getBillingSlabData = async (
 
 const isApplicationPaid = (currentStatus,workflowCode) => {
 let isPAID = false;
-if(currentStatus==="CITIZENACTIONREQUIRED"){
-  return isPAID;
+if(currentStatus==="CITIZENACTIONREQUIRED"  || (currentStatus!=="APPROVED" && currentStatus!=="CANCELLED") ){
+   return isPAID;
 }
 const businessServiceData = JSON.parse(localStorageGet("businessServiceData"));
 
@@ -1264,7 +1266,6 @@ const businessServiceData = JSON.parse(localStorageGet("businessServiceData"));
   } else {
     isPAID = false;
   }
-
   return isPAID;
 };
 
@@ -1342,11 +1343,13 @@ export const createEstimateData = async (
         tenantId,
         accessories,tradeUnits
       );
-      set(
-        payload,
-        "billResponse",
-        getBillResponse.billResponse
-      );
+      if(getBillResponse){
+       set(
+         payload,
+         "billResponse",
+         getBillResponse.billResponse
+       );
+      }
     
   }
 

@@ -100,7 +100,7 @@ export const tradeDocumentDetails = getCommonCard({
 export const getMdmsData = async (action, state, dispatch) => {
   let mdmsBody = {
     MdmsCriteria: {
-      tenantId: commonConfig.tenantId,
+      tenantId: process.env.REACT_APP_NAME === "Citizen"? getQueryArg(window.location.href, "tenantId") : state.auth.userInfo.tenantId,
       moduleDetails: [
         {
           moduleName: "TradeLicense",
