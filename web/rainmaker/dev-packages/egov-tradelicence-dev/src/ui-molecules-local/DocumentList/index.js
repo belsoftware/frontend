@@ -99,7 +99,7 @@ class DocumentList extends Component {
         uploadedIndex
       });
     }
-    getQueryArg(window.location.href, "action") !== "edit" &&
+    getQueryArg(window.location.href, "action") !== "edit" && getQueryArg(window.location.href, "action") !== "EDITRENEWAL"  &&
       Object.values(uploadedDocuments).forEach((item, index) => {
         prepareFinalObject(
           `Licenses[0].tradeLicenseDetail.applicationDocuments[${index}]`,
