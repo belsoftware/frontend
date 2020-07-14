@@ -58,9 +58,10 @@ export const newCollectionDetailsCard = getCommonCard(
             if (!citiesByModule.find(item => item.code === action.value)) {
               return action;
             }
+            console.log("action.value",action.value)
             let requestBody = {
               MdmsCriteria: {
-                tenantId: action.value,
+                tenantId: action.value.split(".")[0],
                 moduleDetails: [
                   {
                     moduleName: "BillingService",
@@ -74,6 +75,9 @@ export const newCollectionDetailsCard = getCommonCard(
                       },
                       {
                         name: "TaxPeriod"
+                      },
+                      {
+                        name:"ServiceGLCODEMapping",
                       }
                     ]
                   }
@@ -89,6 +93,7 @@ export const newCollectionDetailsCard = getCommonCard(
                 [],
                 requestBody
               );
+              console.log("payload",payload)
               dispatch(
                 prepareFinalObject(
                   "applyScreenMdmsData.BillingService",

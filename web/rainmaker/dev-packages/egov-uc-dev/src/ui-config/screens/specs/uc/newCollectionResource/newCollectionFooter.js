@@ -102,9 +102,9 @@ const processDemand = async (state, dispatch) => {
           userName: mobileNumber
         }
       );
-      if (payload ) {
-        const uuid = get(payload , "user[0].uuid");
-        dispatch(prepareFinalObject("Demands[0].payer.uuid" , uuid));
+      if (payload) {
+        const uuid = get(payload, "user[0].uuid");
+        dispatch(prepareFinalObject("Demands[0].payer.uuid", uuid));
         await createDemand(state, dispatch);
         allDateToEpoch(state.screenConfiguration.preparedFinalObject, [
           "Demands[0].taxPeriodFrom",
@@ -124,7 +124,7 @@ const processDemand = async (state, dispatch) => {
         );
         getCommonPayUrl(dispatch, applicationNumber, tenantId, businessService);
       }
-    } catch (error) {}
+    } catch (error) { }
   } else {
     dispatch(
       toggleSnackbar(
@@ -145,10 +145,17 @@ const createDemand = async (state, dispatch) => {
       get(state.screenConfiguration.preparedFinalObject, "Demands")
     )
   );
-// Making payer object as null if it is empty object, later will changge in component.
-if(Object.keys(demands[0].payer).length === 0) {
-  demands[0].payer = null;
-}
+  for (let i = 0; i < state.screenConfiguration.preparedFinalObject.applyScreenMdmsData.BillingService.ServiceGLCODEMapping.length; i++) {
+
+    if ((state.screenConfiguration.preparedFinalObject.Demands[0].serviceType === state.screenConfiguration.preparedFinalObject.applyScreenMdmsData.BillingService.ServiceGLCODEMapping[i].code) && (state.screenConfiguration.preparedFinalObject.applyScreenMdmsData.BillingService.ServiceGLCODEMapping[i].cb === tenantId)) {
+      set(demands[0], "additionalDetails.GLcode", state.screenConfiguration.preparedFinalObject.applyScreenMdmsData.BillingService.ServiceGLCODEMapping[i].glcode);
+    }
+
+  }
+  // Making payer object as null if it is empty object, later will changge in component.
+  if (Object.keys(demands[0].payer).length === 0) {
+    demands[0].payer = null;
+  }
   set(demands[0], "consumerType", demands[0].businessService);
   demands[0].demandDetails &&
     demands[0].demandDetails.forEach(item => {
