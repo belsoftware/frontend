@@ -97,6 +97,10 @@ class Dashboard extends Component {
         filters['tenantId'] = tenentFilter
       }
     }
+
+    console.log("Check the properties and filters", this.props, filters);
+    alert("Testing.. ");
+
     _.each(chartsData, (k, v) => {
       let code = v,requestBody;
       if (code) {
