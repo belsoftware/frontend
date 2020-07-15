@@ -32,8 +32,6 @@ export default function getFilterObj(GFilterData, mdmsData, page) {
             tempValue.push(tenent + '.' + splitOnSpace[splitOnSpace.length-1].toLowerCase());
         }
         filters['tenantId'] = tempValue;
-        console.log("check the tempValue and mdms", tempValue, mdmsData, newGFilterData);
-        alert("Testing..Check now");
     }
 
     if (newGFilterData && newGFilterData['duration'] && Object.keys(_.get(newGFilterData, 'duration.value')).length > 0) {
