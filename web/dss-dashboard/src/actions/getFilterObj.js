@@ -27,7 +27,9 @@ export default function getFilterObj(GFilterData, mdmsData, page) {
 
         for (var i = 0; i < newGFilterData['ULBS'].length; i++) {
             let tenent = `${localStorage.getItem('tenant-id')}` ? (`${localStorage.getItem('tenant-id')}`).split('.')[0] : ''
-            tempValue.push(tenent + '.' + newGFilterData['ULBS'][i].toLowerCase());
+            //tempValue.push(tenent + '.' + newGFilterData['ULBS'][i].toLowerCase());
+            let splitOnSpace = newGFilterData['ULBS'][i].split(" ")
+            tempValue.push(tenent + '.' + splitOnSpace[splitOnSpace.length-1].toLowerCase());
         }
         filters['tenantId'] = tempValue;
     }
