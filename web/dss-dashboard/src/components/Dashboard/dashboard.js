@@ -67,8 +67,6 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    alert("Test Component Mounted.");
-
     let getFYobj = getFinancialYearObj();
 
     let newFilterData = this.state.filter
