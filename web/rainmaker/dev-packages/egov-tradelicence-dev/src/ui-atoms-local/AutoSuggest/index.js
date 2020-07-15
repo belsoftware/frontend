@@ -204,6 +204,7 @@ class IntegrationReactSelect extends React.Component {
     const selectStyles = {
       input: base => ({
         ...base,
+        zIndex :99999,
         color: theme.palette.text.primary,
         "& input": {
           font: "inherit"
@@ -229,7 +230,8 @@ class IntegrationReactSelect extends React.Component {
           value={value ? value : this.state.single}
           placeholder={placeholder}
           {...rest}
-          onChange={this.handleChange("single")}
+          onChange={this.handleChange("single")} 
+          menuPortalTarget={document.body}
         />
       </div>
     );
