@@ -51,7 +51,7 @@ export default class Filters extends React.Component{
   			</div>
   			<div className="col-md-2 filterEach">
   				<label>ULBS</label>				
-				<ReactMultiSelectCheckboxes value="All ULBS" options={ulboptions} />
+				<ReactMultiSelectCheckboxes value="All CBs" options={ulboptions} />
   			</div>
   			<div className="col-md-2 filterEach">
   				<label>Services</label>				

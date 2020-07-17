@@ -205,7 +205,7 @@ class Dashboard extends Component {
           noPage={false}
           needSearch={true}
           needExport={true}
-          excelName={"All ULBs"}
+          excelName={"All CBs"}
 
         />
       </Cards >)

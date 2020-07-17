@@ -85,7 +85,7 @@ class PerformanceChart extends React.Component {
           noPage={false}
           needSearch={true}
           needExport={true}
-          excelName={"All ULBs"}
+          excelName={"ALL CBs"}
 
         />
       </Cards >)
