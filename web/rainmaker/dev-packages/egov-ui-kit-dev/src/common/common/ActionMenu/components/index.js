@@ -59,7 +59,7 @@ const styles = {
   },
 };
 
-class ActionMenuComp extends Component {
+class ActionMenuComp extends Component { 
   constructor(props) {
     super(props);
     this.state = {
@@ -251,10 +251,13 @@ class ActionMenuComp extends Component {
     let actionList = actionListArr;
     let menuTitle = path.split(".");
     let activeItmem = localStorageGet("menuName");
+    console.info("Active item=",activeItmem, "searchText=",searchText," menuItems=",menuItems);
     const showMenuItem = () => {
       const navigationURL = window.location.href.split("/").pop();
+      console.info("length==",searchText.length)
       if (searchText.length == 0) {
         return menuItems.map((item, index) => {
+          console.info("item=?",item)
           let iconLeft;
           if (item.leftIcon) {
             iconLeft = item.leftIcon.split(":");
@@ -303,7 +306,9 @@ class ActionMenuComp extends Component {
               </div>
             );
           } else {
+            console.info("in else part1")
             if (item.navigationURL && item.navigationURL !== "newTab") {
+              console.info("navigation  url=",item.navigationURL)
               return (
                 <Link
                   style={{ textDecoration: "none" }}
@@ -380,6 +385,7 @@ class ActionMenuComp extends Component {
           }
         });
       } else {
+        console.info("in else part2",actionList)
         return (
           actionList &&
           actionList.map((item, index) => {

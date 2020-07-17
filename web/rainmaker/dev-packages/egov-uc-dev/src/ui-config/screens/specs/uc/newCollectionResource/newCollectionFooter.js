@@ -88,42 +88,86 @@ const processDemand = async (state, dispatch) => {
   );
   if (isFormValid) {
     try {
+      // const mobileNumber = get(
+      //   state.screenConfiguration.preparedFinalObject,
+      //   "Demands[0].mobileNumber"
+      // );
+
       const mobileNumber = get(
         state.screenConfiguration.preparedFinalObject,
-        "Demands[0].mobileNumber"
+        "Demands[0].additionalDetails.mobileNumber"
+      )?get(
+        state.screenConfiguration.preparedFinalObject,
+        "Demands[0].additionalDetails.mobileNumber"
+      ):99999999;
+     
+     
+        console.info("mobile available");
+        let payload = await httpRequest(
+          "post",
+          `/user/_search?tenantId=${commonConfig.tenantId}`,
+          "_search",
+          [],
+          {
+            tenantId: commonConfig.tenantId,
+            userName: mobileNumber
+          }
+        );
+
+        
+        console.info("payload??",payload.user.length);
+        //added by dc
+        if (payload.user.length !=0) {
+            const uuid = get(payload , "user[0].uuid");
+            dispatch(prepareFinalObject("Demands[0].payer.uuid" , uuid));           
+          }
+        
+        //commented by dc
+        // if (payload ) {
+        //   const uuid = get(payload , "user[0].uuid");
+        //   dispatch(prepareFinalObject("Demands[0].payer.uuid" , uuid));
+        // }
+      
+        console.info("check to date??");
+        
+        
+
+        if(!(get(
+          state.screenConfiguration.preparedFinalObject,
+          "Demands[0].taxPeriodTo"))){
+          console.info("no To date");
+          const fromDate = get(
+            state.screenConfiguration.preparedFinalObject,
+            "Demands[0].taxPeriodFrom"
+          );
+        dispatch(prepareFinalObject("Demands[0].taxPeriodTo", fromDate));
+       }
+       
+
+      await createDemand(state, dispatch);
+     
+      allDateToEpoch(state.screenConfiguration.preparedFinalObject, [
+        "Demands[0].taxPeriodFrom",
+        "Demands[0].taxPeriodTo"
+      ]);
+      console.info("epoch of from and to done")
+      const applicationNumber = get(
+        state.screenConfiguration.preparedFinalObject,
+        "Demands[0].consumerCode"
       );
-      let payload = await httpRequest(
-        "post",
-        `/user/_search?tenantId=${commonConfig.tenantId}`,
-        "_search",
-        [],
-        {
-          tenantId: commonConfig.tenantId,
-          userName: mobileNumber
-        }
+      const tenantId = get(
+        state.screenConfiguration.preparedFinalObject,
+        "Demands[0].tenantId"
       );
-      if (payload ) {
-        const uuid = get(payload , "user[0].uuid");
-        dispatch(prepareFinalObject("Demands[0].payer.uuid" , uuid));
-        await createDemand(state, dispatch);
-        allDateToEpoch(state.screenConfiguration.preparedFinalObject, [
-          "Demands[0].taxPeriodFrom",
-          "Demands[0].taxPeriodTo"
-        ]);
-        const applicationNumber = get(
-          state.screenConfiguration.preparedFinalObject,
-          "Demands[0].consumerCode"
-        );
-        const tenantId = get(
-          state.screenConfiguration.preparedFinalObject,
-          "Demands[0].tenantId"
-        );
-        const businessService = get(
-          state.screenConfiguration.preparedFinalObject,
-          "Demands[0].serviceType"
-        );
-        getCommonPayUrl(dispatch, applicationNumber, tenantId, businessService);
-      }
+      const businessService = get(
+        state.screenConfiguration.preparedFinalObject,
+        "Demands[0].serviceType"
+      );
+      console.info("now i need to go to payment")
+      //getCommonPayUrl(dispatch, applicationNumber, tenantId, businessService);
+      const previewurl = `/uc/search-preview?applicationNumber=${applicationNumber}&tenantId=${tenantId}&businessService=${businessService}`
+        dispatch(setRoute(previewurl));
+
     } catch (error) {}
   } else {
     dispatch(
@@ -139,23 +183,38 @@ const processDemand = async (state, dispatch) => {
   }
 };
 
-const createDemand = async (state, dispatch) => {
+const createDemand = async (state, dispatch) => {  
+  console.info("create demand")
   let demands = JSON.parse(
     JSON.stringify(
       get(state.screenConfiguration.preparedFinalObject, "Demands")
     )
   );
-// Making payer object as null if it is empty object, later will changge in component.
-if(Object.keys(demands[0].payer).length === 0) {
-  demands[0].payer = null;
-}
+  console.info("create demand2",demands)
+  console.info("payer?",demands[0].payer)
+  
+  if(demands[0].payer == undefined){
+    console.info("No payer details");
+    demands[0].payer = null;
+  }
+     
+   
+     // Making payer object as null if it is empty object, later will changge in component.
+   //Commented by DC
+//    if(Object.keys(demands[0].payer).length === 0) {
+//     console.info("No payer infor")
+//     demands[0].payer = null;
+//  }
+ console.info("create demand3")
   set(demands[0], "consumerType", demands[0].businessService);
+  console.info("create demand4")
   demands[0].demandDetails &&
     demands[0].demandDetails.forEach(item => {
       if (!item.taxAmount) {
         item.taxAmount = 0;
       }
     });
+    console.info("create demand 5")
   demands[0].serviceType &&
     set(demands[0], "businessService", demands[0].serviceType);
   set(
@@ -163,11 +222,18 @@ if(Object.keys(demands[0].payer).length === 0) {
     "taxPeriodFrom",
     convertDateToEpoch(demands[0].taxPeriodFrom)
   );
+  console.info("came till setting To date")
   set(demands[0], "taxPeriodTo", convertDateToEpoch(demands[0].taxPeriodTo));
-  const mobileNumber = demands[0].mobileNumber;
-  const consumerName = demands[0].consumerName;
+  //check mob no filled or not added by DC
+  const mobileNumber=demands[0].additionalDetails.mobileNumber?demands[0].additionalDetails.mobileNumber:null;
+  //const mobileNumber = demands[0].mobileNumber;
+  const consumerName = demands[0].additionalDetails.consumerName;
+  console.info("came till setting consumerName")
   //Check if tax period fall between the tax periods coming from MDMS -- Not required as of now
-  const taxPeriodValid = isTaxPeriodValid(dispatch, demands[0], state);
+  //Commented by DC
+  //const taxPeriodValid = isTaxPeriodValid(dispatch, demands[0], state);
+  //Now from and to date validation not required since only one date field
+  const taxPeriodValid = true;
 
   if (taxPeriodValid) {
     const url = get(
@@ -178,20 +244,26 @@ if(Object.keys(demands[0].payer).length === 0) {
       ? "/billing-service/demand/_update"
       : "/billing-service/demand/_create";
     try {
+      console.info("create demand url==",url)
       const payload = await httpRequest("post", url, "", [], {
         Demands: demands
       });
       if (payload.Demands.length > 0) {
-        //const consumerCode = get(payload, "Demands[0].consumerCode");
+        console.info("calling create demand done")
+        //const consumerCode = get(payload, "Demands[0].consumerCode"); //commented by someone
         const businessService = get(payload, "Demands[0].businessService");
-        set(payload, "Demands[0].mobileNumber", mobileNumber);
-        set(payload, "Demands[0].consumerName", consumerName);
+        //changed by DC
+        // set(payload, "Demands[0].mobileNumber", mobileNumber);
+        // set(payload, "Demands[0].consumerName", consumerName);
+        set(payload, "Demands[0].additionalDetails.mobileNumber", mobileNumber);
+        set(payload, "Demands[0].additionalDetails.consumerName", consumerName);
         set(payload, "Demands[0].serviceType", businessService);
         set(
           payload,
           "Demands[0].businessService",
           businessService.split(".")[0]
         );
+        console.info("setting new redux state")
         dispatch(prepareFinalObject("Demands", payload.Demands));
         //await generateBill(consumerCode, tenantId, businessService, dispatch);
       } else {
@@ -269,7 +341,7 @@ const createEstimateData = billObject => {
   return fees;
 };
 
-const isTaxPeriodValid = (dispatch, demand, state) => {
+const isTaxPeriodValid = (dispatch, demand,   ) => {
   const taxPeriods = get(
     state.screenConfiguration,
     "preparedFinalObject.applyScreenMdmsData.BillingService.TaxPeriod",

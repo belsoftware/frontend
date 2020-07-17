@@ -65,8 +65,11 @@ export const validateFields = (
     {}
   );
   let isFormValid = true;
+  console.info("All fields==",fields)
   for (var variable in fields) {
+    console.info("each variable?",variable,"props==",fields.hasOwnProperty(variable))
     if (fields.hasOwnProperty(variable)) {
+      console.info("checking field==",fields)
       if (
         fields[variable] &&
         fields[variable].props &&
@@ -398,4 +401,18 @@ export const getTextToLocalMapping = label => {
       localisationLabels
     );
   }
+};
+
+
+export const getFeesEstimateCard = props => {
+  const { sourceJsonPath, ...rest } = props;
+  return {
+    uiFramework: "custom-containers-local",
+    moduleName: "egov-uc",
+    componentPath: "EstimateCardContainer",
+    props: {
+      sourceJsonPath,
+      ...rest
+    }
+  };
 };

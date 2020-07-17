@@ -12,7 +12,6 @@ const MihyButton =(props)=>{
   )
 }
 
-
 MihyButton.propTypes={
   children:PropTypes.any
 }

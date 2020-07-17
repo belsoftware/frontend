@@ -17,7 +17,7 @@ const header = getCommonHeader({
 const tenantId = getTenantId();
 
 const getData = async (action, state, dispatch, demandId) => {
-
+ 
   let requestBody = {
     MdmsCriteria: {
       tenantId: commonConfig.tenantId,
@@ -46,9 +46,12 @@ const getData = async (action, state, dispatch, demandId) => {
     );
     
     if(payload){
+      
       dispatch(prepareFinalObject("applyScreenMdmsData", payload.MdmsRes));
       const citymodule = get(payload , "MdmsRes.tenant.citymodule"); 
+      
       const liveTenants =  citymodule && citymodule.filter(item => item.code === "UC" );
+     
       dispatch(
         prepareFinalObject("applyScreenMdmsData.tenant.citiesByModule", get(liveTenants[0], "tenants"))
       );
@@ -107,7 +110,7 @@ const newCollection = {
       "screenConfig.newCollection"
     );
     if (demandId) {
-     
+     console.info("demand id====",demandId)
       set(
         screenConfigForUpdate,
         "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children.serviceCategory.props.disabled",
@@ -121,6 +124,7 @@ const newCollection = {
       action.screenConfig = screenConfigForUpdate;
     }
     !demandId && getData(action, state, dispatch, demandId);
+    console.info("Action===",action)
     return action;
   },
 

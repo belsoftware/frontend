@@ -20,6 +20,8 @@ import get from "lodash/get";
 
 const tenantId = getTenantId();
 
+
+
 export const newCollectionDetailsCard = getCommonCard(
   {
     searchContainer: getCommonContainer(
@@ -40,22 +42,28 @@ export const newCollectionDetailsCard = getCommonCard(
               labelKey: "TL_SELECT_CITY"
             },
             sourceJsonPath: "applyScreenMdmsData.tenant.citiesByModule",
-            // "applyScreenMdmsData.common-masters.citiesByModule.UC.tenants",
+            // "applyScreenMdmsData.common-masters.citiesByModule.UC.tenants", // commented by some one
             jsonPath: "Demands[0].tenantId",
             required: true,
+           
+            visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+           // visible:false,
             props: {
               required: true,
               value: tenantId,
-              disabled: true
+              disabled: true,
+              
             }
           }),
           beforeFieldChange: async (action, state, dispatch) => {
+            console.info("get services",action)
             const citiesByModule = get(
               state,
               "common.citiesByModule.UC.tenants",
               []
             );
             if (!citiesByModule.find(item => item.code === action.value)) {
+              console.info("action.value==",action.value,"item==",item.code)
               return action;
             }
             let requestBody = {
@@ -81,7 +89,7 @@ export const newCollectionDetailsCard = getCommonCard(
               }
             };
             try {
-              let payload = null;
+              let payload = null;              
               payload = await httpRequest(
                 "post",
                 "/egov-mdms-service/v1/_search",
@@ -105,19 +113,26 @@ export const newCollectionDetailsCard = getCommonCard(
             return action;
           }
         },
-        dummyDiv: {
-          uiFramework: "custom-atoms",
-          componentPath: "Div",
+        
+
+        // dummyDiv: {
+        //   uiFramework: "custom-atoms",
+        //   componentPath: "Div",
+        //   gridDefination: {
+        //     xs: 12,
+        //     sm: 6
+        //   },
+        //   visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+        //   props: {
+        //     disabled: true
+        //   }
+        // },
+        
+        ConsumerMobileNo: getTextField({
           gridDefination: {
             xs: 12,
             sm: 6
           },
-          visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
-          props: {
-            disabled: true
-          }
-        },
-        ConsumerMobileNo: getTextField({
           label: {
             labelName: "Mobile No",
             labelKey: "UC_MOBILE_NO_LABEL"
@@ -130,13 +145,18 @@ export const newCollectionDetailsCard = getCommonCard(
             label: "+91 |",
             position: "start"
           },
-          required: true,
+          required: false,
           visible: true,
           pattern: getPattern("MobileNo"),
           errorMessage: "Invalid Mobile No.",
-          jsonPath: "Demands[0].mobileNumber"
+          jsonPath: "Demands[0].mobileNumber",
+          jsonPath: "Demands[0].additionalDetails.mobileNumber"
         }),
         ConsumerName: getTextField({
+          gridDefination: {
+            xs: 12,
+            sm: 6
+          },
           label: {
             labelName: "Consumer Name",
             labelKey: "UC_CONS_NAME_LABEL"
@@ -150,7 +170,29 @@ export const newCollectionDetailsCard = getCommonCard(
           visible: true,
           pattern: getPattern("Name"),
           errorMessage: "Invalid Name.",
-          jsonPath: "Demands[0].consumerName"
+          jsonPath: "Demands[0].consumerName",
+          jsonPath: "Demands[0].additionalDetails.consumerName"
+        }),
+        ConsumerAddress: getTextField({
+          gridDefination: {
+            xs: 12,
+            sm: 6
+          },
+          label: {
+            labelName: "Consumer Address",
+            labelKey: "UC_ADDRESS_LABEL"
+          },
+          placeholder: {
+            labelName: "Enter Consumer Address",
+            labelKey: "UC_ADDRESS_PLACEHOLDER"
+          },
+
+          required: true,
+          visible: true,
+          pattern: getPattern("Address"),
+         // errorMessage: "Invalid Name.",
+          jsonPath: "Demands[0].consumerAddress",
+          jsonPath: "Demands[0].additionalDetails.consumerAddress"
         }),
         serviceCategory: {
           uiFramework: "custom-containers",
@@ -243,6 +285,7 @@ export const newCollectionDetailsCard = getCommonCard(
                 //Set tax head fields if there is no service type available
                 if (!demandId && serviceData[action.value]) {
                   const taxHeads = setTaxHeadFields(action, state, dispatch);
+                  console.info("Calling setTaxHead=",taxHeads);
                 }
               }
             }
@@ -263,7 +306,7 @@ export const newCollectionDetailsCard = getCommonCard(
               labelKey: "UC_SERVICE_TYPE_PLACEHOLDER"
             },
             required: true,
-            visible: false,
+            //visible: false,
             sourceJsonPath: "applyScreenMdmsData.serviceTypes",
             jsonPath: "Demands[0].serviceType",
             gridDefination: {
@@ -279,10 +322,14 @@ export const newCollectionDetailsCard = getCommonCard(
             );
             if (!demandId && action.value) {
               const taxHeads = setTaxHeadFields(action, state, dispatch);
-              console.log(taxHeads);
+              console.log("tax heads to be displayed==",taxHeads);
             }
           }
         },
+
+        
+
+
         fromDate: getDateField({
           label: {
             labelName: "From Date",
@@ -290,7 +337,7 @@ export const newCollectionDetailsCard = getCommonCard(
           },
           placeholder: {
             labelName: "Enter from Date",
-            labelKey: "UC_SELECT_FROM_DATE_PLACEHOLDER"
+            labelKey: "UC_FROM_DATE_LABEL_PLACEHOLDER"
           },
           gridDefination: {
             xs: 12,
@@ -298,7 +345,8 @@ export const newCollectionDetailsCard = getCommonCard(
           },
           required: true,
           pattern: getPattern("Date"),
-          jsonPath: "Demands[0].taxPeriodFrom"
+          jsonPath: "Demands[0].taxPeriodFrom",
+          
         }),
         toDate: getDateField({
           label: {
@@ -313,22 +361,23 @@ export const newCollectionDetailsCard = getCommonCard(
             xs: 12,
             sm: 6
           },
-          required: true,
+         // required: true,          
           pattern: getPattern("Date"),
           jsonPath: "Demands[0].taxPeriodTo"
+          
         }),
-        dummyDiv: {
-          uiFramework: "custom-atoms",
-          componentPath: "Div",
-          gridDefination: {
-            xs: 12,
-            sm: 6
-          },
-          visible: true,
-          props: {
-            disabled: true
-          }
-        }
+        //  dummyDiv: {
+        //   uiFramework: "custom-atoms",
+        //   componentPath: "Div",
+        //   gridDefination: {
+        //     xs: 12,
+        //     sm: 6
+        //   },
+        //   visible: true,
+        //   props: {
+        //     disabled: true
+        //   }
+        // }
       },
       {
         style: {
@@ -338,6 +387,10 @@ export const newCollectionDetailsCard = getCommonCard(
     ),
     commentsContainer: getCommonContainer({
       comments: getTextField({
+        gridDefination: {
+          xs: 12,
+          sm: 6
+        },
         label: {
           labelName: "Comments",
           labelKey: "UC_COMMENT_LABEL"
@@ -348,8 +401,30 @@ export const newCollectionDetailsCard = getCommonCard(
         },
         Required: false,
         jsonPath: "Demands[0].additionalDetails.comment"
-      })
-    })
+      }),
+      // purpose: getTextField({
+      //   gridDefination: {
+      //     xs: 12,
+      //     sm: 6
+      //   },
+      //   label: {
+      //     labelName: "Purpose",
+      //     labelKey: "UC_CONS_PURPOSE_LABEL"
+      //   },
+      //   placeholder: {
+      //     labelName: "Enter Purpose",
+      //     labelKey: "UC _CONS_PURPOSE_LABEL_PLACEHOLDER"
+      //   },
+  
+      //   required: false,
+      //   visible: true,
+      //   pattern: getPattern("Name"),
+      //   errorMessage: "Invalid Name.",
+      //   //jsonPath: "Demands[0].purpose"
+      //   jsonPath: "Demands[0].additionalDetails.purpose"
+      // })
+    }),
+ 
   },
   {
     style: {
@@ -359,6 +434,7 @@ export const newCollectionDetailsCard = getCommonCard(
 );
 
 const setTaxHeadFields = (action, state, dispatch) => {
+  
   const serviceData = get(
     state.screenConfiguration,
     "preparedFinalObject.applyScreenMdmsData.nestedServiceData",
@@ -389,6 +465,7 @@ const setTaxHeadFields = (action, state, dispatch) => {
     );
     if (noOfPreviousTaxHeads > 0) {
       for (let i = 0; i < taxFieldKeys.length; i++) {
+        console.info("what to create?",taxFieldKeys[i]);
         dispatch(
           handleField(
             "newCollection",
@@ -428,6 +505,11 @@ const setTaxHeadFields = (action, state, dispatch) => {
           "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children",
           `taxheadField_${item.code.split(".").join("_")}`,
           getTextField({
+
+            gridDefination: {
+              xs: 12,
+              sm: 6
+            },
             label: {
               labelName: "Tax Amount",
               labelKey: `${getTransformedLocale(item.code)}`
@@ -515,3 +597,112 @@ const setTaxHeadFields = (action, state, dispatch) => {
 //     )
 //   );
 // };
+
+
+// Added and commented by DC. Now mCollect challan will be generated by Tenant only
+        // cityDropdown: {
+        //   uiFramework: "custom-containers",          
+        //   componentPath: "AutosuggestContainer",
+        //   required: true,
+        //   jsonPath: "Demands[0].tenantId",
+        //   gridDefination: {
+        //     xs: 12,
+        //     sm: 6
+        //   },
+        //   visible: process.env.REACT_APP_NAME === "Employee" ? false : true,
+        //   props: {
+        //     style: {
+        //       width: "100%",
+        //       cursor: "pointer"
+        //     },
+        //     localePrefix: {
+        //       moduleName: "TENANT",
+        //       masterName: "TENANTS"
+        //     },
+        //     //className: "citizen-city-picker",
+        //     label: {
+        //       labelName: "City",
+        //       labelKey: "TL_NEW_TRADE_DETAILS_CITY_LABEL"
+        //     },
+        //     placeholder: { labelName: "Select City", labelKey: "TL_SELECT_CITY" },
+        //     jsonPath: "Demands[0].tenantId",
+        //     sourceJsonPath:
+        //       "applyScreenMdmsData.tenant.citiesByModule",
+        //     labelsFromLocalisation: true,
+        //     fullwidth: true,
+        //     required: true,
+        //      suggestions: [],
+        //     inputLabelProps: {
+        //       shrink: true
+        //     }
+        //   },
+
+        //   beforeFieldChange: async (action, state, dispatch) => {
+        //     console.info("get services",action.value)
+        //     const citiesByModule = get(
+        //       state,
+        //       "common.citiesByModule.UC.tenants",
+        //       []
+        //     );
+        //     if (!citiesByModule.find(item => item.code === action.value)) {
+        //       return action;
+        //     }
+        //     let serviceFilter;
+        //     console.info("am i citi/emp?",process.env.REACT_APP_NAME)
+        //     if(process.env.REACT_APP_NAME === "Citizen"){
+        //       console.info("Logged in as a citizen");
+        //       serviceFilter = "[?(@.type=='Adhoc') && (@.isCitizen == true)]"
+        //     }
+        //     else{
+        //       serviceFilter ="[?(@.type=='Adhoc')]"
+        //     }
+        //     console.info("service filter =->",serviceFilter)
+
+        //     let requestBody = {
+        //       MdmsCriteria: {
+        //         tenantId: action.value,
+        //         moduleDetails: [
+        //           {
+        //             moduleName: "BillingService",
+        //             masterDetails: [
+        //               {
+        //                 name: "BusinessService",
+        //                 //filter: "[?(@.type=='Adhoc')]"
+        //                 filter:"[?(@.type=='Adhoc' &&  @.isCitizen == true)]"
+        //               },
+        //               {
+        //                 name: "TaxHeadMaster"
+        //               },
+        //               {
+        //                 name: "TaxPeriod"
+        //               }
+        //             ]
+        //           }
+        //         ]
+        //       }
+        //     };
+        //     try {
+        //       let payload = null;              
+        //       payload = await httpRequest(
+        //         "post",
+        //         "/egov-mdms-service/v1/_search",
+        //         "_search",
+        //         [],
+        //         requestBody
+        //       );
+        //       dispatch(
+        //         prepareFinalObject(
+        //           "applyScreenMdmsData.BillingService",
+        //           payload.MdmsRes.BillingService
+        //         )
+        //       );
+        //       setServiceCategory(
+        //         get(payload, "MdmsRes.BillingService.BusinessService", []),
+        //         dispatch
+        //       );
+        //     } catch (e) {
+        //       console.log(e);
+        //     }
+        //     return action;
+        //   }
+        // },

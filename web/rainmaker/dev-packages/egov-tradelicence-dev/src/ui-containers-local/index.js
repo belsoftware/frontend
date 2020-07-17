@@ -52,6 +52,10 @@ const ResubmitActionContainer = Loadable({
   loading: () => <Loading />
 });
 
+const DownloadIcon = Loadable({
+  loader: () => import("./DownloadIcon"),
+  loading: () => <Loading />
+});
 
 export {
   CustomTabContainer,
@@ -64,5 +68,6 @@ export {
   PaymentRedirectPage,
   ViewBreakupContainer,
   DialogContainer,
-  ResubmitActionContainer
+  ResubmitActionContainer,
+  DownloadIcon
 };
