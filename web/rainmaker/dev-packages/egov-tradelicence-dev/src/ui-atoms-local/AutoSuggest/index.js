@@ -199,12 +199,14 @@ class IntegrationReactSelect extends React.Component {
       inputLabelProps = {
         shrink: true
       },
+    // hasZindex=true,
+    hasZindex=false,
       ...rest
     } = this.props;
     const selectStyles = {
       input: base => ({
         ...base,
-        zIndex :99999,
+        zIndex :9999999,
         color: theme.palette.text.primary,
         "& input": {
           font: "inherit"
@@ -231,7 +233,7 @@ class IntegrationReactSelect extends React.Component {
           placeholder={placeholder}
           {...rest}
           onChange={this.handleChange("single")} 
-          menuPortalTarget={document.body}
+          menuPortalTarget={hasZindex?document.body:null}
         />
       </div>
     );

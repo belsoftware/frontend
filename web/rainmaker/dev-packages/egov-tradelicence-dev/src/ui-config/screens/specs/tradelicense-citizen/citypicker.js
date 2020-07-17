@@ -26,6 +26,7 @@ export const cityPicker = getCommonContainer({
           width: "100%",
           cursor: "pointer"
         },
+        hasZindex:false,
         localePrefix: {
           moduleName: "TENANT",
           masterName: "TENANTS"
