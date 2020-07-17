@@ -231,6 +231,7 @@ const tradeUnitCard = {
                 width: "100%",
                 cursor: "pointer"
               },
+              hasZindex:true,
               label: {
                 labelName: "Trade Sub-Type",
                 labelKey: "TL_NEW_TRADE_DETAILS_TRADE_SUBTYPE_LABEL"
