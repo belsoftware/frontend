@@ -26,6 +26,19 @@ export const getCommonApplyFooter = children => {
   };
 };
 
+export const getFeesEstimateCard = props => {
+  const { sourceJsonPath, ...rest } = props;
+  return {
+    uiFramework: "custom-containers-local",
+    moduleName: "egov-uc",
+    componentPath: "EstimateCardContainer",
+    props: {
+      sourceJsonPath,
+      ...rest
+    }
+  };
+};
+
 export const transformById = (payload, id) => {
   return (
     payload &&
