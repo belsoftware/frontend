@@ -166,28 +166,28 @@ export const callPGService = async (state, dispatch) => {
                                 type: 'hidden',
                               })).append(
                                 $('<input>', {
-                                  name: 'additionalFeild1',
-                                  value: gatewayParam.additionalFeild1,
+                                  name: 'additionalField1',
+                                  value: gatewayParam.additionalField1,
                                   type: 'hidden',
                                 })).append(
                                   $('<input>', {
-                                    name: 'additionalFeild2',
-                                    value: gatewayParam.additionalFeild2,
+                                    name: 'additionalField2',
+                                    value: gatewayParam.additionalField2,
                                     type: 'hidden',
                                   })).append(
                                     $('<input>', {
-                                      name: 'additionalFeild3',
-                                      value: gatewayParam.additionalFeild3,
+                                      name: 'additionalField3',
+                                      value: gatewayParam.additionalField3,
                                       type: 'hidden',
                                     })).append(
                                       $('<input>', {
-                                        name: 'additionalFeild4',
-                                        value: gatewayParam.additionalFeild4,
+                                        name: 'additionalField4',
+                                        value: gatewayParam.additionalField4,
                                         type: 'hidden',
                                       })).append(
                                         $('<input>', {
-                                          name: 'additionalFeild5',
-                                          value: gatewayParam.additionalFeild5,
+                                          name: 'additionalField5',
+                                          value: gatewayParam.additionalField5,
                                           type: 'hidden',
                                         })).append(
                                           $('<input>', {
