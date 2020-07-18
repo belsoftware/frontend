@@ -14,6 +14,7 @@ import set from "lodash/set";
 import commonConfig from "config/common.js";
 import { validate } from "egov-ui-framework/ui-redux/screen-configuration/utils";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import store from "ui-redux/store";
 
 export const addComponentJsonpath = (components, jsonPath = "components") => {
   for (var componentKey in components) {
@@ -207,21 +208,26 @@ export const replaceStrInPath = (inputString, search, replacement) => {
   return inputString.replaceAll(search, replacement);
 };
 
-export const getFileUrlFromAPI = async (fileStoreId,tenantId) => {
+export const getFileUrlFromAPI = async (dispatch,fileStoreId,tenantId) => {
   const queryObject = [
     { key: "tenantId", value: tenantId||commonConfig.tenantId },
     { key: "fileStoreIds", value: fileStoreId }
   ];
   try {
+    store.dispatch(toggleSpinner());
     const fileUrl = await httpRequest(
       "get",
       "/filestore/v1/files/url",
       "",
       queryObject
     );
+    store.dispatch(toggleSpinner());
     return fileUrl;
+ 
+    
   } catch (e) {
     console.log(e);
+    store.dispatch(toggleSpinner());
   }
 };
 
