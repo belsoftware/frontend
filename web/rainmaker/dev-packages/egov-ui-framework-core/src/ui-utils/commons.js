@@ -221,7 +221,10 @@ export const getFileUrlFromAPI = async (dispatch,fileStoreId,tenantId) => {
       "",
       queryObject
     );
-    store.dispatch(toggleSpinner());
+    setTimeout(() => {
+      store.dispatch(toggleSpinner());
+    }, 3000);
+    
     return fileUrl;
  
     

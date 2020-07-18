@@ -1,7 +1,8 @@
 import {
   getCommonHeader,
   getCommonContainer,
-  getLabel
+  getLabel,
+  getSelectField
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { showCityPicker, applyForm } from "../utils";
 
@@ -12,6 +13,7 @@ export const cityPicker = getCommonContainer({
   }),
   cityPicker: getCommonContainer({
     cityDropdown: {
+      ...getSelectField({
       uiFramework: "custom-containers-local",
       moduleName: "egov-tradelicence",
       componentPath: "AutosuggestContainer",
@@ -47,6 +49,7 @@ export const cityPicker = getCommonContainer({
           shrink: true
         }
       }
+    })
     },
     div: {
       uiFramework: "custom-atoms",
