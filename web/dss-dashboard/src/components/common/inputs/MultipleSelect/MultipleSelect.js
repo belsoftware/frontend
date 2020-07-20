@@ -126,7 +126,7 @@ class MultipleSelects extends React.Component {
     let svgicon;
     if (logo === "DDRs") {
       svgicon = districts_icon;
-    } else if (logo === "ULBS") {
+    } else if (logo === "CBS") {
       svgicon = ulbs_icon;
     }
     return (

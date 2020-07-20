@@ -59,6 +59,9 @@ class GlobalFilter extends Component {
         } else if (value === 'PGR') {
             return 'PGR'
         }
+        else if (value === 'M Collect') {
+            return 'MC'
+        }
         return null;
     }
 
@@ -272,7 +275,7 @@ class GlobalFilter extends Component {
         })
         if (target) {
 
-            if (target === 'ULBS') {
+            if (target === 'CBS') {
                 if (value && Array.isArray(value) && value.length > 0) {
                     let ulbs = []
                     let tenents = this.state.tenants
@@ -488,7 +491,7 @@ class GlobalFilter extends Component {
         switch (type) {
             case "dropdown":
                 switch (label) {
-                    case "ULBS":
+                    case "CBS":
                         return this.renderAutoComplete(object.label, this.handleChanges, this.state.ulbs, object.values, '')
                     case "DDRs":
                         return this.renderAutoComplete(object.label, this.handleChanges, this.state.ddrs, object.values, '')
@@ -513,7 +516,7 @@ class GlobalFilter extends Component {
                 switch (label) {
                     case "Date Range":
                         return this.renderDateRange(object.label, object.values);
-                    case "ULBS":
+                    case "CBS":
                         return this.renderAutoComplete(object.label, this.handleFilterChange.bind(this), this.state.ulbs, this.state.tenentName, '')
                     case "Wards":
                         if (this.state.pageId === 'ulb-overview') {
@@ -555,7 +558,7 @@ class GlobalFilter extends Component {
                 // defaultV: newFilterData
             })
         }
-        if (target === 'ULBS') {
+        if (target === 'CBS') {
             this.setState({
                 ulbs: newFilterData
             })
@@ -585,13 +588,13 @@ class GlobalFilter extends Component {
                     }
                 </div>
             </div>}
-            {GFilterData && GFilterData.ULBS && GFilterData.ULBS.length > 0 && <div className={classes.fVRow}>
+            {GFilterData && GFilterData.CBS && GFilterData.CBS.length > 0 && <div className={classes.fVRow}>
                 <div className={classes.fTitle}><span style={{ margin: !isMobile ? 'auto' : '' }}>Selected ULBs:</span></div>
                 <div className={classes.mChips}>
-                    {GFilterData.ULBS.map(item => {
+                    {GFilterData.CBS.map(item => {
                         let handleOnDelete = this.handleOnDelete.bind(this)
                         return <div style={{ margin: isMobile ? '4px 0 0 0' : '0 4px 0 0' }}>
-                            {/* <Chip className={classes.mCustomChip} label={item} color={'gray'} onDelete={() => handleOnDelete('ULBS',item)}></Chip></div> */}
+                            {/* <Chip className={classes.mCustomChip} label={item} color={'gray'} onDelete={() => handleOnDelete('CBS',item)}></Chip></div> */}
 
                             <Chip className={classes.mCustomChip} label={item} color={'gray'}></Chip></div>
                     })
@@ -624,11 +627,11 @@ class GlobalFilter extends Component {
                                             {this.renderComponents(mdmsData)}
                                         </div>
                                     );
-                                } else if (ro.label == "ULBS" && !_.isEmpty(mdmsData, true) && mdmsData.ULBS) {
+                                } else if (ro.label == "CBS" && !_.isEmpty(mdmsData, true) && mdmsData.CBS) {
                                     return (
                                         <div key={ro.label} className={`${classes.filterS} ${"GF_" + ro.label}`}>
                                             <div className={classes.filterHead}>{strings[ro.label_locale] || ro.label_locale}</div>
-                                            {this.renderComponents(mdmsData.ULBS)}
+                                            {this.renderComponents(mdmsData.CBS)}
                                         </div>
                                     );
                                 } else {
@@ -673,10 +676,10 @@ class GlobalFilter extends Component {
                                 }
                             </div>
                         </div>}
-                        {GFilterData && GFilterData.ULBS && GFilterData.ULBS.length > 0 && <div className={classes.fVRow}>
+                        {GFilterData && GFilterData.CBS && GFilterData.CBS.length > 0 && <div className={classes.fVRow}>
                             <div className={classes.fTitle}><span style={{ margin: 'auto' }}>Selected ULBs:</span></div>
                             <div className={classes.mChips}>
-                                {GFilterData.ULBS.map(item => {
+                                {GFilterData.CBS.map(item => {
                                     return <div style={{ marginRight: '5px' }}><Chip className={classes.mCustomChip} label={item} color={'gray'}></Chip></div>
                                 })
     

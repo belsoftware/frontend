@@ -37,8 +37,8 @@ return {
     tentantLogo : tenantLogo,
     tenantName : tenantName,
     corpName : corpName,
-    ULBS :{
-        label: "ULBS",
+    CBS :{
+        label: "CBS",
         label_locale: "DSS_ULBS",
         type: "dropdown",
         values : tempULBS

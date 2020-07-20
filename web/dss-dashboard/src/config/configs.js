@@ -24,9 +24,11 @@ const configs = {
                     {'dashboard':null},
                     {'propertytax':{'services_name':'Property Tax','filterKey':'PT'}},
                     {'tradelicense':{'services_name':'Trade licence','filterKey':'TL'}},
+                    {'mcollect':{'services_name':'M Collect','filterKey':'MC'}},
                     {'pgr':{'services_name':'PGR','filterKey':'PGR'}},
                     {'ws':{'services_name':'W&S','filterKey':'W&S'}}
                     ],
-    'SERVICES': ["Property Tax", "Trade licence","PGR"]
+    'SERVICES': ["Property Tax", "Trade licence", "M Collect"]
+    //'SERVICES': ["Property Tax", "Trade licence","PGR", "M Collect"]
 }
 export default configs;
