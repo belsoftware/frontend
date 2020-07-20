@@ -208,7 +208,7 @@ export const replaceStrInPath = (inputString, search, replacement) => {
   return inputString.replaceAll(search, replacement);
 };
 
-export const getFileUrlFromAPI = async (dispatch,fileStoreId,tenantId) => {
+export const getFileUrlFromAPI = async (fileStoreId,tenantId,dispatch) => {
   const queryObject = [
     { key: "tenantId", value: tenantId||commonConfig.tenantId },
     { key: "fileStoreIds", value: fileStoreId }
@@ -221,9 +221,10 @@ export const getFileUrlFromAPI = async (dispatch,fileStoreId,tenantId) => {
       "",
       queryObject
     );
-    setTimeout(() => {
+    store.dispatch(toggleSpinner());
+   /* setTimeout(() => {
       store.dispatch(toggleSpinner());
-    }, 3000);
+    }, 3000);*/
     
     return fileUrl;
  
