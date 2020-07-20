@@ -34,6 +34,8 @@ export default function getFilterObj(GFilterData, mdmsData, page) {
         filters['tenantId'] = tempValue;
     }
 
+    console.log("Hey check the filter data", filters);
+    
     if (newGFilterData && newGFilterData['duration'] && Object.keys(_.get(newGFilterData, 'duration.value')).length > 0) {
         filters['duration'] = newGFilterData['duration']['value'];
         let startDate = _.get(newGFilterData, 'duration.value.startDate') * 1000;

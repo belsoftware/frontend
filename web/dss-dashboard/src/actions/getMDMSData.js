@@ -29,6 +29,8 @@ for(var i=0; i<localVal.length;i++){
         break;        
     } 
 }
+
+console.log("Hey mdms ",tempDDRs,tempDRRsObj);
 return {
     label: "DDRs",
     type: "dropdown",
