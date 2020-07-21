@@ -11,7 +11,8 @@ import {
 } from "../ui-config/screens/specs/utils";
 import {
   prepareFinalObject,
-  toggleSnackbar
+  toggleSnackbar,
+  toggleSpinner
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   getTranslatedLabel,
@@ -609,7 +610,7 @@ export const findItemInArrayOfObject = (arr, conditionCheckerFn) => {
 };
 
 
-export const handleFileUpload = (event, handleDocument, props) => {
+export const handleFileUpload = (event, handleDocument, props ) => {
   const S3_BUCKET = {
     endPoint: "filestore/v1/files"
   };
@@ -631,6 +632,7 @@ export const handleFileUpload = (event, handleDocument, props) => {
         uploadDocument = false;
       }
       if (uploadDocument) {
+        store.dispatch(toggleSpinner());
         if (file.type.match(/^image\//)) {
           const fileStoreId = await uploadFile(
             S3_BUCKET.endPoint,
@@ -638,14 +640,17 @@ export const handleFileUpload = (event, handleDocument, props) => {
             file,
             commonConfig.tenantId
           );
+          store.dispatch(toggleSpinner());
           handleDocument(file, fileStoreId);
         } else {
+         
           const fileStoreId = await uploadFile(
             S3_BUCKET.endPoint,
             moduleName,
             file,
             commonConfig.tenantId
           );
+          store.dispatch(toggleSpinner());
           handleDocument(file, fileStoreId);
         }
       }
