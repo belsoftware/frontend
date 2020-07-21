@@ -277,7 +277,7 @@ class ActionDialog extends React.Component {
                       <TextFieldContainer
                         InputLabelProps={{ shrink: true }}
                         label={fieldConfig.cbrnNumber.label}
-
+                        required={true}
                         onChange={(e, value) => {
                           let num = JSON.stringify({ 'cbrnNumber': e.target.value })
                           //console.log("num>>>>",e.target.value)
@@ -294,6 +294,7 @@ class ActionDialog extends React.Component {
                         label={fieldConfig.cbrnDate.label}
                         //label="Date"
                         type="date"
+                        required={true}
                         //format={'DD/MM/YYYY'}
                        // formatDate={(date) => moment(date).format('DD/MM/YYYY')}
                         InputLabelProps={{
@@ -483,7 +484,7 @@ class ActionDialog extends React.Component {
                         onChange={e =>
                           handleFieldChange(`${dataPath}.tradeLicenseDetail.additionalDetail.tradeSubType`, e.target.value)
                         }
-
+                        required={true}
                         // roleDefination={{ rolePath: "user-info.roles", roles: ["TL_DOC_VERIFIER"] }} 
                         jsonPath={`${dataPath}.tradeLicenseDetail.additionalDetail.tradeSubType`}
                         placeholder={fieldConfig.tradeSubType.placeholder}

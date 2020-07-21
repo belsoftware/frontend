@@ -197,24 +197,24 @@ class WorkFlowContainer extends React.Component {
       window.location.href,
       "applicationNumber"
     );
-      if (moduleName === "NewWS1" || moduleName === "NewSW1") {
-        data = data[0];
-        data.assignees = [];
-        if (data.assignee) {
-          data.assignee.forEach(assigne => {
-            data.assignees.push({
-              uuid: assigne
-            })
+    if (moduleName === "NewWS1" || moduleName === "NewSW1") {
+      data = data[0];
+      data.assignees = [];
+      if (data.assignee) {
+        data.assignee.forEach(assigne => {
+          data.assignees.push({
+            uuid: assigne
           })
-        }
-        data.processInstance = {
-          documents: data.wfDocuments,
-          assignes: data.assignees,
-          comment: data.comment,
-          action: data.action
-        }
-        data.waterSource = data.waterSource + "." + data.waterSubSource;
+        })
       }
+      data.processInstance = {
+        documents: data.wfDocuments,
+        assignes: data.assignees,
+        comment: data.comment,
+        action: data.action
+      }
+      data.waterSource = data.waterSource + "." + data.waterSubSource;
+    }
 
     if (moduleName === "NewSW1") {
       dataPath = "SewerageConnection";
@@ -305,7 +305,38 @@ class WorkFlowContainer extends React.Component {
 
     set(data, `${appendToPath}action`, label);
 
+    let tradeSubType = null;
+    let cbrnDate = null;
+    let cbrnNumber = null;
+    const status = get(
+      preparedFinalObject,
+      `Licenses[0].status`,
+      []
+    );
+    console.log("status", status)
+    if (status == "FIELDINSPECTION" || status == "APPLIED") {
+      tradeSubType = get(
+        preparedFinalObject,
+        `Licenses[0].tradeLicenseDetail.additionalDetail.tradeSubType`,
+        //"screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.tradeSubType",
+        []
+      );
+    } else {
+      cbrnDate = get(
+        preparedFinalObject,
+        `Licenses[0].tradeLicenseDetail.additionalDetail.cbrnDate`,
+        // "screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.cbrnDate",
+        []
+      );
+      cbrnNumber = get(
+        preparedFinalObject,
+        `Licenses[0].tradeLicenseDetail.additionalDetail.cbrnNumber`,
+        // "screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.cbrnNumber",
+        []
+      );
+    }
     if (isDocRequired) {
+      console.log("if isDocRequired")
       const documents = get(data, "wfDocuments");
       if (documents && documents.length > 0) {
         this.wfUpdate(label);
@@ -317,7 +348,33 @@ class WorkFlowContainer extends React.Component {
         );
       }
     } else {
-      this.wfUpdate(label);
+      console.log("else>>", isDocRequired, tradeSubType, status)
+      if (status == "FIELDINSPECTION" || status == "APPLIED") {
+        if (tradeSubType == null) {
+          toggleSnackbar(
+            true,
+            { labelName: "Please fill all mandatory fields !", labelKey: "ERR_FILL_MANDATORY_FIELDS" },
+            "error"
+          );
+        }
+        else {
+
+          this.wfUpdate(label);
+        }
+      }
+      if (status == "PENDINGAPPROVAL") {
+        if (cbrnDate == null || cbrnNumber == null) {
+          toggleSnackbar(
+            true,
+            { labelName: "Please fill all mandatory fields !", labelKey: "ERR_FILL_MANDATORY_FIELDS" },
+            "error"
+          );
+        }
+        else {
+
+          this.wfUpdate(label);
+        }
+      }
     }
   };
 
