@@ -78,23 +78,7 @@
             "type": "dropdown",
             "values": ""
         },
-        {
-            "label": "DDRs",
-            "label_locale": "DSS_DDRS",
-            "type": "dropdown",
-            "values": [ "DDGE"],
-            "master": { "DDGE":
-                               [ "pb.agra",
-                                 "pb.delhi",
-                                 "pb.lucknow",
-                                 "pb.pune",
-                                 "pb.secunderabad"
-                                  ]
-                               }
-            ,"tentantLogo" : { "pb.abohar":
-                               "https://s3.ap-south-1.amazonaws.com/pb-egov-assets/pb.abohar/logo.png" 
-                            }
-        },
+      
         {
             "label": "CBS",
             "label_locale": "DSS_ULBS",
