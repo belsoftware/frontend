@@ -28,7 +28,7 @@ const configs = {
                     {'pgr':{'services_name':'PGR','filterKey':'PGR'}},
                     {'ws':{'services_name':'W&S','filterKey':'W&S'}}
                     ],
-    'SERVICES': ["Property Tax", "Trade licence", "M Collect"]
+    'SERVICES': ["Trade licence", "M Collect"]
     //'SERVICES': ["Property Tax", "Trade licence","PGR", "M Collect"]
 }
 export default configs;
