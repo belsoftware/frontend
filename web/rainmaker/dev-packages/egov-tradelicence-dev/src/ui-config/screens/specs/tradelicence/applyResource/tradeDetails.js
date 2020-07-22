@@ -74,7 +74,7 @@ const tradeUnitCard = {
                 "applyScreenMdmsData.TradeLicense.TradeTypeTransformed",
               gridDefination: {
                 xs: 12,
-                sm: 4
+                sm: 6
               }
             }),
             beforeFieldChange: (action, state, dispatch) => {
@@ -144,6 +144,39 @@ const tradeUnitCard = {
               }
             }
           },
+          helpPdfButton:{
+            componentPath:"Button",
+            jsonPath:"Licenses[0].tradeLicenseDetail.pdf",
+            gridDefination: {
+              xs: 12,
+              sm: 6
+            },
+            props:{
+              //variant: "outlined",
+              color:"primary",
+              href:"https://github.com/belegovgithub/egov-mdms-data/raw/BEL-CB-Impl/data/pb/TLHelp/TradeTypeSubtypeDetails_Secunderabad.pdf",
+              style:{
+                minWidth:"180px",
+                height:"48px",
+                marginRight:"45",
+                borderRadius: "inherit"
+              }
+            },
+            children:{
+              
+              nextButtonIcon:{
+                uiFramework:"custom-atoms",
+                componentPath:"Icon",
+                props:{
+                  iconName:"cloud_download"
+                }
+              },
+              nextButtonLabel:getLabel({
+                labelName:"Trade Type Help",
+                labelKey:"TRADETYPE_HELP"
+              }),
+            },
+           }, 
           tradeType: {
             ...getSelectField({
               label: {
@@ -168,7 +201,7 @@ const tradeUnitCard = {
                 "applyScreenMdmsData.TradeLicense.TradeCategoryTransformed",
               gridDefination: {
                 xs: 12,
-                sm: 4
+                sm: 6
               }
             }),
             beforeFieldChange: (action, state, dispatch) => {
@@ -224,7 +257,7 @@ const tradeUnitCard = {
             required: true,
             gridDefination: {
               xs: 12,
-              sm: 4
+              sm:6
             },
             props: {
               style: {
@@ -438,7 +471,7 @@ const tradeUnitCard = {
             jsonPath: "Licenses[0].tradeLicenseDetail.tradeUnits[0].uom",
             gridDefination: {
               xs: 12,
-              sm: 4
+              sm: 6
             }
           }),
           tradeUOMValue: getTextField({
@@ -460,38 +493,42 @@ const tradeUnitCard = {
             jsonPath: "Licenses[0].tradeLicenseDetail.tradeUnits[0].uomValue",
             gridDefination: {
               xs: 12,
-              sm: 4
+              sm: 6
             }
           }),        
-          helpPdfButton:{
-            componentPath:"Button",
-            jsonPath:"Licenses[0].tradeLicenseDetail.pdf",
-            props:{
-              //variant: "outlined",
-              color:"primary",
-              href:"https://github.com/belegovgithub/egov-mdms-data/raw/BEL-CB-Impl/data/pb/TLHelp/TradeTypeSubtypeDetails_Secunderabad.pdf",
-              style:{
-                minWidth:"180px",
-                height:"48px",
-                marginRight:"45",
-                borderRadius: "inherit"
-              }
-            },
-            children:{
+          // helpPdfButton:{
+          //   componentPath:"Button",
+          //   jsonPath:"Licenses[0].tradeLicenseDetail.pdf",
+          //   gridDefination: {
+          //     xs: 12,
+          //     sm: 6
+          //   },
+          //   props:{
+          //     //variant: "outlined",
+          //     color:"primary",
+          //     href:"https://github.com/belegovgithub/egov-mdms-data/raw/BEL-CB-Impl/data/pb/TLHelp/TradeTypeSubtypeDetails_Secunderabad.pdf",
+          //     style:{
+          //       minWidth:"180px",
+          //       height:"48px",
+          //       marginRight:"45",
+          //       borderRadius: "inherit"
+          //     }
+          //   },
+          //   children:{
               
-              nextButtonIcon:{
-                uiFramework:"custom-atoms",
-                componentPath:"Icon",
-                props:{
-                  iconName:"cloud_download"
-                }
-              },
-              nextButtonLabel:getLabel({
-                labelName:"Trade Type Help",
-                labelKey:"TRADETYPE_HELP"
-              }),
-            },
-           },                        
+          //     nextButtonIcon:{
+          //       uiFramework:"custom-atoms",
+          //       componentPath:"Icon",
+          //       props:{
+          //         iconName:"cloud_download"
+          //       }
+          //     },
+          //     nextButtonLabel:getLabel({
+          //       labelName:"Trade Type Help",
+          //       labelKey:"TRADETYPE_HELP"
+          //     }),
+          //   },
+          //  },                        
         },
         {
           style: {
