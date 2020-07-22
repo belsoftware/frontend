@@ -314,7 +314,7 @@ class WorkFlowContainer extends React.Component {
       []
     );
     console.log("status", status)
-    if (status == "FIELDINSPECTION" || status == "APPLIED") {
+    if (status == "FIELDINSPECTION") {
       tradeSubType = get(
         preparedFinalObject,
         `Licenses[0].tradeLicenseDetail.additionalDetail.tradeSubType`,
@@ -336,7 +336,7 @@ class WorkFlowContainer extends React.Component {
       );
     }
     if (isDocRequired) {
-      console.log("if isDocRequired")
+
       const documents = get(data, "wfDocuments");
       if (documents && documents.length > 0) {
         this.wfUpdate(label);
@@ -348,8 +348,8 @@ class WorkFlowContainer extends React.Component {
         );
       }
     } else {
-      console.log("else>>", isDocRequired, tradeSubType, status)
-      if (status == "FIELDINSPECTION" || status == "APPLIED") {
+
+      if (status == "FIELDINSPECTION") {
         if (tradeSubType == null) {
           toggleSnackbar(
             true,
@@ -374,6 +374,9 @@ class WorkFlowContainer extends React.Component {
 
           this.wfUpdate(label);
         }
+      }
+      if (status == "APPLIED") {
+        this.wfUpdate(label);
       }
     }
   };
@@ -569,7 +572,8 @@ class WorkFlowContainer extends React.Component {
       ProcessInstances,
       prepareFinalObject,
       dataPath,
-      moduleName
+      moduleName,
+      currentStatus
     } = this.props;
     const workflowContract =
       ProcessInstances &&
@@ -604,6 +608,7 @@ class WorkFlowContainer extends React.Component {
             contractData={workflowContract}
             dataPath={dataPath}
             moduleName={moduleName}
+            currentStatus={currentStatus}
           />}
       </div>
     );
@@ -613,9 +618,10 @@ class WorkFlowContainer extends React.Component {
 const mapStateToProps = state => {
   const { screenConfiguration } = state;
   const { preparedFinalObject } = screenConfiguration;
-  const { workflow } = preparedFinalObject;
+  const { workflow,Licenses } = preparedFinalObject;
   const { ProcessInstances } = workflow || [];
-  return { ProcessInstances, preparedFinalObject };
+  const currentStatus=get(Licenses,"[0].status","")
+  return { ProcessInstances, preparedFinalObject ,currentStatus};
 };
 
 const mapDispacthToProps = dispatch => {

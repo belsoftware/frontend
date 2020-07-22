@@ -80,10 +80,10 @@ class Footer extends React.Component {
             handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnNumber`, null);
             handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnDate`, null);
             break;
-            case 'APPLIED': 
+            case 'FIELDINSPECTION': 
            handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.tradeSubType`, null);
             break;
-            case 'FIELDINSPECTION':
+            case 'APPLIED':
               break;
         }
       
@@ -178,7 +178,8 @@ class Footer extends React.Component {
       dataPath,
       moduleName,
       state,
-      dispatch
+      dispatch,
+      currentStatus
     } = this.props;
     const { open, data, employeeList } = this.state;
     const { isDocRequired } = data;
@@ -318,6 +319,7 @@ class Footer extends React.Component {
           handleFieldChange={handleFieldChange}
           onButtonClick={onDialogButtonClick}
           dataPath={dataPath}
+          currentStatus={currentStatus}
         />
       </div>
     );
