@@ -550,16 +550,18 @@ export const download = (receiptQueryString, mode = "download" ,configKey = "con
         { key: "key", value: configKey },
         { key: "tenantId", value: receiptQueryString[1].value.split('.')[0] }
       ]
+      var payments = [];
       if(payloadReceiptDetails&&payloadReceiptDetails.Payments&&payloadReceiptDetails.Payments.length==0){
         console.log("Could not find any receipts");   
         return;
       }
+      payments.push(payloadReceiptDetails.Payments[0]);
       const oldFileStoreId=get(payloadReceiptDetails.Payments[0],"fileStoreId")
       if(oldFileStoreId){
         downloadReceiptFromFilestoreID(oldFileStoreId,mode)
       }
      else{
-      httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Payments: payloadReceiptDetails.Payments }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
+      httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Payments: payments }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
         .then(res => {
           res.filestoreIds[0]
           if(res&&res.filestoreIds&&res.filestoreIds.length>0){
@@ -577,6 +579,63 @@ export const download = (receiptQueryString, mode = "download" ,configKey = "con
   }
 }
 
+
+export const downloadAppFeeReceipt = (receiptQueryString, mode = "download" ,configKey = "consolidatedreceipt" , state) => {
+  if(state && process.env.REACT_APP_NAME === "Citizen" && configKey === "consolidatedreceipt"){
+    const uiCommonPayConfig = get(state.screenConfiguration.preparedFinalObject , "commonPayInfo");
+    configKey = get(uiCommonPayConfig, "receiptKey")
+  }
+  const FETCHRECEIPT = {
+    GET: {
+      URL: "/collection-services/payments/_search",
+      ACTION: "_get",
+    },
+  };
+  const DOWNLOADRECEIPT = {
+    GET: {
+      URL: "/pdf-service/v1/_create",
+      ACTION: "_get",
+    },
+  };
+  try {
+    httpRequest("post", FETCHRECEIPT.GET.URL, FETCHRECEIPT.GET.ACTION, receiptQueryString).then((payloadReceiptDetails) => {
+      const queryStr = [
+        { key: "key", value: configKey },
+        { key: "tenantId", value: receiptQueryString[1].value.split('.')[0] }
+      ]
+      if(payloadReceiptDetails&&payloadReceiptDetails.Payments&&payloadReceiptDetails.Payments.length==0){
+        console.log("Could not find any receipts");   
+        return;
+      }
+      var payments = [];
+      if(payloadReceiptDetails&&payloadReceiptDetails.Payments&&payloadReceiptDetails.Payments.length>1){
+        payments.push(payloadReceiptDetails.Payments[1]);
+      }
+      else{
+        payments.push(payloadReceiptDetails.Payments[0]);
+      }
+      const oldFileStoreId=get(payments,"fileStoreId")
+      if(oldFileStoreId){
+        downloadReceiptFromFilestoreID(oldFileStoreId,mode)
+      }
+     else{
+      httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Payments: payments }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
+        .then(res => {
+          res.filestoreIds[0]
+          if(res&&res.filestoreIds&&res.filestoreIds.length>0){
+            res.filestoreIds.map(fileStoreId=>{
+              downloadReceiptFromFilestoreID(fileStoreId,mode)
+            })          
+          }else{
+            console.log("Error In Receipt Download");        
+          }         
+        });
+      }
+    })
+  } catch (exception) {
+    alert('Some Error Occured while downloading Receipt!');
+  }
+}
 
 export const downloadBill = async (consumerCode ,tenantId ,configKey = "consolidatedbill",url = "egov-searcher/bill-genie/billswithaddranduser/_get") => {
   const searchCriteria = {
