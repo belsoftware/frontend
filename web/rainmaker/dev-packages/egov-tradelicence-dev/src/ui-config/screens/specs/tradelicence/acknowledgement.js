@@ -590,6 +590,8 @@ const getAcknowledgementCard = (
       gotoHomeFooter
     };
   } else if (purpose === "pay" && status === "failure") {
+    const { Licenses } = state.screenConfiguration.preparedFinalObject;
+    const businessService = Licenses[0].businessService;
     return {
       header: getCommonContainer({
         header: getCommonHeader({
@@ -625,7 +627,7 @@ const getAcknowledgementCard = (
           })
         }
       },
-      paymentFailureFooter: paymentFailureFooter(applicationNumber, tenant)
+      paymentFailureFooter: paymentFailureFooter(applicationNumber, tenant, businessService)
     };
   } else if (purpose === "mark" && status === "success") {
     return {
