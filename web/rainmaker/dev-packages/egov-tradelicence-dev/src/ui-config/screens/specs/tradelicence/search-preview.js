@@ -192,6 +192,11 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
       );
     }
 
+    get(data, "Licenses[0].tradeLicenseDetail.subOwnerShipCategory").split(
+      "."
+    )[0] === "INDIVIDUAL"
+      ? setMultiOwnerForSV(action, true)
+      : setMultiOwnerForSV(action, false);
     const businessService = get(
       state.screenConfiguration.preparedFinalObject,
       `Licenses[0].businessService`
