@@ -639,6 +639,7 @@ class ActionDialog extends React.Component {
                           //label="Date"
                           type="date"
                           required={true}
+                          InputProps={{ inputProps: { max: new Date().toISOString().slice(0,10)} }}
                           //format={'DD/MM/YYYY'}
                           // formatDate={(date) => moment(date).format('DD/MM/YYYY')}
                           InputLabelProps={{
