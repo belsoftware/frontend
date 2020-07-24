@@ -19,12 +19,12 @@ export const callPGService = async (state, dispatch) => {
     state,
     "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].businessService"
   );
-  // const businessService = getQueryArg(window.location.href, "businessService"); businessService
+  const bservice = getQueryArg(window.location.href, "businessService"); businessService
   let callbackUrl = `${
     process.env.NODE_ENV === "production"
       ? `${window.origin}/citizen`
       : window.origin
-  }/egov-common/paymentRedirectPage`;
+  }/egov-common/paymentRedirectPage?businessService=${bservice}`;
 
   const { screenConfiguration = {} } = state;
   const { preparedFinalObject = {} } = screenConfiguration;

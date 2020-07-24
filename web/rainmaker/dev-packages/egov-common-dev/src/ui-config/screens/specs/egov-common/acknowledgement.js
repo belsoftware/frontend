@@ -121,7 +121,7 @@ const getAcknowledgementCard = (
                     })
                 }
             },
-            paymentFooter: paymentFooter(state,consumerCode, tenant, status)
+            paymentFooter: paymentFooter(state,consumerCode, tenant, status,businessService)
         };
     } else if (status === "failure") {
         return {
@@ -142,7 +142,7 @@ const getAcknowledgementCard = (
                     })
                 }
             },
-            paymentFooter: paymentFooter(state,consumerCode, tenant,status)
+            paymentFooter: paymentFooter(state,consumerCode, tenant,status,businessService)
         };
     }
 };
