@@ -30,7 +30,7 @@ import {
 import { getSearchResults } from "egov-tradelicence/ui-utils/commons";
 import DatePicker from "material-ui/DatePicker";
 import TextField from '@material-ui/core/TextField';
-
+import get from "lodash/get";
 
 const styles = theme => ({
 
@@ -144,7 +144,7 @@ class ActionDialog extends React.Component {
       onButtonClick,
       dialogData,
       dataPath,
-      currentStatus
+      state
     } = this.props;
     const {
       buttonLabel,
@@ -174,16 +174,22 @@ class ActionDialog extends React.Component {
     } else {
       assigneePath = `${dataPath}.assignee[0]`;
     }
-    console.log("currentStatus ", currentStatus);
-
+    console.log("Assignee path ", assigneePath);
+    let isFieldInspector = false;
     for (var i = 0; i < userInfo1.roles.length; i++) {
       if (userInfo1.roles[i].code === 'TL_APPROVER') {
-
+        isFieldInspector = true;
       }
 
     }
-
-    switch (currentStatus) {
+  console.log("state>>>>",state);
+  const status = get(
+    state.screenConfiguration.preparedFinalObject,
+    `Licenses[0].status`
+  );
+  console.log("status>>>",status);
+    console.log("Is field inspector", isFieldInspector);
+    switch (status) {
       case "APPLIED":
         return (
           <Dialog
@@ -737,8 +743,80 @@ class ActionDialog extends React.Component {
           </Dialog>
         );
         break;
+        case "PENDINGPAYMENT":
+          return (
+            <Dialog
+              fullScreen={fullscreen}
+              open={open}
+              onClose={onClose}
+              maxWidth={false}
+              style={{ zIndex: 2000 }}
+            >
+              <DialogContent
+                children={
+                  <Container
+                    children={
+                      <Grid
+                        container="true"
+                        spacing={12}
+                        marginTop={16}
+                        className="action-container"
+                      >
+                      
+                        <Grid
+                          item
+                          sm={2}
+                          style={{
+                            textAlign: "right",
+                            cursor: "pointer",
+                            position: "absolute",
+                            right: "16px",
+                            top: "16px"
+                          }}
+                          onClick={onClose}
+                        >
+                          <CloseIcon />
+                        </Grid>
+                     
+  
+                        <Grid item sm="12">
+                          
+                          
+                          
+                          <Grid sm={12} style={{ textAlign: "right" }} className="bottom-button-container">
+                            <Button
+                              variant={"contained"}
+                              color={"primary"}
+                              style={{
+                                minWidth: "200px",
+                                height: "48px"
+                              }}
+                              className="bottom-button"
+                              onClick={() =>
+                                onButtonClick(buttonLabel, isDocRequired)
+                              }
+                            >
+                              <LabelContainer
+                                labelName={getButtonLabelName(buttonLabel)}
+                                labelKey={
+                                  moduleName
+                                    ? `WF_${moduleName.toUpperCase()}_${buttonLabel}`
+                                    : ""
+                                }
+                              />
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    }
+                  />
+                }
+              />
+            </Dialog>
+          );
+          break;
     }
-
+ 
 
 
   }
