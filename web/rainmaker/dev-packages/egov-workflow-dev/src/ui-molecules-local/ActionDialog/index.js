@@ -815,6 +815,77 @@ class ActionDialog extends React.Component {
             </Dialog>
           );
           break;
+          default:
+            return (
+              <Dialog
+                fullScreen={fullscreen}
+                open={open}
+                onClose={onClose}
+                maxWidth={false}
+                style={{ zIndex: 2000 }}
+              >
+                <DialogContent
+                  children={
+                    <Container
+                      children={
+                        <Grid
+                          container="true"
+                          spacing={12}
+                          marginTop={16}
+                          className="action-container"
+                        >
+                        
+                          <Grid
+                            item
+                            sm={2}
+                            style={{
+                              textAlign: "right",
+                              cursor: "pointer",
+                              position: "absolute",
+                              right: "16px",
+                              top: "16px"
+                            }}
+                            onClick={onClose}
+                          >
+                            <CloseIcon />
+                          </Grid>
+                       
+    
+                          <Grid item sm="12">
+                            
+                            
+                            
+                            <Grid sm={12} style={{ textAlign: "right" }} className="bottom-button-container">
+                              <Button
+                                variant={"contained"}
+                                color={"primary"}
+                                style={{
+                                  minWidth: "200px",
+                                  height: "48px"
+                                }}
+                                className="bottom-button"
+                                onClick={() =>
+                                  onButtonClick(buttonLabel, isDocRequired)
+                                }
+                              >
+                                <LabelContainer
+                                  labelName={getButtonLabelName(buttonLabel)}
+                                  labelKey={
+                                    moduleName
+                                      ? `WF_${moduleName.toUpperCase()}_${buttonLabel}`
+                                      : ""
+                                  }
+                                />
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      }
+                    />
+                  }
+                />
+              </Dialog>
+            );
     }
  
 
