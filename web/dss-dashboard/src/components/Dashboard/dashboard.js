@@ -201,11 +201,11 @@ class Dashboard extends Component {
           needHash={false}
           orderBy={"rank"}
           order={(_.get(newData[0], 'rank') === 1 || false) ? 'asc' : 'desc'}
-          tableType='ULB'
+          tableType='CB'
           noPage={false}
           needSearch={true}
           needExport={true}
-          excelName={"All ULBs"}
+          excelName={"All CBs"}
 
         />
       </Cards >)

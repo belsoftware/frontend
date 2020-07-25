@@ -29,6 +29,8 @@ for(var i=0; i<localVal.length;i++){
         break;        
     } 
 }
+
+//console.log("Hey mdms ",tempDDRs,tempDRRsObj);
 return {
     label: "DDRs",
     type: "dropdown",
@@ -37,8 +39,8 @@ return {
     tentantLogo : tenantLogo,
     tenantName : tenantName,
     corpName : corpName,
-    ULBS :{
-        label: "ULBS",
+    CBS :{
+        label: "CBS",
         label_locale: "DSS_ULBS",
         type: "dropdown",
         values : tempULBS

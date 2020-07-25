@@ -126,7 +126,7 @@
 //     let svgicon;
 //     if (logo === "District") {
 //       svgicon = districts_icon;
-//     } else if (logo === "ULBS") {
+//     } else if (logo === "CBS") {
 //       svgicon = ulbs_icon;
 //     }
 //     return (
@@ -258,7 +258,7 @@ class MultipleSelects extends Component {
     let svgicon;
     if (logo === "DDRs") {
       svgicon = districts_icon;
-    } else if (logo === "ULBS") {
+    } else if (logo === "CBS") {
       svgicon = ulbs_icon;
     }
 

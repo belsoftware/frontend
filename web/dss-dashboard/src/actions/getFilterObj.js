@@ -23,15 +23,19 @@ export default function getFilterObj(GFilterData, mdmsData, page) {
         }
     }
 
-    if (newGFilterData && newGFilterData['ULBS'] && newGFilterData['ULBS'].length > 0) {
+    if (newGFilterData && newGFilterData['CBS'] && newGFilterData['CBS'].length > 0) {
 
-        for (var i = 0; i < newGFilterData['ULBS'].length; i++) {
+        for (var i = 0; i < newGFilterData['CBS'].length; i++) {
             let tenent = `${localStorage.getItem('tenant-id')}` ? (`${localStorage.getItem('tenant-id')}`).split('.')[0] : ''
-            tempValue.push(tenent + '.' + newGFilterData['ULBS'][i].toLowerCase());
+            //tempValue.push(tenent + '.' + newGFilterData['CBS'][i].toLowerCase());
+            let splitOnSpace = newGFilterData['CBS'][i].split(" ")
+            tempValue.push(tenent + '.' + splitOnSpace[splitOnSpace.length-1].toLowerCase());
         }
         filters['tenantId'] = tempValue;
     }
 
+    //console.log("Hey check the filter data", filters);
+    
     if (newGFilterData && newGFilterData['duration'] && Object.keys(_.get(newGFilterData, 'duration.value')).length > 0) {
         filters['duration'] = newGFilterData['duration']['value'];
         let startDate = _.get(newGFilterData, 'duration.value.startDate') * 1000;

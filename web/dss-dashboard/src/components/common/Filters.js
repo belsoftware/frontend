@@ -50,8 +50,8 @@ export default class Filters extends React.Component{
 				<ReactMultiSelectCheckboxes value="0" placeholderButtonLabel="All Districts" options={districtoptions} />	
   			</div>
   			<div className="col-md-2 filterEach">
-  				<label>ULBS</label>				
-				<ReactMultiSelectCheckboxes value="All ULBS" options={ulboptions} />
+  				<label>CBS</label>				
+				<ReactMultiSelectCheckboxes value="All CBs" options={ulboptions} />
   			</div>
   			<div className="col-md-2 filterEach">
   				<label>Services</label>				

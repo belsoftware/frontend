@@ -121,7 +121,7 @@ class CheckboxesTags extends React.Component {
         let svgicon;
         if (logo === "DDRs") {
             svgicon = districts_icon;
-        } else if (logo === "ULBS" || "Wards") {
+        } else if (logo === "CBS" || "Wards") {
             svgicon = ulbs_icon;
         }
 
@@ -133,11 +133,11 @@ class CheckboxesTags extends React.Component {
                     <FormControl className={classes.formControl} style={isMobile?{width:"100%"}:{}} >
                         {/* <InputLabel htmlFor="select-multiple-checkbox">{label || 'Select'}</InputLabel> */}
                         <div className={classes.list}>
-                            {/* <div>
+                            <div>
                                 <SVG src={svgicon} className={classes.CloseButton} >
 
                                 </SVG>
-                            </div> */}
+                            </div>
 
                             {
                                 this.props.type === 'Wards' ? <Autocomplete

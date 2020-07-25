@@ -1,9 +1,18 @@
+//var getUrl = window.location;
+// import logo from '../images/';
+
 const configs = {
+    //'BASE_URL': getUrl.origin,
+    // 'BASE_URL': 'http://172.17.22.45:3333',
+
+    // 'BASE_URL': 'http://localhost:3333',
     'DEV_URL': "http://localhost:3000/url",
     'DEMO_API_URL': "",
     'BASE_URL': '/dashboard-analytics',
     'UPLOAD_URL': '',
     'POWERED_BY': 'Tarento',
+    // "APP_LOGO": logo,
+    // "APP_LOGO_1X": logo,
     'APP_NAME': '/dashboard/',
     'FILE_UPLOAD':'/filestore/v1/files',
     'FETCH_FILE':'/filestore/v1/files/url',
@@ -15,9 +24,11 @@ const configs = {
                     {'dashboard':null},
                     {'propertytax':{'services_name':'Property Tax','filterKey':'PT'}},
                     {'tradelicense':{'services_name':'Trade licence','filterKey':'TL'}},
+                    {'mcollect':{'services_name':'M Collect','filterKey':'MC'}},
                     {'pgr':{'services_name':'PGR','filterKey':'PGR'}},
                     {'ws':{'services_name':'W&S','filterKey':'W&S'}}
                     ],
-    'SERVICES': ["Property Tax", "Trade licence","PGR"]
+    'SERVICES': ["Trade licence", "M Collect"]
+    //'SERVICES': ["Property Tax", "Trade licence","PGR", "M Collect"]
 }
 export default configs;

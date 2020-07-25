@@ -38,10 +38,17 @@ class PerformanceChart extends React.Component {
   }
 
   componentDidMount() {
+    // let filters = {};
+    // this.callRequest(this.props, filters);
     this.callAPI();
   }
   handleClick(visualCode) {
+    /*this.setState({
+      IsOpen: true
+    })*/
     this.props.setViewAll(visualCode);
+    //let codekey = _.chain(this.props).get('chartData').first().get("id").value();
+    //this.props.history.push(`/${this.state.page}/${codekey}`)
   }
 
   closeDialogue() {
@@ -51,6 +58,7 @@ class PerformanceChart extends React.Component {
   }
   renderCard(data) {
     if (data && data.length > 0) {
+      // let { order } = this.props;
       let columnData = [];
       columnData.push({ id: 'rank', numeric: true, stickyHeader: false, disablePadding: false, label: 'Rank' })
       columnData.push({ id: 'ULBs', numeric: true, stickyHeader: false, disablePadding: false, label: 'ULBs' })
@@ -77,7 +85,7 @@ class PerformanceChart extends React.Component {
           noPage={false}
           needSearch={true}
           needExport={true}
-          excelName={"All ULBs"}
+          excelName={"ALL CBs"}
 
         />
       </Cards >)
@@ -98,6 +106,8 @@ class PerformanceChart extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
+    // let filters = {};
+    // this.callRequest(nextProps, nextProps.filters);
   }
   render() {
     let { strings } = this.props;
@@ -152,7 +162,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    APITransport: APITransport
+    APITransport: APITransport,
+    // updateFilterData: updateGlobalFilterData
   }, dispatch)
 }
 export default withRouter(withStyles(style)(connect(mapStateToProps, mapDispatchToProps)(PerformanceChart)));
