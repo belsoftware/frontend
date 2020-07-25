@@ -99,7 +99,7 @@ const fetchBill = async (action, state, dispatch, consumerCode, tenantId, billBu
         }
     }
 
-    if (get(totalAmount, "totalAmount") === undefined) {
+    if (get(totalAmount, "totalAmount") === undefined || get(totalAmount, "totalAmount") === 0) {
         const buttonJsonpath = paybuttonJsonpath + `${process.env.REACT_APP_NAME === "Citizen" ? "makePayment" : "generateReceipt"}`;
         dispatch(handleField("pay", buttonJsonpath, "props.disabled", true));
         dispatch(handleField("pay", radioButtonJsonPath, "props.buttons[1].disabled", true));
