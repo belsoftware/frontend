@@ -59,8 +59,9 @@ class PaymentRedirect extends Component {
       let consumerCode = get(pgUpdateResponse, "Transaction[0].consumerCode");
       let tenantId = get(pgUpdateResponse, "Transaction[0].tenantId");
       if (get(pgUpdateResponse, "Transaction[0].txnStatus") === "FAILURE") {
+        const bservice = getQueryArg(window.location.href, "businessService"); 
         this.props.setRoute(
-          `/egov-common/acknowledgement?status=${"failure"}&consumerCode=${consumerCode}&tenantId=${tenantId}`
+          `/egov-common/acknowledgement?status=${"failure"}&consumerCode=${consumerCode}&tenantId=${tenantId}&businessService=${bservice}`
         );
       } else {
         const srcQuery=`?tenantId=${tenantId}&consumerCodes=${consumerCode}`
@@ -86,7 +87,7 @@ class PaymentRedirect extends Component {
             const details = commonPayDetails.filter(item => item.code === "DEFAULT");
             prepareFinalObject("commonPayInfo" , details);
           }
-          this.props.setRoute(`/egov-common/acknowledgement?status=${"success"}&consumerCode=${consumerCode}&tenantId=${tenantId}&receiptNumber=${transactionId}&businessService=${businessService}`
+          this.props.setRoute(`/egov-common/acknowledgement?status=${"success"}&consumerCode=${consumerCode}&tenantId=${tenantId}&receiptNumber=${transactionId}`
           );
       })
       }

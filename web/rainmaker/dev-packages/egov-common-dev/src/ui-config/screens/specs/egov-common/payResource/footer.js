@@ -19,7 +19,7 @@ export const callPGService = async (state, dispatch) => {
     state,
     "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].businessService"
   );
-  const bservice = getQueryArg(window.location.href, "businessService"); businessService
+  const bservice = getQueryArg(window.location.href, "businessService"); 
   let callbackUrl = `${
     process.env.NODE_ENV === "production"
       ? `${window.origin}/citizen`
@@ -56,6 +56,7 @@ export const callPGService = async (state, dispatch) => {
     amountPaid: amtToPay
   });
   try {
+    console.log("callback url ",callbackUrl);
     const requestBody = {
       Transaction: {
         tenantId,
@@ -195,10 +196,9 @@ export const callPGService = async (state, dispatch) => {
                                             value: gatewayParam.checksum,
                                             type: 'hidden',
                                           }))
-          console.log("Form data", newForm);
           $(document.body).append(newForm);
+          console.log("Form data", newForm);
           newForm.submit();
-  
         }catch (e) {
           console.log("Error in payment redirect ",e);
           window.location = redirectionUrl;
