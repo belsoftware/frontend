@@ -16,7 +16,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 import isEmpty from "lodash/isEmpty";
 import "./index.css";
-let  status=null
+let status =null
 class Footer extends React.Component {
   state = {
     open: false,
@@ -61,7 +61,7 @@ class Footer extends React.Component {
 
   openActionDialog = async item => {
     const { handleFieldChange, setRoute, dataPath } = this.props;
-    console.log("handleFieldChange", status)
+    console.log("handleFieldChange",handleFieldChange)
     let employeeList = [];
 
     if (dataPath === "BPA") {
@@ -70,26 +70,20 @@ class Footer extends React.Component {
     } else {
       handleFieldChange(`${dataPath}[0].comment`, "");
       handleFieldChange(`${dataPath}[0].assignee`, []);
-      let userInfo = localStorage.getItem("user-info");
-      userInfo = JSON.parse(userInfo);
-
-     
-
-        switch(status){
-          case 'PENDINGAPPROVAL':
-            handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnNumber`, null);
-            handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnDate`, null);
-            break;
-            case 'FIELDINSPECTION': 
-           handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.tradeSubType`, null);
-            break;
-            case 'APPLIED':
-              break;
-        }
-      
-
-      
-      
+     // handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.tradeSubType`, []);
+     console.log("in footer>>>",status)
+     switch(status){
+      case 'PENDINGAPPROVAL':
+        handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnNumber`, null);
+        handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnDate`, null);
+        break;
+        case 'FIELDINSPECTION': 
+       handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.tradeSubType`, null);
+        break;
+        case 'APPLIED':
+          break;
+    }
+   
     }
 
     if (item.isLast) {
@@ -178,8 +172,7 @@ class Footer extends React.Component {
       dataPath,
       moduleName,
       state,
-      dispatch,
-      currentStatus
+      dispatch
     } = this.props;
     const { open, data, employeeList } = this.state;
     const { isDocRequired } = data;
@@ -191,17 +184,18 @@ class Footer extends React.Component {
           labelName: { buttonLabel },
           labelKey: `WF_${moduleName.toUpperCase()}_${buttonLabel}`,
           link: () => {
-            (moduleName === "NewTL" || moduleName === "EDITRENEWAL") && buttonLabel === "APPLY" ? onDialogButtonClick(buttonLabel, isDocRequired) :
-              this.openActionDialog(item);
+            (moduleName === "NewTL" || moduleName === "EDITRENEWAL" ) && buttonLabel==="APPLY" ? onDialogButtonClick(buttonLabel, isDocRequired) : 
+            this.openActionDialog(item);
           }
         };
       });
 
     if (moduleName === "NewTL") {
-      status = get(
+       status = get(
         state.screenConfiguration.preparedFinalObject,
         `Licenses[0].status`
       );
+      
       const applicationType = get(
         state.screenConfiguration.preparedFinalObject,
         `Licenses[0].applicationType`
@@ -242,11 +236,11 @@ class Footer extends React.Component {
         state.screenConfiguration.preparedFinalObject,
         `Licenses[0].validTo`
       );
-      const now = Date.now();
-      const renewalPeriod = validTo - now;
+      const now=Date.now();
+      const renewalPeriod=validTo-now;
 
-      if (rolecheck && (status === "APPROVED" || status === "EXPIRED") &&
-        renewalPeriod <= 7889400000) {
+      if(rolecheck && (status === "APPROVED" || status === "EXPIRED") &&
+       renewalPeriod<=7889400000 ){
         const editButton = {
           label: "Edit",
           labelKey: "WF_TL_RENEWAL_EDIT_BUTTON",
@@ -260,32 +254,32 @@ class Footer extends React.Component {
             );
           }
         };
-
+        
         const submitButton = {
           label: "Submit",
           labelKey: "WF_TL_RENEWAL_SUBMIT_BUTTON",
           link: () => {
             this.renewTradelicence(financialYear, tenantId);
           }
-        };
-        if (responseLength > 1) {
-          if (applicationType !== "NEW") {
+        };    
+        if(responseLength > 1 ){
+          if(applicationType !== "NEW"){
             downloadMenu && downloadMenu.push(editButton);
             downloadMenu && downloadMenu.push(submitButton);
           }
 
         }
-        else if (responseLength === 1) {
-
-          downloadMenu && downloadMenu.push(editButton);
-          downloadMenu && downloadMenu.push(submitButton);
-        }
-
-
+        else if(responseLength === 1){
+         
+            downloadMenu && downloadMenu.push(editButton);
+            downloadMenu && downloadMenu.push(submitButton);
+          }
 
 
-      }
+        
+      
     }
+  }
     const buttonItems = {
       label: { labelName: "Take Action", labelKey: "WF_TAKE_ACTION" },
       rightIcon: "arrow_drop_down",
@@ -319,7 +313,7 @@ class Footer extends React.Component {
           handleFieldChange={handleFieldChange}
           onButtonClick={onDialogButtonClick}
           dataPath={dataPath}
-          currentStatus={currentStatus}
+          state={state}
         />
       </div>
     );

@@ -197,24 +197,24 @@ class WorkFlowContainer extends React.Component {
       window.location.href,
       "applicationNumber"
     );
-    if (moduleName === "NewWS1" || moduleName === "NewSW1") {
-      data = data[0];
-      data.assignees = [];
-      if (data.assignee) {
-        data.assignee.forEach(assigne => {
-          data.assignees.push({
-            uuid: assigne
+      if (moduleName === "NewWS1" || moduleName === "NewSW1") {
+        data = data[0];
+        data.assignees = [];
+        if (data.assignee) {
+          data.assignee.forEach(assigne => {
+            data.assignees.push({
+              uuid: assigne
+            })
           })
-        })
+        }
+        data.processInstance = {
+          documents: data.wfDocuments,
+          assignes: data.assignees,
+          comment: data.comment,
+          action: data.action
+        }
+        data.waterSource = data.waterSource + "." + data.waterSubSource;
       }
-      data.processInstance = {
-        documents: data.wfDocuments,
-        assignes: data.assignees,
-        comment: data.comment,
-        action: data.action
-      }
-      data.waterSource = data.waterSource + "." + data.waterSubSource;
-    }
 
     if (moduleName === "NewSW1") {
       dataPath = "SewerageConnection";
@@ -305,38 +305,7 @@ class WorkFlowContainer extends React.Component {
 
     set(data, `${appendToPath}action`, label);
 
-    let tradeSubType = null;
-    let cbrnDate = null;
-    let cbrnNumber = null;
-    const status = get(
-      preparedFinalObject,
-      `Licenses[0].status`,
-      []
-    );
-    console.log("status", status)
-    if (status == "FIELDINSPECTION") {
-      tradeSubType = get(
-        preparedFinalObject,
-        `Licenses[0].tradeLicenseDetail.additionalDetail.tradeSubType`,
-        //"screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.tradeSubType",
-        []
-      );
-    } else {
-      cbrnDate = get(
-        preparedFinalObject,
-        `Licenses[0].tradeLicenseDetail.additionalDetail.cbrnDate`,
-        // "screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.cbrnDate",
-        []
-      );
-      cbrnNumber = get(
-        preparedFinalObject,
-        `Licenses[0].tradeLicenseDetail.additionalDetail.cbrnNumber`,
-        // "screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.cbrnNumber",
-        []
-      );
-    }
     if (isDocRequired) {
-
       const documents = get(data, "wfDocuments");
       if (documents && documents.length > 0) {
         this.wfUpdate(label);
@@ -348,36 +317,57 @@ class WorkFlowContainer extends React.Component {
         );
       }
     } else {
-
-      if (status == "FIELDINSPECTION") {
-        if (tradeSubType == null) {
-          toggleSnackbar(
-            true,
-            { labelName: "Please fill all mandatory fields !", labelKey: "ERR_FILL_MANDATORY_FIELDS" },
-            "error"
+      const { Licenses } = preparedFinalObject;
+      const status = Licenses[0].status;
+    
+      switch(status){
+        case "FIELDINSPECTION":
+          const tradeSubType = get(
+            preparedFinalObject,
+            `Licenses[0].tradeLicenseDetail.additionalDetail.tradeSubType`,
+            //"screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.tradeSubType",
+            []
           );
-        }
-        else {
-
+          if (tradeSubType == null ||tradeSubType == "")  {
+            toggleSnackbar(
+              true,
+              { labelName: "Please fill all mandatory fields !", labelKey: "ERR_FILL_MANDATORY_FIELDS" },
+              "error"
+            );
+          }
+          else {
           this.wfUpdate(label);
-        }
-      }
-      if (status == "PENDINGAPPROVAL") {
-        if (cbrnDate == null || cbrnNumber == null) {
-          toggleSnackbar(
-            true,
-            { labelName: "Please fill all mandatory fields !", labelKey: "ERR_FILL_MANDATORY_FIELDS" },
-            "error"
+          }
+          break;
+        case "PENDINGAPPROVAL":
+         const  cbrnDate = get(
+            preparedFinalObject,
+            `Licenses[0].tradeLicenseDetail.additionalDetail.cbrnDate`,
+            // "screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.cbrnDate",
+            []
           );
-        }
-        else {
-
+         const cbrnNumber = get(
+            preparedFinalObject,
+            `Licenses[0].tradeLicenseDetail.additionalDetail.cbrnNumber`,
+            // "screenConfiguration.preparedFinalObject.Licenses[0].tradeLicenseDetail.additionalDetail.cbrnNumber",
+            []
+          );
+          if (cbrnDate == null || cbrnNumber == null||cbrnDate == ""|| cbrnNumber == "") {
+            toggleSnackbar(
+              true,
+              { labelName: "Please fill all mandatory fields !", labelKey: "ERR_FILL_MANDATORY_FIELDS" },
+              "error"
+            );
+          }
+          else {
           this.wfUpdate(label);
-        }
+          }
+          break;
+          default :
+          this.wfUpdate(label);
+
       }
-      if (status == "APPLIED") {
-        this.wfUpdate(label);
-      }
+      
     }
   };
 
@@ -572,8 +562,7 @@ class WorkFlowContainer extends React.Component {
       ProcessInstances,
       prepareFinalObject,
       dataPath,
-      moduleName,
-      currentStatus
+      moduleName
     } = this.props;
     const workflowContract =
       ProcessInstances &&
@@ -608,7 +597,6 @@ class WorkFlowContainer extends React.Component {
             contractData={workflowContract}
             dataPath={dataPath}
             moduleName={moduleName}
-            currentStatus={currentStatus}
           />}
       </div>
     );
@@ -618,10 +606,9 @@ class WorkFlowContainer extends React.Component {
 const mapStateToProps = state => {
   const { screenConfiguration } = state;
   const { preparedFinalObject } = screenConfiguration;
-  const { workflow,Licenses } = preparedFinalObject;
+  const { workflow } = preparedFinalObject;
   const { ProcessInstances } = workflow || [];
-  const currentStatus=get(Licenses,"[0].status","")
-  return { ProcessInstances, preparedFinalObject ,currentStatus};
+  return { ProcessInstances, preparedFinalObject };
 };
 
 const mapDispacthToProps = dispatch => {

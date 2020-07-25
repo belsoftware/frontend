@@ -28,12 +28,11 @@ const defaultValues = {
     ]
   }
 
-export const paymentFooter = (state,consumerCode, tenant,status) => {
-
+export const paymentFooter = (state,consumerCode, tenant,status,businessService) => {
     const uiCommonPayConfig = get(state.screenConfiguration.preparedFinalObject , "commonPayInfo" , defaultValues);
     const  buttons  = get(uiCommonPayConfig,"buttons");
     const redirectionURL = "/egov-common/pay";
-    const path = `${redirectionURL}?consumerCode=${consumerCode}&tenantId=${tenant}`
+    const path = `${redirectionURL}?consumerCode=${consumerCode}&tenantId=${tenant}&businessService=${businessService}`
     
     // gotoHome: {
     //     componentPath: "Button",

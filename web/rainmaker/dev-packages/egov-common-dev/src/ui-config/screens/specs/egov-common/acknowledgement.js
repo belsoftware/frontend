@@ -4,13 +4,14 @@ import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import set from "lodash/set";
 import get from "lodash/get";
 import { ifUserRoleExists } from "../utils";
-import {download} from  "../../../../ui-utils/commons";
+import {download,downloadAppFeeReceipt} from  "../../../../ui-utils/commons";
 import {getHeader} from "./pay";
 import './index.css';
 
 
 const downloadprintMenu=(state,applicationNumber,tenantId,uiCommonPayConfig)=>{
     const receiptKey = get(uiCommonPayConfig, "receiptKey")
+    const licence = get(state.screenConfiguration.preparedFinalObject , "Licenses");
       let receiptDownloadObject = {
         label: { labelName: "DOWNLOAD RECEIPT", labelKey: "COMMON_DOWNLOAD_RECEIPT" },
         link: () => {
@@ -18,6 +19,10 @@ const downloadprintMenu=(state,applicationNumber,tenantId,uiCommonPayConfig)=>{
                 { key: "receiptNumbers", value: applicationNumber },
                 { key: "tenantId", value: tenantId }
             ]
+            if(licence && licence[0].action && licence[0].action==="APPLY")
+             downloadAppFeeReceipt(receiptQueryString , "download" , "tradelicense-appl-receipt",state);
+          
+         else
             download(receiptQueryString , "download" , receiptKey, state);
           
         },
@@ -116,7 +121,7 @@ const getAcknowledgementCard = (
                     })
                 }
             },
-            paymentFooter: paymentFooter(state,consumerCode, tenant, status)
+            paymentFooter: paymentFooter(state,consumerCode, tenant, status,businessService)
         };
     } else if (status === "failure") {
         return {
@@ -137,7 +142,7 @@ const getAcknowledgementCard = (
                     })
                 }
             },
-            paymentFooter: paymentFooter(state,consumerCode, tenant,status)
+            paymentFooter: paymentFooter(state,consumerCode, tenant,status,businessService)
         };
     }
 };
