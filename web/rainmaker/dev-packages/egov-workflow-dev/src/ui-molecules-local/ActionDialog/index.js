@@ -77,7 +77,7 @@ const fieldConfig = {
     },
     placeholder: {
       labelName: "Enter the Trade SubType",
-      labelKey: "TL_NEW_TRADE_DETAILS_TRADE_SUBTYPE_PLACEHOLDER"
+      labelKey: "TL_NEW_TRADE_DETAILS_TRADE_SUBTYPE_DIALOG_PLACEHOLDER"
     },
     roleDefination: {
       rolePath: "user-info.roles",
