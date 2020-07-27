@@ -16,6 +16,7 @@ import { localStorageSet, localStorageGet } from "egov-ui-kit/utils/localStorage
 import "./index.css";
 
 const styles = {
+
   inputStyle: {
     color: "white !important",
     marginTop: "0px",
@@ -37,6 +38,7 @@ const styles = {
     marginLeft: 0,
     padding: 0,
     paddingLeft: 0,
+   
   },
   inputIconStyle: {
     margin: "0",
@@ -132,6 +134,7 @@ class ActionMenuComp extends Component {
     });
   };
   addMenuItems = (path, splitArray, menuItems, index, leftIcon) => {
+   
     let { role, actionListArr } = this.props;
     let actionList = actionListArr;
     //Check if this is last level menu
@@ -253,20 +256,20 @@ class ActionMenuComp extends Component {
     let activeItmem = localStorageGet("menuName");
     const showMenuItem = () => {
       const navigationURL = window.location.href.split("/").pop();
-      if (searchText.length == 0) {
-        return menuItems.map((item, index) => {
+      if (searchText.length == 0) {        
+        return menuItems.map((item, index) => {         
           let iconLeft;
           if (item.leftIcon) {
             iconLeft = item.leftIcon.split(":");
           }
-          if (!item.url) {
+          if (!item.url) {           
             return (
-              <div className="sideMenuItem">
-                {/* <Tooltip
-                  id={"menu-toggle-tooltip"}
-                  title={<Label defaultLabel={menuDrawerOpen ? "" : item.name} label={menuDrawerOpen ? "" : `ACTION_TEST_${item.name}`} />}
-                  placement="right"
-                > */}
+              <div className="sideMenuItem" >
+                 <Tooltip
+                      id={"menu-toggle-tooltip"}
+                      title={menuDrawerOpen ? "" :<Label labelStyle={{color : "white"}} defaultLabel={item.name} label={`ACTION_TEST_${item.name}`} />}
+                      placement="right"
+                    >
                 <MenuItem
                   key={index}
                   id={item.name.toUpperCase().replace(/[\s]/g, "-") + "-" + index}
@@ -299,23 +302,23 @@ class ActionMenuComp extends Component {
                     menuChange(pathParam);
                   }}
                 />
-                {/* </Tooltip> */}
+                </Tooltip>
               </div>
             );
           } else {
-            if (item.navigationURL && item.navigationURL !== "newTab") {
+            if (item.navigationURL && item.navigationURL !== "newTab") {              
               return (
                 <Link
                   style={{ textDecoration: "none" }}
                   key={index}
                   to={item.navigationURL === "/" ? `${item.navigationURL}` : `/${item.navigationURL}`}
                 >
-                  <div className={`sideMenuItem ${activeItmem == item.name ? "selected" : ""}`}>
-                    {/* <Tooltip
+                  <div className={`sideMenuItem ${activeItmem == item.name ? "selected" : ""}`} >
+                    <Tooltip
                       id={"menu-toggle-tooltip"}
-                      title={<Label defaultLabel={menuDrawerOpen ? "" : item.name} label={menuDrawerOpen ? "" : `ACTION_TEST_${item.name}`} />}
+                      title={menuDrawerOpen ? "" :<Label labelStyle={{color : "white"}} defaultLabel={item.name} label={`ACTION_TEST_${item.name}`} />}
                       placement="right"
-                    > */}
+                    >
                     <MenuItem
                       innerDivStyle={styles.defaultMenuItemStyle}
                       style={{ whiteSpace: "initial" }}
@@ -340,17 +343,18 @@ class ActionMenuComp extends Component {
                         />
                       }
                     />
-                    {/* </Tooltip> */}
+                    </Tooltip>
                   </div>
                 </Link>
               );
             } else {
+             
               return (
                 <a href={item.url} target="_blank">
                   <div className="sideMenuItem">
-                    {/* <Tooltip
+                  {/* <Tooltip
                       id={"menu-toggle-tooltip"}
-                      title={<Label defaultLabel={menuDrawerOpen ? "" : item.name} label={menuDrawerOpen ? "" : `ACTION_TEST_${item.name}`} />}
+                      title={menuDrawerOpen ? "" :<Label defaultLabel={item.name} label={`ACTION_TEST_${item.name}`} />}
                       placement="right"
                     > */}
                     <MenuItem
@@ -379,7 +383,7 @@ class ActionMenuComp extends Component {
             }
           }
         });
-      } else {
+      } else {        
         return (
           actionList &&
           actionList.map((item, index) => {
@@ -387,8 +391,8 @@ class ActionMenuComp extends Component {
             if (item.leftIcon) {
               iconLeft = item.leftIcon.split(":");
             }
-            if (item.path && item.url && item.displayName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
-              if (item.navigationURL) {
+            if (item.path && item.url && item.displayName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {              
+              if (item.navigationURL) {                
                 return (
                   <Link
                     style={{ textDecoration: "none" }}
@@ -396,11 +400,11 @@ class ActionMenuComp extends Component {
                     to={item.navigationURL === "/" ? `${item.navigationURL}` : `/${item.navigationURL}`}
                   >
                     <div className="sideMenuItem">
-                      {/* <Tooltip
-                        id={"menu-toggle-tooltip"}
-                        title={<Label defaultLabel={menuDrawerOpen ? "" : item.name} label={menuDrawerOpen ? "" : `ACTION_TEST_${item.name}`} />}
-                        placement="right"
-                      > */}
+                    {/* <Tooltip
+                      id={"menu-toggle-tooltip"}
+                      title={menuDrawerOpen ? "" :<Label defaultLabel={item.name} label={`ACTION_TEST_${item.name}`} />}
+                      placement="right"
+                    > */}
                       <MenuItem
                         innerDivStyle={styles.defaultMenuItemStyle}
                         style={{ whiteSpace: "initial" }}
@@ -485,11 +489,11 @@ class ActionMenuComp extends Component {
             </div>
           )}
           {path && (
-            // <Tooltip
-            //   id={"menu-toggle-tooltip"}
-            //   title={<Label defaultLabel={"Home"} label={menuDrawerOpen ? "" : "CS_HOME_HEADER_HOME"} />}
-            //   placement="right"
-            // >
+          //    <Tooltip
+          //    id={"menu-toggle-tooltip"}
+          //    title={menuDrawerOpen ? "" :<Label defaultLabel={item.name} label={`ACTION_TEST_${item.name}`} />}
+          //    placement="right"
+          //  >
             <div
               className="pull-right pointerCursor"
               onClick={() => {
@@ -500,7 +504,7 @@ class ActionMenuComp extends Component {
             >
               <Icon  className = "menu-label-style" name="home" action="action" />
             </div>
-            // </Tooltip>
+            //  </Tooltip>
           )}
 
           <div className="clearfix" />
@@ -508,11 +512,11 @@ class ActionMenuComp extends Component {
           <div style={{ paddingLeft: "-24px" }}>{showMenuItem()}</div>
           {toggleDrawer ? (
             <div className="sideMenuItem drawer-collapse-menu-item">
-              {/* <Tooltip
-                id={"menu-toggle-tooltip"}
-                title={<Label defaultLabel={"Expand Menu"} label={menuDrawerOpen ? "" : "COMMON_ACTION_TEST_EXPAND_MENU"} />}
-                placement="right"
-              > */}
+               {/* <Tooltip
+                      id={"menu-toggle-tooltip"}
+                      title={menuDrawerOpen ? "" :<Label defaultLabel={item.name} label={`ACTION_TEST_${item.name}`} />}
+                      placement="right"
+                    > */}
               <MenuItem
                 innerDivStyle={styles.defaultMenuItemStyle}
                 style={{ whiteSpace: "initial" }}
