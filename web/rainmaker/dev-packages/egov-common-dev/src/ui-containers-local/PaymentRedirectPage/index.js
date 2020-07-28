@@ -52,7 +52,7 @@ class PaymentRedirect extends Component {
     try {
       let pgUpdateResponse = await httpRequest(
         "post",
-        "pg-service/transaction/v1/_update" + txnQuery,
+        "pg-service/transaction/v1/_update?" + txnQuery,
         "_update",
         [],
         {}
