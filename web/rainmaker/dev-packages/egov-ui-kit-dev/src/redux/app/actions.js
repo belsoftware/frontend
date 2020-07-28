@@ -42,7 +42,7 @@ export const toggleSnackbarAndSetText = (open, message = {}, variant) => {
 export const fetchLocalizationLabel = (locale, module, tenantId) => {
   return async (dispatch) => {
     const commonModules =
-      "rainmaker-tl,rainmaker-common,rainmaker-hr,rainmaker-uc,rainmaker-dss";
+      "rainmaker-tl,rainmaker-common,rainmaker-hr,rainmaker-uc,rainmaker-dss,rainmaker-pgr,rainmaker-pt";
     try {
       const payload1 = await httpRequest(LOCALATION.GET.URL, LOCALATION.GET.ACTION, [
         { key: "module", value: commonModules },

@@ -45,13 +45,14 @@ class PaymentRedirect extends Component {
   componentDidMount = async () => {
     let { search } = this.props.location;
     const {reduxObj , prepareFinalObject} = this.props;
-    const txnQuery=search.split('&')[0].replace('eg_pg_txnid','transactionId');
+    console.log("search path ",search);
+    const txnQuery=search.split('&')[1].replace('eg_pg_txnid','transactionId');
     console.log(txnQuery,'txnQuery');
     
     try {
       let pgUpdateResponse = await httpRequest(
         "post",
-        "pg-service/transaction/v1/_update" + txnQuery,
+        "pg-service/transaction/v1/_update?" + txnQuery,
         "_update",
         [],
         {}
