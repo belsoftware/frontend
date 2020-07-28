@@ -45,7 +45,8 @@ class PaymentRedirect extends Component {
   componentDidMount = async () => {
     let { search } = this.props.location;
     const {reduxObj , prepareFinalObject} = this.props;
-    const txnQuery=search.split('&')[0].replace('eg_pg_txnid','transactionId');
+    console.log("search path ",search);
+    const txnQuery=search.split('&')[1].replace('eg_pg_txnid','transactionId');
     console.log(txnQuery,'txnQuery');
     
     try {
