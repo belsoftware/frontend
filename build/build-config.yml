@@ -44,9 +44,15 @@ config:
     - work-dir: web/dss-dashboard/
       dockerfile: web/dss-dashboard/docker/Dockerfile
       image-name: dss-dashboard
-      
+
 -   name: builds/frontend/common-screen
     build:
     - work-dir: web/egov-common-screen/
       dockerfile: web/egov-common-screen/docker/Dockerfile
       image-name: common-screen
+
+-   name: builds/frontend/demo
+    build:
+    - work-dir: web/rainmaker/
+      dockerfile: web/rainmaker/docker/demo/Dockerfile
+      image-name: citizen
