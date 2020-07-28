@@ -7,3 +7,8 @@ keystore/
 *.css
 *.lock
 web/rainmaker/yarn.lock
+web/rainmaker/dev-packages/egov-bpa-dev/src/ui-molecules-local/MapLocator/index.css
+web/rainmaker/dev-packages/egov-bpa-dev/src/ui-atoms-local/AutoSuggest/index.css
+web/rainmaker/dev-packages/egov-bpa-dev/src/ui-atoms-local/AutoSuggest/index.css
+web/rainmaker/dev-packages/egov-bpa-dev/src/ui-atoms-local/AutoSuggest/index.css
+web/rainmaker/dev-packages/egov-bpa-dev/src/ui-atoms-local/Checkbox/index.css

@@ -165,6 +165,7 @@ export const newCollectionDetailsCard = getCommonCard(
             xs: 12,
             sm: 6
           },
+          required: true,
           props: {
             style: {
               width: "100%",
@@ -182,7 +183,7 @@ export const newCollectionDetailsCard = getCommonCard(
               masterName: "BusinessService",
               moduleName: "BillingService"
             },
-            required: true,
+           
             visible: true,
             jsonPath: "Demands[0].businessService",
             sourceJsonPath: "applyScreenMdmsData.serviceCategories",
@@ -195,13 +196,16 @@ export const newCollectionDetailsCard = getCommonCard(
           },
           beforeFieldChange: async (action, state, dispatch) => {
             //Reset service type value, if any
+
+            console.info("before field change",action,"Action.value==",action.value,"serv type==",state.screenConfiguration.preparedFinalObject.Demands[0].serviceType);
             if(state.screenConfiguration.preparedFinalObject.Demands[0].serviceType){
+              console.info("inside if");
             dispatch(
               handleField(
                 "newCollection",
                 "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children.serviceType",
-               "props.value",
-                  null
+                 "props.value",
+                  []
               )
             );
               }
@@ -211,12 +215,16 @@ export const newCollectionDetailsCard = getCommonCard(
               "preparedFinalObject.applyScreenMdmsData.nestedServiceData",
               {}
             );
-            if (action.value) {
+            if (action.value) {  
+              console.info("Action value==",action.value) 
+             
               if (
                 serviceData[action.value] &&
                 serviceData[action.value].child &&
                 serviceData[action.value].child.length > 0
               ) {
+                console.info("some condns", serviceData[action.value], serviceData[action.value].child)                     
+                
                 dispatch(
                   prepareFinalObject(
                     "applyScreenMdmsData.serviceTypes",
@@ -232,6 +240,7 @@ export const newCollectionDetailsCard = getCommonCard(
                   )
                 );
               } else {
+                console.info("else condition :(")
                 dispatch(
                   handleField(
                     "newCollection",
@@ -253,41 +262,96 @@ export const newCollectionDetailsCard = getCommonCard(
             }
           }
         },
+
         serviceType: {
-          ...getSelectField({
+          uiFramework: "custom-containers",        
+          componentPath: "AutosuggestContainer",
+          jsonPath: "Demands[0].serviceType",
+          gridDefination: {
+            xs: 12,
+            sm: 6
+          },
+          required: true,
+          props: {
+            style: {
+              width: "100%",
+              cursor: "pointer"
+            },
             label: {
               labelName: "Service Type",
               labelKey: "UC_SERVICE_TYPE_LABEL"
+            },
+            placeholder: {
+              labelName: "Select service Type",
+              labelKey: "UC_SERVICE_TYPE_PLACEHOLDER"
             },
             localePrefix: {
               masterName: "BusinessService",
               moduleName: "BillingService"
             },
-            placeholder: {
-              labelName: "Select Service Type",
-              labelKey: "UC_SERVICE_TYPE_PLACEHOLDER"
-            },
-            required: true,
-            visible: false,
-            sourceJsonPath: "applyScreenMdmsData.serviceTypes",
+            
+            visible: true,
             jsonPath: "Demands[0].serviceType",
-            gridDefination: {
-              xs: 12,
-              sm: 6
+            sourceJsonPath: "applyScreenMdmsData.serviceTypes",
+            labelsFromLocalisation: true,
+            suggestions: [],
+            fullwidth: true,
+            inputLabelProps: {
+              shrink: true
             }
-          }),
+          },
           beforeFieldChange: async (action, state, dispatch) => {
-            const demandId = get(
-              state.screenConfiguration.preparedFinalObject,
-              "Demands[0].id",
-              null
-            );
-            if (!demandId && action.value) {
-              const taxHeads = setTaxHeadFields(action, state, dispatch);
-              console.log(taxHeads);
-            }
-          }
+                const demandId = get(
+                    state.screenConfiguration.preparedFinalObject,
+                    "Demands[0].id",
+                    null
+                  );
+                  if (!demandId && action.value) {
+                    const taxHeads = setTaxHeadFields(action, state, dispatch);
+                    console.log(taxHeads);
+                    console.info("selected subtype==",action.value);
+                    
+                  }         
+           }
         },
+
+
+
+        // serviceType: {
+        //   ...getSelectField({
+        //     label: {
+        //       labelName: "Service Type",
+        //       labelKey: "UC_SERVICE_TYPE_LABEL"
+        //     },
+        //     localePrefix: {
+        //       masterName: "BusinessService",
+        //       moduleName: "BillingService"
+        //     },
+        //     placeholder: {
+        //       labelName: "Select Service Type",
+        //       labelKey: "UC_SERVICE_TYPE_PLACEHOLDER"
+        //     },
+        //     required: true,
+        //     visible: false,
+        //     sourceJsonPath: "applyScreenMdmsData.serviceTypes",
+        //     jsonPath: "Demands[0].serviceType",
+        //     gridDefination: {
+        //       xs: 12,
+        //       sm: 6
+        //     }
+        //   }),
+        //   beforeFieldChange: async (action, state, dispatch) => {
+        //     const demandId = get(
+        //       state.screenConfiguration.preparedFinalObject,
+        //       "Demands[0].id",
+        //       null
+        //     );
+        //     if (!demandId && action.value) {
+        //       const taxHeads = setTaxHeadFields(action, state, dispatch);
+        //       console.log(taxHeads);
+        //     }
+        //   }
+        // },
         fromDate: getDateField({
           label: {
             labelName: "From Date",
