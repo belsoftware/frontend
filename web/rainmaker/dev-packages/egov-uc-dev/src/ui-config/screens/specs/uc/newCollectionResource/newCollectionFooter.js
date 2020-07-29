@@ -152,6 +152,12 @@ const createDemand = async (state, dispatch) => {
     }
 
   }
+ // if(state.screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].payerName==null||state.screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].payerName==""){
+    //console.log("Name>>>",state.screenConfiguration.preparedFinalObject.Demands[0].consumerName)
+    set(demands[0], "additionalDetails.consumerName", state.screenConfiguration.preparedFinalObject.Demands[0].consumerName);
+    set(demands[0], "additionalDetails.mobileNumber", state.screenConfiguration.preparedFinalObject.Demands[0].mobileNumber);
+ // }
+  
   // Making payer object as null if it is empty object, later will changge in component.
   if (Object.keys(demands[0].payer).length === 0) {
     demands[0].payer = null;
