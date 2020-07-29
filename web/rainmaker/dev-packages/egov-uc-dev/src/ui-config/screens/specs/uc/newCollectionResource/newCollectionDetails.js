@@ -19,7 +19,6 @@ import {setServiceCategory} from "../../utils"
 import get from "lodash/get";
 
 const tenantId = getTenantId();
-
 export const newCollectionDetailsCard = getCommonCard(
   {
     searchContainer: getCommonContainer(
@@ -367,7 +366,28 @@ export const newCollectionDetailsCard = getCommonCard(
           },
           required: true,
           pattern: getPattern("Date"),
-          jsonPath: "Demands[0].taxPeriodFrom"
+          jsonPath: "Demands[0].taxPeriodFrom",
+          beforeFieldChange: async (action, state, dispatch) => {            
+            if (action.value) {              
+              dispatch(
+                handleField(
+                  "newCollection",
+                  "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children.toDate",
+                  "props.disabled",
+                   false
+                )
+              );
+              dispatch(
+                handleField(
+                  "newCollection",
+                  "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children.toDate",
+                  "props.inputProps.min",
+                  action.value
+                )
+              );
+            }
+           
+          }
         }),
         toDate: getDateField({
           label: {
@@ -382,9 +402,16 @@ export const newCollectionDetailsCard = getCommonCard(
             xs: 12,
             sm: 6
           },
-          required: true,
+          required: true,         
+          props: {
+            disabled: true,            
+            // inputProps: {
+            //   max: new Date().toISOString().slice(0,10)
+            // }           
+          },
           pattern: getPattern("Date"),
-          jsonPath: "Demands[0].taxPeriodTo"
+          jsonPath: "Demands[0].taxPeriodTo",
+          
         }),
         dummyDiv: {
           uiFramework: "custom-atoms",
