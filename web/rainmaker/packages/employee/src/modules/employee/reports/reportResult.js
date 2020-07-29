@@ -13,12 +13,15 @@ import "datatables.net-dt";
 import "datatables.net-buttons-bs";
 import "datatables.net-responsive";
 import "datatables.net-responsive-dt";
+//import "datatables.net/js/jquery.dataTables.min.js"
+//import "datatables.net-buttons/js/dataTables.buttons.min.js"
 import JSZip from "jszip/dist/jszip";
 import get from "lodash/get";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import "datatables.net-buttons/js/buttons.html5.js"; // HTML 5 file export
 import "datatables.net-buttons/js/buttons.flash.js"; // Flash file export
+
 import "datatables.net-buttons/js/buttons.colVis.min.js";
 import { getResultUrl } from "./commons/url";
 import Label from "egov-ui-kit/utils/translationNode";
@@ -123,7 +126,7 @@ class ShowField extends Component {
         extend: "excel",
         text: "XLS",
         filename: _this.state.reportName,
-        title: reportTitle,
+        title:  _this.state.reportName,
         messageTop: tabLabel,
         footer: true,
         className: "report-excel-button",

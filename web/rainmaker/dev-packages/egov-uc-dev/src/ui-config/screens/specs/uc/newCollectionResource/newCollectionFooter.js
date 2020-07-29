@@ -80,6 +80,19 @@ const allDateToEpoch = (finalObj, jsonPaths) => {
 };
 
 const processDemand = async (state, dispatch) => {
+  //Check serviceType is present/not, user can change service category after that user maynot select service type
+    const myData = get(
+    state.screenConfiguration.preparedFinalObject,
+    "Demands[0].serviceType"
+  );
+ //If service type is present, then check whether it is an empty array,
+ //If its an empty array then validation function will fail, since its is expecting null
+ //So update state and make the service type to null, for validation to run properly
+ if(myData != undefined){
+  if(myData.length==0){
+     dispatch(prepareFinalObject("Demands[0].serviceType", null));
+  }
+ }
   const isFormValid = validateFields(
     "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children",
     state,

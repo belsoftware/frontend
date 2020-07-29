@@ -79,6 +79,17 @@ const editRenewalMoveToSuccess = (LicenseData, dispatch) => {
   );
 };
 
+const getAge = (dateString) =>{
+  var today = new Date();
+  var birthDate = new Date(dateString);
+  var age = today.getFullYear() - birthDate.getFullYear();
+  var m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+  }
+  return age;
+};
+
 export const generatePdfFromDiv = (action, applicationNumber) => {
   let target = document.querySelector("#custom-atoms-div");
   html2canvas(target, {
@@ -271,6 +282,26 @@ export const callBackForNext = async (state, dispatch) => {
       );
       return false; // to show the above message
     }
+    let dob = get(
+        state.screenConfiguration.preparedFinalObject,
+        "Licenses[0].tradeLicenseDetail.owners[0].dob"
+      ) 
+    let age = getAge(dob);
+    
+    if(age < 18){
+      dispatch(
+        toggleSnackbar(
+          true,
+          {
+            labelName: "Invalid DOB!",
+            labelKey: "ERR_INVALID_DOB"
+          },
+          "error"
+        )
+      );
+      return false;
+    }
+
     if (isFormValid && isOwnerShipValid) {
       isFormValid = await applyTradeLicense(state, dispatch, activeStep);
       if (!isFormValid) {
