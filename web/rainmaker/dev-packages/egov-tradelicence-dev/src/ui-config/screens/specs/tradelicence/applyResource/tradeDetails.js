@@ -18,7 +18,8 @@ import {
   setFilteredTradeTypes,
   getUniqueItemsFromArray,
   fillOldLicenseData,
-  getTradeTypeDropdownData
+  getTradeTypeDropdownData,
+  isOldLicenseExists
 } from "../../utils";
 import {
   prepareFinalObject as pFO,
@@ -29,7 +30,35 @@ import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-fra
 import get from "lodash/get";
 import filter from "lodash/filter";
 import "./index.css";
+import set from "lodash/set";
 
+
+const showDateBasedOnOldLicense = (state,dispatch,action) =>{
+  const oldLicenseNo = get(
+    state,
+    "screenConfiguration.preparedFinalObject.Licenses[0].oldLicenseNumber"
+  );
+  if(oldLicenseNo!=null && oldLicenseNo !=""){
+     dispatch(
+      handleField(
+        "apply",
+        "components.div.children.formwizardFirstStep.children.tradeDetails.children.cardContent.children.tradeDetailsConatiner.children.tradeCommencementDate",
+        "props.inputProps.min",
+        ""
+      )
+    );
+  }
+  else{
+    dispatch(
+      handleField(
+        "apply",
+        "components.div.children.formwizardFirstStep.children.tradeDetails.children.cardContent.children.tradeDetailsConatiner.children.tradeCommencementDate",
+        "props.inputProps.min",
+        getFinancialYearDates("yyyy-mm-dd").startDate
+      )
+    );
+  }
+};
 const tradeUnitCard = {
   uiFramework: "custom-containers",
   componentPath: "MultiItem",
@@ -1156,7 +1185,13 @@ export const tradeDetails = getCommonCard({
       },
       props:{
         className:"applicant-details-error",
-        disabled:getQueryArg(window.location.href, "action") === "EDITRENEWAL"? true:false
+        disabled:getQueryArg(window.location.href, "action") === "EDITRENEWAL"? true:false,
+       
+          inputProps: {
+            min: getFinancialYearDates("yyyy-mm-dd").startDate
+            
+          }
+        
       },
       placeholder: {
         labelName: "Enter Trade Commencement Date",
@@ -1164,8 +1199,15 @@ export const tradeDetails = getCommonCard({
       },
       required: true,
       pattern: getPattern("Date"),
-      jsonPath: "Licenses[0].commencementDate"
-    }),
+      jsonPath: "Licenses[0].commencementDate",
+      onClickDefination: {
+        action: "condition",
+        callBack: (state, dispatch,action) => {
+          showDateBasedOnOldLicense(state, dispatch,action);
+        }
+      }
+    }
+    ),
     tradeGSTNo: getTextField({
       label: {
         labelName: "Trade GST No.",
