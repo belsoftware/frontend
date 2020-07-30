@@ -31,8 +31,8 @@ class MyCity extends React.Component {
       population: item.population,
       malePopulation: item.malePopulation,
       femalePopulation: item.femalePopultion,
-      workingPopulation: item.workingPopulation,
-      literacyRate: item.literacyRate,
+      // workingPopulation: item.workingPopulation,
+      // literacyRate: item.literacyRate,
       languagesSpoken: item.languagesSpoken,
     }));
     return data[0];
