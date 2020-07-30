@@ -151,9 +151,19 @@ export const getRelationshipRadioButton = {
         value: "FATHER"
       },
       {
-        label: "Husband",
-        labelKey: "COMMON_RELATION_HUSBAND",
-        value: "HUSBAND"
+        labelName: "Mother",
+        labelKey: "COMMON_RELATION_MOTHER",
+        value: "MOTHER"
+      },
+      {
+        label: "Spouse",
+        labelKey: "COMMON_RELATION_SPOUSE",
+        value: "SPOUSE"
+      },
+      {
+        labelName: "Guardian",
+        labelKey: "COMMON_RELATION_GUARDIAN",
+        value: "GUARDIAN"
       }
     ],
     jsonPath:"Licenses[0].tradeLicenseDetail.owners[0].relationship",
@@ -162,7 +172,7 @@ export const getRelationshipRadioButton = {
   required: true,
   type: "array"
 };
-
+//Added by Minju Other Relationship as per UAT obsn from DGDE on 30/07/2020
 export const OwnerInfoCard = {
   uiFramework: "custom-containers",
   componentPath: "MultiItem",
@@ -266,9 +276,19 @@ export const OwnerInfoCard = {
                 value: "FATHER"
               },
               {
-                label: "Husband",
-                labelKey: "COMMON_RELATION_HUSBAND",
-                value: "HUSBAND"
+                labelName: "Mother",
+                labelKey: "COMMON_RELATION_MOTHER",
+                value: "MOTHER"
+              },
+              {
+                label: "Spouse",
+                labelKey: "COMMON_RELATION_SPOUSE",
+                value: "SPOUSE"
+              },
+              {
+                labelName: "Guardian",
+                labelKey: "COMMON_RELATION_GUARDIAN",
+                value: "GUARDIAN"
               }
             ],
             jsonPath:
@@ -541,13 +561,23 @@ export const ownerInfoInstitutional = {
               value: "FATHER"
             },
             {
-              label: "Husband",
-              labelKey: "COMMON_RELATION_HUSBAND",
-              value: "HUSBAND"
+              labelName: "Mother",
+              labelKey: "COMMON_RELATION_MOTHER",
+              value: "MOTHER"
+            },
+            {
+              label: "Spouse",
+              labelKey: "COMMON_RELATION_SPOUSE",
+              value: "SPOUSE"
+            },
+            {
+              labelName: "Guardian",
+              labelKey: "COMMON_RELATION_GUARDIAN",
+              value: "GUARDIAN"
             }
           ],
           jsonPath:
-            "FireNOCs[0].fireNOCDetails.applicantDetails.owners[0].relationship",
+          "Licenses[0].tradeLicenseDetail.owners[0].relationship",
           required: true
         },
         required: true,
