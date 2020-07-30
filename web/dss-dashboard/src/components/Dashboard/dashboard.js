@@ -176,7 +176,7 @@ class Dashboard extends Component {
     if (data && data.length > 0) {
       let columnData = [];
       columnData.push({ id: 'rank', numeric: true, stickyHeader: false, disablePadding: false, label: 'Rank' })
-      columnData.push({ id: 'ULBs', numeric: true, stickyHeader: false, disablePadding: false, label: 'ULBs' })
+      columnData.push({ id: 'ULBs', numeric: true, stickyHeader: false, disablePadding: false, label: 'CBs' })
       columnData.push({ id: 'TargetAchieved', numeric: true, stickyHeader: false, disablePadding: false, label: 'Target Achieved' })
       columnData.push({ id: 'status', numeric: true, stickyHeader: false, disablePadding: false, label: 'Status' })
       let newData = _.chain(data).map((rowData, i) => {
@@ -201,7 +201,7 @@ class Dashboard extends Component {
           needHash={false}
           orderBy={"rank"}
           order={(_.get(newData[0], 'rank') === 1 || false) ? 'asc' : 'desc'}
-          tableType='CB'
+          tableType='ULB'
           noPage={false}
           needSearch={true}
           needExport={true}
