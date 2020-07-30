@@ -78,7 +78,7 @@ class DateRange extends React.Component {
           value: {
             startDate: moment().startOf('week').unix(),
             endDate: moment().endOf('week').unix(),
-            interval: 'week'
+            interval: 'day'
           }
         }
       case 'THIS MONTH':
