@@ -6,11 +6,13 @@ import {
   convertDateToEpoch,
   getTextToLocalMapping
 } from "../../utils/index";
-import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { toggleSnackbar,toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { validateFields } from "../../utils";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
+//Added toggleSpinner for Search by Minju
 export const searchApiCall = async (state, dispatch) => {
+  dispatch(toggleSpinner());
   showHideTable(false, dispatch);
   let queryObject = [
     {
@@ -97,8 +99,9 @@ export const searchApiCall = async (state, dispatch) => {
         }
       }
     }
-
+    
     const response = await getSearchResults(queryObject);
+    
     try {
       
       let data = response.Licenses.map(item => ({
@@ -136,6 +139,7 @@ export const searchApiCall = async (state, dispatch) => {
           )} (${response.Licenses.length})`
         )
       );
+      dispatch(toggleSpinner());
       showHideTable(true, dispatch);
     } catch (error) {
       dispatch(toggleSnackbar(true, error.message, "error"));

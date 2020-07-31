@@ -120,6 +120,9 @@ class ShowField extends Component {
           doc.content[0].text.push({ text: "eChhawani System Reports\n\n", bold: true, fontSize: 20 });
           doc.content[0].text.push({ text: reportTitle, fontSize: 18 });
         },
+        exportOptions: {
+          columns: ':visible'
+        },
         className: "report-pdf-button",
       },
       {

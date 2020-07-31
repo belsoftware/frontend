@@ -114,20 +114,55 @@ const fetchBill = async (action, state, dispatch, consumerCode, tenantId, billBu
 
     dispatch(prepareFinalObject("ReceiptTemp[0].Bill[0].payer", "COMMON_OWNER"));
   
-    //added for consumer name
-    const Name = get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].additionalDetails.consumerName");
-    //console.log("payerName in pay>>>>",Name)
-    if(Name==""||Name==null){
-        dispatch(prepareFinalObject("ReceiptTemp[0].Bill[0].paidBy", get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].payerName")));
-        dispatch(prepareFinalObject("ReceiptTemp[0].Bill[0].payerMobileNumber", get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].mobileNumber")));
-    }
-    else{
+    
+    dispatch(prepareFinalObject("ReceiptTemp[0].Bill[0].paidBy", get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].payerName")));
+    dispatch(prepareFinalObject("ReceiptTemp[0].Bill[0].payerMobileNumber", get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].mobileNumber")));
+    //added for m-collect consumer name
+    if(get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].additionalDetails.consumerName")){
         dispatch(prepareFinalObject("ReceiptTemp[0].Bill[0].paidBy", get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].additionalDetails.consumerName"))); 
         dispatch(prepareFinalObject("ReceiptTemp[0].Bill[0].payerMobileNumber", get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails[0].additionalDetails.mobileNumber")));
-      
-
-        
     }
+
+    //To add the payer detail and initize the payment option on each load 
+    try{
+ 
+        const objectJsonPath = "components.div.children.formwizardFirstStep.children.paymentDetails.children.cardContent.children.capturePaymentDetails.children.cardContent.children.tabSection.props.tabs";
+        const instrumentTypes = get(state.screenConfiguration.screenConfig["pay"] , objectJsonPath);
+        if(instrumentTypes){
+            instrumentTypes.forEach(item => {
+                const tabContent = get(item , "tabContent");
+                const children = Object.values(tabContent)[0].children;
+                for (var child in children) {
+                    console.log("Child",child);
+                    for (var innerChild in children[child].children){
+                        let value =null;
+                        if(innerChild==='paidBy' ){
+                            value=get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].payer");
+                        }else if(innerChild==='payerName'){
+                            value=get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].paidBy");
+                        }else if( innerChild==='payerMobileNo'){
+                            value =get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].payerMobileNumber");
+                        }
+                        if(value!=null){
+                            dispatch(
+                                handleField(
+                                    "pay",
+                                    children[child].children[innerChild].componentJsonpath,
+                                    "props.value",
+                                    value
+                                )
+                            )
+                        }
+                    }
+                }
+            })
+        }
+    }catch(e){
+        console.log("Error in setting values ",e);
+        alert('errr');
+    }
+    
+
 
    // dispatch(prepareFinalObject("ReceiptTemp[0].Bill[0].paidBy", get(state, "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].payerName")));
     
