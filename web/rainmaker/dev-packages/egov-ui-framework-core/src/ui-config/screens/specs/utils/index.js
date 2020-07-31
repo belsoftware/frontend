@@ -530,6 +530,9 @@ export const getPattern = type => {
       return /^[a-zA-Z0-9-]*$/i;
     case "consumerNo":
       return /^[a-zA-Z0-9/-]*$/i;
+      case "AadharNo":
+        //return /^\d{4}\s\d{4}\s\d{4}$/;
+        return /^([0-9]){12}$/;
   }
 };
 
