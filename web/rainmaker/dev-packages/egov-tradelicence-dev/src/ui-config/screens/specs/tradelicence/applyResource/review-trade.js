@@ -175,6 +175,7 @@ const tradeTypeCard = {
   },
   type: "array"
 };
+//Added Occupancy Type as Per UAT Obsn
 export const getReviewTrade = (isEditable = true) => {
   return getCommonGrayCard({
     headerDiv: {
@@ -424,6 +425,21 @@ export const getReviewTrade = (isEditable = true) => {
         {
           jsonPath:
             "Licenses[0].tradeLicenseDetail.additionalDetail.electricityConnectionNo",
+            callBack: checkValueForNA
+        }
+      ),
+      reviewPremisis: getLabelWithValue(
+        {
+          labelName: "Occupancy",
+          labelKey: "TL_NEW_TRADE_DETAILS_PREMISIS_LABEL"
+        },
+        {
+          jsonPath:
+            "Licenses[0].tradeLicenseDetail.additionalDetail.premisis",
+            localePrefix: {
+              moduleName: "COMMON",
+              masterName: "PREMISIS"
+            },
             callBack: checkValueForNA
         }
       )
