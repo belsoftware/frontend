@@ -402,7 +402,7 @@ export const OwnerInfoCard = {
       "children.cardContent.children.header.children.Owner Information.props.label",
     sourceJsonPath: "Licenses[0].tradeLicenseDetail.owners",
     prefixSourceJsonPath:
-      "children.cardContent.children.tradeUnitCardContainer.children"
+      "children.cardContent.children.tradeUnitCardContainerOwnerInfo.children"
   },
 
   type: "array"
