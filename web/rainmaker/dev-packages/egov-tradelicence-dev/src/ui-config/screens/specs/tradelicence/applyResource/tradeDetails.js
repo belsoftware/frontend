@@ -176,15 +176,17 @@ const tradeUnitCard = {
           helpPdfButton:{
             componentPath:"Button",
             jsonPath:"Licenses[0].tradeLicenseDetail.pdf",
+           
             gridDefination: {
               xs: 12,
               sm: 6
             },
             props:{
               //variant: "outlined",
-              color:"primary",
-              href:"https://github.com/belegovgithub/egov-mdms-data/raw/BEL-CB-Impl/data/pb/TLHelp/TradeTypeSubtypeDetails_Secunderabad.pdf",
-              style:{
+              color:"primary",   
+              //Removed hardcoded helpfileurl, cb specific help file url is read from state and set in apply.js>beforeInitScreen          
+             // href:"https://github.com/belegovgithub/egov-mdms-data/raw/BEL-CB-Impl/data/pb/TLHelp/TradeTypeSubtypeDetails_Secunderabad.pdf",
+                style:{
                 minWidth:"180px",
                 height:"48px",
                 marginRight:"45",
@@ -205,6 +207,7 @@ const tradeUnitCard = {
                 labelKey:"TRADETYPE_HELP"
               }),
             },
+                        
            }, 
           tradeType: {
             ...getSelectField({

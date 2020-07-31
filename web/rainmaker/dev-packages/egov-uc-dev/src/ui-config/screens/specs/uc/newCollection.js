@@ -30,6 +30,12 @@ const getData = async (action, state, dispatch, demandId) => {
             },
             { name: "citymodule" }
           ]
+        },
+        {
+          moduleName: "common-masters",
+          masterDetails: [            
+            { name: "Help" }
+          ]
         }
       ]
     }
@@ -64,6 +70,19 @@ const getData = async (action, state, dispatch, demandId) => {
         dispatch
       );
     }
+
+
+    //console.info("src urls==",get(payload,"MdmsRes.common-masters.Help",[]));
+      let helpUrl = get(
+        payload,
+        "MdmsRes.common-masters.Help",
+        []
+        ).filter(item =>item.code ==="UC");
+    //console.info("my help url==",helpUrl);
+    console.info("my help url is set==",helpUrl[0].URL);
+    
+    dispatch(prepareFinalObject("helpFileUrl", helpUrl[0].URL));
+
   } catch (e) {
     console.log(e);
   }
@@ -97,6 +116,23 @@ const newCollection = {
   uiFramework: "material-ui",
   name: "newCollection",
   beforeInitScreen: (action, state, dispatch) => {
+
+    getData(action, state, dispatch).then(responseAction => {
+      console.info("setting url");
+      console.info("Setting url==", get(state.screenConfiguration.preparedFinalObject,"helpFileUrl"));
+
+      //Setting Trade Licence helpFileUrl
+      set(
+       action.screenConfig,
+       "components.div.children.newCollectionDetailsCard.children.cardContent.children.commentsContainer.children.helpPdfButton.props.href",
+       get(state.screenConfiguration.preparedFinalObject,
+         "helpFileUrl",
+         ""
+       ),
+     );
+    });
+
+
     const demandId = get(
       state.screenConfiguration.preparedFinalObject,
       "Demands[0].id",
@@ -121,6 +157,9 @@ const newCollection = {
       action.screenConfig = screenConfigForUpdate;
     }
     !demandId && getData(action, state, dispatch, demandId);
+
+     
+
     return action;
   },
 

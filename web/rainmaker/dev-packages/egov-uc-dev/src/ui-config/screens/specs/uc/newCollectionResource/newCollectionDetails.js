@@ -4,7 +4,8 @@ import {
   getSelectField,
   getCommonContainer,
   getPattern,
-  getDateField
+  getDateField,
+  getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {
   getTransformedLocale
@@ -109,18 +110,18 @@ export const newCollectionDetailsCard = getCommonCard(
             return action;
           }
         },
-        dummyDiv: {
-          uiFramework: "custom-atoms",
-          componentPath: "Div",
-          gridDefination: {
-            xs: 12,
-            sm: 6
-          },
-          visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
-          props: {
-            disabled: true
-          }
-        },
+        // dummyDiv: {
+        //   uiFramework: "custom-atoms",
+        //   componentPath: "Div",
+        //   gridDefination: {
+        //     xs: 12,
+        //     sm: 6
+        //   },
+        //   visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+        //   props: {
+        //     disabled: true
+        //   }
+        // },
         ConsumerMobileNo: getTextField({
           label: {
             labelName: "Mobile No",
@@ -155,6 +156,27 @@ export const newCollectionDetailsCard = getCommonCard(
           pattern: getPattern("Name"),
           errorMessage: "Invalid Name.",
           jsonPath: "Demands[0].consumerName"
+        }),
+        ConsumerAddress: getTextField({
+          gridDefination: {
+            xs: 12,
+            sm: 6
+          },
+          label: {
+            labelName: "Consumer Address",
+            labelKey: "UC_ADDRESS_LABEL"
+          },
+          placeholder: {
+            labelName: "Enter Consumer Address",
+            labelKey: "UC_ADDRESS_PLACEHOLDER"
+          },
+
+          required: true,
+          visible: true,
+          pattern: getPattern("Address"),
+         // errorMessage: "Invalid Name.",
+          jsonPath: "Demands[0].consumerAddress",
+          jsonPath: "Demands[0].additionalDetails.consumerAddress"
         }),
         serviceCategory: {
           uiFramework: "custom-containers",
@@ -413,18 +435,21 @@ export const newCollectionDetailsCard = getCommonCard(
           jsonPath: "Demands[0].taxPeriodTo",
           
         }),
-        dummyDiv: {
-          uiFramework: "custom-atoms",
-          componentPath: "Div",
-          gridDefination: {
-            xs: 12,
-            sm: 6
-          },
-          visible: true,
-          props: {
-            disabled: true
-          }
-        }
+      
+        // dummyDiv: {
+        //   uiFramework: "custom-atoms",
+        //   componentPath: "Div",
+        //   gridDefination: {
+        //     xs: 12,
+        //     sm: 6
+        //   },
+        //   visible: true,
+        //   props: {
+        //     disabled: true
+        //   }
+        // },
+      
+        
       },
       {
         style: {
@@ -434,6 +459,10 @@ export const newCollectionDetailsCard = getCommonCard(
     ),
     commentsContainer: getCommonContainer({
       comments: getTextField({
+        gridDefination: {
+          xs: 12,
+          sm: 6
+        },
         label: {
           labelName: "Comments",
           labelKey: "UC_COMMENT_LABEL"
@@ -444,8 +473,51 @@ export const newCollectionDetailsCard = getCommonCard(
         },
         Required: false,
         jsonPath: "Demands[0].additionalDetails.comment"
-      })
-    })
+      }),
+      helpPdfButton:{
+        componentPath:"Button",
+        jsonPath:"Demands[0].ucCollection.pdf",
+           gridDefination: {
+          xs: 12,
+          sm: 6
+        },
+        props:{
+          //variant: "outlined",
+          color:"primary",   
+          //Removed hardcoded helpfileurl, cb specific help file url is read from state and set in newCollection.js>beforeInitScreen          
+         // href:"https://github.com/belegovgithub/egov-mdms-data/raw/BEL-CB-Impl/data/pb/TLHelp/TradeTypeSubtypeDetails_Secunderabad.pdf",
+            style:{
+            minWidth:"180px",
+            height:"48px",
+            marginRight:"45",
+            borderRadius: "inherit"
+          }
+        },
+        children:{
+          
+          downloadButtonIcon:{
+            uiFramework:"custom-atoms",
+            componentPath:"Icon",
+            props:{
+              iconName:"cloud_download"
+            }
+          },
+          downloadButtonLabel:getLabel({
+            labelName:"Help ?",
+            labelKey:"TL_COMMON_HELP"
+          }),
+        },
+                    
+       }, 
+    
+      
+      
+    }),
+    
+
+    
+
+
   },
   {
     style: {

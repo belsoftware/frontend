@@ -118,6 +118,7 @@ export const getMdmsData = async (action, state, dispatch) => {
             { name: "OwnerShipCategory" },
             { name: "DocumentType" },
             { name: "UOM" },
+            { name: "Help" }
           ]
         },
         {
@@ -135,7 +136,7 @@ export const getMdmsData = async (action, state, dispatch) => {
       ]
     }
   };
-  try {
+   try {
     let payload = null;
     payload = await httpRequest(
       "post",
@@ -166,6 +167,7 @@ export const getMdmsData = async (action, state, dispatch) => {
       "preparedFinalObject.applyScreenMdmsData.tenant.localities",
       []
     );
+   
     if (localities && localities.length > 0) {
       payload.MdmsRes.tenant.localities = localities;
     }
@@ -176,7 +178,22 @@ export const getMdmsData = async (action, state, dispatch) => {
       []
     ).filter(item => item.module === "TL" && item.active === true);
     set(payload, "MdmsRes.egf-master.FinancialYear", financialYearData);
-  } catch (e) {
+  
+    const presentTenantId = getQueryArg(window.location.href, "tenantId")?getQueryArg(window.location.href, "tenantId"):getTenantId();
+    console.info("getting my help url for tenant id==",presentTenantId);
+    //console.info("src urls==",get(payload,"MdmsRes.common-masters.Help",[]));
+      let helpUrl = get(
+        payload,
+        "MdmsRes.common-masters.Help",
+        []
+        ).filter(item =>item.code ==="TL" && item.tenant === presentTenantId);
+    //console.info("my help url==",helpUrl);
+    console.info("my help url is set==",helpUrl[0].URL);
+    
+    dispatch(prepareFinalObject("helpFileUrl", helpUrl[0].URL));
+
+  
+  }catch (e) {
     console.log(e);
   }
 };
@@ -366,6 +383,15 @@ const screenConfig = {
         action.screenConfig,
         "components.div.children.formwizardFirstStep.children.tradeDetails.children.cardContent.children.tradeDetailsConatiner.children.tradeLicenseType.props.value",
         "PERMANENT"
+      );
+      //Setting Trade Licence helpFileUrl
+      set(
+        action.screenConfig,
+        "components.div.children.formwizardFirstStep.children.tradeDetails.children.cardContent.children.tradeUnitCard.props.items[0].item0.children.cardContent.children.tradeUnitCardContainer.children.helpPdfButton.props.href",
+        get(state.screenConfiguration.preparedFinalObject,
+          "helpFileUrl",
+          ""
+        ),
       );
     });
 
