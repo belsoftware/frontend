@@ -62,6 +62,9 @@ class MultiItem extends React.Component {
     for (var child in children) {
       if (children[child].children) {
         for (var innerChild in children[child].children) {
+          if(innerChild==='paidBy' ||innerChild==='payerName' || innerChild==='payerMobileNo'){
+            continue;
+          }
           if (
             get(
               state.screenConfiguration.screenConfig["pay"],
@@ -143,18 +146,6 @@ class MultiItem extends React.Component {
       const children = Object.values(tabContent)[0].children;
       this.resetAllFields(children, dispatch, state);
     })
-    
-    // keyToIndexMapping.forEach(item => {
-    //   const objectJsonPath = `components.div.children.formwizardFirstStep.children.paymentDetails.children.cardContent.children.capturePaymentDetails.children.cardContent.children.tabSection.props.tabs[${
-    //     item.index
-    //   }].tabContent[${item.key}].children`;
-    //   const children = get(
-    //     state.screenConfiguration.screenConfig["pay"],
-    //     objectJsonPath,
-    //     {}
-    //   );
-    //   this.resetAllFields(children, dispatch, state);
-    // });
   };
 
   setInstrumentType = (value, dispatch) => {
