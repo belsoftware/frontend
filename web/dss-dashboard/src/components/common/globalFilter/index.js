@@ -441,14 +441,15 @@ class GlobalFilter extends Component {
     renderUlbFilters(object) {
         let type = object.type;
         let label = object.label;
-        
+
         switch (type) {
             case "dropdown":
                 switch (label) {
                     case "Date Range":
                         return this.renderDateRange(object.label, object.values);
                     case "CBS":
-                        return <div>{(this.state.ulbs && this.state.ulbs.length > 0) ? this.state.ulbs[0] : "CB"}</div>
+                        console.log("Hey check ", this.state)
+                        return <div>{ this.state.tenentName? this.state.tenentName : ""}</div>
                         //return this.renderAutoComplete(object.label, this.handleFilterChange.bind(this), this.state.ulbs, this.state.tenentName, '')
                     case "Wards":
                         if (this.state.pageId === 'ulb-overview') {
