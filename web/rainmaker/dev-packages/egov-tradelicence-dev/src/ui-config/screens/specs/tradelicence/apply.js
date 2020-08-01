@@ -384,15 +384,7 @@ const screenConfig = {
         "components.div.children.formwizardFirstStep.children.tradeDetails.children.cardContent.children.tradeDetailsConatiner.children.tradeLicenseType.props.value",
         "PERMANENT"
       );
-      //Setting Trade Licence helpFileUrl
-      set(
-        action.screenConfig,
-        "components.div.children.formwizardFirstStep.children.tradeDetails.children.cardContent.children.tradeUnitCard.props.items[0].item0.children.cardContent.children.tradeUnitCardContainer.children.helpPdfButton.props.href",
-        get(state.screenConfiguration.preparedFinalObject,
-          "helpFileUrl",
-          ""
-        ),
-      );
+
     });
 
     return action;

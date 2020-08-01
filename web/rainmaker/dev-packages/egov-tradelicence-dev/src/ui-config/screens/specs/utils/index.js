@@ -2260,6 +2260,7 @@ export const showCityPicker = (state, dispatch) => {
 };
 
 export const applyForm = (state, dispatch) => {
+ 
   const tenantId = get(
     state.screenConfiguration.preparedFinalObject,
     "citiesByModule.citizenTenantId"
@@ -2280,6 +2281,9 @@ export const applyForm = (state, dispatch) => {
           ? `/egov-ui-framework/tradelicense-citizen/apply?tenantId=${tenantId}`
           : `/tradelicense-citizen/apply?tenantId=${tenantId}`;
   }
+
+ 
+
 };
 
 export const sortByEpoch = (data, order) => {
@@ -2316,6 +2320,15 @@ export const fillOldLicenseData = async (state, dispatch) => {
       get(state.screenConfiguration, "screenConfig.apply", {})
     )
   );
+};
+
+
+export const downloadHelpFile = async (state, dispatch) => {  
+    const helpurl = get(state.screenConfiguration.preparedFinalObject,
+      "helpFileUrl",
+      ""
+    );   
+    window.open(helpurl,"_blank");
 };
 
 export const getTextToLocalMapping = label => {

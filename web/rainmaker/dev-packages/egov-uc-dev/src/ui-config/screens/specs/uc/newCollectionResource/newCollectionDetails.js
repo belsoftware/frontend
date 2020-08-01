@@ -16,7 +16,9 @@ import {
   prepareFinalObject
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-import {setServiceCategory} from "../../utils"
+import {setServiceCategory,
+        downloadHelpFile
+} from "../../utils"
 import get from "lodash/get";
 
 const tenantId = getTenantId();
@@ -174,6 +176,12 @@ export const newCollectionDetailsCard = getCommonCard(
           required: true,
           visible: true,
           pattern: getPattern("Address"),
+          props: {
+            inputProps: {
+              maxLength: 250,
+            }
+          },
+         
          // errorMessage: "Invalid Name.",
           jsonPath: "Demands[0].consumerAddress",
           jsonPath: "Demands[0].additionalDetails.consumerAddress"
@@ -483,9 +491,7 @@ export const newCollectionDetailsCard = getCommonCard(
         },
         props:{
           //variant: "outlined",
-          color:"primary",   
-          //Removed hardcoded helpfileurl, cb specific help file url is read from state and set in newCollection.js>beforeInitScreen          
-         // href:"https://github.com/belegovgithub/egov-mdms-data/raw/BEL-CB-Impl/data/pb/TLHelp/TradeTypeSubtypeDetails_Secunderabad.pdf",
+          color:"primary",             
             style:{
             minWidth:"180px",
             height:"48px",
@@ -493,6 +499,13 @@ export const newCollectionDetailsCard = getCommonCard(
             borderRadius: "inherit"
           }
         },
+        
+          onClickDefination: {
+              action: "condition",
+              callBack: (state, dispatch) => {
+              downloadHelpFile(state, dispatch);
+              }
+            },
         children:{
           
           downloadButtonIcon:{
