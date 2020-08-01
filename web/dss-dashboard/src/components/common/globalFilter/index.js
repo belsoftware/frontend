@@ -441,14 +441,15 @@ class GlobalFilter extends Component {
     renderUlbFilters(object) {
         let type = object.type;
         let label = object.label;
-
+        
         switch (type) {
             case "dropdown":
                 switch (label) {
                     case "Date Range":
                         return this.renderDateRange(object.label, object.values);
                     case "CBS":
-                        return this.renderAutoComplete(object.label, this.handleFilterChange.bind(this), this.state.ulbs, this.state.tenentName, '')
+                        return <div>{(this.state.ulbs && this.state.ulbs.length > 0) ? this.state.ulbs[0] : "CB"}</div>
+                        //return this.renderAutoComplete(object.label, this.handleFilterChange.bind(this), this.state.ulbs, this.state.tenentName, '')
                     case "Wards":
                         if (this.state.pageId === 'ulb-overview') {
                             return (<div></div>)
@@ -633,7 +634,7 @@ class GlobalFilter extends Component {
 
                                     return (
                                         <div key={ro.label} className={`${classes.filterS} ${"GF_" + ro.label}`}>
-                                            {(this.state.pageId === 'ulb-overview' && ro.label === 'Wards') ? <div></div> : <div className={classes.filterHead}>{strings[ro.label_locale] || ro.label_locale}</div>}
+                                            
 
                                             <div>
                                                 {this.renderUlbFilters(ro)}

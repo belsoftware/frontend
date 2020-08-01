@@ -291,7 +291,7 @@ class Dashboard extends Component {
 
         {!isMobile && <div id="divNotToPrint" className={classes.acbtn}>
           <CustomizedMenus key="download" fileName={dashboardName} fileHeader="State Wide Urban Real-Time Executive (SURE) Dashboard" />
-          <CustomizedShare key="share" fileName={dashboardName} />
+          
         </div>}
       </div>
 
