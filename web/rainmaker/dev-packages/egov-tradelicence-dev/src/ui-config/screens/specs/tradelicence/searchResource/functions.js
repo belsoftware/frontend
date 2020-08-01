@@ -41,6 +41,7 @@ export const searchApiCall = async (state, dispatch) => {
   );
 
   if (!(isSearchBoxFirstRowValid && isSearchBoxSecondRowValid)) {
+    dispatch(toggleSpinner());
     dispatch(
       toggleSnackbar(
         true,
@@ -52,9 +53,11 @@ export const searchApiCall = async (state, dispatch) => {
       )
     );
   } else if (
+    
     Object.keys(searchScreenObject).length == 0 ||
     Object.values(searchScreenObject).every(x => x === "")
   ) {
+    dispatch(toggleSpinner());
     dispatch(
       toggleSnackbar(
         true,
@@ -71,6 +74,7 @@ export const searchApiCall = async (state, dispatch) => {
     searchScreenObject["toDate"] !== undefined &&
     searchScreenObject["toDate"].length !== 0
   ) {
+    dispatch(toggleSpinner());
     dispatch(
       toggleSnackbar(
         true,
@@ -142,6 +146,7 @@ export const searchApiCall = async (state, dispatch) => {
       showHideTable(true, dispatch);
       dispatch(toggleSpinner());
     } catch (error) {
+      dispatch(toggleSpinner());
       dispatch(toggleSnackbar(true, error.message, "error"));
       console.log(error);
     }
