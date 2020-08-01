@@ -74,7 +74,7 @@ const getData = async (action, state, dispatch, demandId) => {
 
 
     const presentTenantId = getQueryArg(window.location.href, "tenantId")?getQueryArg(window.location.href, "tenantId"):getTenantId();
-    console.info("getting my help url for tenant id==",presentTenantId);
+    console.info("getting my help url for tenant id mCollect==",presentTenantId);
     //console.info("src urls==",get(payload,"MdmsRes.common-masters.Help",[]));
       let helpUrl = get(
         payload,
@@ -82,7 +82,7 @@ const getData = async (action, state, dispatch, demandId) => {
         []
         ).filter(item =>item.code ==="UC");
     //console.info("my help url==",helpUrl);
-    console.info("my help url is set==",helpUrl[0].URL);
+    console.info("my help url is set or mCollect==",helpUrl[0].URL);
     
     dispatch(prepareFinalObject("helpFileUrl", helpUrl[0].URL));
 

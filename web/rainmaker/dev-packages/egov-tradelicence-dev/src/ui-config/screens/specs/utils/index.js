@@ -2324,10 +2324,12 @@ export const fillOldLicenseData = async (state, dispatch) => {
 
 
 export const downloadHelpFile = async (state, dispatch) => {  
+    console.info("downlod the help file from the following");
     const helpurl = get(state.screenConfiguration.preparedFinalObject,
       "helpFileUrl",
       ""
-    );   
+    );  
+    console.info("help url==",helpurl);
     window.open(helpurl,"_blank");
 };
 
