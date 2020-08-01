@@ -19,7 +19,8 @@ import {
   getUniqueItemsFromArray,
   fillOldLicenseData,
   getTradeTypeDropdownData,
-  isOldLicenseExists
+  isOldLicenseExists,
+  downloadHelpFile
 } from "../../utils";
 import {
   prepareFinalObject as pFO,
@@ -183,14 +184,18 @@ const tradeUnitCard = {
             },
             props:{
               //variant: "outlined",
-              color:"primary",   
-              //Removed hardcoded helpfileurl, cb specific help file url is read from state and set in apply.js>beforeInitScreen          
-             // href:"https://github.com/belegovgithub/egov-mdms-data/raw/BEL-CB-Impl/data/pb/TLHelp/TradeTypeSubtypeDetails_Secunderabad.pdf",
+              color:"primary",                 
                 style:{
                 minWidth:"180px",
                 height:"48px",
                 marginRight:"45",
                 borderRadius: "inherit"
+              }
+            },
+            onClickDefination: {
+              action: "condition",
+              callBack: (state, dispatch) => {
+              downloadHelpFile(state, dispatch);
               }
             },
             children:{

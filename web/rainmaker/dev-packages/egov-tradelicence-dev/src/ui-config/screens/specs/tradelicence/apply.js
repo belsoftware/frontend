@@ -180,7 +180,7 @@ export const getMdmsData = async (action, state, dispatch) => {
     set(payload, "MdmsRes.egf-master.FinancialYear", financialYearData);
   
     const presentTenantId = getQueryArg(window.location.href, "tenantId")?getQueryArg(window.location.href, "tenantId"):getTenantId();
-    console.info("getting my help url for tenant id==",presentTenantId);
+    console.info("=getting my help url for tenant id TL=",presentTenantId);
     //console.info("src urls==",get(payload,"MdmsRes.common-masters.Help",[]));
       let helpUrl = get(
         payload,
@@ -188,7 +188,7 @@ export const getMdmsData = async (action, state, dispatch) => {
         []
         ).filter(item =>item.code ==="TL" && item.tenant === presentTenantId);
     //console.info("my help url==",helpUrl);
-    console.info("my help url is set==",helpUrl[0].URL);
+    console.info("my help url is set for TL==",helpUrl[0].URL);
     
     dispatch(prepareFinalObject("helpFileUrl", helpUrl[0].URL));
 
@@ -384,15 +384,7 @@ const screenConfig = {
         "components.div.children.formwizardFirstStep.children.tradeDetails.children.cardContent.children.tradeDetailsConatiner.children.tradeLicenseType.props.value",
         "PERMANENT"
       );
-      //Setting Trade Licence helpFileUrl
-      set(
-        action.screenConfig,
-        "components.div.children.formwizardFirstStep.children.tradeDetails.children.cardContent.children.tradeUnitCard.props.items[0].item0.children.cardContent.children.tradeUnitCardContainer.children.helpPdfButton.props.href",
-        get(state.screenConfiguration.preparedFinalObject,
-          "helpFileUrl",
-          ""
-        ),
-      );
+
     });
 
     return action;

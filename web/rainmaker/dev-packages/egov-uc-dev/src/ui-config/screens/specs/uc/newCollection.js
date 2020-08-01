@@ -9,6 +9,7 @@ import { setServiceCategory } from "../utils";
 import commonConfig from "config/common.js";
 import get from "lodash/get";
 import set from "lodash/set";
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
 const header = getCommonHeader({
   labelName: "New Collection",
@@ -72,6 +73,8 @@ const getData = async (action, state, dispatch, demandId) => {
     }
 
 
+    const presentTenantId = getQueryArg(window.location.href, "tenantId")?getQueryArg(window.location.href, "tenantId"):getTenantId();
+    console.info("getting my help url for tenant id mCollect==",presentTenantId);
     //console.info("src urls==",get(payload,"MdmsRes.common-masters.Help",[]));
       let helpUrl = get(
         payload,
@@ -79,7 +82,7 @@ const getData = async (action, state, dispatch, demandId) => {
         []
         ).filter(item =>item.code ==="UC");
     //console.info("my help url==",helpUrl);
-    console.info("my help url is set==",helpUrl[0].URL);
+    console.info("my help url is set or mCollect==",helpUrl[0].URL);
     
     dispatch(prepareFinalObject("helpFileUrl", helpUrl[0].URL));
 
@@ -116,23 +119,6 @@ const newCollection = {
   uiFramework: "material-ui",
   name: "newCollection",
   beforeInitScreen: (action, state, dispatch) => {
-
-    getData(action, state, dispatch).then(responseAction => {
-      console.info("setting url");
-      console.info("Setting url==", get(state.screenConfiguration.preparedFinalObject,"helpFileUrl"));
-
-      //Setting Trade Licence helpFileUrl
-      set(
-       action.screenConfig,
-       "components.div.children.newCollectionDetailsCard.children.cardContent.children.commentsContainer.children.helpPdfButton.props.href",
-       get(state.screenConfiguration.preparedFinalObject,
-         "helpFileUrl",
-         ""
-       ),
-     );
-    });
-
-
     const demandId = get(
       state.screenConfiguration.preparedFinalObject,
       "Demands[0].id",
@@ -157,9 +143,6 @@ const newCollection = {
       action.screenConfig = screenConfigForUpdate;
     }
     !demandId && getData(action, state, dispatch, demandId);
-
-     
-
     return action;
   },
 
