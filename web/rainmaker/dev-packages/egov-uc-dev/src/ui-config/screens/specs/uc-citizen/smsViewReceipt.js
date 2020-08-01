@@ -5,7 +5,7 @@ import {
   prepareFinalObject,
   toggleSnackbar
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-
+import {download} from "egov-common/ui-utils/commons"
 const fetchAndGenerate = async (dispatch, receiptNo, tenantId) => {
   const queryObj = [
     {
@@ -18,11 +18,13 @@ const fetchAndGenerate = async (dispatch, receiptNo, tenantId) => {
     }
   ];
   const response = await getSearchResults(queryObj);
-  if (response && response.Receipt && response.Receipt.length) {
+  if (response && response.Payments && response.Payments.length) {
     dispatch(prepareFinalObject("receiptSearchResponse", response));
-    let pdfGenerateData = {};
-    pdfGenerateData["Receipt No"] = receiptNo;
-    await generateCitizenReciept(pdfGenerateData);
+    const receiptQueryString = [
+      { key: "receiptNumbers", value:  receiptNo},
+      { key: "tenantId", value: tenantId }
+    ]
+    download(receiptQueryString);
   } else {
     dispatch(
       toggleSnackbar(
