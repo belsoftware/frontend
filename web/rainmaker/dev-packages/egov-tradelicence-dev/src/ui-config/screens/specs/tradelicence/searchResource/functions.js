@@ -138,9 +138,9 @@ export const searchApiCall = async (state, dispatch) => {
             "Search Results for Trade License Applications"
           )} (${response.Licenses.length})`
         )
-      );
-      dispatch(toggleSpinner());
+      );      
       showHideTable(true, dispatch);
+      dispatch(toggleSpinner());
     } catch (error) {
       dispatch(toggleSnackbar(true, error.message, "error"));
       console.log(error);
