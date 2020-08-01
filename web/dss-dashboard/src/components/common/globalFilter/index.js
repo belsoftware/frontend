@@ -448,8 +448,7 @@ class GlobalFilter extends Component {
                     case "Date Range":
                         return this.renderDateRange(object.label, object.values);
                     case "CBS":
-                        console.log("Hey check ", this.state)
-                        return <div>{ this.state.tenentName? this.state.tenentName : ""}</div>
+                        return <div>{ this.state.tenentName? this.state.tenentName : "Cantonment Board"}</div>
                         //return this.renderAutoComplete(object.label, this.handleFilterChange.bind(this), this.state.ulbs, this.state.tenentName, '')
                     case "Wards":
                         if (this.state.pageId === 'ulb-overview') {
