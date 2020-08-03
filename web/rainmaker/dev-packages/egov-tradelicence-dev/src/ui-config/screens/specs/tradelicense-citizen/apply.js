@@ -24,7 +24,7 @@ import { getLocale } from "egov-ui-kit/utils/localStorageUtils";
 
 const getData = async (action, state, dispatch, tenantId) => {
   await getMdmsData(action, state, dispatch);
-  await getAllDataFromBillingSlab(tenantId, dispatch);
+  await getAllDataFromBillingSlab(tenantId, dispatch,state);
   await getBoundaryData(action, state, dispatch, [
     { key: "tenantId", value: tenantId }
   ]);

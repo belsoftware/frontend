@@ -1111,8 +1111,10 @@ export const tradeDetails = getCommonCard({
           labelKey: "TL_NEW_TRADE_DETAILS_STRUCT_TYPE_PLACEHOLDER"
         },
         props:{
+          value:"IMMOVABLE",
+          disabled:true,
           className:"applicant-details-error",
-          disabled:getQueryArg(window.location.href, "action") === "EDITRENEWAL"? true:false,
+          //disabled:getQueryArg(window.location.href, "action") === "EDITRENEWAL"? true:false,
         },
         localePrefix: {
           moduleName: "common-masters",
@@ -1149,7 +1151,9 @@ export const tradeDetails = getCommonCard({
           labelKey: "TL_NEW_TRADE_DETAILS_STRUCT_SUB_TYPE_LABEL"
         },
         props:{
-          disabled:getQueryArg(window.location.href, "action") === "EDITRENEWAL"? true:false,
+          value:"IMMOVABLE.PUCCA",
+          disabled:true,
+          //disabled:getQueryArg(window.location.href, "action") === "EDITRENEWAL"? true:false,
           className:"applicant-details-error"
         },
         placeholder: {

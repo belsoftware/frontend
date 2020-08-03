@@ -184,7 +184,6 @@ export const updatePFOforSearchResults = async (
     dispatch(
       prepareFinalObject("Licenses[0].financialYear", nextYear));
   }
-
   const licenseType = payload && get(payload, "Licenses[0].licenseType");
   const structureSubtype =
     payload && get(payload, "Licenses[0].tradeLicenseDetail.structureType");
@@ -192,7 +191,7 @@ export const updatePFOforSearchResults = async (
     state,
     dispatch,
     licenseType,
-    structureSubtype
+    ""
   );
   const tradeTypeDdData = getTradeTypeDropdownData(tradeTypes);
   tradeTypeDdData &&
