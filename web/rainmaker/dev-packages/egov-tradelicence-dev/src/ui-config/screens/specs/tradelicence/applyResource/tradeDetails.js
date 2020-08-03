@@ -958,22 +958,22 @@ export const tradeDetails = getCommonCard({
       props:{
         disabled:getQueryArg(window.location.href, "action") === "EDITRENEWAL"? true:false 
       },
-      iconObj: {
-        iconName: "search",
-        position: "end",
-        color: "#FE7A51",
-        onClickDefination: {
-          action: "condition",
-          callBack: (state, dispatch) => {
-            fillOldLicenseData(state, dispatch);
-          }
-        }
-      },
-      title: {
-        value: "Fill the form by searching your old approved trade license",
-        key: "TL_OLD_TL_NO"
-      },
-      infoIcon: "info_circle",
+      // iconObj: {
+      //   iconName: "search",
+      //   position: "end",
+      //   color: "#FE7A51",
+      //   onClickDefination: {
+      //     action: "condition",
+      //     callBack: (state, dispatch) => {
+      //       fillOldLicenseData(state, dispatch);
+      //     }
+      //   }
+      // },
+      // title: {
+      //   value: "Fill the form by searching your old approved trade license",
+      //   key: "TL_OLD_TL_NO"
+      // },
+      // infoIcon: "info_circle",
       jsonPath: "Licenses[0].oldLicenseNumber"
     }),
     tradeLicenseType: {
