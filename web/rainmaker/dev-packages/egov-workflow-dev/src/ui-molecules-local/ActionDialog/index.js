@@ -191,6 +191,7 @@ class ActionDialog extends React.Component {
     console.log("Is field inspector", isFieldInspector);
     switch (status) {
       case "APPLIED":
+      case "APPROVED":
         return (
           <Dialog
             fullScreen={fullscreen}
@@ -625,12 +626,13 @@ class ActionDialog extends React.Component {
 
                       <Grid item sm="12">
                         <TextFieldContainer
+                        
                           InputLabelProps={{ shrink: true }}
                           label={fieldConfig.cbrnNumber.label}
                           required={true}
                           onChange={(e, value) => {
                             let num = JSON.stringify({ 'cbrnNumber': e.target.value })
-                            //console.log("num>>>>",e.target.value)
+                           //console.log("num>>>>",e.target.value)
                             handleFieldChange(`${dataPath}.tradeLicenseDetail.additionalDetail.cbrnNumber`, e.target.value)
                           }
                           }
