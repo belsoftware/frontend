@@ -99,10 +99,17 @@ const fetchBill = async (action, state, dispatch, consumerCode, tenantId, billBu
         }
     }
 
-    if (get(totalAmount, "totalAmount") === undefined || get(totalAmount, "totalAmount") === 0) {
+    if (get(totalAmount, "totalAmount") === undefined) {
         const buttonJsonpath = paybuttonJsonpath + `${process.env.REACT_APP_NAME === "Citizen" ? "makePayment" : "generateReceipt"}`;
         dispatch(handleField("pay", buttonJsonpath, "props.disabled", true));
         dispatch(handleField("pay", radioButtonJsonPath, "props.buttons[1].disabled", true));
+    }
+    if(get(totalAmount, "totalAmount") === 0){
+        if(process.env.REACT_APP_NAME === "Citizen"){
+        const buttonJsonpath = paybuttonJsonpath +"makePayment";
+        dispatch(handleField("pay", buttonJsonpath, "props.disabled", true));
+        dispatch(handleField("pay", radioButtonJsonPath, "props.buttons[1].disabled", true));
+        }
     }
 
     const consumeCodeComponentPath = 'components.div.children.headerDiv.children.header.children.consumerCode';
