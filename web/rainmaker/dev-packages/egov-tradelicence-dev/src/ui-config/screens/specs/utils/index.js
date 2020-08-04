@@ -2080,7 +2080,7 @@ const getAllBillingSlabs = async tenantId => {
   return payload;
 };
 
-export const getAllDataFromBillingSlab = async (tenantId, dispatch) => {
+export const getAllDataFromBillingSlab = async (tenantId, dispatch,state) => {
   const payload = await getAllBillingSlabs(tenantId);
   const processedData =
     payload.billingSlab &&
@@ -2161,6 +2161,54 @@ export const getAllDataFromBillingSlab = async (tenantId, dispatch) => {
       processedData.tradeTypeData
     )
   );
+
+  var dropDown=get(
+    state,
+    "screenConfiguration.preparedFinalObject.applyScreenMdmsData.common-masters.StructureTypeTransformed",
+    []
+  );
+ if(dropDown.length===1){
+   
+  dispatch(
+    prepareFinalObject(
+      "applyScreenMdmsData.common-masters.StructureSubTypeTransformed",
+      get(
+        state.screenConfiguration.preparedFinalObject
+          .applyScreenMdmsData["common-masters"],
+        `StructureType.${dropDown[0].code}`,
+        []
+      )
+    )
+  );
+ 
+  
+ }
+ 
+      const tradeTypes = setFilteredTradeTypes(
+        state,
+        dispatch,
+        get(
+          state.screenConfiguration.preparedFinalObject,
+          "Licenses[0].licenseType",
+          "PERMANENT"
+        ),
+        ""
+      );
+      
+     let  tradeTypeDropdownData = getTradeTypeDropdownData(tradeTypes);
+      tradeTypeDropdownData &&
+        dispatch(
+          prepareFinalObject(
+            "applyScreenMdmsData.TradeLicense.TradeTypeTransformed",
+            tradeTypeDropdownData
+          )
+        );
+  const structType = get(
+    payload,
+    "Licenses[0].tradeLicenseDetail.structureType"
+  );
+ 
+  
 };
 
 export const getUniqueItemsFromArray = (data, identifier) => {
@@ -2218,8 +2266,7 @@ export const setFilteredTradeTypes = (
           tradeTypeList.length > 0 &&
           tradeTypeList.filter(item => {
             if (
-              item.licenseType === licenseType &&
-              item.structureType === structureSubtype
+              item.licenseType === licenseType 
             )
               return true;
           });
@@ -2260,7 +2307,6 @@ export const showCityPicker = (state, dispatch) => {
 };
 
 export const applyForm = (state, dispatch) => {
- 
   const tenantId = get(
     state.screenConfiguration.preparedFinalObject,
     "citiesByModule.citizenTenantId"
@@ -2281,9 +2327,6 @@ export const applyForm = (state, dispatch) => {
           ? `/egov-ui-framework/tradelicense-citizen/apply?tenantId=${tenantId}`
           : `/tradelicense-citizen/apply?tenantId=${tenantId}`;
   }
-
- 
-
 };
 
 export const sortByEpoch = (data, order) => {
@@ -2320,17 +2363,6 @@ export const fillOldLicenseData = async (state, dispatch) => {
       get(state.screenConfiguration, "screenConfig.apply", {})
     )
   );
-};
-
-
-export const downloadHelpFile = async (state, dispatch) => {  
-    console.info("downlod the help file from the following");
-    const helpurl = get(state.screenConfiguration.preparedFinalObject,
-      "helpFileUrl",
-      ""
-    );  
-    console.info("help url==",helpurl);
-    window.open(helpurl,"_blank");
 };
 
 export const getTextToLocalMapping = label => {

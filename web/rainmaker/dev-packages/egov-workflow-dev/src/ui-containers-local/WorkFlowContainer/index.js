@@ -359,13 +359,13 @@ class WorkFlowContainer extends React.Component {
               "error"
             );
           }
-         /* else if(!Number(cbrnNumber) ){
+         else if(cbrnNumber.length>50){
             toggleSnackbar(
               true,
-              { labelName: "Please Enter CBR Number in Number Format", labelKey: "ERR_FILL_CBR_NUMBER_FIELDS"},
+              { labelName: "CBR Number should be of length less than 50", labelKey: "ERR_FILL_CBR_NUMBER_FIELDS"},
               "error"
             );
-          }*/
+          }
           
           else {
           this.wfUpdate(label);

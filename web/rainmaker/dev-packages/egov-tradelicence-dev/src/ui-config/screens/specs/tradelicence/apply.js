@@ -210,7 +210,7 @@ export const getData = async (action, state, dispatch) => {
         null
       );
   await getMdmsData(action, state, dispatch);
-  await getAllDataFromBillingSlab(getTenantId(), dispatch);
+  await getAllDataFromBillingSlab(getTenantId(), dispatch,state);
 
  
   if (applicationNo) {

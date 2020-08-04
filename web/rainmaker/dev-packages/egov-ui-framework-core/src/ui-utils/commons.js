@@ -636,7 +636,229 @@ export const getCommonPayUrl = (dispatch, applicationNo, tenantId ,businessServi
 export const getTodaysDateInYMD = () => {
   let date = new Date();
   let month = date.getMonth() + 1;
+  month = month < 10 ? `0${month}` : month;
   let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
   date = `${date.getFullYear()}-${month}-${day}`;
   return date;
+};
+
+export const isPublicSearch = () => {
+  return location && location.pathname && location.pathname.includes("/withoutAuth");
+}
+
+export const getStatusKey = (status) => {
+  switch (status) {
+    case "ACTIVE":
+      return { labelName: "Active", labelKey: "ACTIVE" };
+    case "INACTIVE":
+      return { labelName: "Inactive", labelKey: "INACTIVE" };
+    case "INITIATED":
+      return { labelName: "Initiated", labelKey: "INITIATED" };
+    case "APPLIED":
+      return { labelName: "Applied", labelKey: "APPLIED" };
+    case "PAID":
+      return { labelName: "Paid", labelKey: "PAID" };
+
+    case "APPROVED":
+      return { labelName: "Approved", labelKey: "APPROVED" };
+    case "REJECTED":
+      return { labelName: "Rejected", labelKey: "REJECTED" };
+    case "CANCELLED":
+      return { labelName: "Cancelled", labelKey: "CANCELLED" };
+    case "PENDINGAPPROVAL ":
+      return {
+        labelName:
+          "Pending for Approval",
+        labelKey:
+          "PENDINGAPPROVAL"
+      };
+    case "PENDINGPAYMENT":
+      return {
+        labelName:
+          "Pending payment",
+        labelKey:
+          "PENDINGPAYMENT"
+      };
+    case "DOCUMENTVERIFY":
+      return {
+        labelName:
+          "Pending for Document Verification",
+        labelKey: "DOCUMENTVERIFY"
+      };
+    case "FIELDINSPECTION":
+      return {
+        labelKey:
+          "FIELDINSPECTION", labelName:
+          "Pending for Field Inspection"
+      };
+    default:
+      return {
+        labelName: status, labelKey: status
+      }
+
+  }
+}
+
+export const getRequiredDocData = async (action, dispatch, moduleDetails, closePopUp) => {
+  let tenantId =
+    process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
+  let mdmsBody = {
+    MdmsCriteria: {
+      tenantId: moduleDetails[0].moduleName === "ws-services-masters" ? commonConfig.tenantId : tenantId,
+      moduleDetails: moduleDetails
+    }
+  };
+  try {
+    let payload = null;
+    payload = await httpRequest(
+      "post",
+      "/egov-mdms-service/v1/_search",
+      "_search",
+      [],
+      mdmsBody
+    );
+    const moduleName = moduleDetails[0].moduleName;
+    let documents = get(
+      payload.MdmsRes,
+      `${moduleName}.Documents`,
+      []
+    );
+
+    if (moduleName === "PropertyTax") {
+      payload.MdmsRes.tenant.tenants = payload.MdmsRes.tenant.citymodule[1].tenants;
+    }
+    const reqDocuments = getRequiredDocuments(documents, moduleName, footerCallBackForRequiredDataModal(moduleName, closePopUp));
+    set(
+      action,
+      "screenConfig.components.adhocDialog.children.popup",
+      reqDocuments
+    );
+    dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
+    return { payload, reqDocuments };
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const footerCallBackForRequiredDataModal = (moduleName, closePopUp) => {
+  const tenant = getTenantId();
+  switch (moduleName) {
+    case "FireNoc":
+      return (state, dispatch) => {
+        dispatch(prepareFinalObject("FireNOCs", []));
+        dispatch(prepareFinalObject("documentsUploadRedux", {}));
+        const applyUrl =
+          process.env.REACT_APP_SELF_RUNNING === "true" ? `/egov-ui-framework/fire-noc/apply` : `/fire-noc/apply`;
+        dispatch(setRoute(applyUrl));
+      };
+    case "PropertyTax":
+      return (state, dispatch) => {
+        dispatch(prepareFinalObject("documentsUploadRedux", {}));
+        const applyUrl = `/property-tax/assessment-form`;
+        dispatch(setRoute(applyUrl));
+      };
+    case "ws-services-masters":
+      return (state, dispatch) => {
+        dispatch(prepareFinalObject("WaterConnection", []));
+        dispatch(prepareFinalObject("SewerageConnection", []));
+        dispatch(prepareFinalObject("applyScreen", {}));
+        dispatch(prepareFinalObject("searchScreen", {}));
+        const applyUrl = process.env.REACT_APP_NAME === "Citizen" ? `/wns/apply` : `/wns/apply`
+        dispatch(setRoute(applyUrl));
+      };
+    case 'TradeLicense':
+      if (closePopUp) {
+        return (state, dispatch) => {
+          dispatch(prepareFinalObject("Licenses", []));
+          dispatch(prepareFinalObject("LicensesTemp", []));
+          dispatch(prepareFinalObject("DynamicMdms", []));
+          const applyUrl = `/tradelicence/apply?tenantId=${tenant}`;
+          dispatch(
+            handleField("search", "components.adhocDialog", "props.open", false)
+          );
+          dispatch(setRoute(applyUrl));
+        };
+      }
+  }
+}
+export const showHideAdhocPopup = (state, dispatch, screenKey) => {
+  let toggle = get(
+    state.screenConfiguration.screenConfig[screenKey],
+    "components.adhocDialog.props.open",
+    false
+  );
+  dispatch(
+    handleField(screenKey, "components.adhocDialog", "props.open", !toggle)
+  );
+};
+export const getObjectValues = objData => {
+  return (
+    objData &&
+    Object.values(objData).map(item => {
+      return item;
+    })
+  );
+};
+export const getObjectKeys = objData => {
+  return (
+    objData &&
+    Object.keys(objData).map(item => {
+      return { code: item, active: true };
+    })
+  );
+};
+export const getMdmsJson = async (state, dispatch, reqObj) => {
+  let { setPath, setTransformPath, dispatchPath, moduleName, name, type } = reqObj;
+  let mdmsBody = {
+    MdmsCriteria: {
+      tenantId: commonConfig.tenantId,
+      moduleDetails: [
+        {
+          moduleName,
+          masterDetails: [
+            { name }
+          ]
+        }
+      ]
+    }
+  };
+  try {
+    let payload = null;
+    payload = await httpRequest(
+      "post",
+      "/egov-mdms-service/v1/_search",
+      "_search",
+      [],
+      mdmsBody
+    );
+    let result = get(payload, `MdmsRes.${moduleName}.${name}`, []);
+    let filterResult = type ? result.filter(item => item.type == type) : result;
+    set(
+      payload,
+      setPath,
+      filterResult
+    );
+    payload = getTransformData(payload, setPath, setTransformPath);
+    dispatch(prepareFinalObject(dispatchPath, get(payload, dispatchPath, [])));
+    //dispatch(prepareFinalObject(dispatchPath, payload.DynamicMdms));
+    dispatch(prepareFinalObject(`DynamicMdms.apiTriggered`, false));
+  } catch (e) {
+    console.log(e);
+    dispatch(prepareFinalObject(`DynamicMdms.apiTriggered`, false));
+  }
+};
+export const getTransformData = (object, getPath, transerPath) => {
+  let data = get(object, getPath);
+  let transformedData = {};
+  var formTreeBase = (transformedData, row) => {
+    const splitList = row.code.split(".");
+    splitList.map(function (value, i) {
+      transformedData = (i == splitList.length - 1) ? transformedData[value] = row : transformedData[value] || (transformedData[value] = {});
+    });
+  }
+  data.map(a => {
+    formTreeBase(transformedData, a);
+  });
+  set(object, transerPath, transformedData);
+  return object;
 };

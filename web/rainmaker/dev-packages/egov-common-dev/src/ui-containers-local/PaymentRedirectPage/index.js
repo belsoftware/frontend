@@ -48,7 +48,6 @@ class PaymentRedirect extends Component {
     console.log("search path ",search);
     const txnQuery=search.split('&')[1].replace('eg_pg_txnid','transactionId');
     console.log(txnQuery,'txnQuery');
-    
     try {
       let pgUpdateResponse = await httpRequest(
         "post",
@@ -60,14 +59,14 @@ class PaymentRedirect extends Component {
       let consumerCode = get(pgUpdateResponse, "Transaction[0].consumerCode");
       let tenantId = get(pgUpdateResponse, "Transaction[0].tenantId");
       if (get(pgUpdateResponse, "Transaction[0].txnStatus") === "FAILURE") {
-        const bservice = getQueryArg(window.location.href, "businessService"); 
+        let bservice=search.split('&')[0];
+        console.log("bservice  --> ",bservice);
+        bservice= bservice.substr(1);
         this.props.setRoute(
-          `/egov-common/acknowledgement?status=${"failure"}&consumerCode=${consumerCode}&tenantId=${tenantId}&businessService=${bservice}`
+          `/egov-common/acknowledgement?status=${"failure"}&consumerCode=${consumerCode}&tenantId=${tenantId}&${bservice}`
         );
       } else {
         const srcQuery=`?tenantId=${tenantId}&consumerCodes=${consumerCode}`
- 
- 
         let searchResponse = await httpRequest(
           "post",
           "collection-services/payments/_search" + srcQuery,

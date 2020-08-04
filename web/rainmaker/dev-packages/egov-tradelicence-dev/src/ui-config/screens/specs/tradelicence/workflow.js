@@ -158,7 +158,7 @@ export const getMdmsData = async (action, state, dispatch) => {
 export const getData = async (action, state, dispatch) => {
   const queryValue = getQueryArg(window.location.href, "applicationNumber");
   await getMdmsData(action, state, dispatch);
-  await getAllDataFromBillingSlab(getTenantId(), dispatch);
+  await getAllDataFromBillingSlab(getTenantId(), dispatch,state);
 
   if (queryValue) {
     await updatePFOforSearchResults(action, state, dispatch, queryValue);
