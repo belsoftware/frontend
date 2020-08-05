@@ -296,33 +296,7 @@ class CustomizedShare extends Component {
 
         return (
             <div>
-                <Button
-                    style={{ marginLeft: '20px', borderRadius: '2px', border: 'solid 1px #5b5b5b', backgroundColor: "rgba(255, 255, 255, 0)", height: '32px' }}
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    variant="contained"
-                    // color="primary"
-                    onClick={this.handleClick.bind(this)}
-                >
-                    <SVG src={share} style={{ marginRight: '10px' }} >
-                        {/* className={StyledMenuItem.CloseButton} */}
-                    </SVG>
-                    <div style={{ fontFamily: 'Roboto', fontSize: '12px', fontWeight: '500', fontStretch: 'normal', fontStyle: 'normal', linHeight: 'normal', letterSpacing: 'normal', color: '#5b5b5b' }}>{this.props.strings['DSS_SHARE'] || 'DSS_SHARE'}</div>
-                </Button>
-                <StyledMenu
-                    id="customized-menu"
-                    anchorEl={this.state.anchorEl}
-                    keepMounted
-                    open={Boolean(this.state.anchorEl)}
-                    onClose={this.handleClose.bind(this)}
-                >
-                    <StyledMenuItem>
-
-                        {this.renderSharePDFMenue()}
-
-                    </StyledMenuItem>
-
-                </StyledMenu>
+                
             </div >
         );
     }

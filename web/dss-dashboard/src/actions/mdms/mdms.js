@@ -42,8 +42,7 @@ export default class MdmsAPI extends API {
                 "moduleName": "tenant",
                 "masterDetails": [
                 {
-                "name": "tenants",
-                "filter": '[?(@.name != "DGDE")]'
+                "name": "tenants"
                 }]
                 }
                ]
