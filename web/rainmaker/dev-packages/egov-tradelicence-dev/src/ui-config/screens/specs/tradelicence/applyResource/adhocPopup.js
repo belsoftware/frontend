@@ -100,7 +100,11 @@ const updateAdhoc = (state, dispatch) => {
     state.screenConfiguration.preparedFinalObject,
     "Licenses[0].tradeLicenseDetail.adhocExemption"
   );
-  if (adhocAmount || rebateAmount) {
+  const garbageCharges =  get(
+    state.screenConfiguration.preparedFinalObject,
+    "Licenses[0].tradeLicenseDetail.additionalDetail.garbageCharges"
+  );
+  if (adhocAmount || rebateAmount || garbageCharges) {
     const totalAmount = get(
       state.screenConfiguration.preparedFinalObject,
       "ReceiptTemp[0].Bill[0].billDetails[0].totalAmount"
@@ -244,7 +248,7 @@ export const adhocPopup = getCommonContainer({
               width: "90%"
             }
           },
-          jsonPath: "Licenses[0].tradeLicenseDetail.adhocPenalty"
+          jsonPath: "Licenses[0].tradeLicenseDetail.additionalDetail.garbageCharges"
         }),
         // penaltyReason: getSelectField({
         //   label: {
@@ -295,7 +299,7 @@ export const adhocPopup = getCommonContainer({
             width: "90%"
           }
         },
-        jsonPath: "Licenses[0].tradeLicenseDetail.penaltyComments"
+        jsonPath: "Licenses[0].tradeLicenseDetail.additionalDetail.garbageComments"
       })
     },
     {

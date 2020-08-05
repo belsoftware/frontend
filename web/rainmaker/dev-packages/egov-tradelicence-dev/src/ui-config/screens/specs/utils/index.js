@@ -1037,6 +1037,8 @@ const getToolTipInfo = (taxHead, LicenseData) => {
       return get(LicenseData, "tradeLicenseDetail.adhocPenaltyReason");
     case "TL_ADHOC_REBATE":
       return get(LicenseData, "tradeLicenseDetail.adhocExemptionReason");
+    case "TL_GARBAGE_FEE":
+      return get(LicenseData, "tradeLicenseDetail.additionalDetail.garbageComments");
     default:
       return "";
   }
