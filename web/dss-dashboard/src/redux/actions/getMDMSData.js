@@ -22,7 +22,6 @@ _.each(tenants,(v,k) => {
 })
 
 
-
 let localVal = JSON.parse(localStorage.getItem("localization_"+localStorage.getItem("locale") ) );
 for(var i=0; i<localVal.length;i++){    
      if(localVal[i].code === "ULBGRADE_MC1"){ 
@@ -30,23 +29,6 @@ for(var i=0; i<localVal.length;i++){
         break;        
     } 
 }
-
-let s = {
-    label: "DDRs",
-    type: "dropdown",
-    values : tempDDRs,
-    master : tempDRRsObj,
-    tentantLogo : tenantLogo,
-    tenantName : tenantName,
-    corpName : corpName,
-    ULBS :{
-        label: "ULBS",
-        label_locale: "DSS_ULBS",
-        type: "dropdown",
-        values : tempULBS
-    }
-};
-console.log("Check mdms data ", tenants, s);
 return {
     label: "DDRs",
     type: "dropdown",
