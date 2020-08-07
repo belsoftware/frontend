@@ -331,7 +331,7 @@ class WorkFlowContainer extends React.Component {
           if (tradeSubType == null ||tradeSubType == "")  {
             toggleSnackbar(
               true,
-              { labelName: "Please fill all mandatory fields !", labelKey: "ERR_FILL_MANDATORY_FIELDS" },
+              { labelName: "Please fill all mandatory fields !", labelKey: "COMMON_MANDATORY_MISSING_ERROR" },
               "error"
             );
           }
@@ -355,14 +355,14 @@ class WorkFlowContainer extends React.Component {
           if (cbrnDate == null || cbrnNumber == null||cbrnDate == ""|| cbrnNumber == "") {
             toggleSnackbar(
               true,
-              { labelName: "Please fill all mandatory fields !", labelKey: "ERR_FILL_MANDATORY_FIELDS" },
+              { labelName: "Please fill all mandatory fields !", labelKey: "COMMON_MANDATORY_MISSING_ERROR" },
               "error"
             );
           }
          else if(cbrnNumber.length>50){
             toggleSnackbar(
               true,
-              { labelName: "CBR Number should be of length less than 50", labelKey: "ERR_FILL_CBR_NUMBER_FIELDS"},
+              { labelName: "CBR Number should be of length less than 50", labelKey: "COMMON_MANDATORY_MISSING_ERROR"},
               "error"
             );
           }
