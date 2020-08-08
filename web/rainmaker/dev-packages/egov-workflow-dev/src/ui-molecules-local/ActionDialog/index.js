@@ -199,6 +199,7 @@ class ActionDialog extends React.Component {
             onClose={onClose}
             maxWidth={false}
             style={{ zIndex: 2000 }}
+            disableBackdropClick={true}
           >
             <DialogContent
               children={
@@ -362,6 +363,7 @@ class ActionDialog extends React.Component {
             onClose={onClose}
             maxWidth={false}
             style={{ zIndex: 2000 }}
+            disableBackdropClick={true}
           >
             <DialogContent
               children={
@@ -543,6 +545,7 @@ class ActionDialog extends React.Component {
             onClose={onClose}
             maxWidth={false}
             style={{ zIndex: 2000 }}
+            disableBackdropClick={true}
           >
             <DialogContent
               children={
@@ -753,6 +756,7 @@ class ActionDialog extends React.Component {
               onClose={onClose}
               maxWidth={false}
               style={{ zIndex: 2000 }}
+              disableBackdropClick={true}
             >
               <DialogContent
                 children={
@@ -825,6 +829,7 @@ class ActionDialog extends React.Component {
                 onClose={onClose}
                 maxWidth={false}
                 style={{ zIndex: 2000 }}
+                disableBackdropClick={true}
               >
                 <DialogContent
                   children={
