@@ -668,7 +668,7 @@ export const handleFileUpload = (event, handleDocument, props ) => {
       store.dispatch(
         toggleSnackbar(
           true,
-          { labelName: "Invalid Document Format", labelCode:"INAVLID_DOCUMENT_FORMAT"},
+          { labelName: "Invalid Document Format !", labelKey: "INAVLID_DOCUMENT_FORMAT" },
           "error"
         )
       );
