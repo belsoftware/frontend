@@ -244,6 +244,7 @@ export const adhocPopup = getCommonContainer({
             labelKey: "TL_ADD_HOC_CHARGES_POPUP_PEN_AMT_PLACEHOLDER"
           },
           props: {
+            type:"number",
             style: {
               width: "90%"
             }

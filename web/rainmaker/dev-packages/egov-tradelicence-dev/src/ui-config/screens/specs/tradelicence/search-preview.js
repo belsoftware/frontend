@@ -276,7 +276,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
       financialYear
     );
 
-    if(status !== "INITIATED"){
+    if(status !== "INITIATED" && status !== "PENDINGAPPLFEE"){
       process.env.REACT_APP_NAME === "Citizen"
       ? set(
           action,

@@ -242,8 +242,9 @@ class Footer extends React.Component {
       if(rolecheck && (status === "APPROVED" || status === "EXPIRED") &&
        renewalPeriod<=7889400000 ){
         const editButton = {
-          label: "Edit",
-          labelKey: "WF_TL_RENEWAL_EDIT_BUTTON",
+          label: "Submit",
+          //labelKey: "WF_TL_RENEWAL_EDIT_BUTTON",
+          labelKey: "WF_TL_RENEWAL_SUBMIT_BUTTON",
           link: () => {
             const baseURL =
               process.env.REACT_APP_NAME === "Citizen"
@@ -265,14 +266,14 @@ class Footer extends React.Component {
         if(responseLength > 1 ){
           if(applicationType !== "NEW"){
             downloadMenu && downloadMenu.push(editButton);
-            downloadMenu && downloadMenu.push(submitButton);
+            //downloadMenu && downloadMenu.push(submitButton);
           }
 
         }
         else if(responseLength === 1){
          
             downloadMenu && downloadMenu.push(editButton);
-            downloadMenu && downloadMenu.push(submitButton);
+           // downloadMenu && downloadMenu.push(submitButton);
           }
 
 
