@@ -637,6 +637,7 @@ export const handleFileUpload = (event, handleDocument, props ) => {
         alert(`Maximum file size can be ${Math.round(maxFileSize / 1000)} MB`);
         uploadDocument = false;
       }
+      try{
       if (uploadDocument) {
         store.dispatch(toggleSpinner());
         if (file.type.match(/^image\//)) {
@@ -660,6 +661,18 @@ export const handleFileUpload = (event, handleDocument, props ) => {
           handleDocument(file, fileStoreId);
         }
       }
+    }
+    catch(e){
+      store.dispatch(toggleSpinner());
+      store.dispatch(
+        toggleSnackbar(
+          true,
+          { labelName: "Invalid Document Format", labelCode:"INAVLID_DOCUMENT_FORMAT"},
+          "error"
+        )
+      );
+      
+    }
     });
   }
 };
