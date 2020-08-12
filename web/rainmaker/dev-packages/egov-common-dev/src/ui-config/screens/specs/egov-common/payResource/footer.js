@@ -583,6 +583,14 @@ export const footer = getCommonApplyFooter({
       action: "condition",
       callBack: (state, dispatch) => {
         window.posOnSuccess=(posResponse={})=>{
+          toggleSnackbar(
+            true,
+            {
+              labelName: "Payment Success",
+              labelKey: "ERR_FILL_POS_PAYMENT_Success"
+            },
+            "success"
+          )
           callBackForPay(state,dispatch)
         }
 
