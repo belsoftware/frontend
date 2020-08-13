@@ -11,7 +11,7 @@ import { searchResult } from "./receiptsResources/searchResult";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { httpRequest } from "../../../../ui-utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
+import { getTenantId,getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 
 const tenantId = getTenantId();
 const header = getCommonHeader({
@@ -58,12 +58,16 @@ const getMDMSData = async (action, state, dispatch) => {
     console.log(e);
   }
 };
-
+//Fixed Mobile Number of Citizen in the Search Parameter -by Minju on 13/08/2020
 const ucSearchAndResult = {
   uiFramework: "material-ui",
   name: "search",
   beforeInitScreen: (action, state, dispatch) => {
     getData(action, state, dispatch);
+    const userName = JSON.parse(getUserInfo()).userName;
+    dispatch(
+      prepareFinalObject("searchScreen.mobileNumber", userName)
+    );
     return action;
   },
   components: {

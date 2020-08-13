@@ -16,12 +16,15 @@ import {
   prepareFinalObject
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import get from "lodash/get";
+import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 
 const hasButton = getQueryArg(window.location.href, "hasButton");
 //const hasApproval = getQueryArg(window.location.href, "hasApproval");
 let enableButton = true;
 //enableInbox = hasApproval && hasApproval === "false" ? false : true;
 enableButton = hasButton && hasButton === "false" ? false : true;
+
+
 
 const resetFields = (state, dispatch) => {
   dispatch(
@@ -40,14 +43,18 @@ const resetFields = (state, dispatch) => {
       ""
     )
   );
+  const userName = JSON.parse(getUserInfo()).userName;
   dispatch(
-    handleField(
-      "search",
-      "components.div.children.UCSearchCard.children.cardContent.children.searchContainer.children.mobileNo",
-      "props.value",
-      ""
-    )
+    prepareFinalObject("searchScreen.mobileNumber", userName)
   );
+  // dispatch(
+  //   handleField(
+  //     "search",
+  //     "components.div.children.UCSearchCard.children.cardContent.children.searchContainer.children.mobileNo",
+  //     "props.value",
+  //     ""
+  //   )
+  // );
   dispatch(
     handleField(
       "search",
@@ -128,6 +135,8 @@ export const UCSearchCard = getCommonCard({
         dispatch(
           prepareFinalObject("searchScreen.businessServices", serviceTypes)
         );
+
+
         return action;
       }
     },
@@ -149,6 +158,9 @@ export const UCSearchCard = getCommonCard({
         position: "start"
       },
       required: false,
+      props: {
+        disabled: true
+      },
       pattern: getPattern("MobileNo"),
       errorMessage: "Invalid Mobile No..",
       jsonPath: "searchScreen.mobileNumber"
