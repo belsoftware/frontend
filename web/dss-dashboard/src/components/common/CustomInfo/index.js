@@ -248,7 +248,32 @@ class CustomInfo extends React.Component {
         </StyledMenuItem>
 
 
-        
+        <StyledMenuItem button onClick={this.handleMenuClick}>
+          <ListItemIcon className={classes.itemIcon}>
+            <SVG src={share} style={{ marginRight: '10px' }} >
+            </SVG>
+          </ListItemIcon>
+          <ListItemText primary={strings["DSS_MOBILE_SHARE"] || "Share"} />
+          {this.state.open ? <IconExpandLess /> : <IconExpandMore />}
+        </StyledMenuItem>
+
+        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+          <Divider />
+          <List component="div" disablePadding>
+            <StyledMenuItem button onClick={() => this.shareAsImage('email',id,title)}>
+              <ListItemIcon>
+                <DraftsIcon style={{ color: Variables.email }} />
+              </ListItemIcon>
+              <ListItemText primary="Image" />
+            </StyledMenuItem>
+            <StyledMenuItem button onClick={() => this.shareAsImage('whatsapp',id,title)}>
+              <ListItemIcon>
+                <WhatsappIcon style={{ color: Variables.whatsApp }} />
+              </ListItemIcon>
+              <ListItemText primary="Image" />
+            </StyledMenuItem>
+          </List>
+        </Collapse>
       </StyledMenu>
     </div>)
   }
