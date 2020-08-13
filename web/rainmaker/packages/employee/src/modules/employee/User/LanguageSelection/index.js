@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Banner } from "modules/common";
-import { LanguageSelectionForm } from "modules/common";  //egov-ui-kit/common/User/components/LanguageSelectionForm
+import { LanguageSelectionForm } from "modules/common";
 import { fetchLocalizationLabel } from "egov-ui-kit/redux/app/actions";
 import { getLocale } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
-import {DisclaimerInformation} from "modules/common";
-
 
 class LanguageSelection extends Component {
   state = {
@@ -22,36 +20,15 @@ class LanguageSelection extends Component {
     this.props.history.push("/user/login");
   };
 
-  
-
   render() {
-
-    const myStyle = {
-      'position':"absolute",
-      'left':0,
-      'bottom':0,
-      'right':0,   
-      'align-items': "center", 
-      'text-align': "center",
-      'backgroundColor': "white",
-      //'width':'60%',
-    }
-
     const { value } = this.state;
     const { onLanguageSelect, onClick } = this;
     const { bannerUrl, logoUrl, languages } = this.props;
 
     return (
-      <div>
       <Banner className="language-selection" bannerUrl={bannerUrl} logoUrl={logoUrl}>
-        <div>
-           <LanguageSelectionForm items={languages} value={value} onLanguageSelect={onLanguageSelect} onClick={onClick} />
-        </div>               
+        <LanguageSelectionForm items={languages} value={value} onLanguageSelect={onLanguageSelect} onClick={onClick} />
       </Banner>
-      {/* <div>
-          <DisclaimerInformation/>
-      </div> */}
-      </div>     
     );
   }
 }

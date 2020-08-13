@@ -10,9 +10,7 @@ import commonConfig from "config/common.js";
 import get from "lodash/get";
 import set from "lodash/set";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import {newCollectionConsumerDetailsCard} from './newCollectionResource/neCollectionConsumerDetails'
-import{newCollectionServiceDetailsCard} from './newCollectionResource/newCollectionServiceDetails';
-import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+
 const header = getCommonHeader({
   labelName: "New Collection",
   labelKey: "UC_COMMON_HEADER"
@@ -20,8 +18,6 @@ const header = getCommonHeader({
 const tenantId = getTenantId();
 
 const getData = async (action, state, dispatch, demandId) => {
-
-  console.info("Demand id=",action.value);
 
   let requestBody = {
     MdmsCriteria: {
@@ -78,78 +74,17 @@ const getData = async (action, state, dispatch, demandId) => {
 
 
     const presentTenantId = getQueryArg(window.location.href, "tenantId")?getQueryArg(window.location.href, "tenantId"):getTenantId();
-    
+    console.info("getting my help url for tenant id mCollect==",presentTenantId);
+    //console.info("src urls==",get(payload,"MdmsRes.common-masters.Help",[]));
       let helpUrl = get(
         payload,
         "MdmsRes.common-masters.Help",
         []
-        ).filter(item =>item.code ==="UC");   
+        ).filter(item =>item.code ==="UC");
+    //console.info("my help url==",helpUrl);
+    console.info("my help url is set or mCollect==",helpUrl[0].URL);
     
     dispatch(prepareFinalObject("helpFileUrl", helpUrl[0].URL));
-
-    //Get Mohalla data
-        
-     try {
-      let payload = await httpRequest(
-        "post",
-        "/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=REVENUE&boundaryType=Locality",
-        "_search",
-        [{ key: "tenantId", value: `${tenantId}`, }],
-        {}
-      );
-      const mohallaData =
-        payload &&
-        payload.TenantBoundary[0] &&
-        payload.TenantBoundary[0].boundary &&
-        payload.TenantBoundary[0].boundary.reduce((result, item) => {
-          result.push({
-            ...item,
-            name: `${tenantId
-              .toUpperCase()
-              .replace(
-                /[.]/g,
-                "_"
-              )}_REVENUE_${item.code
-              .toUpperCase()
-              .replace(/[._:-\s\/]/g, "_")}`
-          });
-          return result;
-        }, []);
-      dispatch(
-        prepareFinalObject(
-          "applyScreenMdmsData.tenant.localities",
-          mohallaData
-        )
-      );
-      
-      dispatch(
-        handleField(
-          "newCollection",
-          "components.div.children.newCollectionConsumerDetailsCard.children.cardContent.children.ucConsumerContainer.children.ConsumerLocMohalla",
-          "props.suggestions",
-          mohallaData
-          // payload.TenantBoundary && payload.TenantBoundary[0].boundary
-        )
-      );
-      const mohallaLocalePrefix = {
-        moduleName: `${tenantId}`,
-        masterName: "REVENUE"
-      };
-     
-      dispatch(
-        handleField(
-          "newCollection",
-          "components.div.children.newCollectionConsumerDetailsCard.children.cardContent.children.ucConsumerContainer.children.ConsumerLocMohalla",
-          "props.localePrefix",
-          mohallaLocalePrefix
-        )
-      );
-    } catch (e) {
-      console.log(e);
-    }
-    //End of Mohalla data
-
-
 
   } catch (e) {
     console.log(e);
@@ -176,22 +111,14 @@ const getData = async (action, state, dispatch, demandId) => {
       console.log(e);
     }
   }
-
   
   // return action;
 };
-
 
 const newCollection = {
   uiFramework: "material-ui",
   name: "newCollection",
   beforeInitScreen: (action, state, dispatch) => {
-    try{
-      console.info("gerfer")
-    }
-    catch(e){
-      console.log(e)
-    }
     const demandId = get(
       state.screenConfiguration.preparedFinalObject,
       "Demands[0].id",
@@ -201,22 +128,20 @@ const newCollection = {
       state.screenConfiguration,
       "screenConfig.newCollection"
     );
-    console.info("demandId===",demandId);
     if (demandId) {
      
       set(
         screenConfigForUpdate,
-        "components.div.children.newCollectionServiceDetailsCard.children.cardContent.children.searchContainer.children.serviceCategory.props.disabled",
+        "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children.serviceCategory.props.disabled",
         true
       );
       set(
         screenConfigForUpdate,
-        "components.div.children.newCollectionServiceDetailsCard.children.cardContent.children.searchContainer.children.serviceType.props.disabled",
+        "components.div.children.newCollectionDetailsCard.children.cardContent.children.searchContainer.children.serviceType.props.disabled",
         true
       );
       action.screenConfig = screenConfigForUpdate;
     }
-    
     !demandId && getData(action, state, dispatch, demandId);
     return action;
   },
@@ -244,8 +169,7 @@ const newCollection = {
             }
           }
         },
-        newCollectionConsumerDetailsCard,
-        newCollectionServiceDetailsCard,       
+        newCollectionDetailsCard,
         newCollectionFooter
       }
     }

@@ -40,7 +40,6 @@ import OTPForm from "egov-ui-kit/common/User/components/OTPForm";
 import ProfileForm from "egov-ui-kit/common/User/components/ProfileForm";
 import ProfileSection from "egov-ui-kit/common/User/components/ProfileSection";
 import UploadDrawer from "egov-ui-kit/common/User/components/UploadDrawer";
-import DisclaimerInformation from "egov-ui-kit/common/User/components/DisclaimerInformation";
 
 //Pt common components
 import AssessPay from "egov-ui-kit/common/propertyTax/AssessPay";
@@ -92,5 +91,4 @@ export {
   ModuleLandingPage,
   SingleProperty,
   Notifications,
-  DisclaimerInformation
 };
