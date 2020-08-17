@@ -31,7 +31,6 @@ import moment from 'moment';
 class Home extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             filter: this.props.GFilterData,
             page: _.get(this.props, 'match.params.pageId'),
@@ -204,7 +203,7 @@ class Home extends React.Component {
         this.callDashboardAPI();
     }
 
-    getTitleText(strings){        
+    getTitleText(strings){
         let title,fromTxt,toTxt;
 
         fromTxt = (strings["DSS_FROM"])? strings["DSS_FROM"] : "DSS_FROM";
@@ -220,56 +219,64 @@ class Home extends React.Component {
         let { dashboardConfigData } = this.state;
         let tabsInitData = dashboardConfigData && Array.isArray(dashboardConfigData) && dashboardConfigData.length > 0 && dashboardConfigData[0] ? dashboardConfigData[0] : ''
         let dashboardName = dashboardConfigData && Array.isArray(dashboardConfigData) && dashboardConfigData.length >= 0 && dashboardConfigData[0] && dashboardConfigData[0].name && dashboardConfigData[0].name
-        return (
-            <Grid container spacing={24} id="divToPrint">
-                <Grid container spacing={24} className={classes.actions}>
+        if(dashboardConfigData && Array.isArray(dashboardConfigData) && dashboardConfigData.length > 0)
+        {
+            return (
 
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className={classes.pageHeader}>
-                        {this.props.strings[dashboardName] || dashboardName}
+                <Grid container spacing={24} id="divToPrint">
+                    <Grid container spacing={24} className={classes.actions}>
+
+                        <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className={classes.pageHeader}>
+                            {this.props.strings[dashboardName] || dashboardName}
+                        </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6} style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
+                            {/* {isMobile && <div id="divNotToPrint" data-html2canvas-ignore="true" className={classes.posit}>
+
+                                <Menu type="download" bgColor="white" color="black" fileHeader="SURE Dashboard" fileName={dashboardName}></Menu>
+                                {!this.state.dontShowHeader &&
+                                    <Button className={classes.btn1} data-html2canvas-ignore="true"
+                                        onClick={this.handleFilters.bind(this)}
+                                        fileName={dashboardName}
+                                    >
+                                        <FilterIcon></FilterIcon>
+                                    </Button>
+                                }
+                            </div>
+                            } */}
+
+                            {!isMobile && <div id="divNotToPrint" className={classes.acbtn} style={{ display: 'flex', justifyContent: 'flex-end', }}>
+                                <CustomizedMenus key="download" fileName={dashboardName} fileHeader="Cantonment Areas Real time Executive (CARE) Dashboard" />
+                                <CustomizedShare key="share" fileName={dashboardName} />
+                            </div>}
+                        </Grid>
+
                     </Grid>
-                   <Grid item xs={12} sm={12} md={6} lg={6} xl={6} style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
-                        {/* {isMobile && <div id="divNotToPrint" data-html2canvas-ignore="true" className={classes.posit}>
-
-                            <Menu type="download" bgColor="white" color="black" fileHeader="SURE Dashboard" fileName={dashboardName}></Menu>
-                            {!this.state.dontShowHeader &&
-                                <Button className={classes.btn1} data-html2canvas-ignore="true"
-                                    onClick={this.handleFilters.bind(this)}
-                                    fileName={dashboardName}
-                                >
-                                    <FilterIcon></FilterIcon>
-                                </Button>
-                            }
-                        </div>
-                        } */}
-
-                        {!isMobile && <div id="divNotToPrint" className={classes.acbtn} style={{ display: 'flex', justifyContent: 'flex-end', }}>
-                            <CustomizedMenus key="download" fileName={dashboardName} fileHeader="State Wide Urban Real-Time Executive (SURE) Dashboard" />
-                            <CustomizedShare key="share" fileName={dashboardName} />
-                        </div>}
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                        <Typography className={classes.filter}>{this.getTitleText(strings)}</Typography>
                     </Grid>
+                    {isMobile && <div id="divNotToPrint" className={classes.acbtn} style={{ display: 'flex', justifyContent: 'flex-end', }}>
+                        <CustomizedMenus key="download" fileName={dashboardName} fileHeader="Cantonment Areas Real time Executive (CARE) Dashboard" />
+                        <CustomizedShare key="share" fileName={dashboardName} />
+                    </div>}
+
+                    {/* {tabsInitData.visualizations && Array.isArray(tabsInitData.visualizations) && tabsInitData.visualizations.length > 0 && this.gettingData(tabsInitData.visualizations)} */}
+                    {tabsInitData.visualizations && Array.isArray(tabsInitData.visualizations) && tabsInitData.visualizations.length > 0 && tabsInitData.visualizations.map((k, v) => {
+                        return (
+                            k.vizArray && Array.isArray(k.vizArray) && k.vizArray.length > 0 && k.vizArray.map((data, index) => {
+                                // if (data.vizType.toUpperCase() !== 'COLLECTION') { this.gettingData(data) }
+                                return (this.renderChart(data, index))
+
+                            })
+                        )
+                    })}
 
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                    <Typography className={classes.filter}>{this.getTitleText(strings)}</Typography>
-                </Grid>
-                {isMobile && <div id="divNotToPrint" className={classes.acbtn} style={{ display: 'flex', justifyContent: 'flex-end', }}>
-                    <CustomizedMenus key="download" fileName={dashboardName} fileHeader="State Wide Urban Real-Time Executive (SURE) Dashboard" />
-                    <CustomizedShare key="share" fileName={dashboardName} />
-                </div>}
-
-                {/* {tabsInitData.visualizations && Array.isArray(tabsInitData.visualizations) && tabsInitData.visualizations.length > 0 && this.gettingData(tabsInitData.visualizations)} */}
-                {tabsInitData.visualizations && Array.isArray(tabsInitData.visualizations) && tabsInitData.visualizations.length > 0 && tabsInitData.visualizations.map((k, v) => {
-                    return (
-                        k.vizArray && Array.isArray(k.vizArray) && k.vizArray.length > 0 && k.vizArray.map((data, index) => {
-                            // if (data.vizType.toUpperCase() !== 'COLLECTION') { this.gettingData(data) }
-                            return (this.renderChart(data, index))
-
-                        })
-                    )
-                })}
-
-            </Grid>
-        )
+            )
+        }
+        else
+        {
+            return null;
+        }
     }
 }
 
