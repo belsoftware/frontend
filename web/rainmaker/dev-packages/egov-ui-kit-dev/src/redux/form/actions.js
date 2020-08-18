@@ -84,6 +84,20 @@ export const submitForm = (formKey, saveUrl) => {
           formResponse = await httpRequest(saveUrl, action, [], formData);
         }
         dispatch(submitFormComplete(formKey, formResponse, saveUrl));
+        //Added By Minju to Display the Message
+        if(formKey === "employeeChangePassword"){
+          dispatch(
+            toggleSnackbarAndSetText(
+              true,
+              {
+                labelName: "Password changed successfully!",
+                labelKey: "CS_COMMON_EMPLOYEEOTP_CHANGED_PASSWORD_SUCCESS",
+              },
+              "success"
+            )
+          );
+        }
+
       } catch (error) {
         const { message } = error;
         // throw new Error(error);
