@@ -36,6 +36,7 @@ import {
 } from "egov-ui-framework/ui-utils/commons";
 import { uploadFile } from "egov-ui-framework/ui-utils/api";
 import commonConfig from "config/common.js";
+import { logout } from "egov-ui-kit/redux/auth/actions";
 
 export const updateTradeDetails = async requestBody => {
   try {
@@ -75,6 +76,7 @@ export const getSearchResults = async queryObject => {
     );
     return response;
   } catch (error) {
+    
     store.dispatch(
       toggleSnackbar(
         true,
@@ -82,6 +84,9 @@ export const getSearchResults = async queryObject => {
         "error"
       )
     );
+     
+     if(error.message.indexOf("Unauthorized user to access the application") != -1)
+      store.dispatch(logout());
   }
 };
 
