@@ -76,17 +76,19 @@ export const getSearchResults = async queryObject => {
     );
     return response;
   } catch (error) {
-    
-    store.dispatch(
+    console.log("Error Code:",error);
+    Promise.resolve(store.dispatch(
       toggleSnackbar(
         true,
         { labelName: error.message, labelCode: error.message },
         "error"
       )
-    );
-     
-     if(error.message.indexOf("Unauthorized user to access the application") != -1)
+    )).then((res)=>{
+      if(error.message.indexOf("Unauthorized user to access the application") != -1)
       store.dispatch(logout());
+    });
+     
+  
   }
 };
 
