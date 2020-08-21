@@ -67,6 +67,7 @@ export const submitForm = (formKey, saveUrl) => {
       const { action } = form;
       try {
         const formData = await transformer("viewModelToBusinessModelTransformer", formKey, form, state);
+        console.log("FormData");
         let formResponse = {};
         // this will eventually moved out to the auth action; bit messy
         if (formData.hasOwnProperty("login")) {
@@ -80,7 +81,19 @@ export const submitForm = (formKey, saveUrl) => {
             formData.employee.tenantId,
             "EMPLOYEE"
           );
-        } else {
+        }else if(formData.hasOwnProperty("existingPassword")) {
+          
+          let encodedString = new Buffer(formData.existingPassword).toString('base64');
+          encodedString = new Buffer(encodedString).toString('base64');
+          formData.existingPassword = encodedString;
+
+          encodedString = new Buffer(formData.newPassword).toString('base64');
+          encodedString = new Buffer(encodedString).toString('base64');
+          formData.newPassword = encodedString;
+          formResponse = await httpRequest(saveUrl, action, [], formData);
+          
+        }       
+        else {
           formResponse = await httpRequest(saveUrl, action, [], formData);
         }
         dispatch(submitFormComplete(formKey, formResponse, saveUrl));
