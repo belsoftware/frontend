@@ -277,7 +277,7 @@ class Dashboard extends Component {
 
         {isMobile && <div id="divNotToPrint" data-html2canvas-ignore="true" className={[classes.desktop, classes.posit].join(' ')}>
 
-          <Menu type="download" bgColor="white" color="black" fileHeader="SURE Dashboard" fileName={dashboardName}></Menu>
+          <Menu type="download" bgColor="white" color="black" fileHeader="CARE Dashboard" fileName={dashboardName}></Menu>
           {!this.state.dontShowHeader && 
           <Button className={classes.btn1} data-html2canvas-ignore="true"
             onClick={this.handleFilters.bind(this)}
@@ -290,8 +290,8 @@ class Dashboard extends Component {
         }
 
         {!isMobile && <div id="divNotToPrint" className={classes.acbtn}>
-          <CustomizedMenus key="download" fileName={dashboardName} fileHeader="State Wide Urban Real-Time Executive (SURE) Dashboard" />
-          
+          <CustomizedMenus key="download" fileName={dashboardName} fileHeader="Cantonment Areas Real time Executive (CARE) Dashboard" />
+          <CustomizedShare key="share" fileName={dashboardName} />
         </div>}
       </div>
 
