@@ -8,6 +8,8 @@ import { updateLanguage } from './actions/languageChange';
 import variables from './styles/variables';
 import Layout from './utils/Layout';
 import _ from 'lodash';
+import { fetchLocalisationRequest } from './utils/commons';
+import axios from 'axios';
 
 const theme = createMuiTheme({
 
@@ -188,6 +190,23 @@ class App extends React.Component {
   //   }), strings.setLanguage(lang))
   // }
 
+  loadLocalisation = () => {
+    let language = localStorage.getItem("Employee.locale");
+    let localisationLabels = JSON.parse(localStorage.getItem(`localization_${language}`)) || [];
+    if (localisationLabels.length == 0 || localisationLabels.filter(localisation => localisation.module == "rainmaker-dss").length == 0) {
+      let localisationRequest = fetchLocalisationRequest(language);
+      axios.post(localisationRequest.reqUrl, localisationRequest.reqBody, localisationRequest.reqHeaders)
+        .then(response => {
+          this.setLocalisation(response.data.messages);
+        })
+        .catch(error => {
+          console.log(error.response)
+        });
+    } else {
+      this.setLocalisation(localisationLabels);
+    }
+  }
+
   componentWillMount() {
     let language = localStorage.getItem("Employee.locale");
     let data = _.chain(JSON.parse(localStorage.getItem(`localization_${language}`)))
@@ -210,6 +229,7 @@ class App extends React.Component {
   componentDidMount() {
     // let { strings } = this.props;
     document.title = "DSS Dashboard";
+    this.loadLocalisation();
   }
   changeTheName = (e) => {
     this.props.changeTheName();
