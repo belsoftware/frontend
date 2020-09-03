@@ -207,24 +207,39 @@ class App extends React.Component {
     }
   }
 
-  componentWillMount() {
-    let language = localStorage.getItem("Employee.locale");
-    let data = _.chain(JSON.parse(localStorage.getItem(`localization_${language}`)))
+  setLocalisation = (localisationLabels = []) => {
+    let data = _.chain(localisationLabels)
       .map(i => { return { key: i.code, value: i.message } })
       .flatten().value();
     let newIndex = _.chain(data)
       .keyBy('key')
       .mapValues('value')
       .value();
-
-
     let dataL = {
       'en': newIndex,
       'hi': {}
     }
-    // let dataL1 = JSON.parse(localStorage.getItem(`lang`));
     this.props.updateLanguage(dataL);
   }
+
+  // componentWillMount() {
+  //   let language = localStorage.getItem("Employee.locale");
+  //   let data = _.chain(JSON.parse(localStorage.getItem(`localization_${language}`)))
+  //     .map(i => { return { key: i.code, value: i.message } })
+  //     .flatten().value();
+  //   let newIndex = _.chain(data)
+  //     .keyBy('key')
+  //     .mapValues('value')
+  //     .value();
+
+
+  //   let dataL = {
+  //     'en': newIndex,
+  //     'hi': {}
+  //   }
+  //   // let dataL1 = JSON.parse(localStorage.getItem(`lang`));
+  //   this.props.updateLanguage(dataL);
+  // }
 
   componentDidMount() {
     // let { strings } = this.props;
