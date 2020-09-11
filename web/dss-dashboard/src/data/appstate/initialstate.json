@@ -22,7 +22,12 @@
             "type": "dropdown",
             "values": ""
         },
-        
+        {
+            "label": "Wards",
+            "label_locale": "DSS_WARDS",
+            "type": "dropdown",
+            "values": ""
+        },
         {
             "label": "Denomination",
             "label_locale": "DSS_DENOMINATION",
