@@ -423,7 +423,7 @@ class GlobalFilter extends Component {
             case "dropdown":
                 switch (label) {
                     case "CBS":
-                        let filtered = object.values.filter(item => (item!="DGDE"))  //DGDE should not be shown.
+                        let filtered = object.values.filter(item => (item!="DGDE" && item!="Cantonment Board Testing"))  //DGDE should not be shown.
                         return this.renderAutoComplete(object.label, this.handleChanges, this.state.ulbs, filtered, '')
                     case "DDRs":
                         return this.renderAutoComplete(object.label, this.handleChanges, this.state.ddrs, object.values, '')
