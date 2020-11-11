@@ -27,9 +27,10 @@ const configs = {
                     {'tradelicense':{'services_name':'Trade licence','filterKey':'TL'}},
                     {'mcollect':{'services_name':'M Collect','filterKey':'MC'}},
                     {'pgr':{'services_name':'PGR','filterKey':'PGR'}},
-                    {'ws':{'services_name':'W&S','filterKey':'W&S'}}
+                    {'ws':{'services_name':'WS','filterKey':'WS'}},
+                    {'sw':{'services_name':'SW','filterKey':'SW'}}
                     ],
-    'SERVICES': ["Trade licence", "M Collect", "PGR", "Water & Sewerage"]
+    'SERVICES': ["Trade licence", "M Collect", "PGR", "Water", "Sewerage"]
     //'SERVICES': ["Property Tax", "Trade licence","PGR", "M Collect"]
 }
 export default configs;
