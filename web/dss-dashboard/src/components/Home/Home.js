@@ -245,8 +245,7 @@ class Home extends React.Component {
                             } */}
 
                             {!isMobile && <div id="divNotToPrint" className={classes.acbtn} style={{ display: 'flex', justifyContent: 'flex-end', }}>
-                                <CustomizedMenus key="download" fileName={dashboardName} fileHeader="Cantonment Areas Real time Executive (CARE) Dashboard" />
-                                <CustomizedShare key="share" fileName={dashboardName} />
+                                
                             </div>}
                         </Grid>
 
