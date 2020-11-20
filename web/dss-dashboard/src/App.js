@@ -1,76 +1,27 @@
 import React from 'react';
-import './App.css';
-import { connect } from 'react-redux';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { changeTheName } from '../src/actions/firstAction';
-import { bindActionCreators } from 'redux';
-import { updateLanguage } from './actions/languageChange';
-import variables from './styles/variables';
-import Layout from './utils/Layout';
-import _ from 'lodash';
-import { fetchLocalisationRequest } from './utils/commons';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import axios from 'axios';
+import _ from 'lodash';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { changeTheName } from '../src/actions/firstAction';
+import { updateLanguage } from './actions/languageChange';
+import './App.css';
+import variables from './styles/variables';
+import { fetchLocalisationRequest } from './utils/commons';
+import Layout from './utils/Layout';
+import { loadUlbLogo } from './utils/block';
 
 const theme = createMuiTheme({
-
-  // props:{
-  //   MuiSelect:{
-  //     color: 'black',
-  //     IconComponent:{
-  //       color: 'red'
-  //     }
-  //   }
-  // },
-
-  // palette: {
-  //   type: 'dark', // Switching the dark mode on is a single property value change.
-  //   primary: { main: variables.black, light: variables.black },
-  //   secondary: { main: variables.black },
-  // },
-
   overrides: {
     typography: {
       useNextVariants: true,
       fontFamily: variables.primaryFont
     },
-    //   MuiTouchRipple: {
-    //     // root: {
-    //     //   color
-    //     // }
-    //   },
-    //   MuiInputBase: {
-    //     root: {
-    //       color: variables.black,
-    //       fontFamily: variables.primaryFont,
-    //     },
-
-    //   },
-    //   MuiIconButton: {
-    //     colorPrimary: variables.black
-    //   },
-
-    //   MuiTypography: {
-    //     root: {
-    //       fontFamily: variables.primaryFont
-    //     }
-    //   },
-    //   MuiCardHeader: {
-    //     content: {
-    //       fontFamily: variables.primaryFont,
-    //     },
-    //     root: {
-    //       fontFamily: variables.primaryFont,
-    //     },
-    //     title: {
-    //       fontFamily: variables.primaryFont,
-    //     },
-
-    //   },
     MuiMenu: {
       paper: {
         backgroundColor: 'white',
         fontFamily: variables.primaryFont,
-        // minWidth: '100%',
         height: 'auto',
         color: variables.black
       }
@@ -132,7 +83,7 @@ let dataL = {
     "DSS_CLEAR_ALL": "CLEAR",
     "DSS_DATE_RANGE": "Date Range",
     "DSS_DDRS": "DDRs",
-    "DSS_ULBS": "CBS",
+    "DSS_ULBS": "ULBS",
     "DSS_SERVICES": "Services",
     "DSS_DENOMINATION": "Denomination",
     "DSS_PDF": "PDF",
@@ -158,7 +109,6 @@ let dataL = {
     "DSS_TOTAL_COMPLAINTS_STATUS": "Total Complaints by Status",
     "DSS_PGR_COMPLETION_RATE": "Completion Rate",
     "DSS_PROPERTY_TAX": "Property Tax",
-    "DSS_M_COLLECT": "M Collect",
     "DSS_TRADE_LICENCE": "Trade License",
     "DSS_COMPLAINS": 'Complaints',
     "DSS_OVERVIEW_DASHBOARD": "Overview",
@@ -177,19 +127,8 @@ class App extends React.Component {
     this.state = {
       language: 'en'
     }
-    // this.handleLanguageChange = this.handleLanguageChange.bind(this);
-
-    // this.props.loadDashboardConfigData(); removed by Amit 24-10
   }
-  // handleLanguageChange(e) {
-  //   let { strings } = this.props;
-  //   e.preventDefault();
-  //   let lang = e.target.value;
-  //   this.setState(prevState => ({
-  //     language: lang
-  //   }), strings.setLanguage(lang))
-  // }
-
+ 
   loadLocalisation = () => {
     let language = localStorage.getItem("Employee.locale");
     let localisationLabels = JSON.parse(localStorage.getItem(`localization_${language}`)) || [];
@@ -222,77 +161,26 @@ class App extends React.Component {
     this.props.updateLanguage(dataL);
   }
 
-  // componentWillMount() {
-  //   let language = localStorage.getItem("Employee.locale");
-  //   let data = _.chain(JSON.parse(localStorage.getItem(`localization_${language}`)))
-  //     .map(i => { return { key: i.code, value: i.message } })
-  //     .flatten().value();
-  //   let newIndex = _.chain(data)
-  //     .keyBy('key')
-  //     .mapValues('value')
-  //     .value();
-
-
-  //   let dataL = {
-  //     'en': newIndex,
-  //     'hi': {}
-  //   }
-  //   // let dataL1 = JSON.parse(localStorage.getItem(`lang`));
-  //   this.props.updateLanguage(dataL);
-  // }
-
   componentDidMount() {
-    // let { strings } = this.props;
     document.title = "DSS Dashboard";
     this.loadLocalisation();
+    loadUlbLogo(localStorage.getItem('tenant-id'));
   }
+
   changeTheName = (e) => {
     this.props.changeTheName();
   }
 
   render() {
-
-    // strings.setLanguage(this.state.language);
-
     return (
       <MuiThemeProvider theme={theme}>
         <Layout />
       </MuiThemeProvider>
-
-
-      //   <AppRouter>
-      //     <div className={`App ${classes.root}`}>
-      //       <div>
-      //         Change Language: <select onChange={this.handleLanguageChange}>
-      //           <option value="en">En- English</option>
-      //           <option value="hi">hi- Hindi</option>
-      //         </select>
-      //       </div>
-      //       <NavBar />
-      //       <div className={classes.appContainer}>
-      //         {/* <div className="row"> */}
-      //         <Spinner />
-      //         {!isMobile && <SideBar isLoaded={this.props.isLoaded} />}
-      //         <main role="main" style={{ backgroundColor: '#f4f7fb' }} className={classes.main}>
-      //           {/* <Route exact path="/propertytax/">
-      //               <PropertyTax isLoaded={this.props.isLoaded} dashboardConfigData={this.props.dashboardConfigData} />
-      //               </Route>
-      //             <Route exact path="/">
-      //               <Dashboard isLoaded={this.props.isLoaded} /></Route> */}
-      //           <AppRouter />
-      //         </main>
-      //         {/* </div> */}
-      //       </div>
-
-      //     </div>
-      //  </AppRouter>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  // name: state.firstReducer.name,
-  // dashboardConfigData: state.firstReducer.dashboardConfigData,
   isLoaded: state.firstReducer.isLoaded,
   apistatus: state.apistatus,
   strings: state.lang
@@ -306,11 +194,4 @@ const mapDispatchToProps = dispatch => {
     updateLanguage: updateLanguage
   }, dispatch)
 }
-
-// const mapDispatchToProps = (dispatch) => ({
-//   changeTheName: () => dispatch(changeTheName()),
-//   updateLanguage: () => dispatch(updateLanguage())
-//   // loadDashboardConfigData: () => dispatch(loadDashboardConfigData())
-// });
-
 export default connect(mapStateToProps, mapDispatchToProps)(App);
