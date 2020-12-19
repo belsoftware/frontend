@@ -20,8 +20,9 @@ const styles = theme => ({
     tableDiv: {
         width: '100%',
         overflowX: 'auto',
-        border: 'none',
-        borderLeft: '1px solid #e6e6e6'
+        //border: 'none',
+        borderLeft: '1px solid #555555',
+        borderTop: '1px solid #555555'
     },
     expansionTable: {
         display: 'table'
@@ -69,8 +70,9 @@ const styles = theme => ({
             // fontSize: variables.fs_16,
             // border: 'solid 1px #e6e6e6',
             border: 'none',
-            borderRight: 'solid 1px #e6e6e6',
-            borderBottom: 'solid 1px #e6e6e6',
+            borderRight: 'solid 1px #555555',
+            borderBottom: 'solid 1px #555555',
+            textAlign: 'center',
             fontFamily: 'Roboto',
             // backgroundColor: variables.whiteColor,
             fontSize: variables.fs_14,
