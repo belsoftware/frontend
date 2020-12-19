@@ -18,6 +18,7 @@ const toolbarStyles = theme => ({
                 //border: 'solid 1px #e6e6e6 !important',
                 borderRight: 'solid 1px #555555 !important',
                 borderBottom: 'solid 1px #555555 !important',
+                textAlign: 'center',
                 backgroundColor: variables.tableheaBackgrount,
                 '& span': {
                     color: variables.tableHeadetTextColor,
