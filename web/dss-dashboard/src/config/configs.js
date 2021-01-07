@@ -26,11 +26,12 @@ const configs = {
                     {'propertytax':{'services_name':'Property Tax','filterKey':'PT'}},
                     {'tradelicense':{'services_name':'Trade licence','filterKey':'TL'}},
                     {'mcollect':{'services_name':'M Collect','filterKey':'MC'}},
-                    {'pgr':{'services_name':'PGR','filterKey':'PGR'}}
+                    {'pgr':{'services_name':'PGR','filterKey':'PGR'}},
+                    {'lease':{'services_name':'Lease','filterKey':'LAMS'}}
                     // {'ws':{'services_name':'Water','filterKey':'WS'}},
                     // {'sw':{'services_name':'Sewerage','filterKey':'SW'}}
                     ],
-    'SERVICES': ["Trade licence", "M Collect", "PGR"]
+    'SERVICES': ["Trade licence", "M Collect", "PGR", "Lease"]
     //'SERVICES': ["Property Tax", "Trade licence","PGR", "M Collect"]
 }
 export default configs;

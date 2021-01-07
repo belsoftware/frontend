@@ -62,6 +62,9 @@ class GlobalFilter extends Component {
         else if (value === 'M Collect') {
             return 'MC'
         }
+        else if (value === 'Lease') {
+            return 'LAMS'
+        }
         return null;
     }
 

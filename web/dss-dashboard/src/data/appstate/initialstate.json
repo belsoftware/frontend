@@ -53,7 +53,9 @@
             "type": "dropdown",
             "values": [
                 "Trade licence",
-                "M Collect"
+                "M Collect",
+                "PGR",
+                "Lease"
             ]
         },
         {
