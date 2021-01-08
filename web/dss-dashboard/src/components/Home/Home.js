@@ -226,10 +226,10 @@ class Home extends React.Component {
                 <Grid container spacing={24} id="divToPrint">
                     <Grid container spacing={24} className={classes.actions}>
 
-                        <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className={classes.pageHeader}>
+                        <Grid item xs={12} sm={12} md={8} lg={8} xl={8} className={classes.pageHeader}>
                             {this.props.strings[dashboardName] || dashboardName}
                         </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6} style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
+                    <Grid item xs={12} sm={12} md={4} lg={4} xl={4} style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
                             {/* {isMobile && <div id="divNotToPrint" data-html2canvas-ignore="true" className={classes.posit}>
 
                                 <Menu type="download" bgColor="white" color="black" fileHeader="SURE Dashboard" fileName={dashboardName}></Menu>

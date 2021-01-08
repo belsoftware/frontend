@@ -39,7 +39,7 @@ const cardStyle= theme => ({
   },
   '@media (max-width: 3000px)': {
     card: {
-      minHeight: '205px',
+      minHeight: '183px',
     }
   },
   '@media (max-width:823px)': {

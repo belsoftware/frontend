@@ -122,7 +122,7 @@ const styles = theme => ({
             padding: '0px 12px 0px 12px !important',
         },
         paper: {
-            padding: '18px 12px 30px 12px !important',
+            padding: '18px 12px 0px 12px !important',
 
         },
         customCard: {
