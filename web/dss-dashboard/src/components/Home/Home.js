@@ -84,11 +84,20 @@ class Home extends React.Component {
     }
 
     renderChart(data, index) {
+        console.log("Check the data nd index ",data,index,Variables.colors[index].light);
         let { chartLabelName } = this.state;
         let { classes, strings } = this.props;
         let filters = getFilterObj(this.props.GFilterData, this.props.mdmsData, this.state.page);
         let bgColor = Variables.colors[index].light
         let iconColor = Variables.colors[index].dark
+        switch(data.moduleLevel)
+        {
+            case 'LAMS':
+                bgColor = Variables.colors[4].light
+                iconColor = Variables.colors[4].dark
+                break;
+            default: break; 
+        }
         let pageId = ''
         let moduleLevel = ''
 

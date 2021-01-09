@@ -69,13 +69,24 @@ class DonutChart extends React.Component {
 			data: [],
 			dataSymbol: []
 		};
-
 		_.map(chartData, function (k, v) {
+			var headerName = k['headerName'];
 			var plots = k['plots'];
-			for (var i = 0; i < plots.length; i++) {
-				tempData.labels.push(strings[plots[i]['name']] || plots[i]['name']);
-				tempdataSet.data.push(plots[i]['value'])
-				tempdataSet.dataSymbol.push([plots[i]['symbol'], this.props.GFilterData['Denomination']]);
+			if(headerName=="DSS_LEASE_BY_STATUS") //Fix only for Lease Donut chart, for localisation issue.
+			{
+				for (var i = 0; i < plots.length; i++) {
+					tempData.labels.push(" "+(strings[plots[i]['name']] || plots[i]['name']));
+					tempdataSet.data.push(plots[i]['value'])
+					tempdataSet.dataSymbol.push([plots[i]['symbol'], this.props.GFilterData['Denomination']]);
+				}
+			}
+			else
+			{
+				for (var i = 0; i < plots.length; i++) {
+					tempData.labels.push((strings[plots[i]['name']] || plots[i]['name']));
+					tempdataSet.data.push(plots[i]['value'])
+					tempdataSet.dataSymbol.push([plots[i]['symbol'], this.props.GFilterData['Denomination']]);
+				}
 			}
 		}.bind(this))
 		tempData.datasets.push(tempdataSet);
