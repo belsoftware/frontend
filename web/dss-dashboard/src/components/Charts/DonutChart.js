@@ -75,7 +75,7 @@ class DonutChart extends React.Component {
 			if(headerName=="DSS_LEASE_BY_STATUS") //Fix only for Lease Donut chart, for localisation issue.
 			{
 				for (var i = 0; i < plots.length; i++) {
-					tempData.labels.push(""+(strings[plots[i]['name']] || plots[i]['name'])+".");
+					tempData.labels.push((strings[" "+plots[i]['name']] || plots[i]['name']));
 					tempdataSet.data.push(plots[i]['value'])
 					tempdataSet.dataSymbol.push([plots[i]['symbol'], this.props.GFilterData['Denomination']]);
 				}
