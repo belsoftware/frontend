@@ -30,7 +30,7 @@ export const cityPicker = getCommonContainer({
           moduleName: "TENANT",
           masterName: "TENANTS"
         },
-        className: "autocomplete-dropdown",
+        className: "citizen-city-picker",
         label: {
           labelName: "City",
           labelKey: "TL_NEW_TRADE_DETAILS_CITY_LABEL"
