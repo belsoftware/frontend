@@ -4,6 +4,7 @@ import {
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { showCityPicker, applyForm } from "../utils";
+//import "./index.css";
 
 export const cityPicker = getCommonContainer({
   header: getCommonHeader({
@@ -30,7 +31,7 @@ export const cityPicker = getCommonContainer({
           moduleName: "TENANT",
           masterName: "TENANTS"
         },
-        className: "citizen-city-picker",
+        className: "autocomplete-dropdown",
         label: {
           labelName: "City",
           labelKey: "TL_NEW_TRADE_DETAILS_CITY_LABEL"

@@ -1,5 +1,17 @@
-.citizen-city-picker {
-  width: "80%";
-  max-height: "200px";
-  overflow-y: "scroll";
+// .citizen-city-picker {
+//   width: "80%";
+//   max-height: "200px";
+//   overflow: auto;
+// }
+.autocomplete-dropdown {
+  width: 80%;
+  position: absolute;
+  z-index: 1900;
+  max-height: 200px;
+  overflow: hidden;
+}
+.autocomplete-dropdown div {
+min-width: 80%;
+max-height: 200px;
+  overflow: auto;
 }
