@@ -28,8 +28,9 @@ export default function getFilterObj(GFilterData, mdmsData, page) {
         for (var i = 0; i < newGFilterData['CBS'].length; i++) {
             let tenent = `${localStorage.getItem('tenant-id')}` ? (`${localStorage.getItem('tenant-id')}`).split('.')[0] : ''
             //tempValue.push(tenent + '.' + newGFilterData['CBS'][i].toLowerCase());
-            let splitOnSpace = newGFilterData['CBS'][i].split(" ")
-            tempValue.push(tenent + '.' + splitOnSpace[splitOnSpace.length-1].toLowerCase());
+            // let splitOnSpace = newGFilterData['CBS'][i].split(" ")
+            // tempValue.push(tenent + '.' + splitOnSpace[splitOnSpace.length-1].toLowerCase());
+            tempValue.push(newGFilterData['CBS'][i].toLowerCase());
         }
         filters['tenantId'] = tempValue;
     }

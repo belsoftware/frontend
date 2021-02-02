@@ -6,6 +6,7 @@ import TradeIcon from '../../../images/trade-license.svg'
 import WaterSewerage from '../../../images/water_sewerage.svg'
 import LeaseIcon from '../../../images/lease.svg'
 import mCollectIcon from '../../../images/mCollect.svg'
+import Sewerage from '../../../images/sewerage.svg'
 import Style from './Styles'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -19,7 +20,6 @@ class Icon extends React.Component {
 
     renderIcons(type) {
         let { classes } = this.props;
-
         switch (type.toLowerCase()) {
             case 'overview':
             case 'dss_overview':
@@ -33,8 +33,10 @@ class Icon extends React.Component {
             case 'complains':
             case 'dss_complains':
                 return <SVG src={ComplaintsIcon} fill="white" className={classes.icon} style={{ width: '40px', height: '40px' }}></SVG>
-            case 'water sewerage':
-            case 'dss_water_sewerage':
+            case 'dss_sewerage':
+                return <SVG src={Sewerage} fill="white" className={classes.icon} style={{ width: '40px', height: '40px' }}></SVG>
+            case 'water':
+            case 'dss_water':
                 return <SVG src={WaterSewerage} fill="white" className={classes.icon} style={{ width: '40px', height: '40px' }}></SVG>
             case 'lease':
             case 'dss_lease':

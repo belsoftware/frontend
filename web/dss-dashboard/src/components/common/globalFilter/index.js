@@ -65,6 +65,12 @@ class GlobalFilter extends Component {
         else if (value === 'Lease') {
             return 'LAMS'
         }
+        else if (value === 'Water') {
+            return 'WS'
+        }
+        else if (value === 'Sewerage') {
+            return 'SW'
+        }
         return null;
     }
 
@@ -119,8 +125,8 @@ class GlobalFilter extends Component {
                     if (tenants && Array.isArray(tenants) && tenants.length > 0) {
                         tenants.map((t) => {
                             if (tenentVal === t.code) {
-                                tenentObj[t.name] = t.code
-                                tenentName.push(t.name)
+                                tenentObj[t.name] = t.code;
+                                tenentName.push(t.name);
                             }
                         })
                         this.setState({ tenants: tenentObj, tenentName: tenentName })
@@ -237,7 +243,6 @@ class GlobalFilter extends Component {
                             }
                         })
                     }
-
                     let req = {
                         "RequestInfo": {
                             "authToken": ""
@@ -426,7 +431,8 @@ class GlobalFilter extends Component {
             case "dropdown":
                 switch (label) {
                     case "CBS":
-                        let filtered = object.values.filter(item => (item!="DGDE" && item!="Cantonment Board Testing"))  //DGDE should not be shown.
+                        //let filtered = object.values.filter(item => (item!="DGDE" && item!="Cantonment Board Testing"))  //DGDE should not be shown.
+                        let filtered = object.values.filter(item => (item!="pb" && item!="pb.testing"))
                         return this.renderAutoComplete(object.label, this.handleChanges, this.state.ulbs, filtered, '')
                     case "DDRs":
                         return this.renderAutoComplete(object.label, this.handleChanges, this.state.ddrs, object.values, '')

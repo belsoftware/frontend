@@ -1,12 +1,12 @@
 import _ from 'lodash';
 
-export default function getMDMSData(tenants){
+export default function getMDMSData(tenants){ 
 let tempDRRsObj = {},tempDDRs=[],tempULBS=[],tenantId = "",tenantLogo ={},tenantName='',corpName = '';
 _.each(tenants,(v,k) => {
 
     if(v.code){
         tenantLogo[v.code] = v.logoId;
-        tempULBS.push(v.name);
+        tempULBS.push(v.code);
     }
     if(v.code === localStorage.getItem('tenant-id'))
         tenantName = v.name;
