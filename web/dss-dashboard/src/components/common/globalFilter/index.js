@@ -433,6 +433,9 @@ class GlobalFilter extends Component {
                     case "CBS":
                         //let filtered = object.values.filter(item => (item!="DGDE" && item!="Cantonment Board Testing"))  //DGDE should not be shown.
                         let filtered = object.values.filter(item => (item!="pb" && item!="pb.testing"))
+                        filtered.forEach((element, index) => {
+                            filtered[index] = _.startCase((""+element.split(".")[1]+""));
+                        });
                         return this.renderAutoComplete(object.label, this.handleChanges, this.state.ulbs, filtered, '')
                     case "DDRs":
                         return this.renderAutoComplete(object.label, this.handleChanges, this.state.ddrs, object.values, '')

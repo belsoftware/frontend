@@ -30,7 +30,7 @@ export default function getFilterObj(GFilterData, mdmsData, page) {
             //tempValue.push(tenent + '.' + newGFilterData['CBS'][i].toLowerCase());
             // let splitOnSpace = newGFilterData['CBS'][i].split(" ")
             // tempValue.push(tenent + '.' + splitOnSpace[splitOnSpace.length-1].toLowerCase());
-            tempValue.push(newGFilterData['CBS'][i].toLowerCase());
+            tempValue.push("pb."+newGFilterData['CBS'][i].toLowerCase());
         }
         filters['tenantId'] = tempValue;
     }
