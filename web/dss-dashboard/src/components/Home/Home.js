@@ -187,6 +187,10 @@ class Home extends React.Component {
         }
 
         let path = ''
+        if(window.location.pathname && window.location.pathname.includes('citizen-home')){
+            path= 'citizen-home'
+        }
+        else
         if (window.location.pathname && window.location.pathname.includes('ulb-')) {
             path = 'ulb-home'
         } else {

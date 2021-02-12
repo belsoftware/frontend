@@ -22,7 +22,8 @@ class CustomCard extends React.Component {
         let code = this.props.chartData['id'] ? this.props.chartData['id'] : "";
         let filters = this.props.filters
     
-        if(this.props.page.includes('ulb')) {
+        if(this.props.page.includes('ulb') ||
+            (this.props.page && this.props.page.includes('citizen-home'))) {
           if(!filters['tenantId']) {
             let tenentFilter = []
             tenentFilter.push(`${localStorage.getItem('tenant-id')}`)
