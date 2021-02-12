@@ -24,7 +24,7 @@ class CustomCard extends React.Component {
     
         if(this.props.page.includes('ulb') ||
             (this.props.page && this.props.page.includes('citizen-home'))) {
-          if(!filters['tenantId']) {
+          if(!filters['tenantId'] && this.props.page.includes('ulb')) {
             let tenentFilter = []
             tenentFilter.push(`${localStorage.getItem('tenant-id')}`)
             filters['tenantId'] = tenentFilter

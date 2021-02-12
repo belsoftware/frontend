@@ -209,6 +209,10 @@ class Home extends React.Component {
         {
             localStorage.setItem("tenant-id", cant);
         }
+        else
+        {
+            localStorage.setItem("tenant-id", "");
+        }
     }
 
     setLangfromUrl() {
