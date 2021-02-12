@@ -17,6 +17,7 @@ export default function NFormatter(props) {
             style: 'currency',
             currency: 'INR'
         })
+        const Nformatter = new Intl.NumberFormat('en-IN');
         switch (props.nType) {
             case "amount":
             case "Amount":
@@ -42,7 +43,6 @@ export default function NFormatter(props) {
                 }
             case "number":
             case "Number":
-                const Nformatter = new Intl.NumberFormat('en-IN');
                 return Nformatter.format(Math.round(props.value));
             case "percentage":
             case "Percentage":
@@ -51,6 +51,13 @@ export default function NFormatter(props) {
             case "text":
             case "Text":
                 return props.value;
+            case "perday":
+            case "perDay":
+                return Nformatter.format(Math.round(props.value))+" / day";
+            case "avgdays":
+            case "avgDays":
+                let suffix = (Nformatter.format(Math.round(props.value)) > 1)? "days":"day";
+                return "Avg: "+Nformatter.format(Math.round(props.value))+" "+suffix;
             default:
                 return props.value;
 
