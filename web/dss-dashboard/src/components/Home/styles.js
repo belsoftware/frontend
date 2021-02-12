@@ -11,7 +11,7 @@ const styles = theme => ({
     pageHeader: {
         fontFamily: 'Roboto',
         fontSize: '24px',
-        fontWeight: '500',
+        fontWeight: '400',
         flex: 1,
         textAlign: 'left',
         wordBreak: "break-word"
@@ -33,10 +33,10 @@ const styles = theme => ({
     filter: {
         textAlign: 'left',
         fontFamily: 'Roboto',
-        fontSize: '16px',
-        fontWeight: '500',
+        fontSize: '20px',
+        fontWeight: '400',
         color: '#fe7a51',
-        padding: '0px 12px 12px 12px !important'
+        padding: '0px 0px 0px 12px !important'
     },
     title: {
         textAlign: 'left',
@@ -49,14 +49,14 @@ const styles = theme => ({
     subTitle: {
         textAlign: 'left',
         fontFamily: 'Roboto',
-        fontSize: '16px',
-        fontWeight: '400',
+        fontSize: '40px',
+        fontWeight: '300',
         color: 'rgba(0, 0, 0, 0.87)'
     },
     cardTitle: {
         fontFamily: 'Roboto',
-        fontSize: '20px',
-        fontWeight: '500',
+        fontSize: '24px',
+        fontWeight: '400',
         margin: '10px 18px 0px 18px',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',

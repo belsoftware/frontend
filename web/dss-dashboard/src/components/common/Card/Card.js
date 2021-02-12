@@ -8,7 +8,10 @@ import history from '../../../utils/web.history'
 const useStyles = makeStyles(styles);
 
 function handleNavigation(page) {
-  history.push(`${process.env.PUBLIC_URL}/`+ page)
+  if(window.location.pathname.includes("citizen-home"))
+    history.push(`${process.env.PUBLIC_URL}/`);
+  else
+    history.push(`${process.env.PUBLIC_URL}/`+ page)
 }
 
 export default function Card(props) {

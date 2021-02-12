@@ -3,6 +3,7 @@
  */
 import API from '../apis/api';
 import C from '../constants';
+import {getQueryArg} from "../../actions/commons";
 
 export default class ChartsAPI extends API {
 
@@ -39,7 +40,8 @@ export default class ChartsAPI extends API {
         return this.codeKey;
     }
     apiEndPoint() {
-        return `${super.apiEndPoint()}/${this.path}/getChartV2`
+        let apiName = window.location.pathname.includes("citizen-home")? "getChartOpen" : "getChartV2";
+        return `${super.apiEndPoint()}/${this.path}/`+apiName;
     }
 
     getHeaders() {

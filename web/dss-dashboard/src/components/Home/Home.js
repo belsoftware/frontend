@@ -148,7 +148,7 @@ class Home extends React.Component {
         }
         else {
             return (
-                <Grid item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.root} >
+                <Grid item xs={12} sm={6} md={6} lg={6} xl={6} className={classes.root} >
 
                     <Card color="blue" bgColor={bgColor} page={pageId}>
                         <CardHeader color="rose" icon page={pageId || 'overview'}>
