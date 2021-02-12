@@ -9,7 +9,8 @@ const useStyles = makeStyles(styles);
 
 function handleNavigation(page) {
   if(window.location.pathname.includes("citizen-home"))
-    history.push(`${process.env.PUBLIC_URL}/`);
+    //history.push(`${process.env.PUBLIC_URL}/`);
+    history.push(`https://echhawani.gov.in/`);
   else
     history.push(`${process.env.PUBLIC_URL}/`+ page)
 }

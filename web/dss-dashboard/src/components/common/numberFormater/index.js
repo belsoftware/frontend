@@ -56,8 +56,8 @@ export default function NFormatter(props) {
                 return Nformatter.format(Math.round(props.value))+" / day";
             case "avgdays":
             case "avgDays":
-                let suffix = (Nformatter.format(Math.round(props.value)) > 1)? "days":"day";
-                return "Avg: "+Nformatter.format(Math.round(props.value))+" "+suffix;
+                let suffix = (parseFloat(props.value) > 1)? "days":"day";
+                return Nformatter.format(parseFloat(props.value).toFixed(1))+" "+suffix;
             default:
                 return props.value;
 
