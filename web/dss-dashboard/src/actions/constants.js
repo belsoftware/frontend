@@ -17,7 +17,8 @@ const constants = {
     ULBS_FILTER: 'ULBS_FILTER',
     TENENTS: 'TENENTS',
     WARD_DATA: 'WARD_DATA',
-    ULBS_OVERVIEW_FILTER: 'ULBS_OVERVIEW_FILTER'
+    ULBS_OVERVIEW_FILTER: 'ULBS_OVERVIEW_FILTER',
+    VALID_TENANT_IDS: ["pb.agra", "pb.mathura", "pb.allahabad", "pb.faizabad", "pb.varanasi", "pb.almora", "pb.bareilly", "pb.nainital", "pb.ranikhet", "pb.shahjahanpur", "pb.danapur", "pb.ramgarh", "pb.jabalpur", "pb.pachmarhi", "pb.fatehgarh", "pb.kanpur", "pb.lucknow", "pb.chakrata", "pb.clement", "pb.dehradun", "pb.landour", "pb.lansdowne", "pb.meerut", "pb.roorkee", "pb.mhow", "pb.shillong", "pb.barrackpore", "pb.jalapahar", "pb.lebong", "pb.badamibagh", "pb.ahmedabad", "pb.belgaum", "pb.babina", "pb.jhansi", "pb.morar", "pb.saugor", "pb.stm", "pb.wellington", "pb.cannanore", "pb.ajmer", "pb.nasirabad", "pb.deolali", "pb.kamptee", "pb.ahmednagar", "pb.aurangabad", "pb.dehuroad", "pb.kirkee", "pb.pune", "pb.secunderabad", "pb.ambala", "pb.dagshai", "pb.jutogh", "pb.kasauli", "pb.subathu", "pb.delhi", "pb.amritsar", "pb.ferozepur", "pb.jallandhur", "pb.jammu", "pb.bakloh", "pb.dalhousie", "pb.khasyol"]
 }
 
 export default constants

@@ -27,6 +27,8 @@ import Menu from '../common/CustomMenu'
 import getFinancialYearObj from '../../actions/getFinancialYearObj';
 import mdmsAPI from '../../actions/mdms/mdms';
 import moment from 'moment';
+import {getQueryArg} from "../../actions/commons"
+import constants from "../../actions/constants";
 
 class Home extends React.Component {
     constructor(props) {
@@ -201,6 +203,26 @@ class Home extends React.Component {
 
     }
 
+    setTenantIdfromUrl() {
+        let cant = "pb."+getQueryArg(window.location.href,"cant");
+        if(constants.VALID_TENANT_IDS.indexOf(cant) > -1)
+        {
+            localStorage.setItem("tenant-id", cant);
+        }
+    }
+
+    setLangfromUrl() {
+        let lang = +getQueryArg(window.location.href,"lang");
+        if(["en_IN","hi_IN"].indexOf(lang) > -1)
+        {
+            localStorage.setItem("Employee.locale", lang);
+        }
+        else
+        {
+            localStorage.setItem("Employee.locale", "en_IN");
+        }
+    }
+
     componentDidMount() {
         let newFilterData = this.state.filter
         newFilterData.duration.value.startDate = this.state.getFYobj.value.startDate
@@ -212,6 +234,9 @@ class Home extends React.Component {
 
         let mdmsApi = new mdmsAPI(20000);
         this.props.APITransport(mdmsApi);
+
+        this.setTenantIdfromUrl();
+        this.setLangfromUrl();
 
         this.callDashboardAPI();
     }
