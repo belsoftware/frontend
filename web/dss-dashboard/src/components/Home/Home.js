@@ -211,7 +211,7 @@ class Home extends React.Component {
         }
         else
         {
-            localStorage.setItem("tenant-id", "");
+            localStorage.setItem("tenant-id", "pb");
         }
     }
 
@@ -239,8 +239,10 @@ class Home extends React.Component {
         let mdmsApi = new mdmsAPI(20000);
         this.props.APITransport(mdmsApi);
 
-        this.setTenantIdfromUrl();
-        this.setLangfromUrl();
+        if(window.location.pathname && window.location.pathname.includes('citizen-home')){
+            this.setTenantIdfromUrl();
+            this.setLangfromUrl();
+        }
 
         this.callDashboardAPI();
     }

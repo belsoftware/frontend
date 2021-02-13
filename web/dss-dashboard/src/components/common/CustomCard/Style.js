@@ -19,7 +19,7 @@ const styles = theme => ({
         fontFamily: 'Roboto',
         fontSize: '20px',
         fontWeight: '500',
-        color: 'rgba(0, 0, 0, 0.87)',
+        color: 'rgba(103, 103, 103, 0.87)',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         overflow: 'hidden',

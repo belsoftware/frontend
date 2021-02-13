@@ -78,6 +78,7 @@ export const CardStyle = {
         redused: {
             maxWidth: '100%',
             margin: '12px 12px 12px 12px !important',
+            height: '100%'
         }
     },
     '@media (max-width:823px)': {

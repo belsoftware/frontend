@@ -6,6 +6,7 @@ import styles from "./styles/Card";
 import history from '../../../utils/web.history'
 import {getQueryArg} from '../../../actions/commons';
 import constants from '../../../actions/constants';
+import { last } from "lodash";
 const useStyles = makeStyles(styles);
 
 function handleNavigation(page) {
@@ -37,8 +38,8 @@ export default function Card(props) {
     [className]: className !== undefined
   });
   return (
-    <div onClick={()=> handleNavigation(page)} style={{  cursor: 'pointer' }}>
-        <div className={cardClasses} {...rest} style={{ backgroundColor: bgColor }}>
+    <div onClick={()=> handleNavigation(page)} style={{  cursor: 'pointer' , height:'100%'}}>
+        <div className={cardClasses} {...rest} style={{ backgroundColor: bgColor , height:'80%'}}>
           {children}
         </div>
     </div>
