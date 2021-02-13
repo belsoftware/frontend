@@ -46,7 +46,7 @@ export default function getFinancialYearObj(onlyText,yearObj) {
 				FYobj = {
 		            title: `FY ${moment(moment().subtract(1,'year')).month(3).startOf('month').format("YY")}-${moment().month(2).endOf('month').format("YY")}`,
 		            value: {
-		              startDate: moment(moment().subtract(1,'year')).month(3).startOf('month').unix(),
+		              startDate: moment(moment().subtract(1,'year')).month(11).startOf('month').unix(),
 		              endDate: moment().month(2).endOf('month').unix(),
 		              interval: 'week'
 		            }

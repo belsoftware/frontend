@@ -10,15 +10,15 @@ import { last } from "lodash";
 const useStyles = makeStyles(styles);
 
 function handleNavigation(page) {
+  
   if(window.location.pathname.includes("citizen-home"))
   {
-    //history.push(`${process.env.PUBLIC_URL}/`);
-    let cant = getQueryArg(window.location.href,"cant");
-    cant = (constants.VALID_TENANT_IDS.indexOf(cant) > -1 )?cant:"";
-    if(cant)
-      window.location = 'https://echhawani.gov.in/citizen/language-selection?cant='+cant;
-    else
-      window.location = 'https://echhawani.gov.in/citizen/language-selection';
+    // let cant = getQueryArg(window.location.href,"cant");
+    // cant = (constants.VALID_TENANT_IDS.indexOf(cant) > -1 )?cant:"";
+    // if(cant)
+    //   window.location = 'https://echhawani.gov.in/citizen/language-selection?cant='+cant;
+    // else
+    //   window.location = 'https://echhawani.gov.in/citizen/language-selection';
   }
   else
   {
