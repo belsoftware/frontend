@@ -40,7 +40,7 @@ export default function Card(props) {
   let cursorValue = (window.location.pathname && window.location.pathname.includes('citizen-home'))?'auto':"pointer";
   return (
     <div onClick={()=> handleNavigation(page)} style={{  cursor: cursorValue , height:'100%'}}>
-        <div className={cardClasses} {...rest} style={{ backgroundColor: bgColor , height:'80%'}}>
+        <div className={cardClasses} {...rest} style={{ backgroundColor: bgColor , height:'85%'}}>
           {children}
         </div>
     </div>
