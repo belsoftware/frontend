@@ -34,8 +34,8 @@ const styles = theme => ({
         textAlign: 'left',
         fontFamily: 'Roboto',
         fontSize: '20px',
-        fontWeight: '400',
-        color: '#fe7a51',
+        fontWeight: '500',
+        color: 'rgb(103,103,103,0.87)',
         padding: '0px 0px 0px 12px !important'
     },
     title: {
