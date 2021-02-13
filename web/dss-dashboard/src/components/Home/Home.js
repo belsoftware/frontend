@@ -132,7 +132,7 @@ class Home extends React.Component {
                                 {
                                     data && data.charts && Array.isArray(data.charts) && data.charts.length > 0 && data.charts.map((d, i) => {
                                         return (
-                                            <Grid item xs={6} sm={12} md={3} lg={3} xl={3} className={classes.customCard}>
+                                            <Grid item xs={12} sm={6} md={6} lg={3} xl={3} className={classes.customCard}>
                                                 <CustomCard key={d.id} moduleLevel={moduleLevel} chartData={d} filters={filters} type="overview" page={window.location.pathname || ''}></CustomCard>
                                             </Grid>
                                         )  
@@ -248,6 +248,7 @@ class Home extends React.Component {
     }
 
     getTitleText(strings){
+        
         let title,fromTxt,toTxt;
 
         fromTxt = (strings["DSS_FROM"])? strings["DSS_FROM"] : "DSS_FROM";
@@ -255,7 +256,13 @@ class Home extends React.Component {
 
         title = fromTxt + " " + moment.unix(this.state.getFYobj.value.startDate).format("MMM, DD YYYY") + " " +toTxt +" " + moment().format("MMM, DD YYYY")
 
-    return title;
+        if(window.location.pathname && window.location.pathname.includes('citizen-home')){
+            fromTxt = (strings["DSS_AS_ON"])? strings["DSS_AS_ON"] : "DSS_AS_ON";
+            title = fromTxt + " " + moment().format("MMM, DD YYYY");
+            return title;
+        }
+
+        return title;
     }
 
     render() {

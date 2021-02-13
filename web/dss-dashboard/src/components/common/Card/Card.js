@@ -37,8 +37,9 @@ export default function Card(props) {
     [classes.cardChart]: chart,
     [className]: className !== undefined
   });
+  let cursorValue = (window.location.pathname && window.location.pathname.includes('citizen-home'))?'auto':"pointer";
   return (
-    <div onClick={()=> handleNavigation(page)} style={{  cursor: 'pointer' , height:'100%'}}>
+    <div onClick={()=> handleNavigation(page)} style={{  cursor: cursorValue , height:'100%'}}>
         <div className={cardClasses} {...rest} style={{ backgroundColor: bgColor , height:'80%'}}>
           {children}
         </div>
