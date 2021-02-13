@@ -305,8 +305,8 @@ class Home extends React.Component {
                         <Typography className={classes.filter}>{this.getTitleText(strings)}</Typography>
                     </Grid>
                     {isMobile && <div id="divNotToPrint" className={classes.acbtn} style={{ display: 'flex', justifyContent: 'flex-end', }}>
-                        <CustomizedMenus key="download" fileName={dashboardName} fileHeader="Cantonment Areas Real time Executive (CARE) Dashboard" />
-                        <CustomizedShare key="share" fileName={dashboardName} />
+                        {/* <CustomizedMenus key="download" fileName={dashboardName} fileHeader="Cantonment Areas Real time Executive (CARE) Dashboard" />
+                        <CustomizedShare key="share" fileName={dashboardName} /> */}
                     </div>}
 
                     {/* {tabsInitData.visualizations && Array.isArray(tabsInitData.visualizations) && tabsInitData.visualizations.length > 0 && this.gettingData(tabsInitData.visualizations)} */}
