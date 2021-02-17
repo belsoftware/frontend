@@ -42,7 +42,7 @@ const activationDetailsHeader = getHeader({
 });
 
 export const getReviewOwner = (isEditable = true) => {
-  console.info("DC- getReviewOwner");
+  
   return getCommonGrayCard({
     headerDiv: {
       uiFramework: "custom-atoms",
@@ -103,6 +103,7 @@ export const getReviewOwner = (isEditable = true) => {
     viewSeven: connectionChargeDetailsHeader,
     viewEight: connectionChargeDetails,
     viewNine: roadCuttingChargesHeader,
+    //viewTen: getRoadCharges(),
     viewTen: getRoadCharges(),
     viewThirteen: getRoadCuttingChargesNA(),
     viewEleven: activationDetailsHeader,
@@ -191,6 +192,7 @@ export const plumberDetails={
 
 }
 const connectionChargeDetails = getCommonContainer(plumberDetails);
+
 export const roadDetails={
   getCommonContainerreviewRoadType : getLabelWithValue(
     {
@@ -251,8 +253,11 @@ export const roadDetails={
 
 }
 
-
-  const getRoadCharges = ()=>{
+// This code was used earlier using multi-item
+// Issues:- 1)Sometimes data not getting populated
+//          2)Rate is displayed on next line.
+//Can be removed once fine turning of pdf is done
+const getRoadCharges1 = ()=>{
   return({
   uiFramework: "custom-containers",
   componentPath: "MultiItem",
@@ -275,6 +280,10 @@ export const roadDetails={
   })
 }
 
+
+const getRoadCharges = () =>{ 
+  return  getCommonContainer({  })     
+}
 export const activateDetailsMeter={
   reviewConnectionExecutionDate : getLabelWithValueForModifiedLabel(
     {

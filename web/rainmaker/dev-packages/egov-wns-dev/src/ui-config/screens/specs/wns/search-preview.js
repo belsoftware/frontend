@@ -2,7 +2,8 @@ import {
   getCommonCard,
   getCommonContainer, getCommonGrayCard, getCommonHeader,
   getCommonSubHeader, getCommonTitle,
-  getLabel
+  getLabelWithValueForModifiedLabel,
+ 
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, unMountScreen } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg, setBusinessServiceDataToLocalStorage, setDocuments } from "egov-ui-framework/ui-utils/commons";
@@ -366,6 +367,18 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
   }
 
   dispatch(prepareFinalObject("WaterConnection[0].tempRoadType",newRoad));
+  //Populate Road cutting -DC
+ 
+
+
+  for(var i=0;i<newRoad.length ;i++){  
+    displayRoadTypeHeading(newRoad[i],i,dispatch); 
+    displayRoadCuttingEstimate(newRoad[i],i,dispatch);
+  }
+
+  //Populate road cutting end-DC
+
+
   //If Road cutting is not entered
   
    if(flag){
@@ -396,8 +409,92 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
 
 let titleText = "";
 
+const displayRoadTypeHeading = (item,index,dispatch) =>{
+  dispatch(
+    handleField(
+                  "search-preview",
+                  "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewTen.children",
+                `roadCuttingHeading_${index}`,
+           
+              getCommonContainer({
+                roadTypeDivSearchPreview:{
+                  uiFramework: "custom-atoms",
+                  componentPath: "Div",   
+                    children:{      
+                      title:getCommonTitle({
+                        labelName: "Road Type",
+                        labelKey :`WS_ROADTYPE_${(item.roadType)}`,
+                      },
+                      {style: {
+                          fontSize: "15px",
+                          overflowWrap: 'break-word'
+                        }
+                      },
+                           
+                     ),
+                    },                  
+                  },
+                })
+     ))
 
+}
 
+const displayRoadCuttingEstimate = (item,index,dispatch) =>{ 
+  dispatch(
+            handleField(
+                          "search-preview",
+                          "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewTen.children",
+                        `roadCutting_${index}`,
+                   
+                      getCommonContainer({
+                                              
+                             length:getLabelWithValueForModifiedLabel(
+                                {
+                                  labelName: "Plumber mobile No.",
+                                  labelKey: "WF_ESTIMATION_LENGTH"
+                                },
+                                { 
+                                  jsonPath: `WaterConnection[0].tempRoadType[${index}].length`,                  
+                                }, 
+                                                                       
+                              ),
+                              breadth:getLabelWithValueForModifiedLabel(
+                                {
+                                  labelName: "Plumber mobile No.",
+                                  labelKey: "WF_ESTIMATION_BREADTH"
+                                },
+                                { 
+                                  jsonPath: `WaterConnection[0].tempRoadType[${index}].breadth`,                 
+                                }, 
+                                                                    
+                              ),
+                              depth: getLabelWithValueForModifiedLabel(
+                                {
+                                  labelName: "Plumber mobile No.",
+                                  labelKey: "WF_ESTIMATION_DEPTH"
+                                },
+                                { 
+                                  jsonPath: `WaterConnection[0].tempRoadType[${index}].depth`,                 
+                                }, 
+                                                                          
+                              ),
+                              rate:getLabelWithValueForModifiedLabel(
+                                {
+                                  labelName: "Plumber mobile No.",
+                                  labelKey: "WF_ESTIMATION_RATE"
+                                },
+                                { 
+                                  jsonPath: `WaterConnection[0].tempRoadType[${index}].rate`,                 
+                                }, 
+                              
+                              ),
+ 
+                          }),
+      ))
+      
+   
+  
+  }
 
 const setStatusBasedValue = status => {
   switch (status) {
