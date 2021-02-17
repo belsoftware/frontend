@@ -1,4 +1,9 @@
-import { getCommonContainer, getCommonHeader, getStepperObject } from "egov-ui-framework/ui-config/screens/specs/utils";
+import {
+   getCommonContainer, 
+   getCommonHeader, 
+   getStepperObject,
+  
+   } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
@@ -169,7 +174,18 @@ const getMdmsData = async (state, dispatch, tenantId) => {
               filter: "[?(@.active == true)]"
             }
           ]
-        }
+        },
+        {
+          moduleName: "common-masters",
+          masterDetails: [
+            { 
+              name: "Help",
+              filter: "[?(@.code == 'HRMS')]"
+            
+            }
+          
+          ],
+        } 
       ]
     }
   };
@@ -184,6 +200,8 @@ const getMdmsData = async (state, dispatch, tenantId) => {
     dispatch(
       prepareFinalObject("createScreenMdmsData", get(response, "MdmsRes"))
     );
+   
+    dispatch(prepareFinalObject("helpFileUrl", get(response, "MdmsRes.common-masters.Help[0].URL")));
     setRolesList(state, dispatch);
     setHierarchyList(state, dispatch);
     return true;
