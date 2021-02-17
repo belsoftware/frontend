@@ -248,9 +248,7 @@ export const roadDetails={
       jsonPath: "WaterConnection[0].tempRoadType[0].rate",
       callBack: handleNA
     }
-  ),
- 
-
+  )
 }
 
 // This code was used earlier using multi-item
