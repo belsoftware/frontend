@@ -87,7 +87,7 @@ export const searchApplications = getCommonCard({
       gridDefination: { xs: 12, sm: 4 },
       required: false,
       beforeFieldChange: async (action, state, dispatch) => {
-        dispatch(handleField('search', "components.div.children.showSearches.children.showSearchScreens.props.tabs[1].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch.children.applicationstatus", "props.disabled", false));
+        dispatch(handleField('search', "components.div.children.showSearches.children.showSearchScreens.props.tabs[0].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch.children.applicationstatus", "props.disabled", false));
         if (action.value === "NEW WATER CONNECTION" || action.value ==="NEW SEWERAGE CONNECTION") {
           dispatch(
             prepareFinalObject(
