@@ -194,7 +194,7 @@ export const propertyLocationDetails = getCommonCard({
       },
       required: true,
      // pattern: /^[a-zA-Z0-9-]*$/i,
-     pattern : getPattern("Address"),
+     pattern : getPattern("DoorHouseNo"),
       errorMessage: "PT_COMMON_ERR_INVALID_DOOR_NO",
       jsonPath: "Property.address.doorNo"
     }),
