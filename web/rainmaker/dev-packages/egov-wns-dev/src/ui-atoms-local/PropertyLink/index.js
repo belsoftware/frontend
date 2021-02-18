@@ -38,20 +38,21 @@ class AddLinkForProperty extends React.Component {
 
 
     if (isMode === "MODIFY") {
-      return (
-        <div style={styles} className={"property-buttons"}>
-          <a href="javascript:void(0)" onClick={() => routeTo(link)} ><LabelContainer
-            style={clickHereStyles}
-            labelKey="WS_SEARCH_PROPERTY" />
-          </a> <span> </span>
+      console.info("Property modification commented for time being");
+      // return (
+      //   <div style={styles} className={"property-buttons"}>
+      //     <a href="javascript:void(0)" onClick={() => routeTo(link)} ><LabelContainer
+      //       style={clickHereStyles}
+      //       labelKey="WS_SEARCH_PROPERTY" />
+      //     </a> <span> </span>
 
-          <a href="javascript:void(0)" onClick={selectedPropertyId? () => routeTo(modifyLink):""} >
-            <LabelContainer
-              style={clickHereStyles}
-              labelKey="WS_MODIFY_PROPERTY" />
-          </a>
-        </div>
-      );
+      //     <a href="javascript:void(0)" onClick={selectedPropertyId? () => routeTo(modifyLink):""} >
+      //       <LabelContainer
+      //         style={clickHereStyles}
+      //         labelKey="WS_MODIFY_PROPERTY" />
+      //     </a>
+      //   </div>
+      // );
     } else {
       return (
         <div style={styles}>

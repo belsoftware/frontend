@@ -1,5 +1,6 @@
 import { handleScreenConfigurationFieldChange as handleField } from "../../../../ui-redux/screen-configuration/actions";
 import { getTranslatedLabel } from "../../../../ui-utils/commons";
+import get from "lodash/get";
 
 const appCardHeaderStyle = (colorOne = "#ec407a", colorTwo = "#d81b60") => {
   return {
@@ -611,4 +612,13 @@ export const getPattern = type => {
 
 export const checkValueForNA = value => {
   return value && value !== "null" ? value : "NA";
+};
+
+export const downloadHelpFile = async (state) => {  
+  console.info("download the help file");
+  const helpurl = get(state.screenConfiguration.preparedFinalObject,
+    "helpFileUrl",
+    ""
+  );   
+  window.open(helpurl,"_blank");
 };

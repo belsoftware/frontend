@@ -5,7 +5,7 @@ import {
   LabelContainer,
   TextFieldContainer
 } from "egov-ui-framework/ui-containers";
-import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { prepareFinalObject,toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   getFileUrlFromAPI,
   handleFileUpload,
@@ -16,6 +16,7 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import store from "redux/store";
 import { UploadSingleFile } from "../../ui-molecules-local";
 
 const themeStyles = theme => ({
@@ -189,6 +190,7 @@ class DocumentList extends Component {
   };
 
   handleDocument = async (file, fileStoreId) => {
+    store.dispatch(toggleSpinner());
     let { uploadedDocIndex } = this.state;
     const { prepareFinalObject, documentsUploadRedux } = this.props;
     const fileUrl = await getFileUrlFromAPI(fileStoreId);
@@ -198,6 +200,7 @@ class DocumentList extends Component {
         ...documentsUploadRedux[uploadedDocIndex], documents: [{ fileName: file.name, fileStoreId, fileUrl: Object.values(fileUrl)[0] }]
       }
     });
+    store.dispatch(toggleSpinner());
   };
 
   removeDocument = remDocIndex => {
