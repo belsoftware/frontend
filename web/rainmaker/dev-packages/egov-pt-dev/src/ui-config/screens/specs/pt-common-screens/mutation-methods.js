@@ -45,14 +45,7 @@ export const resetFields = (state, dispatch) => {
       ""
     )
   );
-  dispatch(
-    handleField(
-      "propertySearch",
-      "components.div.children.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.propertyTaxUniqueId",
-      "props.value",
-      ""
-    )
-  );
+  
   dispatch(prepareFinalObject(
     "searchScreen.propertyIds",
     ''
@@ -61,10 +54,7 @@ export const resetFields = (state, dispatch) => {
     "searchScreen.mobileNumber",
     ''
   ))
-  dispatch(prepareFinalObject(
-    "searchScreen.oldpropertyids",
-    ''
-  ))
+  
 
 };
 
