@@ -22,6 +22,7 @@ const defaultStyle = {
   lineHeight: "44px",
   width: "28.48%",
   padding: "0 16px",
+  marginBottom : "10px"
 };
 
 const defaultLabelStyle = {
@@ -44,7 +45,7 @@ const LanguageSelectionForm = ({ items, onLanguageSelect, value, onClick }) => {
             </div >
           </div>
         <form>
-            <div className="rainmaker-displayInline" style={{ justifyContent: "center" }}>
+           <div className="rainmaker-displayInline" style={{ justifyContent: "center" }}>
               {items &&
                 items.map((item, index) => {
                   return (
