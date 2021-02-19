@@ -216,7 +216,7 @@ const callBackForNext = async (state, dispatch) => {
         arrayHolderData.push(holderData);
         applyScreenObject.connectionHolders = arrayHolderData;
       }
-      console.info("DC-searchPropertyId",searchPropertyId);
+      
       if (searchPropertyId !== undefined && searchPropertyId !== "") {
 
         if (!isActiveProperty(applyScreenObject.property)) {
@@ -411,14 +411,18 @@ const callBackForNext = async (state, dispatch) => {
     let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
     let addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
     let wsConnectionTaxHeadsValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.wsConnectionTaxHeads.children",state,dispatch);
+    let wsTaxheadsFilledOrNotFlag =  true;
+    let applicationStatus = get(state.screenConfiguration.preparedFinalObject, "applyScreen.applicationStatus");
+     //Tax estimate must be filled by Field inspector
+    if(applicationStatus == "PENDING_FOR_FIELD_INSPECTION")
+        wsTaxheadsFilledOrNotFlag = checkTaxHeadsFilledOrNot(state);
     //Check one full row is filled/not
     let roadCuttingDataRowValidation =  checkRoadCuttingRowFilledOrNot(state,dispatch,isFormValid);
-    let roadCuttingDataValiation = true;
-    console.info("All rows filled or not?",roadCuttingDataRowValidation);
+    let roadCuttingDataValiation = true;      
     if(roadCuttingDataRowValidation){ //Full row is filled so check the data is valid or not
       var objectJsonPath = "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.roadCuttingChargeContainer.children";
       const fields = get(state.screenConfiguration.screenConfig["apply"],objectJsonPath,{});
-     
+     //Check data entered in road cutting are valid/not
       for (var eachItem in fields) { 
         if(eachItem.includes('_')){
           let eachRoadCuttingValidation = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.roadCuttingChargeContainer.children."+eachItem+".children",state, dispatch);
@@ -427,22 +431,10 @@ const callBackForNext = async (state, dispatch) => {
             break;
           }
         }          
-     }
+      }
+     
     }
-
-    // const applicationStatus = get(state, "screenConfiguration.preparedFinalObject.applyScreen.applicationStatus");
-      
-    // if(applicationStatus === "PENDING_FOR_FIELD_INSPECTION"){
-    //   console.info("Check any road cutting / tax is filled");
-    //   let roadTypeEstimate = get(state.screenConfiguration.preparedFinalObject, "applyScreen.roadTypeEst");
-    //   let taxEstimate = get(state.screenConfiguration.preparedFinalObject, "applyScreen.wsTaxHeads");
-    //   console.info("Data==",taxEstimate);
-    //   console.info("empty=", isEmpty(taxEstimate));
-
-
-    // }
-
-
+    
     let errorMessage = {
       labelName: "Please provide valid inputs!",
       labelKey: "WS_FILL_VALID_INPUTS"
@@ -455,7 +447,15 @@ const callBackForNext = async (state, dispatch) => {
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
       return;
     }
-    else if(!plumberValid|| !activateDetailValid||!addConnDetailValid || !wsConnectionTaxHeadsValid || !roadCuttingDataValiation){
+    else if(!wsTaxheadsFilledOrNotFlag){
+      let  errorMessage = {
+        labelName:"Please fill Tax head estimate",
+        labelKey: "ERR_WSTAXHEAD_EST"
+      };
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
+      return;
+    }
+    else if(!plumberValid|| !activateDetailValid||!addConnDetailValid || !wsConnectionTaxHeadsValid || !roadCuttingDataValiation || !wsTaxheadsFilledOrNotFlag){
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
       return;
     }
@@ -545,9 +545,20 @@ const callBackForNext = async (state, dispatch) => {
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
-};
+ };
 
-const checkRoadCuttingRowFilledOrNot = (state,dispatch,isFormValid) =>{
+ const checkTaxHeadsFilledOrNot =(state) =>{
+  let taxEstimateFilled = get(state.screenConfiguration.preparedFinalObject, "applyScreen.wsTaxHeads");
+  for(var i=0;i<taxEstimateFilled.length;i++){
+     var amt = parseFloat(taxEstimateFilled[i].amount);
+    if(isNaN(amt) == false){
+       return true;
+    }  
+  }
+   return false;
+ }
+
+ const checkRoadCuttingRowFilledOrNot = (state) =>{
    let roadTypeEstimate = get(state.screenConfiguration.preparedFinalObject, "applyScreen.roadTypeEst");
    const roadEstimateValidation = [];
    roadTypeEstimate.forEach(element => {
@@ -566,6 +577,7 @@ const checkRoadCuttingRowFilledOrNot = (state,dispatch,isFormValid) =>{
     }
  
   }
+
 
 
 

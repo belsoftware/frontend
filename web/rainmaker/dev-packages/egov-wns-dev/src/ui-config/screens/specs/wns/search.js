@@ -157,7 +157,7 @@ const employeeSearchResults = {
     getMDMSAppType(dispatch);
     getMdmsTenantsData(dispatch);
     dispatch(prepareFinalObject("searchConnection.tenantId", getTenantIdCommon()));
-    dispatch(prepareFinalObject("currentTab", "SEARCH_CONNECTION"));
+    dispatch(prepareFinalObject("currentTab", "SEARCH_APPLICATION"));
     return action;
   },
   components: {

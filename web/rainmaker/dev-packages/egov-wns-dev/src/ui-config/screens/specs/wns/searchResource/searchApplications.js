@@ -84,10 +84,14 @@ export const searchApplications = getCommonCard({
       placeholder: { labelName: "Select to Date", labelKey: "WS_COMMON_APPLICATION_TYPE_PLACEHOLDER" },
       sourceJsonPath: "applyScreenMdmsData.searchScreen.applicationType",
       jsonPath: "searchScreen.applicationType",
+      localePrefix: {
+        moduleName: "WS",
+        masterName: "CONNECTION_TYPE"
+      },
       gridDefination: { xs: 12, sm: 4 },
       required: false,
       beforeFieldChange: async (action, state, dispatch) => {
-        dispatch(handleField('search', "components.div.children.showSearches.children.showSearchScreens.props.tabs[1].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch.children.applicationstatus", "props.disabled", false));
+        dispatch(handleField('search', "components.div.children.showSearches.children.showSearchScreens.props.tabs[0].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch.children.applicationstatus", "props.disabled", false));
         if (action.value === "NEW WATER CONNECTION" || action.value ==="NEW SEWERAGE CONNECTION") {
           dispatch(
             prepareFinalObject(
