@@ -907,7 +907,7 @@ const screenConfig = {
       );
 
        //Setting Tax heads and Road Types
-          if (applicationNumber && getQueryArg(window.location.href, "action") === "edit") {
+          if (applicationNumber && getQueryArg(window.location.href, "action") === "edit" && process.env.REACT_APP_NAME !== "Citizen") {
             //show tax head estimates to only field inspector and doc verifier
             if(checkCardPermission(state , "wsConnectionTaxHeadsContainer")){
               dispatch(
