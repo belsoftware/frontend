@@ -84,6 +84,10 @@ export const searchApplications = getCommonCard({
       placeholder: { labelName: "Select to Date", labelKey: "WS_COMMON_APPLICATION_TYPE_PLACEHOLDER" },
       sourceJsonPath: "applyScreenMdmsData.searchScreen.applicationType",
       jsonPath: "searchScreen.applicationType",
+      localePrefix: {
+        moduleName: "WS",
+        masterName: "CONNECTION_TYPE"
+      },
       gridDefination: { xs: 12, sm: 4 },
       required: false,
       beforeFieldChange: async (action, state, dispatch) => {
