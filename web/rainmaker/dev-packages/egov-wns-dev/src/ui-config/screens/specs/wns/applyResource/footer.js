@@ -408,7 +408,7 @@ const callBackForNext = async (state, dispatch) => {
 
     console.info("Validate third step"); 
     let plumberValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children", state, dispatch);
-    let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
+    //let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
     let addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
     let wsConnectionTaxHeadsValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.wsConnectionTaxHeads.children",state,dispatch);
     let wsTaxheadsFilledOrNotFlag =  true;
@@ -431,10 +431,15 @@ const callBackForNext = async (state, dispatch) => {
             break;
           }
         }          
-      }
-     
+      }     
     }
+    let activationDetailsFilledFlag = true;
+    if(applicationStatus == "PENDING_FOR_CONNECTION_ACTIVATION")
+       activationDetailsFilledFlag  = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children",state,dispatch);
     
+
+       console.info("all validation=","plumberValid=",plumberValid,addConnDetailValid ,wsConnectionTaxHeadsValid ,roadCuttingDataValiation ,wsTaxheadsFilledOrNotFlag ,activationDetailsFilledFlag)
+
     let errorMessage = {
       labelName: "Please provide valid inputs!",
       labelKey: "WS_FILL_VALID_INPUTS"
@@ -455,7 +460,7 @@ const callBackForNext = async (state, dispatch) => {
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
       return;
     }
-    else if(!plumberValid|| !activateDetailValid||!addConnDetailValid || !wsConnectionTaxHeadsValid || !roadCuttingDataValiation || !wsTaxheadsFilledOrNotFlag){
+    else if(!plumberValid|| !addConnDetailValid || !wsConnectionTaxHeadsValid || !roadCuttingDataValiation || !wsTaxheadsFilledOrNotFlag || !activationDetailsFilledFlag){
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
       return;
     }

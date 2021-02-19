@@ -896,7 +896,7 @@ const screenConfig = {
          )
        );
 
-       //Make taxHead visible to false initially
+       //Make estimation/activation containers visible to false initially
        dispatch(
         handleField(
           "apply",
@@ -904,7 +904,18 @@ const screenConfig = {
           "visible",
           false
         )
+       );
+       dispatch(
+        handleField(
+          "apply",
+          "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
+          "visible",
+          false
+        )
       );
+     
+
+      
 
        //Setting Tax heads and Road Types
           if (applicationNumber && getQueryArg(window.location.href, "action") === "edit" && process.env.REACT_APP_NAME !== "Citizen") {
@@ -919,6 +930,58 @@ const screenConfig = {
                 )
               );
             }
+            if(checkCardPermission(state , "plumberDetailsContainer")){
+              dispatch(
+                handleField(
+                  "apply",
+                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
+                  "visible",
+                  true
+                )
+              );
+           }
+            else{
+              dispatch(
+                handleField(
+                  "apply",
+                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
+                  "visible",
+                  false
+                )
+              );
+            }
+            if(checkCardPermission(state , "connectiondetailscontainer")){
+              dispatch(
+                handleField(
+                  "apply",
+                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
+                  "visible",
+                  true
+                )
+              );
+            }
+            else{
+              dispatch(
+                handleField(
+                  "apply",
+                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
+                  "visible",
+                  false
+                )
+              );
+            }
+            if(checkCardPermission(state , "activationDetailsContainer")){
+              dispatch(
+                handleField(
+                  "apply",
+                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
+                  "visible",
+                  true
+                )
+              );
+            }
+           
+
 
             //Create tax head object ---start
             let taxHeadDetails = get(
@@ -974,7 +1037,8 @@ const screenConfig = {
             }
             dispatch(prepareFinalObject("editWSFlow", true));
           }
-       });
+          
+      });
 
 
       // dispatch(prepareFinalObject("applyScreen.water", true));
