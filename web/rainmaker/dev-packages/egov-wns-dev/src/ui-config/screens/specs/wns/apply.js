@@ -146,7 +146,7 @@ export const getMdmsData = async dispatch => {
       tenantId: commonConfig.tenantId,
       moduleDetails: [
         { moduleName: "common-masters", masterDetails: [{ name: "OwnerType" }, { name: "OwnerShipCategory" }] },
-        { moduleName: "tenant", masterDetails: [{ name: "tenants" }] },
+        { moduleName: "tenant", masterDetails: [{ name: "tenants" },{ name: "citymodule" }] },
         { moduleName: "sw-services-calculation", masterDetails: [{ name: "Documents" }, { name: "RoadType" },{ name: "PipeSize" }] },
         { moduleName: "ws-services-calculation", masterDetails: [{ name: "PipeSize" }] },
         {
@@ -510,7 +510,7 @@ export const getData = async (action, state, dispatch) => {
       
       if (propertyID) {
         let queryObject = [{ key: "tenantId", value: tenantId }, { key: "propertyIds", value: propertyID }];
-        getApplyPropertyDetails(queryObject, dispatch, propertyID)
+        getApplyPropertyDetails(queryObject, dispatch, propertyID,state)
       } else {
         let propId = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.propertyId")
         dispatch(prepareFinalObject("searchScreen.propertyIds", propId));
@@ -524,7 +524,21 @@ export const getData = async (action, state, dispatch) => {
     }
   } else if (propertyID) {
     let queryObject = [{ key: "tenantId", value: tenantId }, { key: "propertyIds", value: propertyID }];
-    getApplyPropertyDetails(queryObject, dispatch, propertyID)
+    getApplyPropertyDetails(queryObject, dispatch, propertyID,state)
+    if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
+      toggleWaterFeilds(action, true);
+      toggleSewerageFeilds(action, true);
+    } else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
+      toggleWaterFeilds(action, false);
+      toggleSewerageFeilds(action, true);
+    } else if(get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")){
+      toggleWaterFeilds(action, true);
+      toggleSewerageFeilds(action, false);
+    }   
+    else{
+      toggleWaterFeilds(action, false);
+      toggleSewerageFeilds(action, false);
+    }
     togglePropertyFeilds(action, true);
   }
 };
@@ -554,7 +568,7 @@ const checkCardPermission =(state,cardName) =>{
 
 }
 
-const getApplyPropertyDetails = async (queryObject, dispatch, propertyID) => {
+const getApplyPropertyDetails = async (queryObject, dispatch, propertyID,state) => {
   let payload = await getPropertyResults(queryObject, dispatch);
   let propertyObj = payload.Properties[0];
   if (!isActiveProperty(propertyObj)) {
@@ -602,6 +616,38 @@ const getApplyPropertyDetails = async (queryObject, dispatch, propertyID) => {
           );
         }
       }
+
+      let tenantIdProp = get(payload, "Properties[0].tenantId", "");
+      if(tenantIdProp){
+        const wsTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='WS')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
+        const swTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='SW')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
+        console.log(wsTenant,"----wsTenants");
+        console.log(swTenant,"----swTenant");
+        if(wsTenant.length>0){
+              dispatch(prepareFinalObject("applyScreen.water", true));
+            dispatch(prepareFinalObject("applyScreen.sewerage", false));
+            dispatch(prepareFinalObject("disableWS", false));
+            //toggleSewerageFeilds(action, true);
+           // toggleWaterFeilds(action, true);
+            }
+            else{
+              dispatch(prepareFinalObject("disableWS", true));
+              //toggleWaterFeilds(action, false);            
+            }
+            if(swTenant.length>0){
+              dispatch(prepareFinalObject("applyScreen.water", false));
+              dispatch(prepareFinalObject("applyScreen.sewerage", true));
+              dispatch(prepareFinalObject("disableSW", false));
+              //toggleSewerageFeilds(action, true);
+            }
+            else{
+              dispatch(prepareFinalObject("disableSW", true));
+             // toggleSewerageFeilds(action, false);
+            }
+       
+      }
+     
+      
   
 }
 
@@ -667,6 +713,7 @@ const pageReset = (dispatch) => {
   dispatch(prepareFinalObject("documentsUploadRedux", {}));
   dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", []));
   dispatch(prepareFinalObject("editWSFlow", false));
+ 
   existingConnectionDetails = getExistingConnectionDetails();
   propertyDetail = getPropertyDetails();
   propertyIDDetails = getPropertyIDDetails();
@@ -877,8 +924,8 @@ const screenConfig = {
     //Road cutting charges
     dispatch(prepareFinalObject(`applyScreen.roadTypeEst`, []));
 
-    dispatch(prepareFinalObject("applyScreen.water", true));
-    dispatch(prepareFinalObject("applyScreen.sewerage", false));
+    // dispatch(prepareFinalObject("applyScreen.water", true));
+    // dispatch(prepareFinalObject("applyScreen.sewerage", false));
 
     const propertyId = getQueryArg(window.location.href, "propertyId");
     const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
@@ -1056,8 +1103,13 @@ const screenConfig = {
           } else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
             toggleWaterFeilds(action, false);
             toggleSewerageFeilds(action, true);
-          } else {
+          } 
+          else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")) {
             toggleWaterFeilds(action, true);
+            toggleSewerageFeilds(action, false);
+          }
+          else {
+            toggleWaterFeilds(action, false);
             toggleSewerageFeilds(action, false);
           }          
         } else if (applicationNumber && getQueryArg(window.location.href, "action") === "edit") {   
@@ -1083,8 +1135,12 @@ const screenConfig = {
           } else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
             toggleWaterFeilds(action, false);
             toggleSewerageFeilds(action, true);
-          } else {
+          } 
+          else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")) {
             toggleWaterFeilds(action, true);
+            toggleSewerageFeilds(action, false);
+          }else {
+            toggleWaterFeilds(action, false);
             toggleSewerageFeilds(action, false);
           }
         }
