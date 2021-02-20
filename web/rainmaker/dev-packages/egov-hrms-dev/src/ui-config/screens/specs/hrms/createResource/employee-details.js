@@ -331,7 +331,7 @@ export const professionalDetails = getCommonCard(
       },
       helpPdfButton: {
         componentPath: "Button",
-       // jsonPath: "Challan[0].ucCollection.pdf",
+        jsonPath: "Employee[0].empRoles.pdf",
         gridDefination: {
           xs: 12,
           sm: 6,
