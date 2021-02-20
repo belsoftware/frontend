@@ -387,9 +387,13 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 1) {
     if (isModifyMode()) {
-      isFormValid = true;
-      hasFieldToaster = false;
+      console.info("DC-Modify mode is true");
+      // isFormValid = true;
+      // hasFieldToaster = false;
+      isFormValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
+      hasFieldToaster = true;
     } else {
+      console.info("DC-Modify mode is false");
       if (moveToReview(state, dispatch)) {
         await pushTheDocsUploadedToRedux(state, dispatch);
         isFormValid = true; hasFieldToaster = false;
@@ -406,7 +410,7 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 2 && process.env.REACT_APP_NAME !== "Citizen") {
 
-    console.info("Validate third step"); 
+    console.info("Validate 2nd step"); 
     let plumberValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children", state, dispatch);
     //let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
     let addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
@@ -474,16 +478,17 @@ const callBackForNext = async (state, dispatch) => {
         console.info("inside the modify ");             
           if (moveToReview(state, dispatch)) {
             await pushTheDocsUploadedToRedux(state, dispatch);
+
             // isFormValid = true; 
             // hasFieldToaster = false;
                 // if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {
                 //   setReviewPageRoute(state, dispatch);
                 // }
           }
-          // else {
-          //   isFormValid = true;
-          //   hasFieldToaster = false;
-          // }
+           else {
+            isFormValid = false;
+            hasFieldToaster = true;
+          }
         
       
       } 
@@ -530,23 +535,45 @@ const callBackForNext = async (state, dispatch) => {
         labelName: "Please fill all mandatory fields!",
         labelKey: "WS_FILL_REQUIRED_FIELDS"
       };
-      switch (activeStep) {
-        case 1:
-          errorMessage = {
-            labelName:
-              "Please upload all Mandatory Document!",
-            labelKey: "WS_UPLOAD_MANDATORY_DOCUMENTS"
-          };
-          break;
-        case 2:
-          console.info("PG= 484");
-          errorMessage = {
-            labelName:
-              "Please fill all mandatory fields for Applicant Details, then proceed!",
-            labelKey: "ERR_ROADCUTTING_TOAST"
-          };
-          break;
+      if(!isModifyMode){
+        switch (activeStep) {
+          case 1:
+            errorMessage = {
+              labelName:
+                "Please upload all Mandatory Document!",
+                labelKey: "WS_UPLOAD_MANDATORY_DOCUMENTS"
+              // labelKey:"WS_FILL_REQUIRED_FIELDS"
+            };
+            break;
+          case 2:
+          
+            errorMessage = {
+              labelName:
+                "Please fill all mandatory fields for Applicant Details, then proceed!",
+              labelKey: "ERR_ROADCUTTING_TOAST"
+            };
+            break;
+        }
       }
+      else{
+        switch (activeStep) {
+          case 1:
+            let errorMessage = {
+              labelName: "Please fill all mandatory fields!",
+              labelKey: "WS_FILL_REQUIRED_FIELDS"
+            };
+            break;
+          case 2:
+          
+            errorMessage = {
+              labelName:
+                "Please fill all mandatory fields for Applicant Details, then proceed!",
+              labelKey: "ERR_ROADCUTTING_TOAST"
+            };
+            break;
+        }
+      }
+          
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
