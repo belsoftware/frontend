@@ -125,7 +125,11 @@ const getMdmsData = async (state, dispatch, tenantId) => {
             {
               name: "Designation",
               filter: "[?(@.active == true)]"
-            }
+            },
+            {
+              name: "Help",
+              filter: "[?(@.code == 'HRMS')]"
+            }            
           ]
         },
         {
@@ -174,18 +178,7 @@ const getMdmsData = async (state, dispatch, tenantId) => {
               filter: "[?(@.active == true)]"
             }
           ]
-        },
-        {
-          moduleName: "common-masters",
-          masterDetails: [
-            { 
-              name: "Help",
-              filter: "[?(@.code == 'HRMS')]"
-            
-            }
-          
-          ],
-        } 
+        }        
       ]
     }
   };
