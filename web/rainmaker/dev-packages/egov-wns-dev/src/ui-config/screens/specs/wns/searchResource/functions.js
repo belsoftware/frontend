@@ -156,14 +156,14 @@ const renderSearchApplicationTable = async (state, dispatch) => {
   queryObject.push({ key: "isConnectionSearch", value: true });
   let searchScreenObject = get(state.screenConfiguration.preparedFinalObject, "searchScreen", {});
   const isSearchBoxFirstRowValid = validateFields(
-    "components.div.children.showSearches.children.showSearchScreens.props.tabs[1].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch",
+    "components.div.children.showSearches.children.showSearchScreens.props.tabs[0].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch",
     state,
     dispatch,
     "search"
   );
 
   const isSearchBoxSecondRowValid = validateFields(
-    "components.div.children.showSearches.children.showSearchScreens.props.tabs[1].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch",
+    "components.div.children.showSearches.children.showSearchScreens.props.tabs[0].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch",
     state,
     dispatch,
     "search"
