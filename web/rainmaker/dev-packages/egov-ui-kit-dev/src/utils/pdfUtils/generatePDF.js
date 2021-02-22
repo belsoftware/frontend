@@ -699,7 +699,16 @@ export const downloadPDFFileUsingBase64 = (receiptPDF, filename) => {
     if (typeof mSewaApp === "undefined" )
     {
       // we are running in browser
+      console.log("mSewaApp is undefined");
       receiptPDF.download(filename);
+      if(JSON.parse(localStorageGet('isMobileApp')) == true)
+      {
+        receiptPDF.getBase64(data => {
+            window.flutter_inappwebview.callHandler('downloadBase64File',data, filename);
+   
+          })
+        
+      }
     } else {
       // we are running under webview
       receiptPDF.getBase64(data => {
