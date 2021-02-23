@@ -115,8 +115,10 @@ export const propertySearchApiCall = async (state, dispatch) => {
               dispatch(prepareFinalObject("disableWS", true));
             }
             if(swTenant.length>0){
+              if(wsTenant.length==0){
               dispatch(prepareFinalObject("applyScreen.water", false));
               dispatch(prepareFinalObject("applyScreen.sewerage", true));
+              }
               dispatch(prepareFinalObject("disableSW", false));
             }
             else{
