@@ -8,6 +8,7 @@ import get from "lodash/get";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts";
 import { getFromObject } from "../PTCommon/FormWizardUtils/formUtils";
+import { localStorageGet } from "egov-ui-kit/utils/localStorageUtils";
 
 
 
