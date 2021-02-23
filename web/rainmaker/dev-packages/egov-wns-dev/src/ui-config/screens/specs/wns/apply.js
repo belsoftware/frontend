@@ -635,8 +635,10 @@ const getApplyPropertyDetails = async (queryObject, dispatch, propertyID,state) 
               //toggleWaterFeilds(action, false);            
             }
             if(swTenant.length>0){
+              if(wsTenant.length==0){
               dispatch(prepareFinalObject("applyScreen.water", false));
               dispatch(prepareFinalObject("applyScreen.sewerage", true));
+              }
               dispatch(prepareFinalObject("disableSW", false));
               //toggleSewerageFeilds(action, true);
             }
