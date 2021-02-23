@@ -1,5 +1,8 @@
 import _ from 'lodash';
 import CONFIG from '../config/configs';
+import constants from "../actions/constants";
+import {getQueryArg} from "../actions/commons"
+
 export default function getFilterObj(GFilterData, mdmsData, page) {
     let newGFilterData = _.cloneDeep(GFilterData);
 
@@ -23,8 +26,15 @@ export default function getFilterObj(GFilterData, mdmsData, page) {
         }
     }
 
-    if (newGFilterData && newGFilterData['CBS'] && newGFilterData['CBS'].length > 0) {
+    if(window.location.pathname && window.location.pathname.includes('citizen-home')){
+        let cant = `${localStorage.getItem('tenant-id')}`;
+        if(constants.VALID_TENANT_IDS.indexOf(cant) > -1)
+        {
+            filters['tenantId'] = [cant];
+        }
+    }
 
+    if (newGFilterData && newGFilterData['CBS'] && newGFilterData['CBS'].length > 0) {
         for (var i = 0; i < newGFilterData['CBS'].length; i++) {
             let tenent = `${localStorage.getItem('tenant-id')}` ? (`${localStorage.getItem('tenant-id')}`).split('.')[0] : ''
             //tempValue.push(tenent + '.' + newGFilterData['CBS'][i].toLowerCase());
@@ -52,7 +62,9 @@ export default function getFilterObj(GFilterData, mdmsData, page) {
         let dashKey ='';
         for(var i=0; i<CONFIG.MODULE_LEVEL.length;i++){
             dashKey = Object.keys(CONFIG.MODULE_LEVEL[i])[0];
-            if(dashKey.toLowerCase() == page.toLowerCase() || 'ulb-'+dashKey == page.toLowerCase()){
+            console.log("The dashkey is "+dashKey);
+            if(dashKey.toLowerCase() == page.toLowerCase() || 'ulb-'+dashKey == page.toLowerCase() || 
+                'citizen-home-'+dashKey == page.toLowerCase()){
                 filters['modulelevel'] = CONFIG.MODULE_LEVEL[i][dashKey]['filterKey'];
                 break;
             }else if(newGFilterData && newGFilterData['Services'] && newGFilterData['Services'].length > 0 && CONFIG.MODULE_LEVEL[i][dashKey] && CONFIG.MODULE_LEVEL[i][dashKey]['services_name'] == newGFilterData['Services'] ){

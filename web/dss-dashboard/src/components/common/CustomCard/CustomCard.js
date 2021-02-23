@@ -13,6 +13,13 @@ import Arrow_Downward from "../../../images/arrows/Arrow_Downward.svg";
 import Arrow_Upward from '../../../images/arrows/Arrow_Upward.svg';
 import NFormatter from '../numberFormater';
 
+const BelDssTooltip = withStyles({
+    tooltip: {
+        fontSize:'16px',
+        top:'-10px'
+    }
+  })(Tooltip);
+
 class CustomCard extends React.Component {
     constructor(props) {
         super(props);
@@ -75,13 +82,16 @@ class CustomCard extends React.Component {
             }
                    
             let label = data.label ? (strings[data.label] ? strings[data.label] : data.label) : '';
+            let tooltip = data.label ? (strings[data.label+"_TIP"] ? strings[data.label+"_TIP"] : 
+                (strings[data.label] ? strings[data.label] : data.label)) : '';
+            
             return (
                 <Grid container spacing={24}>
                     <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                         <div>
-                            <Tooltip title={label} placement="top">
+                            <BelDssTooltip title={tooltip} placement="top">
                                 <Typography className={classes.subTitle}>{label}</Typography>
-                            </Tooltip>
+                            </BelDssTooltip>
                         </div>
 
                     </Grid>

@@ -7,3 +7,10 @@ export const getQueryArg = (url, name) => {
   if (!results[2]) return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 };
+
+export const capitalizeFirstLetter = (string) => {
+  if(string)
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  else
+    return;
+}

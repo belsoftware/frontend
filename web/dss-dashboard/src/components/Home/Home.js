@@ -27,8 +27,9 @@ import Menu from '../common/CustomMenu'
 import getFinancialYearObj from '../../actions/getFinancialYearObj';
 import mdmsAPI from '../../actions/mdms/mdms';
 import moment from 'moment';
-import {getQueryArg} from "../../actions/commons"
+import {getQueryArg,capitalizeFirstLetter} from "../../actions/commons"
 import constants from "../../actions/constants";
+
 
 class Home extends React.Component {
     constructor(props) {
@@ -265,6 +266,19 @@ class Home extends React.Component {
         return title;
     }
 
+    getCantBoardName(){
+        if(window.location.pathname && window.location.pathname.includes('citizen-home')){
+            let cant = "pb."+getQueryArg(window.location.href,"cant");
+            if(constants.VALID_TENANT_IDS.indexOf(cant) > -1)
+            {
+                if(constants.TENANT_NAMES[cant])
+                    return constants.TENANT_NAMES[cant];
+                return capitalizeFirstLetter(getQueryArg(window.location.href,"cant"));
+            }
+        }
+        return "";
+    }
+
     render() {
         let { classes, strings } = this.props;
         let { dashboardConfigData } = this.state;
@@ -278,8 +292,12 @@ class Home extends React.Component {
                     <Grid container spacing={24} className={classes.actions}>
 
                         <Grid item xs={12} sm={12} md={8} lg={8} xl={8} className={classes.pageHeader}>
-                            {this.props.strings[dashboardName] || dashboardName}
+                            {(this.props.strings[dashboardName] || dashboardName ) /*+" - " + this.getCantBoardName()*/} 
                         </Grid>
+                        {/* <Grid item xs={12} sm={12} md={8} lg={8} xl={8} className={classes.pageHeader}
+                            style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
+                            {this.getCantBoardName()} 
+                        </Grid> */}
                     <Grid item xs={12} sm={12} md={4} lg={4} xl={4} style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
                             {/* {isMobile && <div id="divNotToPrint" data-html2canvas-ignore="true" className={classes.posit}>
 

@@ -13,6 +13,11 @@ function handleNavigation(page) {
   
   if(window.location.pathname.includes("citizen-home"))
   {
+    let cant = getQueryArg(window.location.href,"cant");
+    if(cant)
+      history.push(`${process.env.PUBLIC_URL}/`+ page+"?cant="+cant);
+    else
+      history.push(`${process.env.PUBLIC_URL}/`+ page);
     // let cant = getQueryArg(window.location.href,"cant");
     // cant = (constants.VALID_TENANT_IDS.indexOf(cant) > -1 )?cant:"";
     // if(cant)

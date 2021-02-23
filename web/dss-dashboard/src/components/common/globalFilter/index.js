@@ -26,6 +26,8 @@ import getFinancialYearObj from '../../../actions/getFinancialYearObj';
 import TenentAPI from '../../../actions/tenent/tenent'
 import Constant from '../../../actions/constants'
 import CONFIG from '../../../config/configs'
+import {getQueryArg} from "../../../actions/commons"
+import constants from "../../../actions/constants";
 
 class GlobalFilter extends Component {
     constructor(props) {
@@ -446,7 +448,7 @@ class GlobalFilter extends Component {
                 }
                 break;
             case "switch":
-                return this.renderSwitch(object.label, object.values)
+                    return this.renderSwitch(object.label, object.values)
                 break;
         }
     }
@@ -554,8 +556,19 @@ class GlobalFilter extends Component {
                 return (
                     <Cards key="gf" fullW={true}>
                         <div className={classes.mainFilter}>
-
                             {globalFilterData.map(ro => {
+                                console.log("Check ro",ro);
+                                if(ro.label == "Services" && 
+                                    window.location.pathname && window.location.pathname.includes('citizen-home-overview'))
+                                {
+                                    return (
+                                        <div key={ro.label} className={`${classes.filterS} ${"GF_" + ro.label}`}>
+                                            <div className={classes.filterHead}>{strings[ro.label_locale] || ro.label_locale}</div>
+                                            {this.renderComponents(ro)}
+                                        </div>
+                                    );
+                                }
+                                else    
                                 if (this.props.hideDepart && ro.label == "Services") {
                                     return (<div></div>);
 
@@ -567,6 +580,12 @@ class GlobalFilter extends Component {
                                         </div>
                                     );
                                 } else if (ro.label == "CBS" && !_.isEmpty(mdmsData, true) && mdmsData.CBS) {
+                                    if(window.location.pathname && window.location.pathname.includes('citizen-home') 
+                                    && constants.VALID_TENANT_IDS.indexOf(`${localStorage.getItem('tenant-id')}`) > -1)
+                                    {
+                                        return;
+                                    }
+                                    else
                                     return (
                                         <div key={ro.label} className={`${classes.filterS} ${"GF_" + ro.label}`}>
                                             <div className={classes.filterHead}>{strings[ro.label_locale] || ro.label_locale}</div>
@@ -574,12 +593,16 @@ class GlobalFilter extends Component {
                                         </div>
                                     );
                                 } else {
-                                    return (
-                                        <div key={ro.label} className={`${classes.filterS} ${"GF_" + ro.label}`}>
-                                            <div className={classes.filterHead}>{strings[ro.label_locale] || ro.label_locale}</div>
-                                            {this.renderComponents(ro)}
-                                        </div>
-                                    );
+                                    if(window.location.pathname && window.location.pathname.includes('citizen-home')
+                                        && ro.label == "Denomination")
+                                       return;
+                                    else    
+                                        return (
+                                            <div key={ro.label} className={`${classes.filterS} ${"GF_" + ro.label}`}>
+                                                <div className={classes.filterHead}>{strings[ro.label_locale] || ro.label_locale}</div>
+                                                {this.renderComponents(ro)}
+                                            </div>
+                                        );
                                 }
                             })
                             }
