@@ -23,11 +23,14 @@ _.each(tenants,(v,k) => {
 
 
 let localVal = JSON.parse(localStorage.getItem("localization_"+localStorage.getItem("locale") ) );
-for(var i=0; i<localVal.length;i++){    
-     if(localVal[i].code === "ULBGRADE_MC1"){ 
-        corpName = localVal[i]['message'];
-        break;        
-    } 
+if(localVal)
+{
+    for(var i=0; i<localVal.length;i++){    
+        if(localVal[i].code === "ULBGRADE_MC1"){ 
+            corpName = localVal[i]['message'];
+            break;        
+        } 
+    }
 }
 
 //console.log("Hey mdms ",tempDDRs,tempDRRsObj);
