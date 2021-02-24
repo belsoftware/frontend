@@ -133,7 +133,7 @@ class Home extends React.Component {
                                 {
                                     data && data.charts && Array.isArray(data.charts) && data.charts.length > 0 && data.charts.map((d, i) => {
                                         return (
-                                            <Grid item xs={12} sm={6} md={6} lg={3} xl={3} className={classes.customCard}>
+                                            <Grid item xs={12} sm={6} md={6} lg={4} xl={4} className={classes.customCard}>
                                                 <CustomCard key={d.id} moduleLevel={moduleLevel} chartData={d} filters={filters} type="overview" page={window.location.pathname || ''}></CustomCard>
                                             </Grid>
                                         )  

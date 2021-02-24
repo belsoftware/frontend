@@ -22,7 +22,7 @@ const toolbarStyles = theme => ({
                 backgroundColor: variables.tableheaBackgrount,
                 '& span': {
                     color: variables.tableHeadetTextColor,
-                    fontSize: variables.fs_14,
+                    fontSize: variables.fs_16,
                     fontWeight: variables.f_500,
                     fontFamily: variables.primaryFont,
                     '&:hover': {

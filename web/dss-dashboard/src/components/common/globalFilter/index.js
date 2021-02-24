@@ -579,13 +579,11 @@ class GlobalFilter extends Component {
                                             {this.renderComponents(mdmsData)}
                                         </div>
                                     );
-                                } else if (ro.label == "CBS" && !_.isEmpty(mdmsData, true) && mdmsData.CBS) {
-                                    if(window.location.pathname && window.location.pathname.includes('citizen-home') 
+                                } else if(ro.label == "CBS" && window.location.pathname && window.location.pathname.includes('citizen-home') 
                                     && constants.VALID_TENANT_IDS.indexOf(`${localStorage.getItem('tenant-id')}`) > -1)
                                     {
-                                        return;
-                                    }
-                                    else
+                                        return; //Return nothing for CB Level Citizen Home Dashboard.                     
+                                } else if (ro.label == "CBS" && !_.isEmpty(mdmsData, true) && mdmsData.CBS) {
                                     return (
                                         <div key={ro.label} className={`${classes.filterS} ${"GF_" + ro.label}`}>
                                             <div className={classes.filterHead}>{strings[ro.label_locale] || ro.label_locale}</div>

@@ -75,10 +75,11 @@ const styles = theme => ({
             textAlign: 'center',
             fontFamily: 'Roboto',
             // backgroundColor: variables.whiteColor,
-            fontSize: variables.fs_14,
+            fontSize: variables.fs_16,
+            fontWeight: 500,
             '& span': {
                 color: variables.black,
-                fontSize: variables.fs_14,
+                fontSize: variables.fs_16,
                 fontFamily: 'Roboto',
             }
         },
