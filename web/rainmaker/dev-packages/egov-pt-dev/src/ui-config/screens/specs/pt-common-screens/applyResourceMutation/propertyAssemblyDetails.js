@@ -191,7 +191,7 @@ export const propertyAssemblyDetails = getCommonCard({
         labelKey: "PT_COMMON_TOTAL_LAND_AREA_PLACEHOLDER"
       },
       required: true,
-      pattern: /^[1-9]\d{0,9}(\.\d{1,3})?%?$/,
+      pattern: /^[1-9]\d{0,7}(\.\d{1,2})?%?$/,
       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
       jsonPath: "Property.landArea"
     }),
@@ -207,7 +207,7 @@ export const propertyAssemblyDetails = getCommonCard({
         labelKey: "PT_COMMON_TOTAL_CONSTRUCTED_AREA_PLACEHOLDER"
       },
       required: true,
-      pattern: /^[1-9]\d{0,9}(\.\d{1,3})?%?$/,
+      pattern: /^[1-9]\d{0,7}(\.\d{1,2})?%?$/,
       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
       jsonPath: "Property.superBuiltUpArea"
     }),
