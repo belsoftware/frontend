@@ -8,6 +8,7 @@ import get from "lodash/get";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts";
 import { getFromObject } from "../PTCommon/FormWizardUtils/formUtils";
+import { localStorageGet } from "egov-ui-kit/utils/localStorageUtils";
 
 
 
@@ -696,10 +697,19 @@ export const downloadPDFFileUsingBase64 = (receiptPDF, filename) => {
         console.log("Base 64:",data);
     });
     
-    if (typeof mSewaApp === "undefined" && !mobileCheck())
+    if (typeof mSewaApp === "undefined" )
     {
       // we are running in browser
+      console.log("mSewaApp is undefined");
       receiptPDF.download(filename);
+      if(JSON.parse(localStorageGet('isMobileApp')) == true)
+      {
+        receiptPDF.getBase64(data => {
+            window.flutter_inappwebview.callHandler('downloadBase64File',data, filename);
+   
+          })
+        
+      }
     } else {
       // we are running under webview
       receiptPDF.getBase64(data => {
@@ -709,7 +719,7 @@ export const downloadPDFFileUsingBase64 = (receiptPDF, filename) => {
   }
   
   export const openPDFFileUsingBase64 = (receiptPDF, filename) => {
-    if (typeof mSewaApp === "undefined" && !mobileCheck())
+    if (typeof mSewaApp === "undefined" )
     {
       // we are running in browser
       receiptPDF.open();
@@ -722,7 +732,7 @@ export const downloadPDFFileUsingBase64 = (receiptPDF, filename) => {
   }
   
   export const printPDFFileUsingBase64 = (receiptPDF, filename) => {
-    if (typeof mSewaApp === "undefined" && !mobileCheck())
+    if (typeof mSewaApp === "undefined" )
     {
       // we are running in browser
       receiptPDF.print();
