@@ -140,8 +140,9 @@ export const additionDetails = getCommonCard({
           required: false,
           sourceJsonPath: "applyScreenMdmsData.ws-services-masters.connectionType",
           gridDefination: { xs: 12, sm: 6 },
-          errorMessage: "ERR_INVALID_BILLING_PERIOD",
-          jsonPath: "applyScreen.connectionType"
+          errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+          jsonPath: "applyScreen.connectionType",
+          required:true,
         }),
         afterFieldChange: async (action, state, dispatch) => {
           let connType = await get(state, "screenConfiguration.preparedFinalObject.applyScreen.connectionType");
@@ -192,10 +193,14 @@ export const additionDetails = getCommonCard({
       dynamicMdmsWaterSource : {
         uiFramework: "custom-containers",
         componentPath: "DynamicMdmsContainer",
+        
         props: {
           dropdownFields: [
             {
               key : 'waterSourceType',
+              isRequired: true,
+              requiredValue : true,
+              errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               callBack: waterSourceTypeChange 
             },
             {
@@ -250,6 +255,7 @@ export const additionDetails = getCommonCard({
         jsonPath: "applyScreen.drainageSize"
       })
     }),
+    
   }),
   plumberDetailsContainer: getCommonGrayCard({
     subHeader: getCommonTitle({

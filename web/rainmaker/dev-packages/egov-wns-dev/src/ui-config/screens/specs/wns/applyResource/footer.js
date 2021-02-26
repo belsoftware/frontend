@@ -30,7 +30,7 @@ const isMode = isModifyMode();
 const isModeAction = isModifyModeAction();
 const setReviewPageRoute = (state, dispatch) => {
 
-  console.info("setReview=====>",setReviewPageRoute);
+  //console.info("setReview=====>",setReviewPageRoute);
   let tenantId = getQueryArg(window.location.href, "tenantId");
   const applicationNumber = get(state, "screenConfiguration.preparedFinalObject.applyScreen.applicationNo");
   const appendUrl =
@@ -50,7 +50,7 @@ const moveToReview = (state, dispatch) => {
   );
 
   let validateDocumentField = false;
-    console.info("move to Review====");
+    //console.info("documentsFormat=",documentsFormat,"move to Review====",documentsFormat);
   for (let i = 0; i < documentsFormat.length; i++) {
     let isDocumentRequired = get(documentsFormat[i], "isDocumentRequired");
     let isDocumentTypeRequired = get(documentsFormat[i], "isDocumentTypeRequired");
@@ -122,13 +122,14 @@ const getMdmsData = async (state, dispatch) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
-  console.info("DC-Call back to next");
+  //console.info("DC-Call back to next");
   window.scrollTo(0, 0);
   let activeStep = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.stepper.props.activeStep", 0);
   let isFormValid = true;
   let hasFieldToaster = false;
   /* validations for property details screen */
   if (activeStep === 0) {
+    //console.info("validate step 0");
      validateFields("components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyID.children", state, dispatch)
      validateFields("components.div.children.formwizardFirstStep.children.connectionHolderDetails.children.cardContent.children.holderDetails.children.holderDetails.children", state, dispatch)
      var connectionDetailValidation =  validateFields("components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children", state, dispatch)
@@ -185,7 +186,7 @@ const callBackForNext = async (state, dispatch) => {
     }
       
     else {
-     
+     //console.info("in else case");
       const water = get(
         state.screenConfiguration.preparedFinalObject,
         "applyScreen.water"
@@ -225,10 +226,11 @@ const callBackForNext = async (state, dispatch) => {
           return false;
         }
         // TODO else part update propertyId.
-
+        //console.info("DC- going to validate connection  holder");
         if (validateConnHolderDetails(applyScreenObject)) {
           isFormValid = true;
           hasFieldToaster = false;
+          //console.info("DC-con holder is valid",applyScreenObject.water,'||', applyScreenObject.sewerage);
           if (applyScreenObject.water || applyScreenObject.sewerage) {
             if (
               applyScreenObject.hasOwnProperty("property") &&
@@ -269,6 +271,7 @@ const callBackForNext = async (state, dispatch) => {
                   )
                 }
               } else if (sewerage) {
+                //console.info("DC-validate sw");
                 if (validateFeildsForSewerage(applyScreenObject)) {
                   isFormValid = true;
                   hasFieldToaster = false;
@@ -368,7 +371,7 @@ const callBackForNext = async (state, dispatch) => {
           )
         }
       } else {
-        console.info("DC-else case=>isFormValid",isFormValid);
+        //console.info("DC-else case=>isFormValid",isFormValid);
         isFormValid = false;
         dispatch(
           toggleSnackbar(
@@ -387,16 +390,18 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 1) {
     if (isModifyMode()) {
-      console.info("DC-Modify mode is true");
+      //console.info("DC-Modify mode is true");
       // isFormValid = true;
       // hasFieldToaster = false;
       isFormValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
       hasFieldToaster = true;
+
     } else {
-      console.info("DC-Modify mode is false");
+      //console.info("DC-Modify mode is false");
       if (moveToReview(state, dispatch)) {
         await pushTheDocsUploadedToRedux(state, dispatch);
-        isFormValid = true; hasFieldToaster = false;
+        isFormValid = true; 
+        hasFieldToaster = false;
         if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {
           setReviewPageRoute(state, dispatch);
         }
@@ -410,10 +415,14 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 2 && process.env.REACT_APP_NAME !== "Citizen") {
 
-    console.info("Validate 2nd step"); 
+    ////console.info("Validate 2nd step"); 
     let plumberValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children", state, dispatch);
     //let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
-    let addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
+    let addConnDetailValid = true;
+    if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")){ // Validate this only for water.
+       addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
+    }
+    
     let wsConnectionTaxHeadsValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.wsConnectionTaxHeads.children",state,dispatch);
     let wsTaxheadsFilledOrNotFlag =  true;
     let applicationStatus = get(state.screenConfiguration.preparedFinalObject, "applyScreen.applicationStatus");
@@ -442,7 +451,7 @@ const callBackForNext = async (state, dispatch) => {
        activationDetailsFilledFlag  = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children",state,dispatch);
     
 
-       console.info("all validation=","plumberValid=",plumberValid,addConnDetailValid ,wsConnectionTaxHeadsValid ,roadCuttingDataValiation ,wsTaxheadsFilledOrNotFlag ,activationDetailsFilledFlag)
+    //console.info("all validation=","plumberValid=",plumberValid,addConnDetailValid ,wsConnectionTaxHeadsValid ,roadCuttingDataValiation ,wsTaxheadsFilledOrNotFlag ,activationDetailsFilledFlag)
 
     let errorMessage = {
       labelName: "Please provide valid inputs!",
@@ -469,18 +478,18 @@ const callBackForNext = async (state, dispatch) => {
       return;
     }
     // let roadCuttingValidation =  checkRoadCuttingRowFilledOrNot(state,dispatch,isFormValid);
-    // console.info("check result==",roadCuttingValidation);
+    // //console.info("check result==",roadCuttingValidation);
     
     // isFormValid = roadCuttingValidation;
     hasFieldToaster = !isFormValid;
     if(isFormValid){
       if (isModifyMode()) {
-        console.info("inside the modify ");             
+        //console.info("inside the modify ");             
           if (moveToReview(state, dispatch)) {
             await pushTheDocsUploadedToRedux(state, dispatch);
 
-            // isFormValid = true; 
-            // hasFieldToaster = false;
+             isFormValid = true; 
+             hasFieldToaster = false;
                 // if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {
                 //   setReviewPageRoute(state, dispatch);
                 // }
@@ -493,7 +502,7 @@ const callBackForNext = async (state, dispatch) => {
       
       } 
       else {
-            console.info("in else part");
+            //console.info("in else part");
           if (getQueryArg(window.location.href, "action") === "edit" && (!isModifyMode() || (isModifyMode() && isModifyModeAction()))) {
             setReviewPageRoute(state, dispatch);
           }
@@ -527,7 +536,8 @@ const callBackForNext = async (state, dispatch) => {
     // responseStatus === "success" && changeStep(activeStep, state, dispatch);
    }
   if (activeStep !== 3) {
-    console.info("DC-going to change step---",activeStep,"isformvalid==",isFormValid);
+    //console.info("DC-going to change step---",activeStep,"isformvalid==",isFormValid,"hasFieldToaster=",hasFieldToaster);
+    //console.info("isModifyMode=",isModifyMode());
     if (isFormValid) {
       changeStep(state, dispatch);
     } else if (hasFieldToaster) {
@@ -535,7 +545,8 @@ const callBackForNext = async (state, dispatch) => {
         labelName: "Please fill all mandatory fields!",
         labelKey: "WS_FILL_REQUIRED_FIELDS"
       };
-      if(!isModifyMode){
+      if(!isModifyMode()){
+        //console.info("not modify mode,activeStep=",activeStep);
         switch (activeStep) {
           case 1:
             errorMessage = {
@@ -556,6 +567,7 @@ const callBackForNext = async (state, dispatch) => {
         }
       }
       else{
+        //console.info("Else case not modify");
         switch (activeStep) {
           case 1:
             let errorMessage = {
@@ -596,7 +608,7 @@ const callBackForNext = async (state, dispatch) => {
    roadTypeEstimate.forEach(element => {
     var arr =[parseFloat(element.length,10),parseFloat(element.breadth,10),parseFloat(element.depth,10),parseFloat(element.rate,10)];
     const NanResult = arr.filter(each => isNaN(each));
-    console.info("NanResult=",NanResult.length,"NaN Result for element==",element);
+    //console.info("NanResult=",NanResult.length,"NaN Result for element==",element);
     if(NanResult.length < 4 && NanResult.length >0){
         roadEstimateValidation.push(element);
        }
@@ -675,7 +687,7 @@ const acknoledgementForBothWaterAndSewerage = async (state, activeStep, isFormVa
         };
         break;
       case 2:
-        console.info("PG= 589");
+        //console.info("PG= 589");
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -713,7 +725,7 @@ const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) 
         };
         break;
       case 2:
-        console.info("PG= 627");
+        //console.info("PG= 627");
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -752,7 +764,7 @@ const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatc
         };
         break;
       case 2:
-        console.info("PG= 664");
+        //console.info("PG= 664");
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -771,7 +783,7 @@ export const changeStep = (
   mode = "next",
   defaultActiveStep = -1
 ) => {
-  console.info("DC-changeStep");
+  //console.info("DC-changeStep");
   window.scrollTo(0, 0);
   let activeStep = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.stepper.props.activeStep", 0);
   if (defaultActiveStep === -1) {

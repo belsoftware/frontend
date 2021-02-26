@@ -497,21 +497,21 @@ export const connectionWater={
 }
 
 export const connectionSewerage={
-  reviewConnectionType : getLabelWithValueForModifiedLabel(
-    {
-      labelName: "Connection Type",
-      labelKey: "WS_SERV_DETAIL_CONN_TYPE"
-    },
-    {
-      jsonPath: "WaterConnection[0].connectionType",
-      callBack: handleNA
-    }, {
-      labelKey: "WS_OLD_LABEL_NAME"
-    }, {
-      jsonPath: "WaterConnectionOld[0].connectionType",
-      callBack: handleNA
-    }
-  ),
+  // reviewConnectionType : getLabelWithValueForModifiedLabel(
+  //   {
+  //     labelName: "Connection Type",
+  //     labelKey: "WS_SERV_DETAIL_CONN_TYPE"
+  //   },
+  //   {
+  //     jsonPath: "WaterConnection[0].connectionType",
+  //     callBack: handleNA
+  //   }, {
+  //     labelKey: "WS_OLD_LABEL_NAME"
+  //   }, {
+  //     jsonPath: "WaterConnectionOld[0].connectionType",
+  //     callBack: handleNA
+  //   }
+  // ),
    reviewWaterClosets : getLabelWithValueForModifiedLabel(
     {
       labelName: "No. of Water Closets",
