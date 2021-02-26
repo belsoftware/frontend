@@ -626,8 +626,10 @@ const getApplyPropertyDetails = async (queryObject, dispatch, propertyID,state) 
         console.log(wsTenant,"----wsTenants");
         console.log(swTenant,"----swTenant");
         if(wsTenant.length>0){
+          if(swTenant.length==0){
               dispatch(prepareFinalObject("applyScreen.water", true));
             dispatch(prepareFinalObject("applyScreen.sewerage", false));
+          }
             dispatch(prepareFinalObject("disableWS", false));
             //toggleSewerageFeilds(action, true);
            // toggleWaterFeilds(action, true);
@@ -928,8 +930,8 @@ const screenConfig = {
     //Road cutting charges
     dispatch(prepareFinalObject(`applyScreen.roadTypeEst`, []));
 
-    // dispatch(prepareFinalObject("applyScreen.water", true));
-    // dispatch(prepareFinalObject("applyScreen.sewerage", false));
+     dispatch(prepareFinalObject("applyScreen.water", false));
+     dispatch(prepareFinalObject("applyScreen.sewerage", false));
 
     const propertyId = getQueryArg(window.location.href, "propertyId");
     const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
