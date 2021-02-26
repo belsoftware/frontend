@@ -107,8 +107,10 @@ export const propertySearchApiCall = async (state, dispatch) => {
             const swTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='SW')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
            
             if(wsTenant.length>0){
+              if(swTenant.length==0){
               dispatch(prepareFinalObject("applyScreen.water", true));
             dispatch(prepareFinalObject("applyScreen.sewerage", false));
+              }
             dispatch(prepareFinalObject("disableWS", false));
             }
             else{
