@@ -59,7 +59,7 @@ const showHideServiceDetails = (dispatch,data)=>{
         "visible",
         false
   )
-);  
+  );  
   }
   else{
      dispatch(
@@ -122,7 +122,7 @@ const showHideConnectionHolder = (dispatch, connectionHolders) => {
 // };
 
 export const sortpayloadDataObj =(connectionObj)=>{ 
-  ////console.info("connectionObj for sorting===",connectionObj);
+ 
   connectionObj.sort(function(x, y){
   console.log("sort in connection details=>", y.auditDetails.createdTime,"-",x.auditDetails.createdTime);
   return  y.auditDetails.createdTime-x.auditDetails.createdTime;
@@ -172,10 +172,13 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       payloadData !== undefined &&
       payloadData.SewerageConnections.length > 0
     ) {
-      //console.info("data to sort==",payloadData.SewerageConnections);
-      if(payloadData.SewerageConnections.length >1)
-          payloadData.SewerageConnections = sortpayloadDataObj(payloadData.SewerageConnections);
-      //console.info("sorted sw==",payloadData.SewerageConnections);
+     
+      payloadData.SewerageConnections = payloadData.SewerageConnections.sort(function(x, y){
+        return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+        });
+       
+      // payloadData.SewerageConnections = sortpayloadDataObj(payloadData.SewerageConnections);
+    
       let sewerageConnection = getActiveConnectionObj(payloadData.SewerageConnections);
       let propTenantId = sewerageConnection.property.tenantId.split(".")[0];
       sewerageConnection.service = serviceReq;
@@ -272,25 +275,12 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       payloadData !== undefined &&
       payloadData.WaterConnection.length > 0
     ) {
-      //console.info("DC before sorting==",payloadData.WaterConnection);
+      
       //payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
       payloadData.WaterConnection = payloadData.WaterConnection.sort(function(x, y){
             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
        });
-      
-
-      //  let applicationNo = getQueryArg(window.location.href, "applicationNumber");
-      //  let connectionNo = getQueryArg(window.location.href, "connectionNumber");
-      //  //console.info("Appl/Consumer=",applicationNo,"::",connectionNo);
-      //  let waterConnection;
-      //  if (applicationNo){
-      //    //console.info("Its edit flow==get latest request");
-      //    waterConnection = payloadData.WaterConnection[0];
-      //  }
-      //  else{
-      //   //console.info("view consumer deatils");
-      //   waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
-      //  }
+          
       let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
      // let waterConnection = payloadData.WaterConnection[0];
       waterConnection.service = serviceReq;
