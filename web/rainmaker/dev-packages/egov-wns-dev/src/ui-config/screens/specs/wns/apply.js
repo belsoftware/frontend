@@ -167,7 +167,7 @@ export const getMdmsData = async dispatch => {
   try {
     let payload = null;
     payload = await httpRequest("post", "/egov-mdms-service/v1/_search", "_search", [], mdmsBody);
-   // //console.info("Payload==>",payload);
+    
     if (payload.MdmsRes['sw-services-calculation'].PipeSize !== undefined && payload.MdmsRes['sw-services-calculation'].PipeSize.length > 0) {
       let drainageSize = [];
       payload.MdmsRes['sw-services-calculation'].PipeSize.forEach(obj => drainageSize.push({ code: obj.size, name: obj.id, isActive: obj.isActive }));
@@ -561,8 +561,7 @@ const checkCardPermission =(state,cardName) =>{
     []
   );
   cardList = cardList.filter( (card) => card.code.includes(cardName));
-  //console.info("DC-workflow status=",workFlowStatus);
-  //console.info("DC-cardList=",cardList);
+
   if(cardList.length >0 && cardList[0].status.includes(workFlowStatus) ){
     return true;
   }
@@ -733,7 +732,7 @@ const pageReset = (dispatch) => {
 }
 
 const getIndividualTaxheads = (item,index,dispatch) =>{
-  //console.info("came to create each item==",cloneDeep(item));
+  
   //return{
     dispatch(
       handleField(
@@ -773,7 +772,7 @@ const getIndividualTaxheads = (item,index,dispatch) =>{
 
 
 const setRoadCuttingEstimate = (item,index,dispatch) =>{
-//console.info("came for road cutting",item);
+
   dispatch(
     handleField(
       "apply",
@@ -976,7 +975,7 @@ const screenConfig = {
 
        //Setting Tax heads and Road Types
           if (applicationNumber && getQueryArg(window.location.href, "action") === "edit" && process.env.REACT_APP_NAME !== "Citizen") {
-           //console.info("DC===>inside");
+           
             //show tax head estimates to only field inspector and doc verifier
             if(checkCardPermission(state , "wsConnectionTaxHeadsContainer")){
               dispatch(
@@ -988,9 +987,9 @@ const screenConfig = {
                 )
               );
             }
-            //console.info("Check modify mode set /not?",isModifyMode());
+           
            if(!isModifyMode()){
-             //console.info("DC-Hide and show plumber and connection detisl");
+             
             
               if(checkCardPermission(state , "plumberDetailsContainer")){
                 dispatch(
@@ -1045,7 +1044,7 @@ const screenConfig = {
              }
 
              let applicationTypeCheck =  get(state.screenConfiguration.preparedFinalObject, "applyScreen.applicationType");
-             //console.info("application type=",applicationTypeCheck);
+             
              if(checkCardPermission(state , "modificationsEffectiveFrom") && (applicationTypeCheck === 'MODIFY_WATER_CONNECTION')){
                dispatch(
                 handleField(
@@ -1066,7 +1065,7 @@ const screenConfig = {
               //Filter for tax heads 
               let applicationType =applicationNumber.includes("SW") ?"SW" : "WS";
               taxHeadDetails = taxHeadDetails.filter( (taxHead) => taxHead.service.includes(applicationType));
-              //console.info("Tax details===",taxHeadDetails);
+              
               //Read existing tax heads
               let existingTaxHeads=get(state, "screenConfiguration.preparedFinalObject.applyScreen.wsTaxHeads",[]);
               let taxHeads={};
@@ -1112,7 +1111,7 @@ const screenConfig = {
 
            }
            else{
-            //console.info("In modify mode-> show modification details");
+           
             dispatch(
               handleField(
                 "apply",
@@ -1137,7 +1136,7 @@ const screenConfig = {
                   // const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
 
             if (propertyId) {
-              //console.info("DC-1");
+              
               togglePropertyFeilds(action, true);
               if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
                 toggleWaterFeilds(action, true);
@@ -1155,9 +1154,10 @@ const screenConfig = {
                 toggleSewerageFeilds(action, false);
               }          
             } else if (applicationNumber && getQueryArg(window.location.href, "action") === "edit") {   
-              //console.info("DC-2");
+              
           togglePropertyFeilds(action, true);
           if (applicationNumber.includes("SW")) {
+            
             dispatch(prepareFinalObject("applyScreen.water", false));
             dispatch(prepareFinalObject("applyScreen.sewerage", true));
             toggleWaterFeilds(action, false);
@@ -1170,7 +1170,7 @@ const screenConfig = {
             toggleSewerageFeilds(action, false);
             }
         } else {
-          //console.info("DC-3");
+         
           togglePropertyFeilds(action, false)
           if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
             toggleWaterFeilds(action, true);

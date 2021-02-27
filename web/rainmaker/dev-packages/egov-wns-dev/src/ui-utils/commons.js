@@ -206,6 +206,10 @@ export const getSearchResultsForSewerage = async (queryObject, dispatch, filter 
             response.SewerageConnections = response.SewerageConnections.filter(app => currentTime > app.dateEffectiveFrom && (app.applicationStatus == 'APPROVED' || app.applicationStatus == 'CONNECTION_ACTIVATED'));
             response.SewerageConnections = response.SewerageConnections.sort((row1, row2) => row2.auditDetails.createdTime - row1.auditDetails.createdTime);
         }
+        response.SewerageConnections = response.SewerageConnections.sort(function(x, y){
+            // console.log("????????", y.auditDetails.createdTime,"-",x.auditDetails.createdTime);
+             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+         });
         let result = findAndReplace(response, null, "NA");
         result.SewerageConnections = await getPropertyObj(result.SewerageConnections);
         dispatch(toggleSpinner());
@@ -947,7 +951,7 @@ export const validateFields = (
     );
     let isFormValid = true;
     for (var variable in fields) {  
-      //  ////console.info("variable=",variable,"field=",fields);
+      //  //////console.info("variable=",variable,"field=",fields);
       if (fields.hasOwnProperty(variable)) {
         if (
           fields[variable] && fields[variable].componentPath != "DynamicMdmsContainer" &&
@@ -1116,9 +1120,11 @@ export const applyForWater = async (state, dispatch) => {
 }
 
 export const applyForSewerage = async (state, dispatch) => {
+    //console.info("DC-applyForSewerage");
     let queryObject = parserFunction(state);
     let sewerId = get(state, "screenConfiguration.preparedFinalObject.SewerageConnection[0].id");
     let method = sewerId ? "UPDATE" : "CREATE";
+    //console.info("DC-method=",method);
     try {
         const tenantId = get(state, "screenConfiguration.preparedFinalObject.SewerageConnection[0].property.tenantId");
         let response;
@@ -1181,6 +1187,7 @@ export const applyForSewerage = async (state, dispatch) => {
 }
 
 export const applyForBothWaterAndSewerage = async (state, dispatch) => {
+    //console.info("DC-Apply for both w&S");
     let method;
     let queryObject = parserFunction(state);
     let waterId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].id");
