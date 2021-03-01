@@ -338,6 +338,7 @@ export const togglePropertyFeilds = (action, value) => {
 }
 
 export const toggleSewerageFeilds = (action, value) => {
+  
   let isMode = isModifyMode();
   let mStep = (isMode) ? 'formwizardSecondStep' : 'formwizardThirdStep';
   set(
@@ -421,6 +422,7 @@ export const toggleSewerageFeilds = (action, value) => {
 
 export const toggleWaterFeilds = (action, value) => {
   let isMode = isModifyMode();
+  
   let mStep = (isMode) ? 'formwizardSecondStep' : 'formwizardThirdStep';
   set(
     action.screenConfig,
@@ -478,6 +480,31 @@ export const toggleWaterFeilds = (action, value) => {
     value
   );
   if (!value) {
+    
+    set(
+      action.screenConfig,
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.motorInfo.visible`,
+      value
+    );
+
+    set(
+      action.screenConfig,
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo.visible`,
+      value
+    );
+
+    set(
+      action.screenConfig,
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.authorizedConnection.visible`,
+      value
+    );
+
+    set(
+      action.screenConfig,
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.waterSourceType.visible`,
+      value
+    );
+
     set(
       action.screenConfig,
       `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.dynamicMdmsWaterSource.visible`,

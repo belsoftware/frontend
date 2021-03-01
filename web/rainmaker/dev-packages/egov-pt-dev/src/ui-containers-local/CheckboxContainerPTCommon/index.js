@@ -45,6 +45,10 @@ class CheckboxLabels extends React.Component {
 
   validator = () => {
     const { preparedFinalObject } = this.props;
+    let tenantId = get(
+      preparedFinalObject,
+      "searchScreen.tenantId"
+    );
     let city = get(
       preparedFinalObject,
       "Property.address.city"
@@ -62,6 +66,7 @@ class CheckboxLabels extends React.Component {
       "Property.address.buildingName"
     );
     if (
+      !_.isUndefined(tenantId) &&
       !_.isUndefined(city) &&
       !_.isUndefined(locality) &&
       !_.isUndefined(doorNo) &&
@@ -83,30 +88,35 @@ class CheckboxLabels extends React.Component {
     } = this.props;
 
     if (this.validator()) {
-       let city = get(
-          preparedFinalObject,
-          "Property.address.city"
-        );
-        let locality = get(
-          preparedFinalObject,
-          "Property.address.locality.code"
-        );
-        let doorNo = get(
-          preparedFinalObject,
-          "Property.address.doorNo"
-        );
-        let buildingName = get(
-          preparedFinalObject,
-          "Property.address.buildingName"
-        );
-      let finalAddress = doorNo + ", " + buildingName + ", " + getTextToLocalMapping(city.toUpperCase().replace(/[.]/g,"_") + '_REVENUE_' + locality) + ", " + city.split(".")[1];
+      let tenantId = get(
+        preparedFinalObject,
+        "searchScreen.tenantId"
+      );
+      let city = get(
+        preparedFinalObject,
+        "Property.address.city"
+      );
+      let locality = get(
+        preparedFinalObject,
+        "Property.address.locality.code"
+      );
+      let doorNo = get(
+        preparedFinalObject,
+        "Property.address.doorNo"
+      );
+      let buildingName = get(
+        preparedFinalObject,
+        "Property.address.buildingName"
+      );
+      console.log("TenantId : ", tenantId);
+      let finalAddress = doorNo + ", " + buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
       this.setState({ [name]: event.target.checked }, () => {
         approveCheck(jsonPath, this.state.checkedG);
-        finalAddress = (this.state.checkedG)?finalAddress:''
-        let itemObj = jsonPath.lastIndexOf('.')        
-        approveCheck(jsonPath.substring(0,itemObj+1) + destinationJsonPath, finalAddress);
-      });      
-      
+        finalAddress = (this.state.checkedG) ? finalAddress : ''
+        let itemObj = jsonPath.lastIndexOf('.')
+        approveCheck(jsonPath.substring(0, itemObj + 1) + destinationJsonPath, finalAddress);
+      });
+
     } else {
       raiseSnackbarAlert(
         "PT_COMMON_PROPERTY_LOCATION_FIELD_REQUIRED",

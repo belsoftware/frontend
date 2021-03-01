@@ -59,7 +59,7 @@ const showHideServiceDetails = (dispatch,data)=>{
         "visible",
         false
   )
-);  
+  );  
   }
   else{
      dispatch(
@@ -113,13 +113,23 @@ const showHideConnectionHolder = (dispatch, connectionHolders) => {
     );
   }
 };
-export const sortpayloadDataObj = (connectionObj) => {
-  return connectionObj.sort((a, b) =>
-    a.additionalDetails.appCreatedDate < b.additionalDetails.appCreatedDate
-      ? 1
-      : -1
-  );
-};
+// export const sortpayloadDataObj = (connectionObj) => {
+//   return connectionObj.sort((a, b) =>
+//     a.additionalDetails.appCreatedDate < b.additionalDetails.appCreatedDate
+//       ? 1
+//       : -1
+//   );
+// };
+
+export const sortpayloadDataObj =(connectionObj)=>{ 
+ 
+  connectionObj.sort(function(x, y){
+  console.log("sort in connection details=>", y.auditDetails.createdTime,"-",x.auditDetails.createdTime);
+  return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+  });
+}
+
+
 
 const getActiveConnectionObj = (connectionsObj) => {
   let getActiveConnectionObj = "";
@@ -162,13 +172,14 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       payloadData !== undefined &&
       payloadData.SewerageConnections.length > 0
     ) {
-      payloadData.SewerageConnections = sortpayloadDataObj(
-        payloadData.SewerageConnections
-      );
-
-      let sewerageConnection = getActiveConnectionObj(
-        payloadData.SewerageConnections
-      );
+     
+      payloadData.SewerageConnections = payloadData.SewerageConnections.sort(function(x, y){
+        return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+        });
+       
+      // payloadData.SewerageConnections = sortpayloadDataObj(payloadData.SewerageConnections);
+    
+      let sewerageConnection = getActiveConnectionObj(payloadData.SewerageConnections);
       let propTenantId = sewerageConnection.property.tenantId.split(".")[0];
       sewerageConnection.service = serviceReq;
 
@@ -264,10 +275,14 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       payloadData !== undefined &&
       payloadData.WaterConnection.length > 0
     ) {
-      payloadData.WaterConnection = sortpayloadDataObj(
-        payloadData.WaterConnection
-      );
-      let waterConnection = getActiveConnectionObj(payloadData.WaterConnection);
+      
+      //payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
+      payloadData.WaterConnection = payloadData.WaterConnection.sort(function(x, y){
+            return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+       });
+          
+      let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
+     // let waterConnection = payloadData.WaterConnection[0];
       waterConnection.service = serviceReq;
       let propTenantId = waterConnection.property.tenantId.split(".")[0];
       if (waterConnection.connectionExecutionDate !== undefined) {
@@ -383,7 +398,7 @@ const connectionHolders = connHolderDetailsSummary();
 
 const connectionHoldersSameAsOwner = connHolderDetailsSameAsOwnerSummary();
 
-const getConnectionDetailsFooterAction =  (ifUserRoleExists('WS_CEMP')) ? connectionDetailsFooter : {};
+const getConnectionDetailsFooterAction =  (ifUserRoleExists('WS_CEMP') || ifUserRoleExists('SW_CEMP')) ? connectionDetailsFooter : {};
 //const getConnectionDetailsFooterAction =   {};
 
 
