@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import APITransport from '../../actions/apitransport/apitransport';
 import DonutChart from './DonutChart';
 import HorizontalBarChart from './HorizontalBarChart'
+import constants from "../../actions/constants";
 
 class ChartType extends React.Component {
     constructor(props) {
@@ -32,13 +33,20 @@ class ChartType extends React.Component {
         let code = this.props.chartData[0]['id'] || "";
 
         let filters = this.props.filters
-        if(this.props.page && (this.props.page.includes('ulb') || this.props.page.includes('citizen-home'))) {
+        if(this.props.page && this.props.page.includes('ulb')) {
             if(!filters['tenantId']) {
               let tenentFilter = []
               tenentFilter.push(`${localStorage.getItem('tenant-id')}`)
               filters['tenantId'] = tenentFilter
             }
           }
+        if(this.props.page.includes('citizen-home')) {
+            if(!filters['tenantId'] && constants.VALID_TENANT_IDS.indexOf(`${localStorage.getItem('tenant-id')}`)>-1) {
+                let tenentFilter = []
+                tenentFilter.push(`${localStorage.getItem('tenant-id')}`)
+                filters['tenantId'] = tenentFilter
+            }
+        }
         
         let requestBody = getChartOptions(code, filters || {});
         let chartsAPI = new ChartsAPI(2000, 'dashboard', code, requestBody && requestBody.dataoption ? requestBody.dataoption : '');
