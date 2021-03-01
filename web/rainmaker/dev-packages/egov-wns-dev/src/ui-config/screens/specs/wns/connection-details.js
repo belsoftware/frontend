@@ -172,15 +172,15 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       payloadData !== undefined &&
       payloadData.SewerageConnections.length > 0
     ) {
-     
+      //sorting
       payloadData.SewerageConnections = payloadData.SewerageConnections.sort(function(x, y){
         return  y.auditDetails.createdTime-x.auditDetails.createdTime;
         });
        
       // payloadData.SewerageConnections = sortpayloadDataObj(payloadData.SewerageConnections);
     
-      let sewerageConnection = payloadData.SewerageConnections[0];
-    //  let sewerageConnection = getActiveConnectionObj(payloadData.SewerageConnections);
+      //let sewerageConnection = payloadData.SewerageConnections[0];
+      let sewerageConnection = getActiveConnectionObj(payloadData.SewerageConnections);
       let propTenantId = sewerageConnection.property.tenantId.split(".")[0];
       sewerageConnection.service = serviceReq;
 
