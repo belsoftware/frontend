@@ -174,7 +174,6 @@ export const getSearchResults = async (queryObject, filter = false) => {
            // response.WaterConnection = response.WaterConnection.sort((row1, row2) => row2.auditDetails.createdTime - row1.auditDetails.createdTime);
         }
         response.WaterConnection = response.WaterConnection.sort(function(x, y){
-           // console.log("????????", y.auditDetails.createdTime,"-",x.auditDetails.createdTime);
             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
         });
         let result = findAndReplace(response, null, "NA");
