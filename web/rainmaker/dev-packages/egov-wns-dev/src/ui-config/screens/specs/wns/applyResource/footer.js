@@ -78,7 +78,7 @@ const moveToReview = (state, dispatch) => {
             }
           } 
           else if (!isModifyMode()) {
-            console.info("DC-validation else case");
+           
             dispatch(
               toggleSnackbar(
                 true,
@@ -94,7 +94,7 @@ const moveToReview = (state, dispatch) => {
           }
         }
         else{
-          console.info("DC-Doc not uploaded");
+         
           dispatch(
             toggleSnackbar(
               true,
@@ -111,7 +111,7 @@ const moveToReview = (state, dispatch) => {
       validateDocumentField = true;
     }
   }
-  console.info("DC-validateDocumentField==",validateDocumentField);
+
   return validateDocumentField;
 };
 
@@ -512,8 +512,7 @@ const callBackForNext = async (state, dispatch) => {
                 // }
           }
            else {
-             console.info("DC-Doc upload failed===");
-            isFormValid = false;
+             isFormValid = false;
             hasFieldToaster = true;
           }
         
@@ -758,6 +757,7 @@ const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) 
 }
 
 const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatch) => {
+ 
   if (isFormValid) {
     if (activeStep === 0) {
       prepareDocumentsUploadData(state, dispatch);
@@ -765,6 +765,7 @@ const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatc
     if (activeStep === 3) {
       isFormValid = await applyForWaterOrSewerage(state, dispatch);
       let combinedArray = get(state.screenConfiguration.preparedFinalObject, "SewerageConnection");
+      console.info("Dc-combinedArray=",combinedArray);
       if (isFormValid) { moveToSuccess(combinedArray, dispatch) }
     }
     return true;
