@@ -146,8 +146,6 @@ export const additionDetails = getCommonCard({
         }),
         afterFieldChange: async (action, state, dispatch) => {
           let connType = await get(state, "screenConfiguration.preparedFinalObject.applyScreen.connectionType");
-          console.log('connType');
-          console.log(connType);
           if (connType === undefined || connType === "Non Metered" || connType === "Bulk-supply" || connType !== "Metered") {
             showHideFeilds(dispatch, false);
           }
@@ -419,7 +417,7 @@ export const additionDetails = getCommonCard({
           xs: 12,
           sm: 6
         },
-        required: true,
+        required: false,
         pattern: /^[a-z0-9]+$/i,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "applyScreen.meterId"
@@ -434,7 +432,7 @@ export const additionDetails = getCommonCard({
           xs: 12,
           sm: 6
         },
-        required: true,
+        required: false,
         pattern: getPattern("Date"),
         errorMessage: "ERR_INVALID_DATE",
         jsonPath: "applyScreen.meterInstallationDate"
@@ -450,7 +448,7 @@ export const additionDetails = getCommonCard({
           xs: 12,
           sm: 6
         },
-        required: true,
+        required: false,
         pattern: /^[0-9]\d{0,9}(\.\d{1,3})?%?$/,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "applyScreen.additionalDetails.initialMeterReading"
