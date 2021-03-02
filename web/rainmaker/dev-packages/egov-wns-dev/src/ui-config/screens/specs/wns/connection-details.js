@@ -172,13 +172,14 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       payloadData !== undefined &&
       payloadData.SewerageConnections.length > 0
     ) {
-     
+      //sorting
       payloadData.SewerageConnections = payloadData.SewerageConnections.sort(function(x, y){
         return  y.auditDetails.createdTime-x.auditDetails.createdTime;
         });
        
       // payloadData.SewerageConnections = sortpayloadDataObj(payloadData.SewerageConnections);
     
+      //let sewerageConnection = payloadData.SewerageConnections[0];
       let sewerageConnection = getActiveConnectionObj(payloadData.SewerageConnections);
       let propTenantId = sewerageConnection.property.tenantId.split(".")[0];
       sewerageConnection.service = serviceReq;
@@ -280,9 +281,13 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       payloadData.WaterConnection = payloadData.WaterConnection.sort(function(x, y){
             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
        });
-          
       let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
-     // let waterConnection = payloadData.WaterConnection[0];
+      //Set water source and sub source
+      waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+      let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
+      let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
+      waterConnection.waterSource = waterSource;
+      waterConnection.waterSubSource = waterSubSource;   
       waterConnection.service = serviceReq;
       let propTenantId = waterConnection.property.tenantId.split(".")[0];
       if (waterConnection.connectionExecutionDate !== undefined) {

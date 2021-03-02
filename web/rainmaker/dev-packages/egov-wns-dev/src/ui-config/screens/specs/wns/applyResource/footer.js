@@ -49,48 +49,65 @@ const moveToReview = (state, dispatch) => {
     get(state.screenConfiguration.preparedFinalObject, "documentsUploadRedux")
   );
 
-  let validateDocumentField = false;
-    //console.info("documentsFormat=",documentsFormat,"move to Review====",documentsFormat);
+  let validateDocumentField = false;    
   for (let i = 0; i < documentsFormat.length; i++) {
     let isDocumentRequired = get(documentsFormat[i], "isDocumentRequired");
-    let isDocumentTypeRequired = get(documentsFormat[i], "isDocumentTypeRequired");
-
+    let isDocumentTypeRequired = get(documentsFormat[i], "isDocumentTypeRequired");    
     if (isDocumentRequired) {
-      let documents = get(documentsFormat[i], "documents");
-      if (documents && documents.length > 0) {
-        if (isDocumentTypeRequired) {
-          let dropdownData = get(documentsFormat[i], "dropdown.value");
-          if (dropdownData) {
-            // if (get(documentsFormat[i], "dropdown.value") !== null && get(documentsFormat[i]).dropdown !==undefined ){
-            validateDocumentField = true;
-          } else {
+      let documents = get(documentsFormat[i], "documents");      
+      if(documents != undefined){
+          if (documents && documents.length > 0) {           
+            if (isDocumentTypeRequired) {             
+              let dropdownData = get(documentsFormat[i], "dropdown.value");
+              if (dropdownData) {
+                // if (get(documentsFormat[i], "dropdown.value") !== null && get(documentsFormat[i]).dropdown !==undefined ){
+                validateDocumentField = true;
+              } else {
+                dispatch(
+                  toggleSnackbar(
+                    true,
+                    { labelName: "Please select type of Document!", labelKey: "" },
+                    "warning"
+                  )
+                );
+                validateDocumentField = false;
+                break;
+              }
+            } else {
+              validateDocumentField = true;
+            }
+          } 
+          else if (!isModifyMode()) {
+           
             dispatch(
               toggleSnackbar(
                 true,
-                { labelName: "Please select type of Document!", labelKey: "" },
+                { labelName: "Please uplaod mandatory documents!", labelKey: "" },
                 "warning"
               )
             );
             validateDocumentField = false;
             break;
+          } 
+          else {
+            validateDocumentField = true;
           }
-        } else {
-          validateDocumentField = true;
         }
-      } else if (!isModifyMode()) {
-        dispatch(
-          toggleSnackbar(
-            true,
-            { labelName: "Please uplaod mandatory documents!", labelKey: "" },
-            "warning"
-          )
-        );
-        validateDocumentField = false;
-        break;
-      } else {
-        validateDocumentField = true;
-      }
-    } else {
+        else{
+         
+          dispatch(
+            toggleSnackbar(
+              true,
+              { labelName: "Please uplaod mandatory documents!", labelKey: "" },
+              "warning"
+            )
+          );
+          validateDocumentField = false;
+          break;
+        }
+    }
+    
+    else {
       validateDocumentField = true;
     }
   }
@@ -415,7 +432,7 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 2 && process.env.REACT_APP_NAME !== "Citizen") {
 
-    ////console.info("Validate 2nd step"); 
+    //console.info("Validate 2nd step"); 
     let plumberValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children", state, dispatch);
     //let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
     let addConnDetailValid = true;
@@ -484,7 +501,7 @@ const callBackForNext = async (state, dispatch) => {
     hasFieldToaster = !isFormValid;
     if(isFormValid){
       if (isModifyMode()) {
-        //console.info("inside the modify ");             
+        console.info("inside the modify ");             
           if (moveToReview(state, dispatch)) {
             await pushTheDocsUploadedToRedux(state, dispatch);
 
@@ -495,7 +512,7 @@ const callBackForNext = async (state, dispatch) => {
                 // }
           }
            else {
-            isFormValid = false;
+             isFormValid = false;
             hasFieldToaster = true;
           }
         
@@ -536,7 +553,7 @@ const callBackForNext = async (state, dispatch) => {
     // responseStatus === "success" && changeStep(activeStep, state, dispatch);
    }
   if (activeStep !== 3) {
-    //console.info("DC-going to change step---",activeStep,"isformvalid==",isFormValid,"hasFieldToaster=",hasFieldToaster);
+    
     //console.info("isModifyMode=",isModifyMode());
     if (isFormValid) {
       changeStep(state, dispatch);
@@ -559,33 +576,33 @@ const callBackForNext = async (state, dispatch) => {
           case 2:
           
             errorMessage = {
-              labelName:
-                "Please fill all mandatory fields for Applicant Details, then proceed!",
+              labelName:"Please fill valid road cutting",
               labelKey: "ERR_ROADCUTTING_TOAST"
             };
             break;
         }
       }
       else{
-        //console.info("Else case not modify");
-        switch (activeStep) {
+      
+         switch (activeStep) {
           case 1:
-            let errorMessage = {
+             errorMessage = {
               labelName: "Please fill all mandatory fields!",
               labelKey: "WS_FILL_REQUIRED_FIELDS"
             };
             break;
           case 2:
-          
+            
             errorMessage = {
-              labelName:
-                "Please fill all mandatory fields for Applicant Details, then proceed!",
-              labelKey: "ERR_ROADCUTTING_TOAST"
+              labelName:"Please upload all Mandatory Document!",
+              labelKey: "WS_UPLOAD_MANDATORY_DOCUMENTS"
             };
+            
             break;
+          
         }
       }
-          
+     
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
@@ -740,6 +757,7 @@ const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) 
 }
 
 const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatch) => {
+ 
   if (isFormValid) {
     if (activeStep === 0) {
       prepareDocumentsUploadData(state, dispatch);
@@ -747,6 +765,7 @@ const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatc
     if (activeStep === 3) {
       isFormValid = await applyForWaterOrSewerage(state, dispatch);
       let combinedArray = get(state.screenConfiguration.preparedFinalObject, "SewerageConnection");
+      console.info("Dc-combinedArray=",combinedArray);
       if (isFormValid) { moveToSuccess(combinedArray, dispatch) }
     }
     return true;
