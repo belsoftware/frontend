@@ -30,7 +30,7 @@ const isMode = isModifyMode();
 const isModeAction = isModifyModeAction();
 const setReviewPageRoute = (state, dispatch) => {
 
-  //console.info("setReview=====>",setReviewPageRoute);
+
   let tenantId = getQueryArg(window.location.href, "tenantId");
   const applicationNumber = get(state, "screenConfiguration.preparedFinalObject.applyScreen.applicationNo");
   const appendUrl =
@@ -139,14 +139,14 @@ const getMdmsData = async (state, dispatch) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
-  //console.info("DC-Call back to next");
+
   window.scrollTo(0, 0);
   let activeStep = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.stepper.props.activeStep", 0);
   let isFormValid = true;
   let hasFieldToaster = false;
   /* validations for property details screen */
   if (activeStep === 0) {
-    //console.info("validate step 0");
+    
      validateFields("components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyID.children", state, dispatch)
      validateFields("components.div.children.formwizardFirstStep.children.connectionHolderDetails.children.cardContent.children.holderDetails.children.holderDetails.children", state, dispatch)
      var connectionDetailValidation =  validateFields("components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children", state, dispatch)
@@ -203,7 +203,7 @@ const callBackForNext = async (state, dispatch) => {
     }
       
     else {
-     //console.info("in else case");
+    
       const water = get(
         state.screenConfiguration.preparedFinalObject,
         "applyScreen.water"
@@ -243,11 +243,11 @@ const callBackForNext = async (state, dispatch) => {
           return false;
         }
         // TODO else part update propertyId.
-        //console.info("DC- going to validate connection  holder");
+      
         if (validateConnHolderDetails(applyScreenObject)) {
           isFormValid = true;
           hasFieldToaster = false;
-          //console.info("DC-con holder is valid",applyScreenObject.water,'||', applyScreenObject.sewerage);
+          
           if (applyScreenObject.water || applyScreenObject.sewerage) {
             if (
               applyScreenObject.hasOwnProperty("property") &&
@@ -288,7 +288,7 @@ const callBackForNext = async (state, dispatch) => {
                   )
                 }
               } else if (sewerage) {
-                //console.info("DC-validate sw");
+               
                 if (validateFeildsForSewerage(applyScreenObject)) {
                   isFormValid = true;
                   hasFieldToaster = false;
@@ -340,6 +340,7 @@ const callBackForNext = async (state, dispatch) => {
                       _.capitalize(serviceConst.SEWERAGE)
                     )
                   );
+                 
                   await applyForSewerage(state, dispatch);
                 } else if ((waterChecked && waterData.length === 0) || (isModifyMode() && waterData.length === 1 && !modifyAppCreated)) {
                   dispatch(
@@ -357,7 +358,10 @@ const callBackForNext = async (state, dispatch) => {
                     "Water And Sewerage"
                   )
                 );
-                if (waterData.length === 0 && sewerData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch); }
+                if (waterData.length === 0 && sewerData.length === 0) { 
+                  isFormValid = await applyForWaterOrSewerage(state, dispatch); 
+                 
+                }
               } else if (waterChecked) {
                 dispatch(
                   prepareFinalObject(
@@ -365,10 +369,10 @@ const callBackForNext = async (state, dispatch) => {
                     _.capitalize(serviceConst.WATER)
                   )
                 );
-                if (waterData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch); }
+                if (waterData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch);  }
               } else if (sewerChecked) {
                 dispatch(prepareFinalObject("applyScreen.service", _.capitalize(serviceConst.SEWERAGE)))
-                if (sewerData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch); }
+                if (sewerData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch);  }
               }
             }
           } else {
@@ -388,7 +392,7 @@ const callBackForNext = async (state, dispatch) => {
           )
         }
       } else {
-        //console.info("DC-else case=>isFormValid",isFormValid);
+        
         isFormValid = false;
         dispatch(
           toggleSnackbar(
@@ -407,14 +411,14 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 1) {
     if (isModifyMode()) {
-      //console.info("DC-Modify mode is true");
+      
       // isFormValid = true;
       // hasFieldToaster = false;
       isFormValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
       hasFieldToaster = true;
 
     } else {
-      //console.info("DC-Modify mode is false");
+      
       if (moveToReview(state, dispatch)) {
         await pushTheDocsUploadedToRedux(state, dispatch);
         isFormValid = true; 
@@ -432,7 +436,7 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 2 && process.env.REACT_APP_NAME !== "Citizen") {
 
-    //console.info("Validate 2nd step"); 
+    
     let plumberValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children", state, dispatch);
     //let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
     let addConnDetailValid = true;
@@ -466,9 +470,7 @@ const callBackForNext = async (state, dispatch) => {
     let activationDetailsFilledFlag = true;
     if(applicationStatus == "PENDING_FOR_CONNECTION_ACTIVATION")
        activationDetailsFilledFlag  = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children",state,dispatch);
-    
-
-    //console.info("all validation=","plumberValid=",plumberValid,addConnDetailValid ,wsConnectionTaxHeadsValid ,roadCuttingDataValiation ,wsTaxheadsFilledOrNotFlag ,activationDetailsFilledFlag)
+      
 
     let errorMessage = {
       labelName: "Please provide valid inputs!",
@@ -495,13 +497,13 @@ const callBackForNext = async (state, dispatch) => {
       return;
     }
     // let roadCuttingValidation =  checkRoadCuttingRowFilledOrNot(state,dispatch,isFormValid);
-    // //console.info("check result==",roadCuttingValidation);
+   
     
     // isFormValid = roadCuttingValidation;
     hasFieldToaster = !isFormValid;
     if(isFormValid){
       if (isModifyMode()) {
-        console.info("inside the modify ");             
+               
           if (moveToReview(state, dispatch)) {
             await pushTheDocsUploadedToRedux(state, dispatch);
 
@@ -519,7 +521,7 @@ const callBackForNext = async (state, dispatch) => {
       
       } 
       else {
-            //console.info("in else part");
+           
           if (getQueryArg(window.location.href, "action") === "edit" && (!isModifyMode() || (isModifyMode() && isModifyModeAction()))) {
             setReviewPageRoute(state, dispatch);
           }
@@ -541,20 +543,20 @@ const callBackForNext = async (state, dispatch) => {
 
    }
    if (activeStep === 3) {
-    let waterId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].id");
-    let sewerId = get(state, "screenConfiguration.preparedFinalObject.SewerageConnection[0].id");
-    if (waterId && sewerId) {
-      isFormValid = await acknoledgementForBothWaterAndSewerage(state, activeStep, isFormValid, dispatch);
-    } else if (waterId) {
-      isFormValid = await acknoledgementForWater(state, activeStep, isFormValid, dispatch);
-    } else {
-      isFormValid = await acknoledgementForSewerage(state, activeStep, isFormValid, dispatch);
-    }
-    // responseStatus === "success" && changeStep(activeStep, state, dispatch);
+      let sewerageForm = get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage");
+      let waterForm = get(state.screenConfiguration.preparedFinalObject, "applyScreen.water");
+      if (sewerageForm && waterForm) {
+        isFormValid = await acknoledgementForBothWaterAndSewerage(state, activeStep, isFormValid, dispatch);
+      } else if (waterForm) {
+        isFormValid = await acknoledgementForWater(state, activeStep, isFormValid, dispatch);
+      } else {
+        isFormValid = await acknoledgementForSewerage(state, activeStep, isFormValid, dispatch);
+      }
+      // responseStatus === "success" && changeStep(activeStep, state, dispatch);
    }
   if (activeStep !== 3) {
     
-    //console.info("isModifyMode=",isModifyMode());
+    
     if (isFormValid) {
       changeStep(state, dispatch);
     } else if (hasFieldToaster) {
@@ -563,7 +565,7 @@ const callBackForNext = async (state, dispatch) => {
         labelKey: "WS_FILL_REQUIRED_FIELDS"
       };
       if(!isModifyMode()){
-        //console.info("not modify mode,activeStep=",activeStep);
+        
         switch (activeStep) {
           case 1:
             errorMessage = {
@@ -625,7 +627,7 @@ const callBackForNext = async (state, dispatch) => {
    roadTypeEstimate.forEach(element => {
     var arr =[parseFloat(element.length,10),parseFloat(element.breadth,10),parseFloat(element.depth,10),parseFloat(element.rate,10)];
     const NanResult = arr.filter(each => isNaN(each));
-    //console.info("NanResult=",NanResult.length,"NaN Result for element==",element);
+    
     if(NanResult.length < 4 && NanResult.length >0){
         roadEstimateValidation.push(element);
        }
@@ -677,6 +679,7 @@ const acknoledgementForBothWaterAndSewerage = async (state, activeStep, isFormVa
     }
     if (activeStep === 3) {
       isFormValid = await applyForWaterOrSewerage(state, dispatch);
+     
       let WaterConnection = get(state.screenConfiguration.preparedFinalObject, "WaterConnection");
       let SewerageConnection = get(state.screenConfiguration.preparedFinalObject, "SewerageConnection");
       let combinedArray = WaterConnection.concat(SewerageConnection)
@@ -704,7 +707,7 @@ const acknoledgementForBothWaterAndSewerage = async (state, activeStep, isFormVa
         };
         break;
       case 2:
-        //console.info("PG= 589");
+        
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -724,6 +727,7 @@ const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) 
     }
     if (activeStep === 3) {
       isFormValid = await applyForWaterOrSewerage(state, dispatch);
+      
       let combinedArray = get(state.screenConfiguration.preparedFinalObject, "WaterConnection");
       if (isFormValid) { moveToSuccess(combinedArray, dispatch) }
     }
@@ -742,7 +746,7 @@ const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) 
         };
         break;
       case 2:
-        //console.info("PG= 627");
+        
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -763,9 +767,11 @@ const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatc
       prepareDocumentsUploadData(state, dispatch);
     }
     if (activeStep === 3) {
+
       isFormValid = await applyForWaterOrSewerage(state, dispatch);
+     
       let combinedArray = get(state.screenConfiguration.preparedFinalObject, "SewerageConnection");
-      console.info("Dc-combinedArray=",combinedArray);
+     
       if (isFormValid) { moveToSuccess(combinedArray, dispatch) }
     }
     return true;
@@ -783,7 +789,7 @@ const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatc
         };
         break;
       case 2:
-        //console.info("PG= 664");
+      
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -802,7 +808,7 @@ export const changeStep = (
   mode = "next",
   defaultActiveStep = -1
 ) => {
-  //console.info("DC-changeStep");
+ 
   window.scrollTo(0, 0);
   let activeStep = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.stepper.props.activeStep", 0);
   if (defaultActiveStep === -1) {
