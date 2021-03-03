@@ -989,48 +989,27 @@ const screenConfig = {
             }
            
            if(!isModifyMode()){
-             
-            
-              if(checkCardPermission(state , "plumberDetailsContainer")){
-                dispatch(
-                  handleField(
-                    "apply",
-                    "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
-                    "visible",
-                    true
-                  )
-                );
-              }
-              else{
-                dispatch(
-                  handleField(
-                    "apply",
-                    "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
-                    "visible",
-                    false
-                  )
-                );
-              }
-              if(checkCardPermission(state , "connectiondetailscontainer")){
-                dispatch(
-                  handleField(
-                    "apply",
-                    "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
-                    "visible",
-                    true
-                  )
-                );
-              }
-              else{
-                dispatch(
-                  handleField(
-                    "apply",
-                    "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
-                    "visible",
-                    false
-                  )
-                );
-              }
+             console.info("Dc-Non modify mode");
+             //Display cards based on permission. CEMP/DOC_VER dont have access to taxheads&plumber details
+             //card permission is read from MDMS.
+             let plumberDisplayPermission = checkCardPermission(state , "plumberDetailsContainer");
+             dispatch(
+              handleField(
+                "apply",
+                "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
+                "visible",
+                plumberDisplayPermission
+              )
+            );
+            let connectionDetailsDisplayPermission = checkCardPermission(state , "connectiondetailscontainer");
+            dispatch(
+              handleField(
+                "apply",
+                "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
+                "visible",
+                connectionDetailsDisplayPermission
+              )
+            );          
           
              if(checkCardPermission(state , "activationDetailsContainer")){
               dispatch(
@@ -1111,7 +1090,7 @@ const screenConfig = {
 
            }
            else{
-           
+            console.info("DC-Modify mode");
             dispatch(
               handleField(
                 "apply",
