@@ -70,7 +70,8 @@ class PieChart extends React.Component {
 		_.map(chartData, function (k, v) {
 			var plots = k['plots'];
 			for (var i = 0; i < plots.length; i++) {
-				tempData.labels.push(strings[plots[i]['name']] || plots[i]['name']);
+				tempData.labels.push(strings["DSS_"+_.chain(plots[i]['name']).split(' ').join("_").toUpper().value()] 
+					|| "DSS_"+_.chain(plots[i]['name']).split(' ').join("_").toUpper().value());
 				tempdataSet.data.push(plots[i]['value'])
 				tempdataSet.dataSymbol.push([plots[i]['symbol'], this.props.GFilterData['Denomination']]);
 			}

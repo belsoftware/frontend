@@ -168,7 +168,7 @@ class DateRange extends React.Component {
     }
   }
   render() {
-    let { classes, open } = this.props;
+    let { classes, open,strings } = this.props;
     return (
       <Dialog
         disableBackdropClick
@@ -187,7 +187,8 @@ class DateRange extends React.Component {
               data={this.state.buttons}
               selected={this.state.value ||  this.state.buttons[this.state.default].value}
               type="normal" target={"duration"} 
-              handleSelected={this.handleChanges.bind(this)}>
+              handleSelected={this.handleChanges.bind(this)}
+              strings={strings}>
             </SwitchButton>
           </div>
           {this.state.value === 'Custom' &&

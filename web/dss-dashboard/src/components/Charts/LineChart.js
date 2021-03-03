@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import style from './styles';
 import { isMobile } from 'react-device-detect';
 import CONFIG from '../../config/configs';
+import _ from 'lodash';
 
 const options = {
   scales: {
@@ -62,7 +63,8 @@ class LineChart extends React.Component {
       }
       let tempdataArr = [];
       let tempdatalabel = [],tempVal='';
-      tempObj.label =   strings[d.headerName] || d.headerName;
+      tempObj.label =   strings["DSS_"+_.chain(d.headerName).split(' ').join("_").toUpper().value()] 
+        || "DSS_"+_.chain(d.headerName).split(' ').join("_").toUpper().value();
       d.plots.map((d1, i) => {
         tempVal = NFormatterFun(d1.value, d1.symbol, this.props.GFilterData['Denomination']);
         tempVal = (typeof tempVal == 'string')?parseFloat(tempVal.replace(/,/g, '')):tempVal;

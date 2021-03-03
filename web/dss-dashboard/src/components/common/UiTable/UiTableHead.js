@@ -5,6 +5,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import toolbarStyles from './UiTableHeaderStyle'
+import _ from 'lodash';
 
 class UiTableHead extends Component {
   createSortHandler = property => event => {
@@ -13,7 +14,7 @@ class UiTableHead extends Component {
 
   render() {
     // const { classes, onSelectAllClick, Globfilter, order, orderBy, numSelected, rowCount, columnData, needHash, needCheckBox } = this.props;
-    const { classes, Globfilter, order, orderBy, columnData, needHash } = this.props;
+    const { classes, Globfilter, order, orderBy, columnData, needHash,strings } = this.props;
     return (
       <TableHead className={classes.root}>
         <TableRow>
@@ -57,7 +58,8 @@ class UiTableHead extends Component {
                     onClick={this.createSortHandler(column.id)}
                   >
 
-                    {column.label + (column.colType === 'amount' ? ' (In ' + Globfilter['Denomination'] + ')' : ' ')}
+                    {(strings["DSS_"+_.chain(column.label).split(' ').join("_").toUpper().value()] || "DSS_"+_.chain(column.label).split(' ').join("_").toUpper().value())  
+                      + (column.colType === 'amount' ? ' ( ' + (strings["DSS_"+_.upperCase(Globfilter['Denomination'])] || "DSS_"+_.upperCase(Globfilter['Denomination'])) + ')' : ' ')}
                   </TableSortLabel>
                     :
                     <span>{column.label}</span>

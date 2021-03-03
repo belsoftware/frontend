@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import style from './styles';
 import { isMobile } from 'react-device-detect';
 import CONFIG from '../../config/configs';
+import _ from 'lodash';
 
 const options = {
   scales: {
@@ -66,7 +67,8 @@ class BarChart extends React.Component {
         tempVal = NFormatterFun(d1.value, d1.symbol, this.props.GFilterData['Denomination']);
         tempVal = (typeof tempVal == 'string')?parseFloat(tempVal.replace(/,/g, '')):tempVal;
         tempdataArr.push(tempVal);
-        tempdatalabel.push(strings[d1.name] || d1.name);
+        tempdatalabel.push(strings["DSS_"+_.chain(d1.name).split(' ').join("_").toUpper().value()] 
+          || "DSS_"+_.chain(d1.name).split(' ').join("_").toUpper().value());
       })
       tempObj.data = tempdataArr;
       tempdata.labels = tempdatalabel;

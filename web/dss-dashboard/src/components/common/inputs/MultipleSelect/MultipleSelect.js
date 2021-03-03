@@ -122,7 +122,7 @@ class MultipleSelects extends React.Component {
     )
   }
   render() {
-    const { classes, logo, target } = this.props;
+    const { classes, logo, target, strings } = this.props;
     let svgicon;
     if (logo === "DDRs") {
       svgicon = districts_icon;
@@ -159,7 +159,7 @@ class MultipleSelects extends React.Component {
         </div>
         {this.state.localItems.map((name, i) => (
           <MenuItem tabIndex={i} component="div" ref={this.props.innerRef} disableRipple className={classes.menuItem} style={{ minWidth: (this.props.minWidth) ? this.props.minWidth : 200 }} color={'primary'} key={name} value={name}>
-            <ListItemText primary={name} />
+            <ListItemText primary={strings[name] || name} />
             <Checkbox checked={this.props.clear ? !this.props.clear : this.state.name.indexOf(name) > -1} />
           </MenuItem>
         ))}

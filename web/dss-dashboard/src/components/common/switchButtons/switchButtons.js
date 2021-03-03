@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ActionButton from '../inputs/ActionButtons';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import styles from './localStyles';
+import _ from 'lodash';
 
 class SwitchButton extends Component {
 
@@ -29,14 +30,15 @@ class SwitchButton extends Component {
 
     }
     renderSmallbtns() {
-        let { data, selected } = this.props;
+        let { data, selected, strings} = this.props;
         return data && data.map(item => {
             return (< ActionButton key={item.value}
                 checked={item.value === selected}
                 buttonType="small"
                 value={item.value}
                 targer={item.value}
-                text={item.value}
+                text={strings["DSS_"+_.chain(item.value).split(' ').join("_").toUpper().value()] 
+                    || "DSS_"+_.chain(item.value).split(' ').join("_").toUpper().value()}
                 selected={item.value === selected}
                 handleClick={this.handleClick.bind(this)}
                 padding={this.props.padding}
@@ -46,14 +48,15 @@ class SwitchButton extends Component {
         });
     }
     renderBigbtns() {
-        let { data, selected } = this.props;
+        let { data, selected, strings } = this.props;
         return data && data.map(item => {
             return (< ActionButton key={item.value}
                 checked={item.value === selected}
                 buttonType="normal"
                 value={item.value}
                 targer={item.value}
-                text={item.value}
+                text={strings["DSS_"+_.chain(item.value).split(' ').join("_").toUpper().value()] 
+                    || "DSS_"+_.chain(item.value).split(' ').join("_").toUpper().value()}
                 selected={item.value === selected}
                 handleClick={this.handleClick.bind(this)}
             />

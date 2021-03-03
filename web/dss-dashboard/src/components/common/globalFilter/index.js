@@ -350,8 +350,8 @@ class GlobalFilter extends Component {
                         onClick={this.openPicker.bind(this)}
                     />
                     <DateRange
-                        selectBtn={strings["DSS_SELECT"] || "SELECT"}
-                        cancelBtn={strings["DSS_CANCEL"] || "CANCEL"}
+                        selectBtn={strings["DSS_SELECT"] || "DSS_SELECT"}
+                        cancelBtn={strings["DSS_CANCEL"] || "DSS_CANCEL"}
                         key={"DateRange"}
                         id="date-range"
                         title1={(_.get(this.state, "filterData.duration.title") || this.state.value)}
@@ -360,6 +360,7 @@ class GlobalFilter extends Component {
                         onClose={this.handleClose.bind(this)}
                         value={this.state.value}
                         handleSelectedOk={this.handleChanges.bind(this)}
+                        strings = {strings}
                     ></DateRange>
                 </div>
             </FormControl>
@@ -367,6 +368,7 @@ class GlobalFilter extends Component {
     }
 
     renderSimpleSelect(label, data) {
+        let {strings} = this.props;
         let newData = _.map(data, (d, i) => {
             return {
                 key: i + 1,
@@ -375,11 +377,12 @@ class GlobalFilter extends Component {
         })
         newData = [{ key: 0, value: `All ${label}` }, ...newData];
         return (
-            <SimpleSelect data={newData} value={this.state.dept} target={label} selected={this.state[label] || `All ${label}`} handleChange={this.handleChanges.bind(this)}></SimpleSelect>
+            <SimpleSelect data={newData} value={this.state.dept} target={label} selected={this.state[label] || `All ${label}`} handleChange={this.handleChanges.bind(this)} strings={strings}></SimpleSelect>
         )
     }
 
     renderSwitch(label, data) {
+        let { strings } = this.props;
         let newData = _.map(data, (d) => {
             return {
                 key: d,
@@ -387,7 +390,7 @@ class GlobalFilter extends Component {
             }
         })
         return (
-            <SwitchButton type="small" topMmargin="5px" padding="3px" fontSize="14px" selected={this.state.filterData[label] || data[0]} target={label} data={newData} handleSelected={this.handleChanges}></SwitchButton>
+            <SwitchButton type="small" topMmargin="5px" padding="3px" fontSize="14px" selected={this.state.filterData[label] || data[0]} target={label} data={newData} handleSelected={this.handleChanges} strings={strings}></SwitchButton>
         )
     }
 
@@ -405,6 +408,7 @@ class GlobalFilter extends Component {
     }
 
     renderAutoComplete(target, hndlslected, defaultV, data, type) {
+        let {strings} = this.props;
         return (<AutoComplete
             logo={target}
             handleSelected={hndlslected}
@@ -415,6 +419,7 @@ class GlobalFilter extends Component {
             clear={this.state.clear}
             handleClear={this.handleClear.bind(this)}
             type={type}
+            strings = {strings}
         />);
     }
 

@@ -237,7 +237,7 @@ class TableChart extends Component {
         <div className={classes.tableChart} style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="tableHeading">
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <SwitchButton clickFromTab={this.clickFromTab} chartParent={chartParent} />
+              <SwitchButton clickFromTab={this.clickFromTab} chartParent={chartParent} strings={strings}/>
 
             </div>
           </div>

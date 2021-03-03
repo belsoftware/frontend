@@ -9,7 +9,7 @@ import variables from '../../../../styles/variables';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import { isMobile } from 'react-device-detect';
-
+import _ from 'lodash';
 
 const theme = createMuiTheme({
     overrides: {
@@ -69,18 +69,19 @@ class SimpleSelect extends Component {
         }
     };
     prepareFilterDropdown(data) {
+        let {strings} = this.props;
         return (
             data.map((item, index) => {
                 if (typeof (item) !== 'object') {
-                    return (<MenuItem key={index} value={item}>{item}</MenuItem>)
+                    return (<MenuItem key={index} value={item}>{strings["DSS_"+_.chain(item).split('.').join("_").toUpper().value()] || "DSS_"+_.chain(item).split(' ').join("_").toUpper().value()}</MenuItem>)
                 } else {
-                    return (<MenuItem key={index} value={item.value}>{item.value}</MenuItem>)
+                    return (<MenuItem key={index} value={item.value}>{strings["DSS_"+_.chain(item.value).split(' ').join("_").toUpper().value()]|| "DSS_"+_.chain(item.value).split(' ').join("_").toUpper().value()}</MenuItem>)
                 }
             })
         )
     }
     render() {
-        let { classes, data, selected, noIcon, value } = this.props;
+        let { classes, data, selected, noIcon, value, strings } = this.props;
         // return (<div className={classes.list} style={isMobile?{width:'200px' ,display:"inline-flex"}:{display:"inline-flex"}}>
         return (
             <MuiThemeProvider theme={theme}>

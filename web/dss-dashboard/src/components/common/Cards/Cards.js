@@ -13,6 +13,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import { Tooltip } from '@material-ui/core';
 import variables from '../../../styles/variables';
 import CustomInfo from '../CustomInfo';
+import _ from 'lodash';
 
 const cardStyle = {
   backgroundColor: variables.widget_background,
@@ -33,7 +34,9 @@ class Cards extends Component {
     return (
       <Card id={'card' + id} style={this.props.cardStyle || cardStyle} classes={{ root: newClass }}>
         <div className={classes.headRoot}>
-          {title && <CardHeader classes={{ title: classes.title, root: classes.cardheader }} title={(strings[title] || title) + (!noUnit ? '' : (' (In ' + this.props.GFilterData['Denomination'] + ')'))}
+          {title && <CardHeader classes={{ title: classes.title, root: classes.cardheader }} title={(strings[title] || title) + (!noUnit ? '' : (' ( ' 
+            + (strings["DSS_IN_"+_.upperCase(this.props.GFilterData['Denomination'])] || "DSS_IN_"+_.upperCase(this.props.GFilterData['Denomination']) )
+            + ')'))}
             action={
               <div style={{ paddingLeft: '4px' }}>
                 <Tooltip title={strings[title] || title} classes={{ tooltip: classes.lightTooltip }} placement="top">

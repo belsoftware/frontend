@@ -117,7 +117,7 @@ class CheckboxesTags extends React.Component {
     };
 
     render() {
-        const { classes, logo } = this.props;
+        const { classes, logo, strings } = this.props;
         let svgicon;
         if (logo === "DDRs") {
             svgicon = districts_icon;
@@ -159,7 +159,7 @@ class CheckboxesTags extends React.Component {
                                             style={{ margin: '0px 0px 2px 0px',padding:0,  color:'black' }}
                                             checked={selected}
                                         />
-                                        {option}
+                                        {strings[option] || option}
                                     </React.Fragment>
                                 )}
 
@@ -199,26 +199,31 @@ class CheckboxesTags extends React.Component {
                                         style={{ margin: '0px 0px 2px 0px',padding:0,  color:'black' }}
                                         checked={selected}
                                     />
-                                    {option}
+                                    {strings["TENANT_TENANTS_"+_.chain(option).split('.').join("_").toUpper().value()] || option}
                                 </React.Fragment>
                             )}
 
                             renderTags={(value, getTagProps) =>{
+                                
                                 return this.state.localItems && this.state.localItems.length > 0 ? value.map((option, index) => (
-                                    (this.props.defaultValue && this.props.defaultValue.includes(option)) || this.props.type !=='Wards' ? <Chip  label={option} {...getTagProps({ index })} /> : <div></div>
+                                    (this.props.defaultValue && this.props.defaultValue.includes(option)) || this.props.type !=='Wards' ? 
+                                        <Chip  label={strings["TENANT_TENANTS_"+_.chain(option).split('.').join("_").toUpper().value()] || option} {...getTagProps({ index })} /> 
+                                        : <div></div>
                                 )) : ''
                             }
                             }
                             
                             style={(isMobile) ? { width: "100%", margin:"-6"} : {}}                                  
+                            
                             renderInput={params => (
+                                
                                 <div style={isMobile?{color:'black',margin:"0px -6px 0px 0px"}:{color:'black'}}>
 
                                 <TextField
                                     {...params}
                                     variant="standard"
                                     fullWidth
-                                    placeholder={this.state.label}
+                                    placeholder={strings[this.state.label] || this.state.label}
                                     style={isMobile?{color:'black',margin:"0px -6px 0 0"}:{color:'black'}}
                                     // InputLabelProps={{
                                     //     style: {
