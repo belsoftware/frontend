@@ -85,7 +85,8 @@ const additionalDetailsJson = "components.div.children.formwizardFirstStep.child
 
   let subUsage;
     if (propertyType === "BUILTUP.SHAREDPROPERTY" || propertyType === "BUILTUP.INDEPENDENTPROPERTY") {
-        if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL") {
+        if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL"
+        || usageType === "NONRESIDENTIAL.OTHERS") {
             dispatch(handleField('register-property', additionalDetailsJson, "visible", true));
             dispatch(handleField('register-property', additionalDetailsJson, "props.visible", true));
             if (usageType === "MIXED") {

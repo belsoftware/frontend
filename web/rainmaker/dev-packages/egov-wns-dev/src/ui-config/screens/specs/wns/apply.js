@@ -989,28 +989,26 @@ const screenConfig = {
             }
            
            if(!isModifyMode()){
-             console.info("Dc-Non modify mode");
-             //Display cards based on permission. CEMP/DOC_VER dont have access to taxheads&plumber details
-             //card permission is read from MDMS.
-             let plumberDisplayPermission = checkCardPermission(state , "plumberDetailsContainer");
-             dispatch(
-              handleField(
-                "apply",
-                "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
-                "visible",
-                plumberDisplayPermission
-              )
-            );
-            let connectionDetailsDisplayPermission = checkCardPermission(state , "connectiondetailscontainer");
-            dispatch(
-              handleField(
-                "apply",
-                "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
-                "visible",
-                connectionDetailsDisplayPermission
-              )
-            );          
-          
+             
+              let chkplumberDetailsContainer = checkCardPermission(state , "plumberDetailsContainer");
+              dispatch(
+                handleField(
+                  "apply",
+                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
+                  "visible",
+                  chkplumberDetailsContainer
+                )
+              );
+              let chkconnectiondetailscontainer = checkCardPermission(state , "connectiondetailscontainer");
+              dispatch(
+                handleField(
+                  "apply",
+                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
+                  "visible",
+                  chkconnectiondetailscontainer
+                )
+              );
+              
              if(checkCardPermission(state , "activationDetailsContainer")){
               dispatch(
                 handleField(
@@ -1107,63 +1105,51 @@ const screenConfig = {
       });
 
 
-                // dispatch(prepareFinalObject("applyScreen.water", true));
-                // dispatch(prepareFinalObject("applyScreen.sewerage", false));
 
-
-                  // const propertyId = getQueryArg(window.location.href, "propertyId");
-                  // const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
-
-            if (propertyId) {
-              
-              togglePropertyFeilds(action, true);
-              if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
-                toggleWaterFeilds(action, true);
-                toggleSewerageFeilds(action, true);
-              } else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
-                toggleWaterFeilds(action, false);
-                toggleSewerageFeilds(action, true);
-              } 
-              else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")) {
-                toggleWaterFeilds(action, true);
-                toggleSewerageFeilds(action, false);
-              }
-              else {
-                toggleWaterFeilds(action, false);
-                toggleSewerageFeilds(action, false);
-              }          
-            } else if (applicationNumber && getQueryArg(window.location.href, "action") === "edit") {   
+      if (propertyId) {
+          togglePropertyFeilds(action, true);
+          if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
+              toggleWaterFeilds(action, true);
+              toggleSewerageFeilds(action, true);
+          } else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
+              toggleWaterFeilds(action, false);
+              toggleSewerageFeilds(action, true);
+          }else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")) {
+              toggleWaterFeilds(action, true);
+              toggleSewerageFeilds(action, false);
+          }else {
+              toggleWaterFeilds(action, false);
+              toggleSewerageFeilds(action, false);
+          }          
+      } else if (applicationNumber && getQueryArg(window.location.href, "action") === "edit") {   
               
           togglePropertyFeilds(action, true);
           if (applicationNumber.includes("SW")) {
-            
-            dispatch(prepareFinalObject("applyScreen.water", false));
-            dispatch(prepareFinalObject("applyScreen.sewerage", true));
-            toggleWaterFeilds(action, false);
-            toggleSewerageFeilds(action, true);
-            } 
-          else {
-            dispatch(prepareFinalObject("applyScreen.water", true));
-            dispatch(prepareFinalObject("applyScreen.sewerage", false));
-            toggleWaterFeilds(action, true);
-            toggleSewerageFeilds(action, false);
-            }
+              dispatch(prepareFinalObject("applyScreen.water", false));
+              dispatch(prepareFinalObject("applyScreen.sewerage", true));
+              toggleWaterFeilds(action, false);
+              toggleSewerageFeilds(action, true);
+          }else {
+              dispatch(prepareFinalObject("applyScreen.water", true));
+              dispatch(prepareFinalObject("applyScreen.sewerage", false));
+              toggleWaterFeilds(action, true);
+              toggleSewerageFeilds(action, false);
+          }
         } else {
          
           togglePropertyFeilds(action, false)
           if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
-            toggleWaterFeilds(action, true);
-            toggleSewerageFeilds(action, true);
+              toggleWaterFeilds(action, true);
+              toggleSewerageFeilds(action, true);
           } else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
-            toggleWaterFeilds(action, false);
-            toggleSewerageFeilds(action, true);
-          } 
-          else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")) {
-            toggleWaterFeilds(action, true);
-            toggleSewerageFeilds(action, false);
+              toggleWaterFeilds(action, false);
+              toggleSewerageFeilds(action, true);
+          }else if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")) {
+              toggleWaterFeilds(action, true);
+              toggleSewerageFeilds(action, false);
           }else {
-            toggleWaterFeilds(action, false);
-            toggleSewerageFeilds(action, false);
+              toggleWaterFeilds(action, false);
+              toggleSewerageFeilds(action, false);
           }
         }
          
