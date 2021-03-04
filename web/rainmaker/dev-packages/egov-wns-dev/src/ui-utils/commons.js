@@ -129,7 +129,7 @@ export const getPropertyObj = async (waterConnection, locality, tenantId, isFrom
             if (waterConnection[i].propertyId && waterConnection[i].propertyId !== null && waterConnection[i].propertyId !== "NA") {
                 if (propertyArr[waterConnection[i].propertyId]) {
                     tempPropertyObj = (propertyArr[waterConnection[i].propertyId]) ? propertyArr[waterConnection[i].propertyId] : null
-                    if(tempPropertyObj.status=='INACTIVE'){
+                   /* if(tempPropertyObj.status=='INACTIVE'){
                         let queryObject1 = [];
                         if (process.env.REACT_APP_NAME === "Citizen") {
                             queryObject1 = [{ key: "propertyIds", value: tempPropertyObj.propertyId }];
@@ -145,7 +145,7 @@ export const getPropertyObj = async (waterConnection, locality, tenantId, isFrom
                         }
                         let payload = await getPropertyResultsWODispatch(queryObject1);
                         tempPropertyObj = payload.Properties[0];
-                    }
+                    }*/
                     waterConnection[i].property = tempPropertyObj;
                     waterConnection[i].tenantId = (tempPropertyObj && tempPropertyObj.tenantId) ? tempPropertyObj.tenantId : null;
                     tempPropertyObj = null;
@@ -201,13 +201,12 @@ export const getSearchResultsForSewerage = async (queryObject, dispatch, filter 
             return response;
         }
         let currentTime = new Date().getTime();
-        if (filter) {
-            response.SewerageConnections = response.SewerageConnections.filter(app => currentTime > app.dateEffectiveFrom && (app.applicationStatus == 'APPROVED' || app.applicationStatus == 'CONNECTION_ACTIVATED'));
-            response.SewerageConnections = response.SewerageConnections.sort((row1, row2) => row2.auditDetails.createdTime - row1.auditDetails.createdTime);
-        }
+        // if (filter) {
+        //     response.SewerageConnections = response.SewerageConnections.filter(app => currentTime > app.dateEffectiveFrom && (app.applicationStatus == 'APPROVED' || app.applicationStatus == 'CONNECTION_ACTIVATED'));
+        //     response.SewerageConnections = response.SewerageConnections.sort((row1, row2) => row2.auditDetails.createdTime - row1.auditDetails.createdTime);
+        // }
         response.SewerageConnections = response.SewerageConnections.sort(function(x, y){
-            // console.log("????????", y.auditDetails.createdTime,"-",x.auditDetails.createdTime);
-             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+            return  y.auditDetails.createdTime-x.auditDetails.createdTime;
          });
         let result = findAndReplace(response, null, "NA");
         result.SewerageConnections = await getPropertyObj(result.SewerageConnections);
@@ -256,11 +255,11 @@ export const getCBMdmsData = async (dispatch,tenantId) => {
         ]
       }
     };
-    console.log("Common_config",commonConfig.tenantId);
+   
     try {
       let payload = null;
       payload = await httpRequest("post", "/egov-mdms-service/v1/_search", "_search", [], mdmsBody);
-      console.log("Payload for ",payload);
+     
       dispatch(prepareFinalObject("applyScreenMdmsData.ws-services-masters.Documents", payload.MdmsRes["ws-services-masters"].Documents));
       dispatch(prepareFinalObject("applyScreenMdmsData.ws-services-masters.ModifyConnectionDocuments", payload.MdmsRes["ws-services-masters"].ModifyConnectionDocuments));
     } catch (e) { console.log(e); }
@@ -950,7 +949,7 @@ export const validateFields = (
     );
     let isFormValid = true;
     for (var variable in fields) {  
-      //  //////console.info("variable=",variable,"field=",fields);
+     
       if (fields.hasOwnProperty(variable)) {
         if (
           fields[variable] && fields[variable].componentPath != "DynamicMdmsContainer" &&
@@ -1119,11 +1118,11 @@ export const applyForWater = async (state, dispatch) => {
 }
 
 export const applyForSewerage = async (state, dispatch) => {
-    console.info("DC-applyForSewerage");
+ 
     let queryObject = parserFunction(state);
     let sewerId = get(state, "screenConfiguration.preparedFinalObject.SewerageConnection[0].id");
     let method = sewerId ? "UPDATE" : "CREATE";
-    //console.info("DC-method=",method);
+    
     try {
         const tenantId = get(state, "screenConfiguration.preparedFinalObject.SewerageConnection[0].property.tenantId");
         let response;
@@ -1186,7 +1185,7 @@ export const applyForSewerage = async (state, dispatch) => {
 }
 
 export const applyForBothWaterAndSewerage = async (state, dispatch) => {
-    //console.info("DC-Apply for both w&S");
+  
     let method;
     let queryObject = parserFunction(state);
     let waterId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].id");
@@ -1397,7 +1396,7 @@ export const getMdmsDataForMeterStatus = async (dispatch) => {
             [],
             mdmsBody
         );
-        // console.log(payload.MdmsRes)
+       
         let data = payload.MdmsRes['ws-services-calculation'].MeterStatus.map(ele => {
             return { code: ele }
         })
@@ -1908,7 +1907,7 @@ export const downloadBill = (receiptQueryString, mode) => {
 
                 payloadReceiptDetails.Bill[0].billDetails.sort((a, b) => b.toPeriod - a.toPeriod);
                 httpRequest("post", "/egov-mdms-service/v1/_search", "_search", [], requestBody).then((payloadbillingPeriod) => {
-                    console.log(payloadbillingPeriod);
+                
                     let waterMeteredDemandExipryDate = 0, waterNonMeteredDemandExipryDate = 0, sewerageNonMeteredDemandExpiryDate = 0;
                     const service = (payloadReceiptDetails.Bill && payloadReceiptDetails.Bill.length > 0 && payloadReceiptDetails.Bill[0].businessService) ? payloadReceiptDetails.Bill[0].businessService : 'WS';
                     if (service === 'WS' &&
@@ -2148,6 +2147,7 @@ export const getWaterSource = (waterSource, waterSubSource) => {
 }
 
 export const isWorkflowExists = async (queryObj) => {
+   
     try {
         const payload = await httpRequest(
             "post",
@@ -2159,7 +2159,7 @@ export const isWorkflowExists = async (queryObj) => {
         if (payload && payload.ProcessInstances && payload.ProcessInstances.length > 0) {
             for (let pInstance of payload.ProcessInstances) {
                 isApplicationApproved = pInstance.state.isTerminateState;
-                if (!isApplicationApproved) {
+                 if (!isApplicationApproved) {
                     break;
                 }
             }

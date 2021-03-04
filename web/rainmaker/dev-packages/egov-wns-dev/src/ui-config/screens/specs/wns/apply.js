@@ -918,6 +918,8 @@ const screenConfig = {
   name: "apply",
   // hasBeforeInitAsync:true,
   beforeInitScreen: (action, state, dispatch) => {
+    //prevent the createCall at last step.
+    dispatch(prepareFinalObject("modifyAppCreated", false));
     pageReset(dispatch);
     dispatch(prepareFinalObject(`applyScreen.wsTaxHeads`, []));
     //Road cutting charges
