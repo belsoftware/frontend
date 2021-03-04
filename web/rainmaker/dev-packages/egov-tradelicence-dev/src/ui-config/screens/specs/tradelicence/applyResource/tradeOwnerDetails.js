@@ -271,7 +271,7 @@ export const OwnerInfoCard = {
             labelKey: "TL_NEW_OWNER_DETAILS_NAME_PLACEHOLDER"
           },
           required: true,
-          pattern: getPattern("CommonName"),
+          pattern: getPattern("Name"),
           jsonPath: "Licenses[0].tradeLicenseDetail.owners[0].name"
         }),
         getFatherNameField: getTextField({
@@ -573,7 +573,7 @@ export const ownerInfoInstitutional = {
           labelName: "Enter Name of Authorised Person",
           labelKey: "TL_NEW_OWNER_AUTH_PER_PLACEHOLDER"
         },
-        pattern: getPattern("CommonName"),
+        pattern: getPattern("Name"),
         required: true,
         jsonPath: "Licenses[0].tradeLicenseDetail.owners[0].name"
       }),
