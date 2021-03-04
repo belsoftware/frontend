@@ -192,7 +192,8 @@ export const propertyAssemblyDetails = getCommonCard({
         labelKey: "PT_COMMON_TOTAL_LAND_AREA_PLACEHOLDER"
       },
       required: true,
-      pattern: /^[1-9]\d{0,7}(\.\d{1,2})?%?$/,
+      //pattern: /^[1-9]\d{0,7}(\.\d{1,2})?%?$/,
+      pattern: /^[1-9]\d{0,7}?%?$/,
       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
       jsonPath: "Property.landArea"
     }),
@@ -208,7 +209,7 @@ export const propertyAssemblyDetails = getCommonCard({
         labelKey: "PT_COMMON_TOTAL_CONSTRUCTED_AREA_PLACEHOLDER"
       },
       required: true,
-      pattern: /^[1-9]\d{0,7}(\.\d{1,2})?%?$/,
+      pattern: /^[1-9]\d{0,7}?%?$/,
       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
       jsonPath: "Property.superBuiltUpArea"
     }),
@@ -279,7 +280,7 @@ export const propertyAssemblyDetails = getCommonCard({
             labelKey: "PT_COMMON_NO_OF_FLOORS_PLACEHOLDER"
           },
           required: true,
-          pattern: /^[1-9]\d{0,9}(\.\d{1,3})?%?$/,
+          pattern: /^[1-9]\d{0,9}?%?$/,
           errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
           jsonPath: "Property.noOfFloors"
         }),
@@ -295,7 +296,7 @@ export const propertyAssemblyDetails = getCommonCard({
                 labelKey: "PT_COMMON_NO_OF_FLATS_PLACEHOLDER"
               },
               required: true,
-              pattern: /^[1-9]\d{0,9}(\.\d{1,3})?%?$/,
+              pattern: /^[1-9]\d{0,9}?%?$/,
               errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               jsonPath: "Property.noOfFlats"
             })

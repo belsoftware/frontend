@@ -622,8 +622,6 @@ const getApplyPropertyDetails = async (queryObject, dispatch, propertyID,state) 
       if(tenantIdProp){
         const wsTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='WS')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
         const swTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='SW')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
-        console.log(wsTenant,"----wsTenants");
-        console.log(swTenant,"----swTenant");
         if(wsTenant.length>0){
           if(swTenant.length==0){
               dispatch(prepareFinalObject("applyScreen.water", true));
@@ -910,13 +908,9 @@ const setRoadCuttingEstimate = (item,index,dispatch) =>{
                 },
             }),
       
-     }),
-    
-  
+      }),  
      )
     )
-  
-
 }
  
 const screenConfig = {
@@ -924,6 +918,8 @@ const screenConfig = {
   name: "apply",
   // hasBeforeInitAsync:true,
   beforeInitScreen: (action, state, dispatch) => {
+    //prevent the createCall at last step.
+    dispatch(prepareFinalObject("modifyAppCreated", false));
     pageReset(dispatch);
     dispatch(prepareFinalObject(`applyScreen.wsTaxHeads`, []));
     //Road cutting charges
@@ -952,15 +948,7 @@ const screenConfig = {
           false
         )
        );
-       dispatch(
-        handleField(
-          "apply",
-          "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
-          "visible",
-          false
-        )
-       );
-
+ 
        dispatch(
         handleField(
           "apply",
@@ -969,140 +957,115 @@ const screenConfig = {
           false
         )
        );
-     
+    
 
-      
-
-       //Setting Tax heads and Road Types
-          if (applicationNumber && getQueryArg(window.location.href, "action") === "edit" && process.env.REACT_APP_NAME !== "Citizen") {
+             //Setting Tax heads and Road Types
+      if (applicationNumber && getQueryArg(window.location.href, "action") === "edit" && process.env.REACT_APP_NAME !== "Citizen") {
            
-            //show tax head estimates to only field inspector and doc verifier
-            if(checkCardPermission(state , "wsConnectionTaxHeadsContainer")){
+             //show tax head estimates to only field inspector and doc verifier
+             let chkwsConnectionTaxHeadsContainer = checkCardPermission(state , "wsConnectionTaxHeadsContainer");
+             //if(checkCardPermission(state , "wsConnectionTaxHeadsContainer")){
               dispatch(
                 handleField(
                   "apply",
                   "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer",
                   "visible",
-                  true
+                  chkwsConnectionTaxHeadsContainer
                 )
               );
-            }
+             //}
            
-           if(!isModifyMode()){
+                    if(!isModifyMode()){
              
-              let chkplumberDetailsContainer = checkCardPermission(state , "plumberDetailsContainer");
-              dispatch(
-                handleField(
-                  "apply",
-                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
-                  "visible",
-                  chkplumberDetailsContainer
-                )
-              );
-              let chkconnectiondetailscontainer = checkCardPermission(state , "connectiondetailscontainer");
-              dispatch(
-                handleField(
-                  "apply",
-                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
-                  "visible",
-                  chkconnectiondetailscontainer
-                )
-              );
-              
-             if(checkCardPermission(state , "activationDetailsContainer")){
-              dispatch(
-                handleField(
-                  "apply",
-                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
-                  "visible",
-                  true
-                )
-              );
-             }
+                      let chkplumberDetailsContainer = checkCardPermission(state , "plumberDetailsContainer");
+                      dispatch(
+                        handleField(
+                          "apply",
+                          "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer",
+                          "visible",
+                          chkplumberDetailsContainer
+                        )
+                      );
+                      let chkconnectiondetailscontainer = checkCardPermission(state , "connectiondetailscontainer");
+                      dispatch(
+                        handleField(
+                          "apply",
+                          "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
+                          "visible",
+                          chkconnectiondetailscontainer
+                        )
+                      );
+                      
+                      //Fill tax heads and road cutting charges
+                      //Create tax head object ---start
+                      let taxHeadDetails = get(
+                        state,
+                        "screenConfiguration.preparedFinalObject.applyScreenMdmsData.ws-services-masters.TaxHeadMaster",
+                        []
+                      );
+                      //Filter for tax heads 
+                      let applicationType =applicationNumber.includes("SW") ?"SW" : "WS";
+                      taxHeadDetails = taxHeadDetails.filter( (taxHead) => taxHead.service.includes(applicationType));
+                      
+                      //Read existing tax heads
+                      let existingTaxHeads=get(state, "screenConfiguration.preparedFinalObject.applyScreen.wsTaxHeads",[]);
+                      let taxHeads={};
+                      existingTaxHeads.forEach(obj =>taxHeads[obj.taxHeadCode]=obj );
 
-             let applicationTypeCheck =  get(state.screenConfiguration.preparedFinalObject, "applyScreen.applicationType");
-             
-             if(checkCardPermission(state , "modificationsEffectiveFrom") && (applicationTypeCheck === 'MODIFY_WATER_CONNECTION')){
-               dispatch(
-                handleField(
-                  "apply",
-                  "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
-                  "visible",
-                  true
-                )
-               );
-              }
-              //Fill tax heads and road cutting charges
-              //Create tax head object ---start
-              let taxHeadDetails = get(
-                state,
-                "screenConfiguration.preparedFinalObject.applyScreenMdmsData.ws-services-masters.TaxHeadMaster",
-                []
-              );
-              //Filter for tax heads 
-              let applicationType =applicationNumber.includes("SW") ?"SW" : "WS";
-              taxHeadDetails = taxHeadDetails.filter( (taxHead) => taxHead.service.includes(applicationType));
-              
-              //Read existing tax heads
-              let existingTaxHeads=get(state, "screenConfiguration.preparedFinalObject.applyScreen.wsTaxHeads",[]);
-              let taxHeads={};
-              existingTaxHeads.forEach(obj =>taxHeads[obj.taxHeadCode]=obj );
+                       for(var i=0;i<taxHeadDetails.length ;i++){      
+                        taxHeadDetails[i]={...taxHeadDetails[i] , amount : null,taxHeadCode : taxHeadDetails[i].code, id : null } ;
+                        if(taxHeads[taxHeadDetails[i].code]){
+                          taxHeadDetails[i].amount=taxHeads[taxHeadDetails[i].code].amount;
+                          taxHeadDetails[i].id=taxHeads[taxHeadDetails[i].code].id;
+                        }  
+                       }
+                       dispatch(prepareFinalObject(`applyScreen.wsTaxHeads`, taxHeadDetails) );
 
-              for(var i=0;i<taxHeadDetails.length ;i++){      
-                taxHeadDetails[i]={...taxHeadDetails[i] , amount : null,taxHeadCode : taxHeadDetails[i].code, id : null } ;
-                if(taxHeads[taxHeadDetails[i].code]){
-                  taxHeadDetails[i].amount=taxHeads[taxHeadDetails[i].code].amount;
-                  taxHeadDetails[i].id=taxHeads[taxHeadDetails[i].code].id;
-                }  
-              }
-              dispatch(prepareFinalObject(`applyScreen.wsTaxHeads`, taxHeadDetails) );
+                        //Filter for road types
+                        let roadTypes = get(
+                          state,
+                          "screenConfiguration.preparedFinalObject.applyScreenMdmsData.sw-services-calculation.RoadType",
+                          []
+                        ); 
+                        let existingRoadDetail=get(state, "screenConfiguration.preparedFinalObject.applyScreen.roadTypeEst",[]);
+                        let roadDetails={};
+                        existingRoadDetail.forEach(obj =>obj['code']=obj.roadType );
+                        existingRoadDetail.forEach(obj =>roadDetails[obj.roadType]=obj );
 
-              //Filter for road types
-              let roadTypes = get(
-                state,
-                "screenConfiguration.preparedFinalObject.applyScreenMdmsData.sw-services-calculation.RoadType",
-                []
-              ); 
-              let existingRoadDetail=get(state, "screenConfiguration.preparedFinalObject.applyScreen.roadTypeEst",[]);
-              let roadDetails={};
-              existingRoadDetail.forEach(obj =>obj['code']=obj.roadType );
-              existingRoadDetail.forEach(obj =>roadDetails[obj.roadType]=obj );
+                        for(var i=0;i<roadTypes.length ;i++){     
+                          roadTypes[i]={...roadTypes[i], roadType :roadTypes[i].code , length : null, depth : null ,breadth : null,rate : null };
+                          if(roadDetails[roadTypes[i].code]){ 
+                            roadTypes[i] =roadDetails[roadTypes[i].code]; 
+                          }  
+                        }
+                        dispatch(
+                          prepareFinalObject(`applyScreen.roadTypeEst`, roadTypes )
+                        );
 
-              for(var i=0;i<roadTypes.length ;i++){     
-                roadTypes[i]={...roadTypes[i], roadType :roadTypes[i].code , length : null, depth : null ,breadth : null,rate : null };
-                if(roadDetails[roadTypes[i].code]){ 
-                  roadTypes[i] =roadDetails[roadTypes[i].code]; 
-                }  
-              }
-              dispatch(
-                prepareFinalObject(`applyScreen.roadTypeEst`, roadTypes )
-              );
+                        //create component
+                        for(var i=0;i<taxHeadDetails.length ;i++){        
+                          getIndividualTaxheads(taxHeadDetails[i],i,dispatch);
+                        }
+                        for(var i=0;i<roadTypes.length;i++){ 
+                          setRoadCuttingEstimate(roadTypes[i],i,dispatch);
+                        }
 
-              //create component
-              for(var i=0;i<taxHeadDetails.length ;i++){        
-                getIndividualTaxheads(taxHeadDetails[i],i,dispatch);
-              }
-              for(var i=0;i<roadTypes.length;i++){ 
-                setRoadCuttingEstimate(roadTypes[i],i,dispatch);
-              }
-
-           }
-           else{
-           
-            dispatch(
-              handleField(
-                "apply",
-                "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom",
-                "visible",
-                true
-              )
-             );
-           }
+                     }
+                    else{
+                        dispatch(
+                          handleField(
+                            "apply",
+                            "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom",
+                            "visible",
+                            true
+                          )
+                        );
+                    }
                 
-            dispatch(prepareFinalObject("editWSFlow", true));
-          }
+               dispatch(prepareFinalObject("editWSFlow", true));
+              }
           
-      });
+          });
 
 
 
@@ -1154,16 +1117,12 @@ const screenConfig = {
         }
          
 
-   // });
-
-
-
-    if (isModifyMode()) {
-      triggerModificationsDisplay(action, true);
-    } 
-    // else {
-    //   triggerModificationsDisplay(action, false);
-    // }
+      if (isModifyMode()) {
+        triggerModificationsDisplay(action, true);
+      } 
+      // else {
+      //   triggerModificationsDisplay(action, false);
+      // }
 
     if(propertyId){
       prepareDocumentsUploadData(state, dispatch);
@@ -1178,9 +1137,9 @@ const screenConfig = {
     let tenantId = getQueryArg(window.location.href, "tenantId");
     let action1 = getQueryArg(window.location.href, "action");
 
-let modeaction1 = getQueryArg(window.location.href, "modeaction");
+    let modeaction1 = getQueryArg(window.location.href, "modeaction");
 
-let mode = getQueryArg(window.location.href, "mode");
+    let mode = getQueryArg(window.location.href, "mode");
     let modifyLink;
     if (isMode === "MODIFY" || action1 ==="edit") {
       modifyLink = `/wns/apply?`;
@@ -1205,9 +1164,7 @@ let mode = getQueryArg(window.location.href, "mode");
     set(action, "screenConfig.components.div.children.headerDiv.children.header.children.applicationNumberWater.props.mode",isModifyMode() && !isModifyModeAction());
     set(action, "screenConfig.components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyID.children.clickHereLink.props.url", modifyLink)
     set(action, "screenConfig.components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyID.children.clickHereLink.props.isMode", isMode)
-   
-   
-  
+    
    
     return action;
   },

@@ -102,7 +102,7 @@ export const searchApiCall = async (state, dispatch) => {
         }
       }
     }
-    
+
     const response = await getSearchResults(queryObject);
     try {
       

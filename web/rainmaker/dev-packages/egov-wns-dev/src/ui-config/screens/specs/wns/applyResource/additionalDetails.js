@@ -203,6 +203,9 @@ export const additionDetails = getCommonCard({
             },
             {
               key : 'waterSubSource',
+              isRequired: true,
+              requiredValue : true,
+              errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               callBack: waterSubSourceChange 
             }
           ],
