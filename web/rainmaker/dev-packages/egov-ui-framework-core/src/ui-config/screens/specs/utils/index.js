@@ -558,6 +558,8 @@ export const getPattern = type => {
         return /^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,50}$/i;
       } 
         
+    case "CommonName":
+        return /^([^-!#$%&()*,./:;?@[\\]_{|}¨ˇ“”€+<=>§°\\d\\s¤®™©]| )+$/;
     case "MobileNo":
       return /^[6789][0-9]{9}$/i;
     case "Amount":
