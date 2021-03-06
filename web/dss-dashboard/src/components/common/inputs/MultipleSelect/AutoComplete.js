@@ -199,7 +199,7 @@ class CheckboxesTags extends React.Component {
                                         style={{ margin: '0px 0px 2px 0px',padding:0,  color:'black' }}
                                         checked={selected}
                                     />
-                                    {strings["TENANT_TENANTS_"+_.chain(option).split('.').join("_").toUpper().value()] || option}
+                                    {strings["TENANT_TENANTS_PB_"+_.chain(option).split('.').join("_").toUpper().value()] || option}
                                 </React.Fragment>
                             )}
 
@@ -207,7 +207,7 @@ class CheckboxesTags extends React.Component {
                                 
                                 return this.state.localItems && this.state.localItems.length > 0 ? value.map((option, index) => (
                                     (this.props.defaultValue && this.props.defaultValue.includes(option)) || this.props.type !=='Wards' ? 
-                                        <Chip  label={strings["TENANT_TENANTS_"+_.chain(option).split('.').join("_").toUpper().value()] || option} {...getTagProps({ index })} /> 
+                                        <Chip  label={strings["TENANT_TENANTS_PB_"+_.chain(option).split('.').join("_").toUpper().value()] || option} {...getTagProps({ index })} /> 
                                         : <div></div>
                                 )) : ''
                             }
