@@ -8,6 +8,7 @@ import style from './styles';
 import { isMobile } from 'react-device-detect';
 import CONFIG from '../../config/configs';
 import _ from 'lodash';
+import moment from 'moment';
 
 const options = {
   scales: {
@@ -47,7 +48,18 @@ class BarChart extends React.Component {
   
   callforNewData(elems) {
 		
-	}
+  }
+  
+  checkIfDateFormat = (plots) =>{
+    let isDate = false;
+    var formats = [
+      "D-MMM-YYYY",
+      "DD-MMM-YYYY" 
+    ];
+    isDate = plots && plots.length>0 && plots[0].name && moment(plots[0].name, formats, true).isValid();
+    return isDate;
+  }
+
   manupulateData(strings,chartData) {
     var tempdata = {
       labels: [],
@@ -65,11 +77,15 @@ class BarChart extends React.Component {
       let tempdatalabel = [],tempVal='';
       tempObj.label =   strings["DSS_"+_.chain(d.headerName).split(' ').join("_").toUpper().value()] 
         || "DSS_"+_.chain(d.headerName).split(' ').join("_").toUpper().value();
+      let isDateFormatLabels = this.checkIfDateFormat(d.plots);
       d.plots.map((d1, i) => {
         tempVal = NFormatterFun(d1.value, d1.symbol, this.props.GFilterData['Denomination']);
         tempVal = (typeof tempVal == 'string')?parseFloat(tempVal.replace(/,/g, '')):tempVal;
         tempdataArr.push(tempVal);
-        tempdatalabel.push(strings["DSS_"+_.chain(d1.name).split(' ').join("_").toUpper().value()] || "DSS_"+_.chain(d1.name).split(' ').join("_").toUpper().value());
+        if(isDateFormatLabels)
+          tempdatalabel.push(d1.name);
+        else
+          tempdatalabel.push(strings["DSS_"+_.chain(d1.name).split(' ').join("_").toUpper().value()] || "DSS_"+_.chain(d1.name).split(' ').join("_").toUpper().value());
       })
       tempObj.data = tempdataArr;
       tempdata.labels = tempdatalabel;
