@@ -26,5 +26,6 @@ const AutosuggestContainer = Loadable({
 export {
   TestMolecules,
   HowItWorks,
-  AutosuggestContainer
+  AutosuggestContainer,
+  SingleApplication
 };
