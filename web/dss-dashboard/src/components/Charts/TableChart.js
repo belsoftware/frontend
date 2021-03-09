@@ -223,7 +223,7 @@ class TableChart extends Component {
                       }
                       newrowData[a.name] = [a.label,text]
                   } else {
-                      a.symbol = (a.name === "Total Citizens")?"number":a.symbol;  //A temporary fix for citizens. tobechanged
+                      a.symbol = (a.name === "Total Citizens" || a.name === "Total Processed")?"number":a.symbol;  //A temporary fix for citizens. tobechanged
                       let val = NFormatterFun(a.value, a.symbol, this.props.GFilterData['Denomination'], false);
                       newrowData[a.name] = val
                   }
