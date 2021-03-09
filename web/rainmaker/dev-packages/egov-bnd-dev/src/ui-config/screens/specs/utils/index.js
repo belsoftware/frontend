@@ -572,7 +572,7 @@ export const postPaymentSuccess = async(action,state,dispatch, data) => {
 
   dispatch(toggleSpinner());
   setTimeout(() => {     
-    postPaymentActivity(action,state, dispatch,data);
+    postPaymentActivity(data);
     dispatch(toggleSpinner());
   }, 4000); //Give 2 sec gap so that the screen is loaded correctly
     
