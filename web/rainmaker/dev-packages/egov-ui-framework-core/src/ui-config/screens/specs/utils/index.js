@@ -544,7 +544,7 @@ export const getTab = (label, props = {}) => {
 
 export const getPattern = type => {
   const locale = getLocale();
-  console.log("locale:",locale);
+  //console.log("locale:",locale);
 
   switch (type) {
     case "Name":

@@ -92,8 +92,6 @@ export const reviewDocumentDetails = reviewDocuments();
 
 export const reviewModificationsDetails = (isModifyMode()) ? reviewModificationsEffective(process.env.REACT_APP_NAME !== "Citizen") : {};
 
-//export const reviewRoadCuttingUserEntry = reviewRoadCuttingUserEntryDetails();
-//export const reviewRoadCuttingUserEntry = reviewRoadCuttingUserEntry ();
 
 const summaryScreenCitizen = getCommonCard({
   reviewConnDetails,
@@ -957,6 +955,14 @@ const screenConfig = {
           false
         )
        );
+       dispatch(
+        handleField(
+          "apply",
+          "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
+          "visible",
+          false
+        )
+       );
     
 
              //Setting Tax heads and Road Types
@@ -964,7 +970,6 @@ const screenConfig = {
            
              //show tax head estimates to only field inspector and doc verifier
              let chkwsConnectionTaxHeadsContainer = checkCardPermission(state , "wsConnectionTaxHeadsContainer");
-             //if(checkCardPermission(state , "wsConnectionTaxHeadsContainer")){
               dispatch(
                 handleField(
                   "apply",
@@ -973,7 +978,7 @@ const screenConfig = {
                   chkwsConnectionTaxHeadsContainer
                 )
               );
-             //}
+           
            
                     if(!isModifyMode()){
              
@@ -993,6 +998,16 @@ const screenConfig = {
                           "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer",
                           "visible",
                           chkconnectiondetailscontainer
+                        )
+                      );
+
+                      let chkActivationDetailsContainer = checkCardPermission(state , "activationDetailsContainer");
+                      dispatch(
+                        handleField(
+                          "apply",
+                          "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
+                          "visible",
+                          chkActivationDetailsContainer
                         )
                       );
                       
@@ -1085,8 +1100,7 @@ const screenConfig = {
               toggleSewerageFeilds(action, false);
           }          
       } else if (applicationNumber && getQueryArg(window.location.href, "action") === "edit") {   
-              
-          togglePropertyFeilds(action, true);
+           togglePropertyFeilds(action, true);
           if (applicationNumber.includes("SW")) {
               dispatch(prepareFinalObject("applyScreen.water", false));
               dispatch(prepareFinalObject("applyScreen.sewerage", true));
@@ -1117,7 +1131,7 @@ const screenConfig = {
         }
          
 
-      if (isModifyMode()) {
+      if (isModifyMode()) {      
         triggerModificationsDisplay(action, true);
       } 
       // else {
