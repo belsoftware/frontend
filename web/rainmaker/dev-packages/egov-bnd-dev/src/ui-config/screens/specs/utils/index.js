@@ -568,7 +568,7 @@ export const downloadCert = async (tenantId, id) => {
 }
 
 
-export const postPaymentSuccess = async(action,state,dispatch, data) => {
+export const postPaymentSuccess = async(data) => {
 
   dispatch(toggleSpinner());
   setTimeout(() => {     
