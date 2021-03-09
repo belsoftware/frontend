@@ -568,12 +568,12 @@ export const downloadCert = async (tenantId, id) => {
 }
 
 
-export const postPaymentSuccess = async(action,state,dispatch, data) => {
+export const postPaymentSuccess = async(data) => {
 
-  dispatch(toggleSpinner());
+  store.dispatch(toggleSpinner());
   setTimeout(() => {     
     postPaymentActivity(data);
-    dispatch(toggleSpinner());
+    store.dispatch(toggleSpinner());
   }, 4000); //Give 2 sec gap so that the screen is loaded correctly
     
 };
