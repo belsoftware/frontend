@@ -281,7 +281,7 @@ export const getDocumentsCard = (documentsUploadRedux) => {
 
 export const generateKeyValue = (preparedFinalObject, containerObject) => {
     let keyValue = []
-    console.log("container object--"+getLocale());
+    //console.log("container object--"+getLocale());
     Object.keys(containerObject).map(keys => {
         const labelObject = getFromObject(containerObject[keys],'children.label.children.key.props', getFromObject(containerObject[keys],'children.label1.children.key.props',{}));
         const key = getLocaleLabels(labelObject.labelName, labelObject.labelKey)
