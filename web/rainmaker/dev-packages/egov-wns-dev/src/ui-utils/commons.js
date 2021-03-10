@@ -748,8 +748,8 @@ export const setWSDocuments = async (payload, sourceJsonPath, businessService) =
                     return item.fileStoreId;
                 })
                 .join(",");
-        const fileUrlPayload = fileStoreIds && (await getFileUrlFromAPI(fileStoreIds));
-        const reviewDocData =
+         const fileUrlPayload = fileStoreIds && (await getFileUrlFromAPI(fileStoreIds));
+         const reviewDocData =
             uploadedDocData &&
             uploadedDocData.map((item, index) => {
                 return {
@@ -848,13 +848,14 @@ export const prefillDocuments = async (payload, destJsonPath, dispatch) => {
     let documentsUploadRedux = {};
     // const uploadedDocData = get(payload, sourceJsonPath);
     let uploadedDocs = await setWSDocuments(payload, "applyScreen.documents", "WS");
-    if (uploadedDocs !== undefined && uploadedDocs !== null && uploadedDocs.length > 0) {
+     if (uploadedDocs !== undefined && uploadedDocs !== null && uploadedDocs.length > 0) {
         documentsUploadRedux = uploadedDocs && uploadedDocs.length && uploadedDocs.map((item, key) => {
             let docUploadRedux = {};
             docUploadRedux[key] = { documents: [{ fileName: item.name, fileUrl: item.link, fileStoreId: payload.applyScreen.documents[key].fileStoreId }] };
             let splittedString = payload.applyScreen.documents[key].documentType.split(".");
-            if (splittedString[1] === "ADDRESSPROOF") { docUploadRedux[key].dropdown = { value: splittedString.join(".") }; }
+            if (splittedString[1] === "ADDRESSPROOF") {docUploadRedux[key].dropdown = { value: splittedString.join(".") };}
             else if (splittedString[1] === "IDENTITYPROOF") { docUploadRedux[key].dropdown = { value: splittedString.join(".") }; }
+            else if(splittedString[1] === "NOC_") { docUploadRedux[key].dropdown = { value: splittedString.join(".") }; }
             else {
                 docUploadRedux[key].dropdown = { value: payload.applyScreen.documents[key].documentType };
             }
