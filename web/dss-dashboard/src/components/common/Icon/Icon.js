@@ -5,6 +5,8 @@ import ComplaintsIcon from '../../../images/complaints.svg'
 import TradeIcon from '../../../images/trade-license.svg'
 import WaterSewerage from '../../../images/water_sewerage.svg'
 import LeaseIcon from '../../../images/lease.svg'
+import BirthIcon from '../../../images/birth.svg'
+import DeathIcon from '../../../images/death.svg'
 import mCollectIcon from '../../../images/mCollect.svg'
 import Sewerage from '../../../images/sewerage.svg'
 import Style from './Styles'
@@ -41,6 +43,12 @@ class Icon extends React.Component {
             case 'lease':
             case 'dss_lease':
                 return <SVG src={LeaseIcon} fill="white" className={classes.icon} style={{ width: '40px', height: '40px' }}></SVG>
+            case 'birth':
+            case 'dss_birth':
+                return <SVG src={BirthIcon} fill="white" className={classes.icon} style={{ width: '40px', height: '40px' }}></SVG>
+            case 'death':
+            case 'dss_death':
+                return <SVG src={DeathIcon} fill="white" className={classes.icon} style={{ width: '40px', height: '40px' }}></SVG>
             case 'mCollect':
             case 'dss_m_collect':
                 return <SVG src={mCollectIcon} fill="white" className={classes.icon} style={{ width: '40px', height: '40px' }}></SVG>
