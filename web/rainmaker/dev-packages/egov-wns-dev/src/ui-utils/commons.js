@@ -97,9 +97,9 @@ export const getPropertyObj = async (waterConnection, locality, tenantId, isFrom
                 let queryObject1 = [];
                 uuids = uuids.substring(0, uuids.length - 1);
                 if (process.env.REACT_APP_NAME === "Citizen") {
-                    queryObject1 = [{ key: "uuids", value: uuids }];
+                    queryObject1 = [{ key: "propertyIds", value: uuids }];
                 } else {
-                    queryObject1 = [{ key: "tenantId", value: getTenantIdCommon() }, { key: "uuids", value: uuids }];
+                    queryObject1 = [{ key: "tenantId", value: getTenantIdCommon() }, { key: "propertyIds", value: uuids }];
                 }
 
                 if(locality) {
@@ -112,7 +112,7 @@ export const getPropertyObj = async (waterConnection, locality, tenantId, isFrom
                     let payload = await getPropertyResultsWODispatch(queryObject1);
                     if (payload.Properties.length > 0) {
                         for (var j = 0; j < payload.Properties.length; j++) {
-                            propertyArr[payload.Properties[j].id] = payload.Properties[j]
+                            propertyArr[payload.Properties[j].propertyId] = payload.Properties[j]
                         }
                     }
                 }
@@ -152,6 +152,9 @@ export const getPropertyObj = async (waterConnection, locality, tenantId, isFrom
                 }
             }
         }
+    }
+    if(get(waterConnection[0], "property.owners")) {
+        waterConnection[0].property.owners = waterConnection[0].property.owners.filter(owner => owner.status == "ACTIVE");
     }
     return waterConnection;
 }
@@ -643,7 +646,7 @@ const parserFunction = (state) => {
         noOfWaterClosets: parseInt(queryObject.noOfWaterClosets),
         noOfToilets: parseInt(queryObject.noOfToilets),
         proposedTaps: parseInt(queryObject.proposedTaps),
-        propertyId: (queryObject.property) ? queryObject.property.id : null,
+        propertyId: (queryObject.property) ? queryObject.property.propertyId : null,
         additionalDetails: {
             initialMeterReading: (
                 queryObject.additionalDetails !== undefined &&
@@ -748,8 +751,8 @@ export const setWSDocuments = async (payload, sourceJsonPath, businessService) =
                     return item.fileStoreId;
                 })
                 .join(",");
-        const fileUrlPayload = fileStoreIds && (await getFileUrlFromAPI(fileStoreIds));
-        const reviewDocData =
+         const fileUrlPayload = fileStoreIds && (await getFileUrlFromAPI(fileStoreIds));
+         const reviewDocData =
             uploadedDocData &&
             uploadedDocData.map((item, index) => {
                 return {
@@ -848,13 +851,14 @@ export const prefillDocuments = async (payload, destJsonPath, dispatch) => {
     let documentsUploadRedux = {};
     // const uploadedDocData = get(payload, sourceJsonPath);
     let uploadedDocs = await setWSDocuments(payload, "applyScreen.documents", "WS");
-    if (uploadedDocs !== undefined && uploadedDocs !== null && uploadedDocs.length > 0) {
+     if (uploadedDocs !== undefined && uploadedDocs !== null && uploadedDocs.length > 0) {
         documentsUploadRedux = uploadedDocs && uploadedDocs.length && uploadedDocs.map((item, key) => {
             let docUploadRedux = {};
             docUploadRedux[key] = { documents: [{ fileName: item.name, fileUrl: item.link, fileStoreId: payload.applyScreen.documents[key].fileStoreId }] };
             let splittedString = payload.applyScreen.documents[key].documentType.split(".");
-            if (splittedString[1] === "ADDRESSPROOF") { docUploadRedux[key].dropdown = { value: splittedString.join(".") }; }
+            if (splittedString[1] === "ADDRESSPROOF") {docUploadRedux[key].dropdown = { value: splittedString.join(".") };}
             else if (splittedString[1] === "IDENTITYPROOF") { docUploadRedux[key].dropdown = { value: splittedString.join(".") }; }
+            else if(splittedString[1] === "NOC_") { docUploadRedux[key].dropdown = { value: splittedString.join(".") }; }
             else {
                 docUploadRedux[key].dropdown = { value: payload.applyScreen.documents[key].documentType };
             }
