@@ -1080,9 +1080,10 @@ const screenConfig = {
                         );
                     }
                 
-               dispatch(prepareFinalObject("editWSFlow", true));
               }
-          
+              if (applicationNumber && getQueryArg(window.location.href, "action") === "edit"){
+                dispatch(prepareFinalObject("editWSFlow", true));
+              }
           });
 
 
