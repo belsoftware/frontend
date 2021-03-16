@@ -142,7 +142,7 @@ export const additionDetails = getCommonCard({
           gridDefination: { xs: 12, sm: 6 },
           errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
           jsonPath: "applyScreen.connectionType",
-          required:true,
+          required:false,
         }),
         afterFieldChange: async (action, state, dispatch) => {
           let connType = await get(state, "screenConfiguration.preparedFinalObject.applyScreen.connectionType");
@@ -196,15 +196,15 @@ export const additionDetails = getCommonCard({
           dropdownFields: [
             {
               key : 'waterSourceType',
-              isRequired: true,
-              requiredValue : true,
+              isRequired: false,
+              requiredValue : false,
               errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               callBack: waterSourceTypeChange 
             },
             {
               key : 'waterSubSource',
-              isRequired: true,
-              requiredValue : true,
+              isRequired: false,
+              requiredValue : false,
               errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               callBack: waterSubSourceChange 
             }
@@ -421,7 +421,7 @@ export const additionDetails = getCommonCard({
           sm: 6
         },
         required: false,
-        pattern: /^[a-z0-9]+$/i,
+        pattern :/^[#.\\/0-9a-zA-Z\s,-]+$/i,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "applyScreen.meterId"
       }),
