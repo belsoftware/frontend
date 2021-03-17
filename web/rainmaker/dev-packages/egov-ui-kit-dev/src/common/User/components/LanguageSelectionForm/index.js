@@ -1,15 +1,12 @@
 import React from "react";
-import { connect } from "react-redux";
-import { ButtonGroup, Card, Image , AutoSuggestDropdown,AutoSuggestCommon} from "components";
-import { setLocale } from "egov-ui-kit/utils/localStorageUtils";
-import { fetchLocalizationLabel } from "egov-ui-kit/redux/app/actions";
+import { ButtonGroup, Card, Image , AutoSuggestDropdown} from "components";
 import { Button} from "egov-ui-framework/ui-atoms";
 import Label from "egov-ui-kit/utils/translationNode";
 import logo from "egov-ui-kit/assets/images/logo_black.png";
 import filter from "lodash/filter";
 import "./index.css";
-import LanguagePicker from "../../../common/LanguagePicker";
-import { AutoSuggest } from "../../../../components";
+
+
 
 
 const selectedLabelStyle = {
@@ -87,7 +84,8 @@ const LanguageSelectionForm = ({ items, onLanguageSelect, value, onClick,regiona
               />
             </div>
 
- 
+
+            <div className="button-toggle-container">
             <AutoSuggestDropdown
             dataSource={regionalLanguages}
             fullWidth={false}
@@ -105,8 +103,10 @@ const LanguageSelectionForm = ({ items, onLanguageSelect, value, onClick,regiona
               </div>
             }
              onChange={onChange} 
+            
            
           />  
+           </div>
 
 
             <div className="button-container">
