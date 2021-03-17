@@ -933,6 +933,7 @@ export const getDefaultFontStyle = (locale = "en_IN") => {
         break;
       case 'ml_IN':
         fontStyle = 'malyalam'
+        break;
       case 'hi_IN':
       case 'en_IN':
           fontStyle = 'Camby'
