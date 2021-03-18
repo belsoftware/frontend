@@ -89,7 +89,7 @@ const mapStateToProps = ({ common }) => {
   let languages = get(stateInfoById, "0.languages", []);
   let regionalLanguages = get(stateInfoById, "0.languagesRegional", []);
   let commonLanguages = get(stateInfoById, "0.languagesCommon", []);
-  return { bannerUrl, logoUrl, languages };
+  return { bannerUrl, logoUrl, languages,regionalLanguages,commonLanguages};
 };
 
 const mapDispatchToProps = (dispatch) => {
