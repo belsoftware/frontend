@@ -772,6 +772,8 @@ export const setWSDocuments = async (payload, sourceJsonPath, businessService) =
                         `Document - ${index + 1}`,
                 };
             });
+        
+           
         return reviewDocData;
     }
 };
@@ -851,28 +853,24 @@ export const prefillDocuments = async (payload, destJsonPath, dispatch) => {
     let documentsUploadRedux = {};
     // const uploadedDocData = get(payload, sourceJsonPath);
     let uploadedDocs = await setWSDocuments(payload, "applyScreen.documents", "WS");
+   
      if (uploadedDocs !== undefined && uploadedDocs !== null && uploadedDocs.length > 0) {
         documentsUploadRedux = uploadedDocs && uploadedDocs.length && uploadedDocs.map((item, key) => {
             let docUploadRedux = {};
             docUploadRedux[key] = { documents: [{ fileName: item.name, fileUrl: item.link, fileStoreId: payload.applyScreen.documents[key].fileStoreId }] };
-            let splittedString = payload.applyScreen.documents[key].documentType.split(".");
-            if (splittedString[1] === "ADDRESSPROOF") {docUploadRedux[key].dropdown = { value: splittedString.join(".") };}
-            else if (splittedString[1] === "IDENTITYPROOF") { docUploadRedux[key].dropdown = { value: splittedString.join(".") }; }
-            else if(splittedString[1] === "NOC_") { docUploadRedux[key].dropdown = { value: splittedString.join(".") }; }
-            else {
-                docUploadRedux[key].dropdown = { value: payload.applyScreen.documents[key].documentType };
-            }
+            docUploadRedux[key].dropdown = { value: payload.applyScreen.documents[key].documentType};
             docUploadRedux[key].documentType = payload.applyScreen.documents[key].documentType;
             docUploadRedux[key].id = payload.applyScreen.documents[key].id;
             docUploadRedux[key].isDocumentRequired = true;
             docUploadRedux[key].isDocumentTypeRequired = true;
+           
             return docUploadRedux;
         });
         let docs = {};
         for (let i = 0; i < documentsUploadRedux.length; i++) {
             docs[i] = documentsUploadRedux[i][i];
         }
-
+       
         var tempDoc = {}, docType = "";
         var dList = (isModifyMode()) ? payload.applyScreenMdmsData['ws-services-masters'].ModifyConnectionDocuments : payload.applyScreenMdmsData['ws-services-masters'].Documents;
         if (dList !== undefined && dList !== null) {
@@ -890,7 +888,7 @@ export const prefillDocuments = async (payload, destJsonPath, dispatch) => {
         } else {
             tempDoc = docs;
         }
-
+       
         dispatch(prepareFinalObject("documentsUploadRedux", tempDoc));
         dispatch(prepareFinalObject(destJsonPath, tempDoc));
     }
