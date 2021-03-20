@@ -15,10 +15,13 @@ const addMeterReading = async (state, dispatch) => {
     dispatch(toggleSpinner());
     const tenantId = getQueryArg(window.location.href, "tenantId");
     const connectionNos = getQueryArg(window.location.href, "connectionNos");
-    let queryObject = [{ key: "tenantId", value: tenantId }, { key: "connectionNumber", value: connectionNos }];
+    let queryObject = [{ key: "tenantId", value: tenantId }, { key: "connectionNumber", value: connectionNos },{ key: "isConnectionSearch", value: true }];
     let payloadData = await getSearchResults(queryObject);
     if (payloadData !== null && payloadData !== undefined && payloadData.WaterConnection.length > 0) {
-        payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
+       
+        if(payloadData.WaterConnection.length >1)
+            payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
+       
         let applicationNos = getApplicationNo(payloadData.WaterConnection);
         const queryObj = [
             { key: "businessIds", value: applicationNos },
