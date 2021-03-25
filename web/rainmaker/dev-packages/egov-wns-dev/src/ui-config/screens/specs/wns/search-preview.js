@@ -715,7 +715,7 @@ const screenConfig = {
             bserviceTemp: (service === serviceConst.WATER) ? "WS.ONE_TIME_FEE" : "SW.ONE_TIME_FEE",
             redirectQueryString: redirectQueryString,
             editredirect: editredirect,
-            beforeSubmitHook: (data) => {
+            beforeSubmitHook: (data) => {              
               data = data[0];
               data.wsTaxHeads.forEach(item => {
                 if (!item.amount || item.length === null) {
@@ -735,8 +735,12 @@ const screenConfig = {
                   if (!item.rate || item.rate === null) {
                     item.rate = 0;
                   }
-
               });
+
+              if(data.additionalDetails.initialMeterReading === null){               
+                data.additionalDetails.initialMeterReading = 0;
+              }              
+              
 
               set(data, 'propertyId', get(data, 'property.propertyId', null));
               data.assignees = [];
