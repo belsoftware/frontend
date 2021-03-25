@@ -279,7 +279,7 @@ export const propertyAssemblyDetails = getCommonCard({
             labelName: "Enter Number of Floors",
             labelKey: "PT_COMMON_NO_OF_FLOORS_PLACEHOLDER"
           },
-          required: true,
+          required: false,
           pattern: /^[1-9]\d{0,9}?%?$/,
           errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
           jsonPath: "Property.noOfFloors"
@@ -295,7 +295,7 @@ export const propertyAssemblyDetails = getCommonCard({
                 labelName: "Enter Number of Flats",
                 labelKey: "PT_COMMON_NO_OF_FLATS_PLACEHOLDER"
               },
-              required: true,
+              required: false,
               pattern: /^[1-9]\d{0,9}?%?$/,
               errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               jsonPath: "Property.noOfFlats"

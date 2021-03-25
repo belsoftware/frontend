@@ -7,7 +7,7 @@ import {
   getLabel,
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import { convertEpochToDateAndHandleNA, handleNA,handleRoadType } from "../../utils";
+import { convertEpochToDateAndHandleNA, handleNA,handleRoadType,handleMeterReading } from "../../utils";
 import { serviceConst } from "../../../../../ui-utils/commons";
 const getHeader = label => {
   return {
@@ -327,17 +327,22 @@ export const activateDetailsMeter={
       callBack: convertEpochToDateAndHandleNA
     }
   ),
-  reviewInitialMeterReading : getLabelWithValueForModifiedLabel(
+  reviewInitialMeterReading : getLabelWithValue(
     {
       labelName: "Initial Meter Reading",
       labelKey: "WS_ADDN_DETAILS_INITIAL_METER_READING"
     },
-    { jsonPath: "WaterConnection[0].additionalDetails.initialMeterReading",
-      callBack: handleNA }, {
-        labelKey: "WS_OLD_LABEL_NAME"
-      },
-      { jsonPath: "WaterConnectionOld[0].additionalDetails.initialMeterReading",
-      callBack: handleNA }
+    {
+       jsonPath: "WaterConnection[0].additionalDetails.initialMeterReading",
+      callBack: handleMeterReading 
+    }
+    // , 
+    //   {
+    //     labelKey: "WS_OLD_LABEL_NAME"
+    //   },
+    //   { jsonPath: "WaterConnectionOld[0].additionalDetails.initialMeterReading",
+    //   callBack: handleMeterReading
+    //  }
   )
 
 }
