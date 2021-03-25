@@ -675,7 +675,7 @@ const callBackForNext = async (state, dispatch) => {
    let meterInstallationDate =get(state.screenConfiguration.preparedFinalObject, "applyScreen.meterInstallationDate");
    let initialMeterReading =get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.initialMeterReading");
    
-   if( initialMeterReading !== null && meterInstallationDate !==0 && meterId !== null)
+   if( initialMeterReading !== null && meterInstallationDate !==null && meterId !== null)
       return true;
    else
        return false;
