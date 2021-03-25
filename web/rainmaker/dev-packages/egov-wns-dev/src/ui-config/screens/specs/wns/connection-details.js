@@ -269,24 +269,25 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       showHideServiceDetails(dispatch, sewerageConnection);
     }
   } else if (serviceReq === serviceConst.WATER) {   
-    let payloadData = await getSearchResults(queryObject, true);    
+    let payloadData = await getSearchResults(queryObject, true);  
     if (
       payloadData !== null &&
       payloadData !== undefined &&
       payloadData.WaterConnection.length > 0
     ) {
-      
-      //payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
+     //payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
       payloadData.WaterConnection = payloadData.WaterConnection.sort(function(x, y){
             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
-       });
+       });     
       let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
-      //Set water source and sub source
-      waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
-      let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
-      let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
-      waterConnection.waterSource = waterSource;
-      waterConnection.waterSubSource = waterSubSource;   
+      
+      //Set water source and sub source    
+      // waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+      // let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
+      // let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
+      // waterConnection.waterSource = waterSource;
+      // waterConnection.waterSubSource = waterSubSource;   
+
       waterConnection.service = serviceReq;
       let propTenantId = waterConnection.property.tenantId.split(".")[0];
       if (waterConnection.connectionExecutionDate !== undefined) {
