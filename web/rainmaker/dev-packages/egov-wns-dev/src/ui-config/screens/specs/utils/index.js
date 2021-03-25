@@ -260,6 +260,15 @@ export const handleNA = params => {
   } else { return "NA"; }
 }
 
+export const handleMeterReading = params =>{
+    if(params === 0 || params === null || isNaN(params)){
+    return "0";
+  }
+ else if (params !== undefined && params !== null && params !== "") {
+       return params;
+  } else { return "NA"; }
+}
+
 export const handleRoadType = params =>{
   return handleNA(params)=="NA"?"NA":'WS_ROADTYPE_'+params;
 }
