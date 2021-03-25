@@ -281,12 +281,16 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
        });     
       let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
       
-      //Set water source and sub source    
-      // waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
-      // let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
-      // let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
-      // waterConnection.waterSource = waterSource;
-      // waterConnection.waterSubSource = waterSubSource;   
+      if(waterConnection.waterSource.includes(".")){      
+           //Set water source and sub source    
+        waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+        let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
+        let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
+        waterConnection.waterSource = waterSource;
+        waterConnection.waterSubSource = waterSubSource;   
+      }
+      
+   
 
       waterConnection.service = serviceReq;
       let propTenantId = waterConnection.property.tenantId.split(".")[0];
