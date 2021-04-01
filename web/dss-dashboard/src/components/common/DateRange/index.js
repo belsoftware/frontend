@@ -15,7 +15,6 @@ import getFinancialYearObj from '../../../actions/getFinancialYearObj';
 
 const year = (new Date()).getFullYear();
 let fYearObj = getFinancialYearObj('',true)
-console.log("Check the fin year ",fYearObj);
 class DateRange extends React.Component {
   constructor(props) {
     super(props);    
@@ -24,7 +23,7 @@ class DateRange extends React.Component {
       fromDate: '',
       toDate: '',
       value: null,
-      default:5,
+      default:4,
       title: this.props.title1,
       fYearObj:fYearObj,      
       dateRanges: Array.from(new Array(20), (x, i) => i + year - 10),
@@ -32,9 +31,9 @@ class DateRange extends React.Component {
       { key: "2", value: "This Week" },
       { key: "3", value: "This Month" },
       { key: "4", value: "This Quarter" },
-      { key: "5", value: fYearObj[0].title},
-      { key: "6", value: fYearObj[1].title},
-      //{ key: "7", value: fYearObj[2].title},
+      { key: "5", value: "From Launch"},
+      { key: "6", value: fYearObj[0].title},
+      { key: "7", value: fYearObj[1].title},
       { key: "8", value: "Custom" },
       ],
     }

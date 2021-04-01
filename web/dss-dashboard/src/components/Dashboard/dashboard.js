@@ -71,7 +71,7 @@ class Dashboard extends Component {
 
     let newFilterData = this.state.filter
     
-    newFilterData.duration.value.startDate = getFYobj.value.startDate
+    newFilterData.duration.value.startDate = getFYobj.value.launchedDate
     newFilterData.duration.value.endDate = getFYobj.value.endDate
 
     this.setState({
