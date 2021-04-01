@@ -230,7 +230,7 @@ class Home extends React.Component {
 
     componentDidMount() {
         let newFilterData = this.state.filter
-        newFilterData.duration.value.startDate = this.state.getFYobj.value.startDate
+        newFilterData.duration.value.startDate = this.state.getFYobj.value.launchedDate
         newFilterData.duration.value.endDate = this.state.getFYobj.value.endDate
 
         this.setState({

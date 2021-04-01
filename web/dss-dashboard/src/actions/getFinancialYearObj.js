@@ -74,10 +74,20 @@ export default function getFinancialYearObj(onlyText,yearObj) {
 		              interval: 'week'
 		            }
 		        })
+				FYobj.push({
+					title: `FY ${moment().month(3).startOf('month').format("YY")}-${moment().month(2).endOf('month').add(2, 'years').format("YY")}`,
+					value: {
+						startDate: moment().month(3).startOf('month').unix(),
+						endDate: moment().month(2).endOf('month').add(2, 'years').unix(),
+						interval: 'week'
+					}
+				})
+
 			}else{
 		        FYobj = {
 		            title: `FY ${moment().month(3).startOf('month').format("YY")}-${moment().month(2).endOf('month').add(1, 'years').format("YY")}`,
 		            value: {
+									launchedDate: moment().set('year', 2020).set('month', 10).set('date', 1).unix(),
 		              startDate: moment().month(3).startOf('month').unix(),
 		              endDate: moment().month(2).endOf('month').add(1, 'years').unix(),
 		              interval: 'week'
