@@ -35,7 +35,7 @@ class GlobalFilter extends Component {
 
         this.state = {
             open: false,
-            value: getFinancialYearObj(true), //fOR date range
+            value: "From Beginning",//getFinancialYearObj(true), //fOR date range
             filterData: this.props.GFilterData,
             title: '',
             dept: "All Services",
@@ -344,7 +344,8 @@ class GlobalFilter extends Component {
                     </SVG> */}
                     <Input
                         id="adornment-amount"
-                        value={(_.get(this.state, "filterData.duration.title") || this.state.value)}
+                        value={(_.get(this.state, "filterData.duration.title") ||
+                             strings["DSS_"+this.state.value.replace(" ","_")] || this.state.value)}
                         className={classes.dateFilter}
                         endAdornment={<DropDownIcon style={{ color: '#656565' }}></DropDownIcon>}
                         onClick={this.openPicker.bind(this)}

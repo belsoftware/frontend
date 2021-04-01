@@ -31,7 +31,7 @@ class DateRange extends React.Component {
       { key: "2", value: "This Week" },
       { key: "3", value: "This Month" },
       { key: "4", value: "This Quarter" },
-      { key: "5", value: "From Launch"},
+      { key: "5", value: "From Beginning"},
       { key: "6", value: fYearObj[0].title},
       { key: "7", value: fYearObj[1].title},
       { key: "8", value: "Custom" },
