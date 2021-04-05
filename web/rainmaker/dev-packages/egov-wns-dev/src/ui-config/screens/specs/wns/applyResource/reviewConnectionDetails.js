@@ -126,6 +126,27 @@ const propertyLocationDetails = {
           },
           { jsonPath: "applyScreenOld.property.address.city", callBack: handleNA },
         ),
+        reviewLocation: getLabelWithValueForModifiedLabel(
+          {
+            labelName: "Property Location",
+            labelKey: "WS_PROP_DETAIL_LOCATION"
+          },
+          { jsonPath: "applyScreen.property.address.location", callBack: handleNA,
+            localePrefix: {
+              moduleName: "WS",
+              masterName: "PROP_LOCATION"
+            }
+          },
+          {
+            labelKey: "WS_OLD_LABEL_NAME"
+          },
+          { jsonPath: "applyScreenOld.property.address.location", callBack: handleNA,
+            localePrefix: {
+              moduleName: "WS",
+              masterName: "PROP_LOCATION"
+            }
+          },
+        ),
         reviewDoorOrHouseNumber: getLabelWithValueForModifiedLabel(
           {
             labelName: "Door/House No.",
@@ -148,17 +169,17 @@ const propertyLocationDetails = {
           },
           { jsonPath: "applyScreenOld.property.address.buildingName", callBack: handleNA },
         ),
-        reviewStreetName: getLabelWithValueForModifiedLabel(
-          {
-            labelName: "Street Name",
-            labelKey: "WS_PROP_DETAIL_STREET_NAME"
-          },
-          { jsonPath: "applyScreen.property.address.street", callBack: handleNA },
-          {
-            labelKey: "WS_OLD_LABEL_NAME"
-          },
-          { jsonPath: "applyScreenOld.property.address.street", callBack: handleNA }
-        ),
+        // reviewStreetName: getLabelWithValueForModifiedLabel(
+        //   {
+        //     labelName: "Street Name",
+        //     labelKey: "WS_PROP_DETAIL_STREET_NAME"
+        //   },
+        //   { jsonPath: "applyScreen.property.address.street", callBack: handleNA },
+        //   {
+        //     labelKey: "WS_OLD_LABEL_NAME"
+        //   },
+        //   { jsonPath: "applyScreenOld.property.address.street", callBack: handleNA }
+        // ),
         reviewLocalityOrMohalla: getLabelWithValueForModifiedLabel(
           {
             labelName: "Locality/Mohalla",
@@ -170,17 +191,17 @@ const propertyLocationDetails = {
           },
           { jsonPath: "applyScreenOld.property.address.locality.name", callBack: handleNA },
         ),
-        reviewPincode: getLabelWithValueForModifiedLabel(
-          {
-            labelName: "Pincode",
-            labelKey: "WS_PROP_DETAIL_PINCODE"
-          },
-          { jsonPath: "applyScreen.property.address.pincode", callBack: handleNA },
-          {
-            labelKey: "WS_OLD_LABEL_NAME"
-          },
-          { jsonPath: "applyScreenOld.property.address.pincode", callBack: handleNA },
-        ),
+        // reviewPincode: getLabelWithValueForModifiedLabel(
+        //   {
+        //     labelName: "Pincode",
+        //     labelKey: "WS_PROP_DETAIL_PINCODE"
+        //   },
+        //   { jsonPath: "applyScreen.property.address.pincode", callBack: handleNA },
+        //   {
+        //     labelKey: "WS_OLD_LABEL_NAME"
+        //   },
+        //   { jsonPath: "applyScreenOld.property.address.pincode", callBack: handleNA },
+        // ),
       })
     }),
 
@@ -299,7 +320,7 @@ const getPropertyDetails = {
           ),
           reviewPlotSize: getLabelWithValueForModifiedLabel(
             {
-              labelName: "Plot Size (in sq metres)",
+              labelName: "Total Land Area (in sq metres)",
               labelKey: "WS_PROP_DETAIL_PLOT_SIZE_LABEL"
             },
             { jsonPath: "applyScreen.property.landArea", callBack: handleNA },
@@ -307,6 +328,17 @@ const getPropertyDetails = {
               labelKey: "WS_OLD_LABEL_NAME"
             },
             { jsonPath: "applyScreenOld.property.landArea", callBack: handleNA },
+          ),
+          reviewConstructedSize: getLabelWithValueForModifiedLabel(
+            {
+              labelName: "Total Constructed Area (in sq metres)",
+              labelKey: "WS_PROP_DETAIL_CONSTRUCTION_SIZE_LABEL"
+            },
+            { jsonPath: "applyScreen.property.superBuiltUpArea", callBack: handleNA },
+            {
+              labelKey: "WS_OLD_LABEL_NAME"
+            },
+            { jsonPath: "applyScreenOld.property.superBuiltUpArea", callBack: handleNA },
           ),
           reviewNumberOfFloors: getLabelWithValueForModifiedLabel(
             {
@@ -319,23 +351,34 @@ const getPropertyDetails = {
             },
             { jsonPath: "applyScreenOld.property.noOfFloors", callBack: handleNA },
           ),
-          rainwaterHarvestingFacility: getLabelWithValueForModifiedLabel(
+          reviewNumberOfFlats: getLabelWithValueForModifiedLabel(
             {
-              labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC",
-              labelName: "Rain Water Harvesting Facility"
+              labelName: "Number Of Flats",
+              labelKey: "WS_PROPERTY_NO_OF_FLATS_LABEL"
             },
-            {
-              jsonPath: "applyScreen.property.additionalDetails.isRainwaterHarvesting",
-              callBack: handleNA
-            },
+            { jsonPath: "applyScreen.property.noOfFlats", callBack: handleNA },
             {
               labelKey: "WS_OLD_LABEL_NAME"
             },
-            {
-              jsonPath: "applyScreenOld.property.additionalDetails.isRainwaterHarvesting",
-              callBack: handleNA
-            },
-          )
+            { jsonPath: "applyScreenOld.property.noOfFlats", callBack: handleNA },
+          ),
+          // rainwaterHarvestingFacility: getLabelWithValueForModifiedLabel(
+          //   {
+          //     labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC",
+          //     labelName: "Rain Water Harvesting Facility"
+          //   },
+          //   {
+          //     jsonPath: "applyScreen.property.additionalDetails.isRainwaterHarvesting",
+          //     callBack: handleNA
+          //   },
+          //   {
+          //     labelKey: "WS_OLD_LABEL_NAME"
+          //   },
+          //   {
+          //     jsonPath: "applyScreenOld.property.additionalDetails.isRainwaterHarvesting",
+          //     callBack: handleNA
+          //   },
+          // )
         })
     }),
     items: [],
@@ -503,15 +546,109 @@ const propertyOwnerDetails = () => {
       scheama: getCommonGrayCard({
         div3: ownerDetailsInfo,
         viewFive: getCommonContainer({
-          mobileNumber,
-          name,
-          gender,
-          dateOfBirth,
-          email,
-          fatherName,
-          relationship,
-          correspondenceAddress,
-          specialApplicantCategory
+          // mobileNumber,
+          // name,
+          // gender,
+          // dateOfBirth,
+          // email,
+          // fatherName,
+          // relationship,
+          // correspondenceAddress,
+          // specialApplicantCategory,
+          mobileNumber: getLabelWithValue(
+            {
+              labelKey: "WS_OWN_DETAIL_MOBILE_NO_LABEL"
+            },
+            { 
+              jsonPath: "applyScreen.property.owners[0].mobileNumber", 
+              callBack: handleNA 
+            }
+          ),
+          name: getLabelWithValue(
+            {
+              labelName: "Name",
+              labelKey: "WS_OWN_DETAIL_OWN_NAME_LABEL"
+            },
+            { 
+              jsonPath: "applyScreen.property.owners[0].name", 
+              callBack: handleNA 
+            }
+          ),
+          gender: getLabelWithValue(
+            {
+              labelKey: "WS_OWN_DETAIL_GENDER_LABEL"
+            },
+            {
+              jsonPath: "applyScreen.property.owners[0].gender",
+              callBack: handleNA,
+              localePrefix: {
+                moduleName: "COMMON",
+                masterName: "GENDER"
+              }
+            }
+          ),
+          // dateOfBirth: getLabelWithValue(
+          //   {
+          //     labelKey: "WS_OWN_DETAIL_DOB_LABEL"
+          //   },
+          //   {
+          //     jsonPath: "applyScreen.property.owners[0].dob",
+          //     callBack: convertEpochToDateAndHandleNA
+          //   }
+          // ),
+          // email: getLabelWithValue(
+          //   {
+          //     labelKey: "WS_OWN_DETAIL_OWN_EMAIL_LABEL"
+          //   },
+          //   {
+          //     jsonPath: "applyScreen.property.owners[0].emailId",
+          //     callBack: handleNA
+          //   }
+          // ),
+          fatherName: getLabelWithValue(
+            {
+              labelKey: "WS_OWN_DETAIL_FATHER_OR_HUSBAND_NAME"
+            },
+            { 
+              jsonPath: "applyScreen.property.owners[0].fatherOrHusbandName",               
+              callBack: handleNA 
+            }
+          ),
+          relationship: getLabelWithValue(
+            {
+              labelKey: "WS_OWN_DETAIL_RELATION_LABEL"
+            },
+            { 
+              jsonPath: "applyScreen.property.owners[0].relationship", 
+              localePrefix: {
+                moduleName: "COMMON",
+                masterName: "RELATION"
+              },
+              callBack: handleNA 
+            }
+          ),
+          correspondenceAddress: getLabelWithValue(
+            {
+              labelKey: "WS_OWN_DETAIL_CROSADD"
+            },
+            {
+              jsonPath: "applyScreen.property.owners[0].correspondenceAddress",
+              callBack: handleNA
+            }
+          ),
+          specialApplicantCategory: getLabelWithValue(
+            {
+              labelKey: "WS_OWN_DETAIL_SPECIAL_APPLICANT_LABEL"
+            },
+            {
+              jsonPath: "applyScreen.property.owners[0].ownerType",
+              localePrefix: {
+                moduleName: "COMMON_MASTERS",
+                masterName: "OWNERTYPE"
+              },
+              callBack: handleNA
+            }
+          )
         }),
       }),
       items: [],
@@ -594,6 +731,17 @@ export const taskNoOfToilets = getLabelWithValueForModifiedLabel(
   { jsonPath: "applyScreenOld.proposedToilets", callBack: handleNA },
 );
 
+export const taskDrainageSizeProposed = getLabelWithValueForModifiedLabel(
+  {
+    labelKey: "WS_TASK_DETAILS_CONN_DETAIL_DRAINAGE_SIZE_PROPOSED"
+  },
+  { jsonPath: "applyScreen.proposedDrainageSize", callBack: handleNA },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  { jsonPath: "applyScreen.proposedDrainageSize", callBack: handleNA },
+)
+
 const getConnectionDetails = () => {
   return getCommonContainer({
     connectionDetailsHeader,
@@ -607,7 +755,8 @@ export const renderService = () => {
     taskNumberOfTapsPropsed,
     taskPipeSizeProposed,
     taskNoOfClosets,
-    taskNoOfToilets
+    taskNoOfToilets,
+    taskDrainageSizeProposed
   });
 }
 
@@ -674,7 +823,11 @@ export const connectionHolderDetails={
     {
       labelKey: "WS_CONN_HOLDER_OWN_DETAIL_RELATION_LABEL"
     },
-    { jsonPath: "applyScreen.connectionHolders[0].relationship", callBack: handleNA },
+    { jsonPath: "applyScreen.connectionHolders[0].relationship", callBack: handleNA,
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "RELATION"
+    } },
     {
       labelKey: "WS_OLD_LABEL_NAME"
     },
@@ -702,7 +855,11 @@ export const connectionHolderDetails={
     },
     {
       jsonPath: "applyScreen.connectionHolders[0].ownerType",
-      callBack: handleNA
+      callBack: handleNA,
+      localePrefix: {
+        moduleName: "COMMON_MASTERS",
+        masterName: "OWNERTYPE"
+      }
     },
     {
       labelKey: "WS_OLD_LABEL_NAME"

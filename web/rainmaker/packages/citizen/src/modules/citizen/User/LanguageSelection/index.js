@@ -9,26 +9,53 @@ import {DisclaimerInformation} from "modules/common";
 import {LanguageSelectionHeader} from "modules/common";
 import './index.css'
 import  digit from './digit.png'
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
 class LanguageSelection extends Component {
   state = {
     value: getLocale()
   };
 
+  componentDidMount = async () => {
+    let lang = getQueryArg(window.location.href, "lang");
+    if(["en_IN","hi_IN"].indexOf(lang) > -1)
+      this.onClick(lang);
+    else if(["kn_IN","ml_IN","ta_IN","te_IN","mr_IN","bn_IN"].indexOf(lang) > -1)
+    {
+      var event = new Event('input', { bubbles: true });
+      event.value = lang
+      this.onChange(event);
+    }
+
+  }
+
   onClick = (value) => {
     this.setState({ value });
     this.props.fetchLocalizationLabel(value);
   };
 
+  onChange = (event)=>{
+    this.setState({value:event.value})
+    this.props.fetchLocalizationLabel(event.value);
+  }
+
+
   onLanguageSelect = () => {
-    this.props.history.push("/user/register");
+    
+    let url = "/user/login?";
+    if(getQueryArg(window.location.href, "cant"))
+      url=url+"cant="+getQueryArg(window.location.href, "cant")+"&";
+    if(getQueryArg(window.location.href, "lang"))
+      url=url+"lang="+getQueryArg(window.location.href, "lang")+"&";
+    this.props.history.push(url);  
+
   };
 
   render() {
 
     const { value,isMobile } = this.state;
-    const { onLanguageSelect, onClick,isMobileView } = this;
-    const { bannerUrl, logoUrl, languages } = this.props;
+    const { onLanguageSelect, onClick,isMobileView,onChange } = this;
+    const { bannerUrl, logoUrl, languages,regionalLanguages,commonLanguages } = this.props;
     return (
 
       <div>
@@ -37,7 +64,7 @@ class LanguageSelection extends Component {
         </div> */}
         <Banner className="language-selection" bannerUrl={bannerUrl} logoUrl={logoUrl}>
           <div>
-            <LanguageSelectionForm items={languages} value={value} onLanguageSelect={onLanguageSelect} onClick={onClick} />
+            <LanguageSelectionForm items={languages} value={value} onLanguageSelect={onLanguageSelect} onClick={onClick} regionalLanguages ={regionalLanguages} commonLanguages ={commonLanguages} onChange={onChange}/>
           </div>
         </Banner>
         {/* <div className="Wrapper">
@@ -67,7 +94,9 @@ const mapStateToProps = ({ common }) => {
   let bannerUrl = get(stateInfoById, "0.bannerUrl");
   let logoUrl = get(stateInfoById, "0.logoUrl");
   let languages = get(stateInfoById, "0.languages", []);
-  return { bannerUrl, logoUrl, languages };
+  let regionalLanguages = get(stateInfoById, "0.languagesRegional", []);
+  let commonLanguages = get(stateInfoById, "0.languagesCommon", []);
+  return { bannerUrl, logoUrl, languages,regionalLanguages,commonLanguages};
 };
 
 const mapDispatchToProps = (dispatch) => {

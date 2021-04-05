@@ -166,7 +166,7 @@ const institutionInformation = () => {
           },
           required: true,
           pattern: getPattern("Landline"),
-          jsonPath: "Property.institution.landlineNumber"
+          jsonPath: "Property.owners[0].altContactNumber"
         }),
         authorisedAddress: getTextField({
           label: {
@@ -286,7 +286,7 @@ const commonApplicantInformation = () => {
             {
               labelName: "Transgender",
               labelKey: "PT_COMMON_GENDER_TRANSGENDER",
-              value: "TRANSGENDER"
+              value: "OTHERS"
             }
           ],
           jsonPath: "Property.owners[0].gender",
@@ -329,7 +329,7 @@ const commonApplicantInformation = () => {
         },
         required: true,
         jsonPath: "Property.owners[0].relationship",
-        data: [{ code: "FATHER" }, { code: "HUSBAND" }],
+        data: [{ code: "PARENT" }, { code: "SPOUSE" }, { code: "GUARDIAN" }],
         localePrefix: {
           moduleName: "common-masters",
           masterName: "OwnerType"

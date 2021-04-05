@@ -10,7 +10,7 @@ import {
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { propertySearch} from "./searchResource/searchFunctions";
+import { propertySearch } from "./searchResource/searchFunctions";
 
 
 export const resetFields = (state, dispatch) => {
@@ -45,14 +45,7 @@ export const resetFields = (state, dispatch) => {
       ""
     )
   );
-  dispatch(
-    handleField(
-      "propertySearch",
-      "components.div.children.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.propertyTaxUniqueId",
-      "props.value",
-      ""
-    )
-  );
+  
   dispatch(prepareFinalObject(
     "searchScreen.propertyIds",
     ''
@@ -61,10 +54,7 @@ export const resetFields = (state, dispatch) => {
     "searchScreen.mobileNumber",
     ''
   ))
-  dispatch(prepareFinalObject(
-    "searchScreen.oldpropertyids",
-    ''
-  ))
+  
 
 };
 
@@ -80,32 +70,66 @@ export const searchPropertyDetails = getCommonCard({
     labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_DESC"
   }),
   ulbCityContainer: getCommonContainer({
-    ulbCity: getSelectField({
-      label: {
-        labelName: "City",
-        labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_CITY"
-      },
-      placeholder: {
-        labelName: "Select City",
-        labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_CITY_PLACEHOLDER"
-      },
-
-      localePrefix: {
-        moduleName: "TENANT",
-        masterName: "TENANTS"
-      },
-      jsonPath: "searchScreen.tenantId",
-      sourceJsonPath: "searchScreenMdmsData.tenant.tenants",
-      required: true,
+    ulbCity: {
+      uiFramework: "custom-containers-local",
+      moduleName: "egov-pt",
+      componentPath: "AutosuggestContainer",
       props: {
+        className: "autocomplete-dropdown",
+        suggestions: [],
+        label: {
+          labelName: "City",
+          labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_CITY"
+        },
+        placeholder: {
+          labelName: "Select City",
+          labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_CITY_PLACEHOLDER"
+        },
+
+        localePrefix: {
+          moduleName: "TENANT",
+          masterName: "TENANTS"
+        },
         required: true,
-        disabled: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+        labelsFromLocalisation: true,
+        isClearable: true,
+        jsonPath: "searchScreen.tenantId",
+        sourceJsonPath: "searchScreenMdmsData.tenant.tenants",
+        disabled: process.env.REACT_APP_NAME === "Citizen" ? false : true,        
       },
+      required: true,
+      jsonPath: "searchScreen.tenantId",
       gridDefination: {
         xs: 12,
         sm: 4
       }
-    }),
+    },
+    // ulbCity: getSelectField({
+    //   label: {
+    //     labelName: "City",
+    //     labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_CITY"
+    //   },
+    //   placeholder: {
+    //     labelName: "Select City",
+    //     labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_CITY_PLACEHOLDER"
+    //   },
+
+    //   localePrefix: {
+    //     moduleName: "TENANT",
+    //     masterName: "TENANTS"
+    //   },
+    //   jsonPath: "searchScreen.tenantId",
+    //   sourceJsonPath: "searchScreenMdmsData.tenant.tenants",
+    //   required: true,
+    //   props: {
+    //     required: true,
+    //     disabled: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+    //   },
+    //   gridDefination: {
+    //     xs: 12,
+    //     sm: 4
+    //   }
+    // }),
     ownerMobNo: getTextField({
       label: {
         labelName: "Owner Mobile No.",
@@ -124,7 +148,7 @@ export const searchPropertyDetails = getCommonCard({
       iconObj: {
         label: "+91 |",
         position: "start"
-      },
+      },   
       required: false,
       pattern: getPattern("MobileNo"),
       jsonPath: "searchScreen.mobileNumber",
@@ -145,30 +169,33 @@ export const searchPropertyDetails = getCommonCard({
 
       },
       required: false,
-      pattern: /^[a-zA-Z0-9-]*$/i,
-      errorMessage: "ERR_INVALID_PROPERTY_ID",
-      jsonPath: "searchScreen.oldpropertyids"
-    }),
-    propertyTaxUniqueId: getTextField({
-      label: {
-        labelName: "Unique Property Id",
-        labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_PROPERTY_UNIQUE_ID"
-      },
-      placeholder: {
-        labelName: "Enter Property Tax Unique Id",
-        labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_PROPERTY_UNIQUE_ID_PLACEHOLDER"
-      },
-      gridDefination: {
-        xs: 12,
-        sm: 4,
-
-      },
-      required: false,
-      pattern: /^[a-zA-Z0-9-]*$/i,
+      pattern: /^[a-zA-Z0-9/-]*$/i,
       errorMessage: "ERR_INVALID_PROPERTY_ID",
       jsonPath: "searchScreen.propertyIds"
-    })
-    
+    }),
+    // propertyTaxUniqueId: getTextField({
+    //   label: {
+    //     labelName: "Unique Property Id",
+    //     labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_PROPERTY_UNIQUE_ID"
+    //   },
+    //   placeholder: {
+    //     labelName: "Enter Property Tax Unique Id",
+    //     labelKey: "PT_COMMON_HOME_SEARCH_RESULTS_PROPERTY_UNIQUE_ID_PLACEHOLDER"
+    //   },
+    //   gridDefination: {
+    //     xs: 12,
+    //     sm: 4,
+
+    //   },
+    //   props:{
+    //     visible: false
+    //   },      
+    //   required: false,
+    //   pattern: /^[a-zA-Z0-9/-]*$/i,
+    //   errorMessage: "ERR_INVALID_PROPERTY_ID",
+    //   jsonPath: "searchScreen.oldpropertyids"
+    // })
+
   }),
   button: getCommonContainer({
     buttonContainer: getCommonContainer({

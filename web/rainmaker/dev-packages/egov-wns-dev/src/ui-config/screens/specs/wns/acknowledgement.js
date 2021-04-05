@@ -28,14 +28,17 @@ import get from "lodash/get";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getMdmsData } from './apply';
 import { getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
+import {localStorageGet} from "egov-ui-kit/utils/localStorageUtils";
+
 let headerLabel = "WS_APPLICATION_NEW_CONNECTION_HEADER";
 const applicationNo = getQueryArg(window.location.href, "applicationNumber");
 if(isModifyMode()){
-  if(applicationNo.includes("WS")){
-  headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
-  }else{
-  headerLabel = "SW_APPLICATION_MODIFY_CONNECTION_HEADER";
-  }
+  headerLabel = "WS_MODIFY_CONNECTION_HEADER";
+  // if(applicationNo.includes("WS")){
+  // headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
+  // }else{
+  // headerLabel = "SW_APPLICATION_MODIFY_CONNECTION_HEADER";
+  // }
 }
 
 const headerrow = getCommonContainer({
@@ -128,7 +131,7 @@ const getAcknowledgementCard = (
               labelKey: "WS_APPLICATION_SUCCESS_ACKO_MESSAGE_SUB"
             },
             tailText: {
-              labelName: "Water Application No.",
+              labelName: "Water Application No",
               labelKey: "WS_ACKNO_APP_NO_LABEL"
             },
             number: applicationNumberWater,
@@ -180,7 +183,7 @@ const getAcknowledgementCard = (
               labelKey: "WS_APPLICATION_SUCCESS_ACKO_MESSAGE_SUB"
             },
             tailText: {
-              labelName: "Application Number.",
+              labelName: "Application Number",
               labelKey: "WS_ACK_COMMON_APP_NO_LABEL"
             },
             number: applicationNumber
@@ -574,7 +577,7 @@ export const downloadPrintContainer = (
   tenantId,service
 ) => {
   /** MenuButton data based on status */
-tenantId = getQueryArg(window.location.href, "tenantId");
+  tenantId = getQueryArg(window.location.href, "tenantId");
  applicationNumber = getQueryArg(window.location.href, "applicationNumber");
  service = getQueryArg(window.location.href, "service");
   let downloadMenu = [];
@@ -732,7 +735,7 @@ tenantId = getQueryArg(window.location.href, "tenantId");
               label: { labelName: "DOWNLOAD", labelKey: "WS_COMMON_BUTTON_DOWNLOAD" },
               leftIcon: "cloud_download",
               rightIcon: "arrow_drop_down",
-              props: { variant: "outlined", style: { height: "60px", color: "#FE7A51", maxWidth: "95%", marginRight: "-15px" }, className: "tl-download-button" },
+              props: { variant: "outlined", style: { height: "60px", width: "210px",color: "#FE7A51", maxWidth: "95%", marginRight: "-15px" }, className: "tl-download-button" },
               menu: downloadMenu
             }
           }
@@ -746,10 +749,11 @@ tenantId = getQueryArg(window.location.href, "tenantId");
               label: { labelName: "PRINT", labelKey: "WS_COMMON_BUTTON_PRINT" },
               leftIcon: "print",
               rightIcon: "arrow_drop_down",
-              props: { variant: "outlined", style: { height: "60px", color: "#FE7A51", maxWidth: "85%" }, className: "tl-print-button" },
+              props: { variant: "outlined", style: { height: "60px", width: "170px",color: "#FE7A51", maxWidth: "85%" }, className: "tl-print-button" },
               menu: printMenu
             }
-          }
+          },
+          visible : !JSON.parse(localStorageGet('isMobileApp'))
         }
 
       },

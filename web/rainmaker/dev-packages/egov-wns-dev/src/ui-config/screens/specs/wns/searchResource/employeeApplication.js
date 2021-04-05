@@ -19,7 +19,7 @@ export const wnsApplication = getCommonCard({
     labelKey: "WS_HOME_SEARCH_CONN_RESULTS_DESC"
   }),
   wnsApplicationContainer: getCommonContainer({
-      city: getTextField({
+      city: getSelectField({
         label: {
             labelKey: "WS_PROP_DETAIL_CITY"
         },
@@ -34,7 +34,7 @@ export const wnsApplication = getCommonCard({
             moduleName: "TENANT",
             masterName: "TENANTS"
           },
-          disabled:true
+          disabled: process.env.REACT_APP_NAME === "Citizen" ? false : true,
         },  
         placeholder: {
             labelKey: "WS_PROP_DETAIL_CITY_PLACEHOLDER"
@@ -45,8 +45,7 @@ export const wnsApplication = getCommonCard({
         },
         sourceJsonPath: "applyScreenMdmsData.tenant.tenants",
         jsonPath: "searchConnection.tenantId",//db sake
-        required: true,
-        
+        required: true,        
         gridDefination: {
             xs: 12,
             sm: 4
@@ -64,7 +63,7 @@ export const wnsApplication = getCommonCard({
             sm: 4
         },
         required: false,
-        pattern: /^[a-zA-Z0-9-]*$/i,
+        pattern: /^[a-zA-Z0-9/-]*$/i,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "searchConnection.propertyId"
     }),
@@ -116,7 +115,8 @@ export const wnsApplication = getCommonCard({
             sm: 4
         },
         required: false,
-        pattern: /^[a-zA-Z0-9-]*$/i,
+        pattern: /^[a-zA-Z0-9/-]*$/i,
+        visible : false,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "searchConnection.oldConnectionNumber"
     })

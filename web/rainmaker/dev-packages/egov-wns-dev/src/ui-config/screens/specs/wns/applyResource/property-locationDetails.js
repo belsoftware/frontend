@@ -5,7 +5,7 @@ import {
     getLabelWithValue,
     getLabel
   } from "egov-ui-framework/ui-config/screens/specs/utils";
-  
+  import { handleNA } from '../../utils';
   export const propertyLocationDetails = getCommonContainer({
     city: getLabelWithValue(
       {
@@ -15,6 +15,19 @@ import {
         jsonPath: "applyScreen.property.address.city",
       }
     ),
+    location: getLabelWithValue(
+      {
+        labelKey: "WS_PROP_DETAIL_LOCATION",
+        labelName:"Property Location"
+      },
+      {
+        jsonPath: "applyScreen.property.address.location",
+        localePrefix: {
+          moduleName: "WS",
+          masterName: "PROP_LOCATION"
+        }
+      }
+    ),
     plotOrHouseOrSurveyNo: getLabelWithValue(
       {
         labelKey: "WS_PROP_DETAIL_DHNO",
@@ -22,6 +35,7 @@ import {
       },
       {
         jsonPath: "applyScreen.property.address.doorNo",
+        callBack: handleNA
       }
     ),
     buildingOrColonyName: getLabelWithValue(
@@ -29,17 +43,18 @@ import {
         labelKey: "WS_PROP_DETAIL_BUILD_NAME_LABEL"
       },
       {
-        jsonPath: "applyScreen.property.address.buildingName"
+        jsonPath: "applyScreen.property.address.buildingName",
+        callBack: handleNA
       }
     ),
-    streetName: getLabelWithValue(
-      {
-        labelKey: "WS_PROP_DETAIL_STREET_NAME"
-      },
-      {
-        jsonPath: "applyScreen.property.address.street"
-      }
-    ),
+    // streetName: getLabelWithValue(
+    //   {
+    //     labelKey: "WS_PROP_DETAIL_STREET_NAME"
+    //   },
+    //   {
+    //     jsonPath: "applyScreen.property.address.street"
+    //   }
+    // ),
     locality: getLabelWithValue(
       {
         labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL",
@@ -49,12 +64,12 @@ import {
         jsonPath: "applyScreen.property.address.locality.name",
       }
     ),
-    pincode: getLabelWithValue(
-      {
-        labelKey: "WS_PROP_DETAIL_PINCODE"
-      },
-      { jsonPath: "applyScreen.property.address.pincode" }
-    ),
+    // pincode: getLabelWithValue(
+    //   {
+    //     labelKey: "WS_PROP_DETAIL_PINCODE"
+    //   },
+    //   { jsonPath: "applyScreen.property.address.pincode" }
+    // ),
    })
   
   export const getPropertyDetails = (isEditable = true) => {

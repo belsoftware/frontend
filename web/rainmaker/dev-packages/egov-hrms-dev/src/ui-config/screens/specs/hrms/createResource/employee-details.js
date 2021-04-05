@@ -4,7 +4,9 @@ import {
   getTextField,
   getDateField,
   getCommonContainer,
-  getPattern
+  getPattern,
+  downloadHelpFile,
+  getLabel,
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getMaxDate } from "egov-ui-framework/ui-utils/commons";
 import { getTodaysDateInYMD ,getMaxDateForDOB} from "../../utils";
@@ -326,7 +328,44 @@ export const professionalDetails = getCommonCard(
         style:{
           flexWrap:'wrap'
         }
-      }
+      },
+      helpPdfButton: {
+        componentPath: "Button",
+        jsonPath: "Employee[0].empRoles.pdf",
+        gridDefination: {
+          xs: 12,
+          sm: 6,
+        },
+        props: {
+          color: "primary",
+          style: {
+            minWidth: "180px",
+            height: "48px",
+            marginRight: "45",
+            borderRadius: "inherit",
+          },
+        },
+
+        onClickDefination: {
+          action: "condition",
+          callBack: (state) => {
+            downloadHelpFile(state);
+          },
+        },
+        children: {
+          downloadButtonIcon: {
+            uiFramework: "custom-atoms",
+            componentPath: "Icon",
+            props: {
+              iconName: "cloud_download",
+            },
+          },
+          downloadButtonLabel: getLabel({
+            labelName: "Employee Role List",
+            labelKey: "EGOV_HRMS_EMPLOYEE_ROLES",
+          }),
+        },
+      },
     })
   },
   {

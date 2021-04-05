@@ -214,9 +214,23 @@ class WorkFlowContainer extends React.Component {
           data = beforeSubmitHook(data);
         }
       }
-      let payload = await httpRequest("post", updateUrl, "", [], {
-        [dataPath]: data
-      });
+      let payload;
+      try{
+          payload = await httpRequest("post", updateUrl, "", [], {
+          [dataPath]: data
+        });
+      }
+      catch(e){
+        this.props.hideSpinner();
+        toggleSnackbar(
+          true,
+          {
+            labelName: "ServiceFailed",
+            labelKey: e.message,
+          },
+          "error"
+        );
+      }
 
       this.setState({
         open: false
@@ -295,7 +309,7 @@ class WorkFlowContainer extends React.Component {
   };
 
   createWorkFLow = async (label, isDocRequired) => {
-    const { toggleSnackbar, dataPath, preparedFinalObject } = this.props;
+    const { toggleSnackbar, dataPath, preparedFinalObject,moduleName } = this.props;
     let data = {};
 
     if (dataPath == "BPA" || dataPath == "Assessment" || dataPath == "Property" || dataPath === "Noc") {
@@ -334,7 +348,7 @@ class WorkFlowContainer extends React.Component {
           "error"
         );
       }
-    } else if(tlAppStatus!=null) {
+    } else if((moduleName=='NewTL' || moduleName=='EDITRENEWAL') && tlAppStatus!=null) {
       let pattern = getPattern("Comments");
       const comments = get(
         preparedFinalObject,
@@ -536,7 +550,10 @@ class WorkFlowContainer extends React.Component {
     const roleIndex = userRoles.findIndex(item => {
       if (actions.indexOf(item.code) > -1) return true;
     });
-
+    
+    if((moduleName === "NewWS1" || moduleName === "ModifyWSConnection" || moduleName === "ModifySWConnection" || moduleName === "NewSW1") && (applicationState==='PENDING_APPROVAL_FOR_CONNECTION' || applicationState=== 'PENDING_FOR_APPROVAL')){
+      state.isStateUpdatable = false;
+    }
     let editAction = {};
     // state.isStateUpdatable = true; // Hardcoded configuration for PT mutation Edit
     if (state.isStateUpdatable && actions.length > 0 && roleIndex > -1) {

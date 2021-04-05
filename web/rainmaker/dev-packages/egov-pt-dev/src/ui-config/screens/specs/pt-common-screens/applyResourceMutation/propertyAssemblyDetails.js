@@ -11,7 +11,68 @@ import set from "lodash/set";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 
 
-const rendersubUsageType = (usageType, propType, dispatch, state) => {
+export const renderNoOfFloorData = (usageType, propType, dispatch, state) => {
+
+    console.log("usage type",usageType);
+    //let noOfFloors;
+    let propertyType = get(
+            state.screenConfiguration.preparedFinalObject,
+            "Property.propertyType"
+          ); 
+    console.log("propertyType",propertyType);
+    const additionalDetailsJson = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.noOfFloors"; 
+    if (propertyType === "BUILTUP.INDEPENDENTPROPERTY" || propertyType === "VACANT") {
+        set(state.screenConfiguration.preparedFinalObject,"Property.noOfFloors", "");
+        dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", true));
+       // dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
+    }else{
+        dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", false));
+    }
+}
+
+export const renderAreaData = (usageType, propType, dispatch, state) => {
+
+    console.log("usage type",usageType);
+    //let noOfFloors;
+    let propertyType = get(
+            state.screenConfiguration.preparedFinalObject,
+            "Property.propertyType"
+          ); 
+    console.log("propertyType",propertyType);
+    
+    const additionalDetailsJson_totalConstructedArea = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.totalConstructedArea"; 
+    if (propertyType === "VACANT") {
+        set(state.screenConfiguration.preparedFinalObject,"Property.noOfFloors", "");
+        dispatch(handleField('register-property', additionalDetailsJson_totalConstructedArea, "props.disabled", true));
+       
+       // dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
+    }else{
+        dispatch(handleField('register-property', additionalDetailsJson_totalConstructedArea, "props.disabled", false));
+       
+    }
+}
+
+export const renderNoOfFlatsData = (usageType, propType, dispatch, state) => {
+
+    console.log("usage type",usageType);
+    //let noOfFloors;
+    let propertyType = get(
+            state.screenConfiguration.preparedFinalObject,
+            "Property.propertyType"
+          ); 
+    console.log("propertyType",propertyType);
+    const additionalDetailsJson = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.noOfFlats"; 
+    if (propertyType === "BUILTUP.INDEPENDENTPROPERTY" || propertyType === "VACANT") {
+        set(state.screenConfiguration.preparedFinalObject,"Property.noOfFlats", "");
+        dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", true));
+       // dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
+    }else{
+        dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", false));
+    }
+}
+
+
+export const rendersubUsageType = (usageType, propType, dispatch, state) => {
   let subTypeValues = get(
     state.screenConfiguration.preparedFinalObject,
     "searchScreenMdmsData.PropertyTax.subUsageType"
@@ -20,35 +81,49 @@ const rendersubUsageType = (usageType, propType, dispatch, state) => {
     state.screenConfiguration.preparedFinalObject,
     "Property.propertyType"
   );  
+const additionalDetailsJson = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.subUsageType"; 
+
   let subUsage;
-  if (propertyType === "BUILTUP.SHAREDPROPERTY") {
-    dispatch(
-      handleField(
-        "register-property",
-        "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.subUsageType",
-        "required",
-        true
-      )
-     )
-    if (usageType === "MIXED") {
-      subUsage = subTypeValues;
-    } else {
-      subUsage = subTypeValues.filter(cur => {
-        return (cur.code.startsWith(usageType))
-      })
-    }
-  } else {
-    subUsage = [];
-     set(state.screenConfiguration.preparedFinalObject,"Property.subUsageCategory", "");
-     dispatch(
-      handleField(
-        "register-property",
-        "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.subUsageType",
-        "required",
-        false
-      )
-     )
-  }
+    if (propertyType === "BUILTUP.SHAREDPROPERTY" || propertyType === "BUILTUP.INDEPENDENTPROPERTY") {
+        if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL"
+        || usageType === "NONRESIDENTIAL.OTHERS") {
+            dispatch(handleField('register-property', additionalDetailsJson, "visible", true));
+            dispatch(handleField('register-property', additionalDetailsJson, "props.visible", true));
+            if (usageType === "MIXED") {
+                subUsage = subTypeValues;
+            } else {
+                subUsage = subTypeValues.filter(cur => {
+                    return (cur.code.startsWith(usageType))
+                })
+            }
+        } else {
+            set(state.screenConfiguration.preparedFinalObject,"Property.subUsageCategory", "");
+            dispatch(handleField('register-property', additionalDetailsJson, "visible", false));
+            dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
+        }
+    } else {
+        set(state.screenConfiguration.preparedFinalObject,"Property.subUsageCategory", "");
+        dispatch(handleField('register-property', additionalDetailsJson, "visible", false));
+        dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
+    }
+
+//   if (propertyType === "BUILTUP.SHAREDPROPERTY") {
+//     dispatch(handleField('register-property', additionalDetailsJson, "required", true));
+//     dispatch(handleField('register-property', additionalDetailsJson, "props.required", true))
+
+//     if (usageType === "MIXED") {
+//       subUsage = subTypeValues;
+//     } else {
+//       subUsage = subTypeValues.filter(cur => {
+//         return (cur.code.startsWith(usageType))
+//       })
+//     }
+//   } else {
+//     subUsage = [];
+//     set(state.screenConfiguration.preparedFinalObject,"Property.subUsageCategory", "");
+//     dispatch(handleField('register-property', additionalDetailsJson, "required", false));
+//     dispatch(handleField('register-property', additionalDetailsJson, "props.required", false));
+//   }
   dispatch(
     prepareFinalObject(
       "propsubusagetypeForSelectedusageCategory",
@@ -99,6 +174,9 @@ export const propertyAssemblyDetails = getCommonCard({
         );
         // if (usageType) {
           rendersubUsageType(usageType, action.value, dispatch, state)
+          renderNoOfFloorData(usageType, action.value, dispatch, state)
+          renderNoOfFlatsData(usageType, action.value, dispatch, state)
+          renderAreaData(usageType, action.value, dispatch, state)
         // }
       }
     }),
@@ -114,7 +192,8 @@ export const propertyAssemblyDetails = getCommonCard({
         labelKey: "PT_COMMON_TOTAL_LAND_AREA_PLACEHOLDER"
       },
       required: true,
-      pattern: /^[0-9]\d{0,9}(\.\d{1,3})?%?$/,
+      //pattern: /^[1-9]\d{0,7}(\.\d{1,2})?%?$/,
+      pattern: /^[1-9]\d{0,7}?%?$/,
       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
       jsonPath: "Property.landArea"
     }),
@@ -130,9 +209,9 @@ export const propertyAssemblyDetails = getCommonCard({
         labelKey: "PT_COMMON_TOTAL_CONSTRUCTED_AREA_PLACEHOLDER"
       },
       required: true,
-      pattern: /^[0-9]\d{0,9}(\.\d{1,3})?%?$/,
+      pattern: /^[1-9]\d{0,7}?%?$/,
       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
-      jsonPath: "Property.totalConstructedArea"
+      jsonPath: "Property.superBuiltUpArea"
     }),
     usageType: getSelectField({
       label: {
@@ -172,7 +251,8 @@ export const propertyAssemblyDetails = getCommonCard({
         labelName: "Select Sub Usage Type",
         labelKey: "PT_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
       },
-      required: false,
+      required: true,
+      visible: false,
       jsonPath: "Property.subUsageCategory",
       sourceJsonPath: "propsubusagetypeForSelectedusageCategory",
       gridDefination: {
@@ -187,6 +267,38 @@ export const propertyAssemblyDetails = getCommonCard({
         moduleName: "COMMON",
         masterName: "PROPSUBUSGTYPE"
       },
-    })
+    }),
+    noOfFloors: getTextField({
+          label: {
+            labelName: "No of Floors",
+            labelKey: "PT_COMMON_NO_OF_FLOORS"
+          },
+          props: {
+          },
+          placeholder: {
+            labelName: "Enter Number of Floors",
+            labelKey: "PT_COMMON_NO_OF_FLOORS_PLACEHOLDER"
+          },
+          required: false,
+          pattern: /^[1-9]\d{0,9}?%?$/,
+          errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+          jsonPath: "Property.noOfFloors"
+        }),
+    noOfFlats:getTextField({
+              label: {
+                labelName: "No of Flats",
+                labelKey: "PT_COMMON_NO_OF_FLATS"
+              },
+              props: {
+              },
+              placeholder: {
+                labelName: "Enter Number of Flats",
+                labelKey: "PT_COMMON_NO_OF_FLATS_PLACEHOLDER"
+              },
+              required: false,
+              pattern: /^[1-9]\d{0,9}?%?$/,
+              errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+              jsonPath: "Property.noOfFlats"
+            })
   })
 });

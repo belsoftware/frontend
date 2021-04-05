@@ -1,18 +1,27 @@
 import get from "lodash/get";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { getPropertyResults, isActiveProperty, showHideFieldsFirstStep } from "../../../../../ui-utils/commons";
+import { getPropertyResults, isActiveProperty, showHideFieldsFirstStep, getSearchResults, getSearchResultsForSewerage , getCBMdmsData,prepareDocumentsUploadData } from "../../../../../ui-utils/commons";
 import { getUserInfo, getTenantIdCommon } from "egov-ui-kit/utils/localStorageUtils";
-
 export const propertySearchApiCall = async (state, dispatch) => {
   showHideFields(dispatch, false);
   let tenantId = getTenantIdCommon();
-  let queryObject = [{ key: "tenantId", value: tenantId }];
+  let queryObject = process.env.REACT_APP_NAME === "Citizen"?[]:[{ key: "tenantId", value: tenantId }];
   let searchScreenObject = get(state.screenConfiguration.preparedFinalObject, "searchScreen", {});
   dispatch(
     handleField(
       "apply",
-      "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.cardContent.children.headerDiv",
+      "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.applicantSummary.children.cardContent.children.cardOne",
+      //"components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.cardContent.children.headerDiv",
+      "props.items",
+      []
+    )
+  );
+  dispatch(
+    handleField(
+      "apply",
+      "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.institutionSummary.children.cardContent",
+      //"components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.cardContent.children.headerDiv",
       "props.items",
       []
     )
@@ -60,6 +69,12 @@ export const propertySearchApiCall = async (state, dispatch) => {
       let response = await getPropertyResults(queryObject, dispatch);
       if (response && response.Properties.length > 0) {
         let propertyData = response.Properties[0];
+        try{
+          getCBMdmsData(dispatch,propertyData.tenantId);
+          prepareDocumentsUploadData(state,dispatch);
+        }catch(err){
+          console.log("Document related process", err);
+        }
         if(!isActiveProperty(propertyData)){
           dispatch(toggleSnackbar(true, { labelKey: `ERR_WS_PROP_STATUS_${propertyData.status}`, labelName: `Property Status is ${propertyData.status}` }, "warning"));     
           showHideFieldsFirstStep(dispatch,propertyData.propertyId,false); 
@@ -84,9 +99,110 @@ export const propertySearchApiCall = async (state, dispatch) => {
               }
             }    
           }
+          if (propertyData && propertyData.owners && propertyData.owners.length > 0) {
+            propertyData.owners = propertyData.owners.filter(
+              (owner) => owner.status == "ACTIVE"
+            );
+          }
           dispatch(prepareFinalObject("applyScreen.property", propertyData))
           showHideFields(dispatch, true);
+          let tenantIdProp = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.tenantId");
+          if(tenantIdProp){
+            const wsTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='WS')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
+            const swTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='SW')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
+           
+            if(wsTenant.length>0){
+              if(swTenant.length==0){
+              dispatch(prepareFinalObject("applyScreen.water", true));
+            dispatch(prepareFinalObject("applyScreen.sewerage", false));
+              }
+            dispatch(prepareFinalObject("disableWS", false));
+            }
+            else{
+              dispatch(prepareFinalObject("disableWS", true));
+            }
+            if(swTenant.length>0){
+              if(wsTenant.length==0){
+              dispatch(prepareFinalObject("applyScreen.water", false));
+              dispatch(prepareFinalObject("applyScreen.sewerage", true));
+              }
+              dispatch(prepareFinalObject("disableSW", false));
+            }
+            else{
+              dispatch(prepareFinalObject("disableSW", true));
+            }
+            
+    
+          }
         }
+        if(searchScreenObject["propertyIds"].trim()){
+        let ownershipCategory = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.ownershipCategory", "");
+        
+        if (ownershipCategory.includes("INDIVIDUAL")) {
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.institutionSummary",
+              "visible",
+              false
+            )
+          );
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.applicantSummary",
+              "visible",
+              true
+            )
+          );
+        } else {
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.institutionSummary",
+              "visible",
+              true
+            )
+          );
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.applicantSummary",
+              "visible",
+              false
+            )
+          );
+        }
+      }
+        //Added by vidya to get water and severage connection for a property   
+        queryObject = [];
+        queryObject = [{ key: "searchType", value: "CONNECTION" }];
+        queryObject.push({ key: "tenantId", value: tenantId });
+        queryObject.push({ key: "propertyId", value: searchScreenObject["propertyIds"].trim() });
+        try { 
+          let payloadWater = await getSearchResults(queryObject);
+          let wsConns = get(payloadWater,"WaterConnection",[]); 
+          let count = wsConns.length; 
+          let connStr =[];
+          wsConns.forEach(obj => connStr.push(obj.connectionNo));
+          dispatch(prepareFinalObject("applyScreen.existingWaterConnCount", count));
+          dispatch(prepareFinalObject("applyScreen.existingWaterConn", connStr.join(", ")));          
+        } catch (error) { console.error(error); };
+
+        try { 
+          let payloadSewerage = await getSearchResultsForSewerage(queryObject, dispatch) ;
+          let swConns = get(payloadSewerage,"SewerageConnections",[]); 
+          let count = swConns.length; 
+          let connStr =[];
+          swConns.forEach(obj => connStr.push(obj.connectionNo));
+          // for (let i = 0; i < swConns.length; i++) {
+          //   let conn = swConns[i];                    
+          //   connStr = connStr.concat(conn.connectionNo);
+          //   console.log("Swerge connection No. ", connStr);   
+          // }
+          dispatch(prepareFinalObject("applyScreen.existingSewerageConnCount", count));
+          dispatch(prepareFinalObject("applyScreen.existingSewerageConn", connStr.join(", ")));
+        } catch (error) { console.error(error); }///////////
       } else {
         showHideFields(dispatch, false);
         dispatch(toggleSnackbar(true, { labelKey: "ERR_WS_PROP_NOT_FOUND", labelName: "No Property records found" }, "warning"));
@@ -127,6 +243,14 @@ const showHideFields = (dispatch, value) => {
     handleField(
       "apply",
       "components.div.children.formwizardFirstStep.children.connectionHolderDetails",
+      "visible",
+      value
+    )
+  );
+  dispatch(
+    handleField(
+      "apply",
+      "components.div.children.formwizardFirstStep.children.existingConnection",
       "visible",
       value
     )

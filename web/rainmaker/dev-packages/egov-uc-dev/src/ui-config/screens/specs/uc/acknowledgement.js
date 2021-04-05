@@ -79,7 +79,7 @@ const downloadprintMenu = (state, dispatch,applicationNumber,tenantId) => {
             rightIcon: "arrow_drop_down",
             props: { variant: "outlined", 
             style: { 
-              height: "60px", color: "#FE7A51", 
+              height: "60px", width: "200px",color: "#FE7A51", 
               marginRight: "5px" 
             },
             className: "uc-download-button" },

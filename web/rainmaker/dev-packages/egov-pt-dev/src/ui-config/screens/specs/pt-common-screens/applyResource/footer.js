@@ -9,18 +9,71 @@ import { httpRequest } from "../../../../../ui-utils";
 import { getCommonApplyFooter } from "../../utils";
 import { getQueryRedirectUrl } from "../searchResource/searchResults";
 import "./index.css";
+import cloneDeep from "lodash/cloneDeep";
 
 
 
 let screenKey = "register-property"
 
-const callBackForApply = async (state, dispatch) => {
-
-  let consumerCode = getQueryArg(window.location.href, "consumerCode");
+export const displayEditPage = async (state, dispatch) => {
   let propertyPayload = get(
     state,
     "screenConfiguration.preparedFinalObject.Property"
   );
+  
+  if(window.location.href.includes("pt-common-screens/summary")) {
+    let mode = getQueryArg(window.location.href, "ptmode")
+    store.dispatch(
+      setRoute(`register-property?purpose=update&propertyId=${propertyPayload.propertyId}&tenantId=${propertyPayload.tenantId}&ptmode=${mode}&redirectUrl=${getQueryArg(window.location.href, "redirectUrl")}&action=${getQueryArg(window.location.href, "action")}`)
+    );
+  }
+}
+
+const callBackForApply = async (state, dispatch) => {
+  let propertyPayload = get(
+    state,
+    "screenConfiguration.preparedFinalObject.Property"
+  );
+  //console.log("propertyPayload here--",propertyPayload);
+  if(window.location.href.includes("pt-common-screens/summary") && getQueryArg(window.location.href, "purpose")!='update') {
+    let isFromWorkflowDetails = get ( state, "screenConfiguration.preparedFinalObject.isWorkflowDetails", null );
+    set(propertyPayload, "workflow", isFromWorkflowDetails);
+    let payload = null;
+        payload = await httpRequest(
+          "post",
+          "/property-services/property/_update",
+          "_update",
+          [],
+          { Property: propertyPayload }
+        );
+        if (payload) {
+          store.dispatch(handleField("summary", "components.adhocDialog", "props.open", true));
+          setTimeout(() => {
+            const isMode = getQueryArg(window.location.href, "mode");
+            if (isMode === "MODIFY") {
+              store.dispatch(
+                setRoute(`${getQueryRedirectUrl()}&propertyId=${payload.Properties[0].propertyId}`)
+              )
+            } else {
+              store.dispatch(
+                setRoute(`${getQueryRedirectUrl()}&propertyId=${payload.Properties[0].propertyId}&tenantId=${propertyPayload.tenantId}`)
+              )
+            }
+          }, 3000);
+        } else {
+          dispatch(
+            toggleSnackbar(
+              true, {
+              labelKey: "PT_COMMON_FAILED_TO_UPDATE_PROPERTY",
+              labelName: "Failed to update property"
+            },
+              "warning"
+            )
+          )
+        }
+  } else {
+  //console.log("in else")
+  let consumerCode = getQueryArg(window.location.href, "consumerCode");
 
   let isAssemblyDetailsValid = validateFields(
     "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children",
@@ -49,6 +102,20 @@ const callBackForApply = async (state, dispatch) => {
   );
   let isAssemblyDetailstotalLandArea = validateFields(
     "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.totalLandArea",
+    state,
+    dispatch,
+    screenKey
+  );
+
+  let isAssemblyDetailsnoOfFloors = validateFields(
+    "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.noOfFloors",
+    state,
+    dispatch,
+    screenKey
+  );
+
+  let isAssemblyDetailsnoOfFlats = validateFields(
+    "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.noOfFlats",
     state,
     dispatch,
     screenKey
@@ -133,6 +200,8 @@ const callBackForApply = async (state, dispatch) => {
     isAssemblyDetailsValid &&
     isAssemblyDetailsPropType &&
     isAssemblyDetailsConstructedArea &&
+    isAssemblyDetailsnoOfFloors &&
+    isAssemblyDetailsnoOfFlats &&
     isAssemblyDetailstotalLandArea &&
     isAssemblyDetailsusageType &&
     isPropertyLocationDetailsValid &&
@@ -160,7 +229,7 @@ const callBackForApply = async (state, dispatch) => {
       }
     }
     // Property.landArea Property.totalConstructedArea
-    if (parseInt(propertyPayload.totalConstructedArea) > parseInt(propertyPayload.landArea)) {
+    if (Number(propertyPayload.superBuiltUpArea) > Number(propertyPayload.landArea)) {
       dispatch(
         toggleSnackbar(
           true, {
@@ -200,18 +269,29 @@ const callBackForApply = async (state, dispatch) => {
       propertyPayload.owners.map(owner => {
         owner.status = "ACTIVE";
         owner.ownerType = 'NONE';
-        owner.altContactNumber = propertyPayload.institution.landlineNumber;
+        owner.altContactNumber = propertyPayload.owners[0].altContactNumber;
       })
       propertyPayload.owners = [
         ...propertyPayload.owners
       ]
     }
     set(propertyPayload, "channel", "SYSTEM");
-    set(propertyPayload, "source", "MUNICIPAL_RECORDS");
+    if(window.location.href.includes("redirectUrl=/wns/apply")) { 
+      set(propertyPayload, "source", "WATER_CHARGES");
+    } else {
+      set(propertyPayload, "source", "MUNICIPAL_RECORDS");
+    }
+   // console.log("nooffloors---",propertyPayload.noOfFloors);
+
+    if(propertyPayload.noOfFloors==undefined || propertyPayload.noOfFloors=='')
     set(propertyPayload, "noOfFloors", 1);
+    //console.log("nooffloors after---",propertyPayload.noOfFloors);
+    if(propertyPayload.noOfFlats==undefined || propertyPayload.noOfFlats=='')
+    set(propertyPayload, "noOfFlats", 0);
+    //console.log("noOfFlats after---",propertyPayload.noOfFlats);
     propertyPayload.landArea = parseInt(propertyPayload.landArea);
-    propertyPayload.tenantId = propertyPayload.address.city;
-    propertyPayload.address.city = propertyPayload.address.city.split(".")[1];
+    propertyPayload.tenantId = propertyPayload.tenantId || propertyPayload.address.city;
+    propertyPayload.address.city = propertyPayload.tenantId.split(".")[1];
     let additionalDetails = {
       isRainwaterHarvesting: false
     }
@@ -219,23 +299,55 @@ const callBackForApply = async (state, dispatch) => {
     try {
       if (propertyPayload.propertyType === 'BUILTUP.SHAREDPROPERTY') {
         let unit = {};
-        unit.usageCategory = propertyPayload.subUsageCategory;
+        unit.usageCategory = propertyPayload.subUsageCategory ? propertyPayload.subUsageCategory : propertyPayload.usageCategory;
         unit.occupancyType = "SELFOCCUPIED";
-        unit.constructionDetail = {};
+        unit.constructionDetail = {
+          // carpetArea :  propertyPayload.superBuiltUpArea,
+          // builtUpArea : propertyPayload.superBuiltUpArea,
+          superBuiltUpArea : propertyPayload.superBuiltUpArea,
+          plinthArea : propertyPayload.superBuiltUpArea,
+
+        };
         propertyPayload.units = [];
         propertyPayload.units.push(unit);
       }
-      propertyPayload.creationReason = 'CREATE';
+      propertyPayload.creationReason = propertyPayload.creationReason || 'CREATE';
       let payload = null;
-      payload = await httpRequest(
-        "post",
-        "/property-services/property/_create",
-        "_update",
-        [],
-        { Property: propertyPayload }
+      console.log("--propertyPayload at create--",cloneDeep(propertyPayload));
+     
+      if(getQueryArg(window.location.href, "purpose")=='update'){
 
-      );
-      if (payload) {
+        let isFromWorkflowDetails = get ( state, "screenConfiguration.preparedFinalObject.isWorkflowDetails", null );
+        //propertyPayload.creationReason = 'UPDATE';
+        let mode = getQueryArg(window.location.href, "ptmode")
+        if(mode=="modify" && propertyPayload.status==='ACTIVE'){
+          propertyPayload.creationReason = 'UPDATE';
+        }
+        set(propertyPayload, "workflow", isFromWorkflowDetails);
+            payload = await httpRequest(
+              "post",
+              "/property-services/property/_update",
+              "_update",
+              [],
+              { Property: propertyPayload }
+            );
+
+      }
+      else{
+       
+        payload = await httpRequest(
+          "post",
+          "/property-services/property/_create",
+          "_update",
+          [],
+          { Property: propertyPayload }
+  
+        );
+      }
+     
+
+      let isFromWNS = get( state, "screenConfiguration.preparedFinalObject.isFromWNS", false);
+      if (payload && !isFromWNS) {
         store.dispatch(handleField(screenKey, "components.adhocDialog", "props.open", true));
         setTimeout(() => {
           const isMode = getQueryArg(window.location.href, "mode");
@@ -244,11 +356,26 @@ const callBackForApply = async (state, dispatch) => {
               setRoute(`${getQueryRedirectUrl()}&propertyId=${payload.Properties[0].propertyId}`)
             )
           } else {
+           
             store.dispatch(
               setRoute(`${getQueryRedirectUrl()}&propertyId=${payload.Properties[0].propertyId}&tenantId=${propertyPayload.tenantId}`)
             )
           }
         }, 3000);
+      } else if (payload && isFromWNS) {
+        let mode = getQueryArg(window.location.href, "ptmode");
+        let action =  getQueryArg(window.location.href, "action");
+        let redirectUrl = `${getQueryRedirectUrl()}&propertyId=${payload.Properties[0].propertyId}&tenantId=${propertyPayload.tenantId}&ptmode=${mode}`
+        if(action==="edit"){
+          store.dispatch(
+            setRoute(`summary?redirectUrl=${redirectUrl}`)
+          )
+        }
+        else{
+        store.dispatch(
+          setRoute(`summary?redirectUrl=/wns/apply?propertyId=${payload.Properties[0].propertyId}&tenantId=${propertyPayload.tenantId}&ptmode=${mode}`)
+        )
+        }
       }
       else {
         dispatch(
@@ -285,6 +412,7 @@ const callBackForApply = async (state, dispatch) => {
     )
   }
 }
+}
 
 export const footer = getCommonApplyFooter({
   payButton: {
@@ -309,5 +437,28 @@ export const footer = getCommonApplyFooter({
       callBack: callBackForApply
     },
     visible: true
+  },
+  nextButton: {
+    componentPath: "Button",
+    props: {
+      variant: "contained",
+      color: "primary",
+      style: {
+        minWidth: "200px",
+        height: "48px",
+        marginRight: "45px"
+      }
+    },
+    children: {
+      nextButtonLabel: getLabel({
+        labelName: "Next",
+        labelKey: "PT_COMMON_BUTTON_NEXT"
+      }),
+    },
+    onClickDefination: {
+      action: "condition",
+      callBack: callBackForApply
+    },
+    visible: false
   }
 });

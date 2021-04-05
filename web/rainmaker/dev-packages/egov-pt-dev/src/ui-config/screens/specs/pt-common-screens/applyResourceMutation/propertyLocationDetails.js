@@ -29,8 +29,12 @@ export const propertyLocationDetails = getCommonCard({
     }
   ),
   propertyLocationDetailsContainer: getCommonContainer({
-    city: {
-      ...getSelectField({
+    city: {      
+      uiFramework: "custom-containers-local",
+      moduleName: "egov-pt",
+      componentPath: "AutosuggestContainer",
+      props: {
+        className: "autocomplete-dropdown",
         label: {
           labelKey: "PT_COMMON_CITY"
         },
@@ -41,14 +45,16 @@ export const propertyLocationDetails = getCommonCard({
           moduleName: "TENANT",
           masterName: "TENANTS"
         },
-        sourceJsonPath: "applyScreenMdmsData.tenant.tenants",
-        jsonPath: "Property.address.city",//db sake
-        required: true,
-        gridDefination: {
-          xs: 12,
-          sm: 6
-        },
-      }),
+        sourceJsonPath: "applyScreenMdmsData.common-masters.citiesByModule.wns",
+        labelsFromLocalisation: true,
+        isClearable: true,
+      },      
+      jsonPath: "Property.address.city",//db sake
+      required: true,
+      gridDefination: {
+        xs: 12,
+        sm: 6
+      },
       beforeFieldChange: async (action, state, dispatch) => {
         //Below only runs for citizen - not required here in employee
         dispatch(fetchLocalizationLabel(getLocale(), action.value, action.value));
@@ -117,6 +123,28 @@ export const propertyLocationDetails = getCommonCard({
       }
 
     },
+    propertyLocation: getSelectField({
+            label: {
+              labelName: "Property Location",
+              labelKey: "PT_COMMON_PROPERTY_LOCATION"
+            },
+            placeholder: {
+              labelName: "Select Property Type",
+              labelKey: "PT_COMMON_PROPERTY_LOCATION_PLACEHOLDER"
+            },
+            required: true,
+            jsonPath: "Property.address.location",
+            sourceJsonPath: "searchScreenMdmsData.PropertyTax.PropertyLocation",
+            gridDefination: {
+              xs: 12,
+              sm: 12,
+              md: 6
+            },
+            localePrefix: {
+              moduleName: "PT_COMMON",
+              masterName: "PROPERTY_LOCATION"
+            }
+    }),
     localityOrMohalla: {
       uiFramework: "custom-containers-local",
       moduleName: "egov-pt",
@@ -164,9 +192,9 @@ export const propertyLocationDetails = getCommonCard({
         xs: 12,
         sm: 6
       },
-      required: true,
+     // required: true,
      // pattern: /^[a-zA-Z0-9-]*$/i,
-      pattern: getPattern("DoorHouseNo"),
+     pattern : getPattern("DoorHouseNo"),
       errorMessage: "PT_COMMON_ERR_INVALID_DOOR_NO",
       jsonPath: "Property.address.doorNo"
     }),
@@ -181,9 +209,9 @@ export const propertyLocationDetails = getCommonCard({
         xs: 12,
         sm: 6
       },
-      required: true,
+      //required: true,
      // pattern: /^[a-zA-Z0-9-]*$/i,
-      pattern: getPattern("BuildingStreet"),
+      pattern : getPattern("Address"),
       errorMessage: "PT_COMMON_ERR_INVALID_BUILDING_COLONY",
       jsonPath: "Property.address.buildingName"
     })

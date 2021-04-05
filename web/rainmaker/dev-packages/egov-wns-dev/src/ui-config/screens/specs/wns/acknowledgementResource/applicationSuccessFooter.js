@@ -9,6 +9,8 @@ import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { generateWSAcknowledgement } from "egov-ui-kit/utils/pdfUtils/generateWSAcknowledgement";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import cloneDeep from "lodash/cloneDeep";
+import {localStorageGet} from "egov-ui-kit/utils/localStorageUtils";
+
 const getCommonApplyFooter = children => {
   return {
     uiFramework: "custom-atoms",
@@ -145,6 +147,7 @@ const handleAppDownloadAndPrint = async(state, dispatch, action) => {
   filteredDocs && filteredDocs.map(val => {
     if (val.title.includes("WS_OWNER.IDENTITYPROOF.")) { val.title = "WS_OWNER.IDENTITYPROOF"; }
     else if (val.title.includes("WS_OWNER.ADDRESSPROOF.")) { val.title = "WS_OWNER.ADDRESSPROOF"; }
+    else if (val.title.includes("WS_OWNER.NOC_")) { val.title = "NOC"; }
   });
   if (applicationNumberWater && applicationNumberSewerage) {
     WaterConnection[0].pdfDocuments = filteredDocs;
@@ -246,7 +249,8 @@ export const DownloadAndPrint = (state,
       onClickDefination: {
         action: "condition",
         callBack: () => { handleAppDownloadAndPrint(state, dispatch, "print") }
-      }
+      },
+      visible : !JSON.parse(localStorageGet('isMobileApp'))
     }
   })
 

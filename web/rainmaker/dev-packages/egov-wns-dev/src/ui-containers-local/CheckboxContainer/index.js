@@ -11,7 +11,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import "./index.css";
 import { toggleWater, toggleSewerage } from './toggleFeilds';
-import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
 const styles = {
   root: {
@@ -74,8 +73,12 @@ class CheckboxLabels extends React.Component {
   }
 
   render() {
-    const { classes, required, preparedFinalObject } = this.props;
+    const { classes, required, preparedFinalObject,editWSFlow,disableWS,disableSW,onFieldChange } = this.props;
     let checkedWater, checkedSewerage;
+    let disabled = editWSFlow ? editWSFlow : false;
+    let disableWS1 = disableWS ? disableWS : false;
+    let disableSW1 = disableSW ? disableSW : false;
+
     if (this.state.interChange) {
       checkedWater = this.state.checkedWater;
       checkedSewerage = this.state.checkedSewerage;
@@ -83,6 +86,15 @@ class CheckboxLabels extends React.Component {
       checkedWater = (preparedFinalObject && preparedFinalObject.applyScreen.water) ? preparedFinalObject.applyScreen.water : false;
       checkedSewerage = (preparedFinalObject && preparedFinalObject.applyScreen.sewerage) ? preparedFinalObject.applyScreen.sewerage : false;
     }
+    if (checkedSewerage) {
+      toggleSewerage(onFieldChange, true);
+    } 
+    else { toggleSewerage(onFieldChange, false); }
+    
+    if (checkedWater) {
+      toggleWater(onFieldChange, true);
+    } 
+    else { toggleWater(onFieldChange, false); }
 
     return (
       <div className={classes.root}>
@@ -99,6 +111,7 @@ class CheckboxLabels extends React.Component {
                   onChange={this.handleWater("checkedWater")}
                   classes={{ root: classes.radioRoot, checked: classes.checked }}
                   color="primary"
+                  disabled ={disableWS1?disableWS1:disabled}
                 />}
               label={<LabelContainer labelKey="WS_APPLY_WATER" />}
             />
@@ -110,6 +123,7 @@ class CheckboxLabels extends React.Component {
                   onChange={this.handleSewerage("checkedSewerage")}
                   classes={{ root: classes.radioRoot, checked: classes.checked }}
                   color="primary"
+                  disabled ={disableSW1?disableSW1:disabled}
                 />}
               label={<LabelContainer labelKey="WS_APPLY_SEWERAGE" />}
             />
@@ -123,8 +137,9 @@ class CheckboxLabels extends React.Component {
 const mapStateToProps = (state, ownprops) => {
   const { screenConfiguration } = state;
   const { jsonPathWater, jsonPathSewerage } = ownprops;
-  const { preparedFinalObject } = screenConfiguration;
-  return { preparedFinalObject, jsonPathWater, jsonPathSewerage };
+  const { preparedFinalObject } = screenConfiguration; 
+  const { editWSFlow,disableSW,disableWS } = preparedFinalObject; 
+  return { preparedFinalObject, jsonPathWater, jsonPathSewerage, editWSFlow,disableSW,disableWS  };
 };
 
 const mapDispatchToProps = dispatch => {

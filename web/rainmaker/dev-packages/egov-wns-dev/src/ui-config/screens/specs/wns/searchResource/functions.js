@@ -5,7 +5,9 @@ import { fetchBill, findAndReplace, getSearchResults, getSearchResultsForSewerag
 import { validateFields } from "../../utils";
 import { convertDateToEpoch, convertEpochToDate, resetFieldsForApplication, resetFieldsForConnection } from "../../utils/index";
 import { httpRequest } from "../../../../../ui-utils";
+import { toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 export const searchApiCall = async (state, dispatch) => {
+  dispatch(toggleSpinner());
   showHideApplicationTable(false, dispatch);
   showHideConnectionTable(false, dispatch);
   let getCurrentTab = get(state.screenConfiguration.preparedFinalObject, "currentTab");
@@ -17,6 +19,7 @@ export const searchApiCall = async (state, dispatch) => {
     resetFieldsForConnection(state, dispatch);
     await renderSearchApplicationTable(state, dispatch);
   }
+  dispatch(toggleSpinner());
 }
 
 const renderSearchConnectionTable = async (state, dispatch) => {
@@ -27,7 +30,7 @@ const renderSearchConnectionTable = async (state, dispatch) => {
   if (
     Object.values(searchScreenObject).length <= 1
   ) {
-    dispatch(toggleSnackbar(true, {labelName:"Please provide the city and any one other field information to search for property.", labelKey: "ERR_PT_COMMON_FILL_MANDATORY_FIELDS" }, "warning"));
+    dispatch(toggleSnackbar(true, {labelName:"Please provide the city and any one other field information to search for property.", labelKey: "ERR_WS_FILL_ATLEAST_ONE_FIELD" }, "warning"));
   } else if (
     (searchScreenObject["fromDate"] === undefined || searchScreenObject["fromDate"].length === 0) &&
     searchScreenObject["toDate"] !== undefined && searchScreenObject["toDate"].length !== 0) {
@@ -153,14 +156,14 @@ const renderSearchApplicationTable = async (state, dispatch) => {
   queryObject.push({ key: "isConnectionSearch", value: true });
   let searchScreenObject = get(state.screenConfiguration.preparedFinalObject, "searchScreen", {});
   const isSearchBoxFirstRowValid = validateFields(
-    "components.div.children.showSearches.children.showSearchScreens.props.tabs[1].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch",
+    "components.div.children.showSearches.children.showSearchScreens.props.tabs[0].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch",
     state,
     dispatch,
     "search"
   );
 
   const isSearchBoxSecondRowValid = validateFields(
-    "components.div.children.showSearches.children.showSearchScreens.props.tabs[1].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch",
+    "components.div.children.showSearches.children.showSearchScreens.props.tabs[0].tabContent.searchApplications.children.cardContent.children.wnsApplicationSearch",
     state,
     dispatch,
     "search"
@@ -258,7 +261,7 @@ const renderSearchApplicationTable = async (state, dispatch) => {
               applicationNo: element.applicationNo,
               applicationType: element.applicationType,
               name: ownerName.slice(2),
-              applicationStatus: appStatus,
+              applicationStatus: element.applicationStatus,
               address: handleAddress(element),
               service: element.service,
               connectionType: element.connectionType,
@@ -270,7 +273,7 @@ const renderSearchApplicationTable = async (state, dispatch) => {
               applicationNo: element.applicationNo,
               applicationType: element.applicationType,
               name: (element.property && element.property !== "NA" && element.property.owners)?element.property.owners[0].name:"",
-              applicationStatus: appStatus,
+              applicationStatus: element.applicationStatus,
               address: handleAddress(element),
               service: element.service,
               connectionType: element.connectionType,

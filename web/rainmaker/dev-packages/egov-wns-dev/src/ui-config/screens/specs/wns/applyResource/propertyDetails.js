@@ -9,7 +9,8 @@ import {
 import { propertySearchApiCall } from './functions';
 import { handlePropertySubUsageType, handleNA, resetFieldsForApplication } from '../../utils';
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-
+import store from "ui-redux/store";
+import get from "lodash/get";
 let isMode = getQueryArg(window.location.href, "mode");
 isMode = (isMode) ? isMode.toUpperCase() : "";
 let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
@@ -21,7 +22,7 @@ let modeaction = getQueryArg(window.location.href, "modeaction");
 let mode = getQueryArg(window.location.href, "mode");
 
 let modifyLink;
-if(isMode==="MODIFY"){
+if(isMode==="MODIFY" || action ==="edit"){
   modifyLink=`/wns/apply?`;
   modifyLink = applicationNumber ? modifyLink + `applicationNumber=${applicationNumber}` : modifyLink;
   modifyLink = connectionNumber ? modifyLink + `&connectionNumber=${connectionNumber}` : modifyLink;
@@ -40,8 +41,7 @@ isMode = (isMode) ? isMode.toUpperCase() : "";
  connectionNumber = getQueryArg(window.location.href, "connectionNumber");
  tenantId = getQueryArg(window.location.href, "tenantId");
  action = getQueryArg(window.location.href, "action");
-
-if(isMode==="MODIFY"){
+if(isMode==="MODIFY" || action ==="edit"){
   modifyLink=`/wns/apply?`;
   modifyLink = applicationNumber ? modifyLink + `applicationNumber=${applicationNumber}` : modifyLink;
   modifyLink = connectionNumber ? modifyLink + `&connectionNumber=${connectionNumber}` : modifyLink;
@@ -71,7 +71,7 @@ export const propertyID = getCommonContainer({
     },
     sourceJsonPath: "applyScreen.property.propertyId",
     title: {
-      value: "Enter Property Id",
+      value: "Fill the form by searching your old approved trade license",
       // key: "TL_OLD_TL_NO"
     },
     pattern: /^[a-zA-Z0-9/-]*$/i,
@@ -167,16 +167,49 @@ const propertyDetails = getCommonContainer({
 
     }
   ),
-  // numberOfFloors: getLabelWithValue(
-  //   {
-  //     labelKey: "WS_PROPERTY_NO_OF_FLOOR_LABEL",
-  //     labelName: "Number Of Floors"
-  //   },
-  //   {
-  //     jsonPath: "applyScreen.property.noOfFloors",
-  //     callBack: handleNA
-  //   }
-  // ),
+  constructionSize: getLabelWithValue(
+    {
+      labelKey: "WS_PROP_DETAIL_CONSTRUCTION_SIZE_LABEL"
+    },
+    {
+      jsonPath: "applyScreen.property.superBuiltUpArea",
+      callBack: handleNA
+
+    }
+  ),
+  numberOfFloors: getLabelWithValue(
+    {
+      labelKey: "WS_PROPERTY_NO_OF_FLOOR_LABEL",
+      labelName: "Number Of Floors"
+    },
+    {
+      jsonPath: "applyScreen.property.noOfFloors",
+      //callBack: handleNA
+      callBack: value => {
+        let state = store.getState();
+        let finalValue;
+       // console.log("state---"+JSON.stringify(state.screenConfiguration.preparedFinalObject))
+          let propertyType = get( state.screenConfiguration.preparedFinalObject.applyScreen, "property.propertyType" );
+          console.log("usage type is---"+propertyType)
+          if ( propertyType !== "VACANT") {
+              finalValue = value;
+          }
+          else
+              finalValue = "NA";
+        return finalValue;
+      }
+    }
+  ),
+  numberOfFlats: getLabelWithValue(
+    {
+      labelKey: "WS_PROPERTY_NO_OF_FLATS_LABEL",
+      labelName: "Number Of Flats"
+    },
+    {
+      jsonPath: "applyScreen.property.noOfFlats",
+      callBack: handleNA
+    }
+  ),
   // rainwaterHarvestingFacility: getLabelWithValue(
   //   {
   //     labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC",

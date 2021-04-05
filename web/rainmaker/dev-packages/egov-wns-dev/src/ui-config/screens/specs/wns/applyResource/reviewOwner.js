@@ -7,7 +7,7 @@ import {
   getDivider,
   getLabelWithValueForModifiedLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { convertEpochToDateAndHandleNA, handleNA } from '../../utils';
+import { convertEpochToDateAndHandleNA, handleNA,handleMeterReading } from '../../utils';
 import { changeStep } from "./footer";
 
 const getHeader = label => {
@@ -109,6 +109,25 @@ export const reviewWaterSubSource = getLabelWithValueForModifiedLabel(
     callBack: handleNA
   }
 );
+
+export const reviewSourceInfo = getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Water Source Info",
+    labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO"
+  },
+  {
+    jsonPath: "applyScreen.sourceInfo",
+    callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    jsonPath: "applyScreenOld.sourceInfo",
+    callBack: handleNA
+  }
+);
+
 export const reviewPipeSize = getLabelWithValueForModifiedLabel(
   {
     labelName: "Pipe Size (in inches)",
@@ -127,6 +146,42 @@ export const reviewPipeSize = getLabelWithValueForModifiedLabel(
   }
 );
 
+export const reviewMotorInfo = getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Motor Info",
+    labelKey: "WS_SERV_DETAIL_MOTOR_INFO"
+  },
+  {
+    jsonPath: "applyScreen.motorInfo",
+    callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    jsonPath: "applyScreenOld.motorInfo",
+    callBack: handleNA
+  }
+);
+
+export const reviewAuthorizedConnection = getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Authorized Connection",
+   labelKey: "WS_SERV_DETAIL_AUTHORIZED_CONN"
+  },
+  {
+    jsonPath: "applyScreen.authorizedConnection",
+    callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    jsonPath: "applyScreenOld.authorizedConnection",
+    callBack: handleNA
+  }
+); 
+ 
 export const reviewWaterClosets = getLabelWithValueForModifiedLabel(
   {
     labelName: "No. of Water Closets",
@@ -159,6 +214,24 @@ export const reviewNumberOfToilets = getLabelWithValueForModifiedLabel(
   },
   {
     jsonPath: "applyScreenOld.noOfToilets",
+    callBack: handleNA
+  }
+);
+
+export const reviewDrainageSize = getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Drainage Size (in inches)",
+    labelKey: "WS_SERV_DETAIL_DRAINAGE_SIZE"
+  },
+  {
+    jsonPath: "applyScreen.drainageSize",
+    callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    jsonPath: "applyScreenOld.drainageSize",
     callBack: handleNA
   }
 );
@@ -253,23 +326,23 @@ export const reviewRoadType = getLabelWithValueForModifiedLabel(
   }
 );
 
-export const reviewArea = getLabelWithValueForModifiedLabel(
-  {
-    labelName: "Area (in sq ft)",
-    labelKey: "WS_ADDN_DETAILS_AREA_LABEL"
-  },
-  {
-    jsonPath: "applyScreen.roadCuttingArea",
-    callBack: handleNA
-  },
-  {
-    labelKey: "WS_OLD_LABEL_NAME"
-  },
-  {
-    jsonPath: "applyScreenOld.roadCuttingArea",
-    callBack: handleNA
-  }
-);
+// export const reviewArea = getLabelWithValueForModifiedLabel(
+//   {
+//     labelName: "Area (in sq ft)",
+//     labelKey: "WS_ADDN_DETAILS_AREA_LABEL"
+//   },
+//   {
+//     jsonPath: "applyScreen.roadCuttingArea",
+//     callBack: handleNA
+//   },
+//   {
+//     labelKey: "WS_OLD_LABEL_NAME"
+//   },
+//   {
+//     jsonPath: "applyScreenOld.roadCuttingArea",
+//     callBack: handleNA
+//   }
+// );
 export const reviewConnectionExecutionDate = getLabelWithValueForModifiedLabel(
   {
     labelName: "Connection Execution Date",
@@ -321,20 +394,21 @@ export const reviewMeterInstallationDate = getLabelWithValueForModifiedLabel(
   }
 );
 
-export const reviewInitialMeterReading = getLabelWithValueForModifiedLabel(
+export const reviewInitialMeterReading = getLabelWithValue(
   {
     labelName: "Initial Meter Reading",
     labelKey: "WS_ADDN_DETAILS_INITIAL_METER_READING"
   },
   { jsonPath: "applyScreen.additionalDetails.initialMeterReading",
-    callBack: handleNA },
-  {
-    labelKey: "WS_OLD_LABEL_NAME"
-  },
-  {
-    jsonPath: "applyScreenOld.additionalDetails.initialMeterReading",
-    callBack: handleNA
-  }
+    callBack: handleMeterReading }
+  //   ,
+  // {
+  //   labelKey: "WS_OLD_LABEL_NAME"
+  // },
+  // {
+  //   jsonPath: "applyScreenOld.additionalDetails.initialMeterReading",
+  //   callBack: handleNA
+  // }
 );
 
 export const reviewOwner = (isEditable = true) => {
@@ -408,9 +482,13 @@ const connectionDetails = getCommonContainer({
   reviewWaterSource,
   reviewWaterSubSource,
   reviewPipeSize,
+  reviewAuthorizedConnection,
+  reviewMotorInfo,
+  reviewSourceInfo,
   // reviewBillingType,
   reviewWaterClosets,
-  reviewNumberOfToilets
+  reviewNumberOfToilets,
+  reviewDrainageSize
 });
 
 const connectionChargeDetails = getCommonContainer({
@@ -422,7 +500,7 @@ const connectionChargeDetails = getCommonContainer({
 
 const roadCuttingCharges = getCommonContainer({
   reviewRoadType,
-  reviewArea
+ // reviewArea
 });
 
 const activationDetails = getCommonContainer({

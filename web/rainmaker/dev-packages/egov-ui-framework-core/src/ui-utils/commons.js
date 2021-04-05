@@ -711,7 +711,7 @@ export const getRequiredDocData = async (action, dispatch, moduleDetails, closeP
     process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
   let mdmsBody = {
     MdmsCriteria: {
-      tenantId: moduleDetails[0].moduleName === "ws-services-masters" ? commonConfig.tenantId : tenantId,
+      tenantId: tenantId,
       moduleDetails: moduleDetails
     }
   };
@@ -902,4 +902,48 @@ export const enableFieldAndHideSpinner = (screenKey, jsonPath = 'components', di
 export const disableFieldAndShowSpinner = (screenKey, jsonPath = 'components', dispatch) => {
   dispatch(showSpinner());
   disableField(screenKey, jsonPath, dispatch);
+}
+
+export const sortDropdownNames = (e1, e2) => {
+  if (e1 && e1.name && typeof e1.name == 'string') {
+    return e1 && e1.name && e1.name.localeCompare && e1.name.localeCompare(e2 && e2.name && e2.name || '');
+  } else if (e1 && e1.name && typeof e1.name == 'number') {
+    return e1.name - e2.name;
+  } else {
+    return 1;
+  }
+}
+
+export const sortDropdownLabels = (e1, e2) => {
+  if (e1 && e1.label && typeof e1.label == 'string') {
+    return e1 && e1.label && e1.label.localeCompare && e1.label.localeCompare(e2 && e2.label && e2.label || '');
+  } else if (e1 && e1.label && typeof e1.label == 'number') {
+    return e1.label - e2.label;
+  } else {
+    return 1;
+  }
+}
+
+export const getDefaultFontStyle = (locale = "en_IN") => {
+  let fontStyle = 'Camby';
+  if (locale != undefined && locale != "") {
+    switch (locale) {
+      case 'kn_IN':
+        fontStyle = 'kannada'
+        break;
+      case 'ml_IN':
+        fontStyle = 'malyalam'
+        break;
+      case 'te_IN':
+        fontStyle = 'telugu'
+          break;
+      case 'hi_IN':
+      case 'en_IN':
+          fontStyle = 'Camby'
+          break;
+      default:
+         fontStyle = 'Camby';
+  }
+}
+return fontStyle;  
 }

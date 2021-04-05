@@ -171,12 +171,25 @@ class TableData extends Component {
   }
 
   checkSLA = (taskboardLabel, row) => {
-    const MAX_SLA = this.state.businessServiceSla[row[2].text.props.label.split('_')[1]];
+    let bService =row[2].text.props.label.split("_")[1];
+    let apptatus  = "";
+    let n = row[2].text.props.label.indexOf("_", 3);
+    if(n>0){
+      apptatus = row[2].text.props.label.substring(n+1,  row[2].text.props.label.length);
+    }
+    else{
+      apptatus = row[2].text.props.label.split("_")[2];
+    }
+
+   // const MAX_SLA = this.state.businessServiceSla[row[2].text.props.label.split('_')[1]];
+   const MAX_SLA = this.geMaxSLAData(bService,apptatus)
     if (taskboardLabel === '' || taskboardLabel === 'WF_TOTAL_TASK') {
       return true;
     } else if ((taskboardLabel === 'WF_TOTAL_NEARING_SLA' && row[4].text > 0 && row[4].text <= (MAX_SLA - MAX_SLA / 3))) {
       return true;
-    } else if ((taskboardLabel === 'WF_ESCALATED_SLA' && row[4].text <= 0)) {
+    } else if (taskboardLabel === 'WF_ESCALATED_SLA' && row[4].text <= 0 && (apptatus == 'PENDINGAPPROVAL' || apptatus == 'FIELDINSPECTION'
+    || apptatus == 'PENDINGPAYMENT' || apptatus == 'APPLIED' || apptatus == 'PENDING_FOR_DOCUMENT_VERIFICATION'||
+    apptatus == 'PENDING_FOR_FIELD_INSPECTION' || apptatus == 'PENDING_APPROVAL_FOR_CONNECTION' || apptatus == 'PENDING_FOR_CONNECTION_ACTIVATION')) {
       return true;
     } else {
       return false;
@@ -196,6 +209,21 @@ class TableData extends Component {
   convertMillisecondsToDays = (milliseconds) => {
     return (milliseconds / (1000 * 60 * 60 * 24));
   }
+
+  geMaxSLAData = (bService , status ) => {
+    if(bService && status){
+      let businessServiceData = JSON.parse(localStorageGet("businessServiceData"));
+      let bServcieData = filter(businessServiceData, (item) =>{return item.businessService.toUpperCase() ===bService.toUpperCase()});
+      if(bServcieData.length>0) {
+        let obj = filter(bServcieData[0].states,(item)=> {return item.applicationStatus && item.applicationStatus.toUpperCase() ===status.toUpperCase()});
+        if(obj.length> 0){
+          return this.convertMillisecondsToDays(obj[0].sla);
+        }
+      }
+    }
+    return 0;
+  }
+
   applyFilter = (inboxData) => {
     this.showLoading();
     let initialInboxData = inboxData ? cloneDeep(inboxData) : cloneDeep(this.state.initialInboxData);
@@ -207,9 +235,23 @@ class TableData extends Component {
       initialInboxData.map((row, ind) => {
         row.rows = row.rows.filter((eachRow) => {
           let isValid = this.checkRow(eachRow, filter, searchFilter, taskboardLabel);
-          if (isValid && ind === 1) {
-            let MAX_SLA = this.state.businessServiceSla[eachRow[2].text.props.label.split('_')[1]];
-            if (eachRow[4].text <= 0) {
+          if (isValid && ind === 1) {        
+            let bService =eachRow[2].text.props.label.split("_")[1];
+           // let apptatus =eachRow[2].text.props.label.split("_")[2];
+           let apptatus  = "";
+           let n = eachRow[2].text.props.label.indexOf("_", 3);
+           if(n>0){
+            apptatus = eachRow[2].text.props.label.substring(n+1,  eachRow[2].text.props.label.length);
+           }
+           else{
+               apptatus = eachRow[2].text.props.label.split("_")[2];
+           }
+
+            //let MAX_SLA = this.state.businessServiceSla[eachRow[2].text.props.label.split('_')[1]];
+            let MAX_SLA = this.geMaxSLAData(bService,apptatus)
+          if ((apptatus == 'PENDINGAPPROVAL' || apptatus == 'FIELDINSPECTION'
+          || apptatus == 'PENDINGPAYMENT' || apptatus == 'APPLIED' || apptatus == 'PENDING_FOR_DOCUMENT_VERIFICATION'||
+          apptatus == 'PENDING_FOR_FIELD_INSPECTION' || apptatus == 'PENDING_APPROVAL_FOR_CONNECTION' || apptatus == 'PENDING_FOR_CONNECTION_ACTIVATION') && eachRow[4].text <= 0) {
               ESCALATED_SLA.push(eachRow[4].text);
             }
             if (eachRow[4].text > 0 && eachRow[4].text <= (MAX_SLA - MAX_SLA / 3)) {
@@ -230,7 +272,7 @@ class TableData extends Component {
     if (initialInboxData.length === 2) {
       initialInboxData.map((row, ind) => {
         row.rows = row.rows.filter((eachRow) => {
-          let isValid = this.checkSLA(taskboardLabel, eachRow);
+         let isValid = this.checkSLA(taskboardLabel, eachRow);
           return isValid;
         }
         )
@@ -358,7 +400,7 @@ class TableData extends Component {
       const locality = localitymap.find(locality => {
         return locality.referencenumber === item.businessId;
       })
-      var sla = item.businesssServiceSla && item.businesssServiceSla / (1000 * 60 * 60 * 24);
+      var sla = item.stateSla && item.stateSla / (1000 * 60 * 60 * 24);
       let row0 = { text: item.businessId, subtext: item.businessService, hiddenText: item.moduleName };
       let row1 = { text: locality ? <Label label={`${item.tenantId.toUpperCase().replace(/[.]/g, "_")}_REVENUE_${locality.locality.toUpperCase().replace(/[. ]/g, "_")}`} color="#000000" /> : <Label label={"NA"} color="#000000" /> };
       let row2 = {
@@ -372,8 +414,7 @@ class TableData extends Component {
             "NA"
           ),
       };
-
-      let row3 = { text: item.assigner ? <Label label={item.assigner.name} color="#000000" /> : <Label label={"NA"} color="#000000" /> };
+      let row3 = { text: <Label label={get(item,"assignes[0].name","NA")} color="#000000" /> };
       let row4 = { text: Math.round(sla), badge: true };
       let row5 = { historyButton: true };
 
@@ -492,9 +533,9 @@ class TableData extends Component {
           let assignes = get(item, 'assignes');
           return get(assignes ? assignes[0] : {}, "uuid") === uuid
         }),
-        ["businesssServiceSla"]
+        ["stateSla"]
       );
-      const allData = orderBy(get(responseData, "ProcessInstances", []), ["businesssServiceSla"]);
+      const allData = orderBy(get(responseData, "ProcessInstances", []), ["stateSla"]);
 
 
       // const assignedDataRows = []

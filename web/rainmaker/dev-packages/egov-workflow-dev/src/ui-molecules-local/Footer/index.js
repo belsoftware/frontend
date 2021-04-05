@@ -78,7 +78,7 @@ class Footer extends React.Component {
         state,
         `screenConfiguration.preparedFinalObject.Licenses[0].status`,null
       );
-
+      if((item.moduleName=='NewTL' || item.moduleName=='EDITRENEWAL') && tlAppStatus!=null){
       switch(tlAppStatus){
         case 'PENDINGAPPROVAL':
             handleFieldChange(`${dataPath}[0].tradeLicenseDetail.additionalDetail.cbrnNumber`, get(state,
@@ -99,6 +99,7 @@ class Footer extends React.Component {
           case 'APPLIED':
             break;
       }
+    }
     }
 
     if (item.isLast) {
@@ -208,7 +209,7 @@ class Footer extends React.Component {
           labelName: { buttonLabel },
           labelKey: `WF_${appName.toUpperCase()}_${moduleName.toUpperCase()}_${buttonLabel}`,
           link: () => {
-            (moduleName === "NewTL" || moduleName === "EDITRENEWAL" ) && buttonLabel==="APPLY" ? onDialogButtonClick(buttonLabel, isDocRequired) : 
+           ((moduleName === "NewTL" || moduleName === "EDITRENEWAL" ) && buttonLabel==="APPLY") || (((moduleName === "NewWS1" || moduleName === "ModifyWSConnection" || moduleName === "ModifySWConnection" || moduleName === "NewSW1")) && buttonLabel==="SUBMIT_APPLICATION") ? onDialogButtonClick(buttonLabel, isDocRequired) : 
             this.openActionDialog(item);
           }
         };
@@ -350,6 +351,7 @@ class Footer extends React.Component {
           onButtonClick={onDialogButtonClick}
           dataPath={dataPath}
           state={state}
+          moduleName={moduleName}
         />
       </div>
     );

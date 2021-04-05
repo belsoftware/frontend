@@ -42,7 +42,7 @@ const getMyLeaseApplications = async (action, state, dispatch) => {
 const header = getCommonHeader(
   {
     labelName: "My Applications",
-    labelKey: "LAMS_MY_APPLICATIONS_HEADER"
+    labelKey: "LAMS_CITIZEN_MY_APPLICATIONS"
   },
   {
     classes: {
@@ -63,8 +63,7 @@ const myApplications = {
       //toberemoved
       if(!response || (response && !response.leases))
       {
-        alert("No data recieved. Showing sample data. ");
-        dispatch(prepareFinalObject("searchResults",sampleSearchResponse.leases));
+        alert("Looks like there was some error! Please try again later.");
       }
     });
     return action;
@@ -83,17 +82,7 @@ const myApplications = {
       children: {
         details: getCommonCard(
           {
-            header: getCommonTitle(
-                {
-                  labelName: "My Applications",
-                  labelKey: "LAMS_CITIZEN_MY_APPLICATIONS"
-                },
-                {
-                  style: {
-                    marginBottom: 18
-                  }
-                }
-              ),
+            header: header,
               div: {
                 uiFramework: "custom-atoms",
                 componentPath: "Div",

@@ -14,7 +14,7 @@ import set from "lodash/set";
 import React from "react";
 import { routeTo } from "./PTCommon/FormWizardUtils/formActionUtils";
 import { getPropertyInfoScreenUrl } from "./PTCommon/FormWizardUtils/formUtils";
-
+import { FETCHBILL, PAYMENTSEARCH } from "./endPoints";
 export const statusToMessageMapping = {
   rejected: "Rejected",
   closed: "Closed",
@@ -1042,6 +1042,7 @@ export const getModuleName = () => {
   else if (pathName.indexOf("wns") > -1) { return "rainmaker-ws,rainmaker-pdf"; }
   else if (pathName.indexOf("tradelicense") > -1 || pathName.indexOf("rainmaker-tl") > -1 || pathName.indexOf("tradelicence") > -1 || pathName.indexOf("tradelicense-citizen") > -1) { return "rainmaker-tl"; }
   else if (pathName.indexOf("lams") > -1) { return "rainmaker-lams"; }
+  else if (pathName.indexOf("birth") > -1  ||  pathName.indexOf("death") > -1 || pathName.indexOf("bnd") > -1) { return "rainmaker-bnd"; }
   else if (pathName.indexOf("hrms") > -1) { return "rainmaker-hr"; }
   else if (pathName.indexOf("fire-noc") > -1) { return "rainmaker-noc,rainmaker-pgr"; }
   else if (pathName.indexOf("dss/home") > -1) { return "rainmaker-dss"; }
@@ -1054,6 +1055,7 @@ export const getModuleName = () => {
   else if (pathName.indexOf("bpastakeholder") > -1 || pathName.indexOf("edcrscrutiny") > -1 ||
     pathName.indexOf("egov-bpa") > -1 || pathName.indexOf("oc-bpa") > -1) { return "rainmaker-bpa,rainmaker-bpareg"; }
   else if (pathName.indexOf("noc") > -1) { return "rainmaker-common-noc"; }
+  else if (pathName.indexOf("rainmaker-ws") > -1) { return "rainmaker-ws"; }
   else {
     return "rainmaker-common";
   }
@@ -1095,3 +1097,17 @@ export const getBusinessServiceMdmsData = async (dispatch, tenantId, businessSer
     console.log(e);
   }
 };
+
+
+export const getPaymentSearchAPI = (businessService='')=>{
+  if(businessService=='-1'){
+    return `${PAYMENTSEARCH.GET.URL}${PAYMENTSEARCH.GET.ACTION}`
+  }else if (process.env.REACT_APP_NAME === "Citizen") {
+    return `${PAYMENTSEARCH.GET.URL}${PAYMENTSEARCH.GET.ACTION}`;
+  }
+  return `${PAYMENTSEARCH.GET.URL}${businessService}/${PAYMENTSEARCH.GET.ACTION}`;
+}
+
+export const getFetchBillAPI = () => {
+  return `${FETCHBILL.GET.URL}`
+}

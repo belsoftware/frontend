@@ -6,18 +6,19 @@ import {
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
+import { getTenantId, getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 import store from "ui-redux/store";
 import { httpRequest } from "../../../../ui-utils";
 import "./index.css";
 // import { showHideAdhocPopup } from "../utils";
 import { resetFields, searchPropertyDetails } from "./mutation-methods";
 import { getQueryRedirectUrl, searchPropertyTable } from "./searchResource/searchResults";
+import get from "lodash/get";
 
 const hasButton = getQueryArg(window.location.href, "hasButton");
 let enableButton = true;
-enableButton = hasButton && hasButton === "false" ? false : true;
-const tenant = getTenantId();
+enableButton = (hasButton && hasButton === "false") ||  process.env.REACT_APP_NAME == "Citizen" ? false : true;
+const tenant = process.env.REACT_APP_NAME === "Employee" ? getTenantId() : JSON.parse(getUserInfo()).permanentCity;
 
 
 
@@ -33,6 +34,12 @@ const getMDMSData = async (dispatch) => {
               name: "tenants"
             }, { name: "citymodule" }
           ]
+        },
+        {
+          moduleName: "PropertyTax",
+          masterDetails: [
+            { name: "PTWorkflow" }
+          ]
         }
       ]
     }
@@ -46,18 +53,38 @@ const getMDMSData = async (dispatch) => {
       mdmsBody
     );
     dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
-    if (process.env.REACT_APP_NAME != "Citizen") {
+    payload.MdmsRes.tenant.tenants = payload.MdmsRes.tenant.citymodule[1].tenants;
+    dispatch(prepareFinalObject("applyScreenMdmsData.tenant", payload.MdmsRes.tenant));
+    //if (process.env.REACT_APP_NAME != "Citizen") {
       dispatch(
         prepareFinalObject(
           "searchScreen.tenantId",
           tenant
         )
       );
-    }
+    //}
+
+    let ptWorkflowDetails = get(payload, "MdmsRes.PropertyTax.PTWorkflow", []);
+    ptWorkflowDetails.forEach(data => {
+      if(data.enable) {
+        dispatch(prepareFinalObject("applyScreenMdmsData.isCheckFromWNS", false));
+        if((data.businessService).includes("WNS")){
+          dispatch(prepareFinalObject("applyScreenMdmsData.isCheckFromWNS", true));
+        }
+      }
+    })
   } catch (e) {
     console.log(e);
   }
 };
+const ifUserRoleExists = () => {
+  let userInfo = JSON.parse(getUserInfo());
+  const roles = get(userInfo, "roles");
+  const roleCodes = roles ? roles.map(role => role.code) : [];
+  if (roleCodes.indexOf("WS_CEMP") > -1 || roleCodes.indexOf("SW_CEMP") > -1) {
+    return true;
+  } else return false;
+}; 
 
 const header = getCommonHeader({
   labelName: "Property Registry",
@@ -101,7 +128,7 @@ const screenConfig = {
                 sm: 6,
                 align: "right"
               },
-              visible: enableButton,
+              visible: ifUserRoleExists(),
               props: {
                 variant: "contained",
                 color: "primary",
