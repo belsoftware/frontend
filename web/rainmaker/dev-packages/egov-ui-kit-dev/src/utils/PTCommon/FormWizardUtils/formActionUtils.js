@@ -91,7 +91,7 @@ export const createProperty = async (Properties, action, props, isModify, prepar
     const { search } = location;
     const isEditInWorkflow = getQueryValue(search, "mode") == 'WORKFLOWEDIT';
     let isDocumentValid = true;
-    Object.keys(documentsUploadRedux).map((key) => {
+    documentsUploadRedux && Object.keys(documentsUploadRedux).map((key) => {
         if(documentsUploadRedux[key].documents && documentsUploadRedux[key].documents.length > 0 && !(documentsUploadRedux[key].dropdown && documentsUploadRedux[key].dropdown.value)){
             isDocumentValid = false;
         }

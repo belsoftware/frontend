@@ -313,7 +313,8 @@ class Property extends Component {
       receiptsByYr,
       totalBillAmountDue,
       documentsUploaded,
-      loading
+      loading,
+      Payments = []
     } = this.props;
     const { closeYearRangeDialogue } = this;
     const { dialogueOpen, urlToAppend, showAssessmentHistory } = this.state;
@@ -346,7 +347,9 @@ class Property extends Component {
       style={{ lineHeight: "auto", minWidth: "inherit" }}
     />
     } */
-
+    let payLen = Payments && Payments.find(item =>{
+      return item && item.instrumentStatus === "APPROVED"
+    });
     return (
       <Screen className={clsName} loading={loading}>
         <PTHeader header="PT_PROPERTY_INFORMATION" subHeaderTitle="PT_PROPERTY_PTUID" subHeaderValue={propertyId} downloadPrintButton={true} download={() => this.download()} print={() => this.print()} />
@@ -676,7 +679,7 @@ const mapStateToProps = (state, ownProps) => {
   const { urls, localizationLabels } = app;
   const { cities } = common;
   const { generalMDMSDataById } = state.common || {};
-  let { propertiesById, singleAssessmentByStatus = [], loading, receiptsByYr, totalBillAmountDue = 0, Assessments = [] } = state.properties || {};
+  let { propertiesById, singleAssessmentByStatus = [], loading, receiptsByYr, totalBillAmountDue = 0, Assessments = [],Payments = [] } = state.properties || {};
   const tenantId = ownProps.match.params.tenantId;
   const propertyId = decodeURIComponent(ownProps.match.params.propertyId);
   const selPropertyDetails = propertiesById[propertyId] || {};
@@ -729,7 +732,8 @@ const mapStateToProps = (state, ownProps) => {
     documentsUploaded,
     Assessments,
     loading,
-    UlbLogoForPdf
+    UlbLogoForPdf,
+    Payments
   };
 };
 

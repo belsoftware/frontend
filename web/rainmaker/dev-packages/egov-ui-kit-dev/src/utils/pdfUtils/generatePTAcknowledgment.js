@@ -58,7 +58,19 @@ export const generatePTAcknowledgment = (property, generalMDMSDataById, UlbLogoF
     }
     const documentCard = !isLegacy ? getDocumentsCard(property.documentsUploaded):"N/A";
 
-    let pdfData = {
+    let legacyPdfData = {
+        header: "PT_ACKNOWLEDGEMENT", tenantId: property.tenantId,
+        applicationNoHeader: 'PT_PROPERTY_PTUID', applicationNoValue: property.propertyId,
+        additionalHeader: "PT_APPLICATION_NO_LABEL", additionalHeaderValue: property.acknowldgementNumber,
+        cards: [
+            { header: "PT_PROPERTY_ADDRESS_SUB_HEADER", items: addressCard },
+            { header: "PT_ASSESMENT_INFO_SUB_HEADER", items: assessmentCard },
+            { items: unitInfoCard, type: "multiItem", hide: unitInfoCard.length === 0 },
+            { header: 'PT_OWNERSHIP_INFO_SUB_HEADER', items: ownerCard, type: ownerInfo.length > 1 ? 'multiItem' : 'singleItem' },
+        ]
+    }
+
+    let assessmentPdfData = {
         header: "PT_ACKNOWLEDGEMENT", tenantId: property.tenantId,
         applicationNoHeader: 'PT_PROPERRTYID', applicationNoValue: property.propertyId,
         additionalHeader: "PT_APPLICATION_NO", additionalHeaderValue: property.acknowldgementNumber,
@@ -69,5 +81,8 @@ export const generatePTAcknowledgment = (property, generalMDMSDataById, UlbLogoF
             { header: 'PT_OWNERSHIP_INFO_SUB_HEADER', items: ownerCard, type: ownerInfo.length > 1 ? 'multiItem' : 'singleItem' },
             { header: 'PT_COMMON_DOCS', items: documentCard }]
     }
+
+    let pdfData ={} ;
+    pdfData = isLegacy ? legacyPdfData:assessmentPdfData;
     generatePDF(UlbLogoForPdf, pdfData, fileName);
 }
