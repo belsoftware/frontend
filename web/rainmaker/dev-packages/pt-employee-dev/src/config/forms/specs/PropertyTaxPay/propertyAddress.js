@@ -112,6 +112,13 @@ const formConfig = {
             "UsageCategorySubMinor"
           ])
         );
+        dispatch(fetchGeneralMDMSData(
+          null,
+          "BillingService",
+          ["TaxPeriod", "TaxHeadMaster"],
+          "",
+          field.value
+        ));
       }
     },
     ...dummy,

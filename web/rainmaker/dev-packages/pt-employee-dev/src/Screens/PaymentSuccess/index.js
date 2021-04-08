@@ -135,6 +135,13 @@ class PaymentSuccess extends Component {
       "PropertySubType",
       "UsageCategoryDetail"
     ]);
+    fetchGeneralMDMSData(
+      null,
+      "BillingService",
+      ["TaxPeriod", "TaxHeadMaster"],
+      "",
+      commonConfig.tenantId
+    );
     fetchProperties([
       { key: "propertyIds", value: match.params.propertyId },
       { key: "tenantId", value: match.params.tenantId }
