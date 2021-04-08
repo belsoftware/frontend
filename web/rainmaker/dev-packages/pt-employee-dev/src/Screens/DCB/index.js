@@ -1297,7 +1297,7 @@ class FormWizardDataEntry extends Component {
                         errorCode = "ERR04_DEMAND_ENTER_THE_DATA";
                       }
                     }
-                    if (data.demand[data1][data2].PT_TAXHEAD === "PT_TAX") {
+                    if (data.demand[data1][data2].PT_TAXHEAD === "PT_HOUSE_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_WATER_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_CONSERVANCY_TAX") {
                       hasPropertyTax = true;
                       propertyTaxAmount = data.demand[data1][data2].PT_DEMAND;
                       let collectedAmount = parseInt(data.demand[data1][data2].PT_COLLECTED);
