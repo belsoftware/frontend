@@ -9,7 +9,7 @@ const formConfig = {
       id: "assessment-usageType",
       jsonPath: "Properties[0].propertyDetails[0].units[0].usageCategoryMajor",
       type: "textfield",
-      floatingLabelText: "PT_FORM2_USAGE_TYPE",
+      floatingLabelText: "PT_COMMON_USAGE_TYPE",
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
       value: "Residential",
       required: true,

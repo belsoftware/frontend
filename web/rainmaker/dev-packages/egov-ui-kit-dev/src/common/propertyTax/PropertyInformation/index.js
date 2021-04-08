@@ -87,6 +87,13 @@ class Property extends Component {
       "PropertyType",
       "UsageCategory"
     ]);
+    fetchGeneralMDMSData(
+      null,
+      "BillingService",
+      ["TaxPeriod", "TaxHeadMaster"],
+      "",
+      commonConfig.tenantId
+    );
     const { pathname } = location;
     if (!(localStorageGet("path") === pathname)) {
       customTitle && addBreadCrumbs({ title: customTitle, path: window.location.pathname });

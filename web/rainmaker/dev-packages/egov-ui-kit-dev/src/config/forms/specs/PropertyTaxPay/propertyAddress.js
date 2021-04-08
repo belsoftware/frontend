@@ -96,7 +96,7 @@ const formConfig = {
       id: "pincode",
       type: "number",
       jsonPath: "Properties[0].address.pincode",
-      floatingLabelText: "PT_PROPERTY_DETAILS_PINCODE",
+      floatingLabelText: "PT_PROPERTY_ADDRESS_PINCODE",
       hintText: "PT_PROPERTY_DETAILS_PINCODE_PLACEHOLDER",
       numcols: 6,
       //errorMessage: "PT_PROPERTY_DETAILS_PINCODE_ERRORMSG",
