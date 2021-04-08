@@ -23,6 +23,7 @@ class DemandCollection extends React.Component {
     
     let dummyarray = [];
 
+/* 
     //changing index of yearly data
 
     for(let i=0; demands_data && i< demands_data.length;i++)
@@ -54,7 +55,9 @@ class DemandCollection extends React.Component {
           }
         }   
 
-        set(preparedFinalObject, `DemandProperties[0].propertyDetails[0].demand`, newarray);
+
+        set(preparedFinalObject, `DemandProperties[0].propertyDetails[0].demand`, newarray); */
+
 
     const getYear =
       finalData && finalData.length ? (

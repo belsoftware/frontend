@@ -131,6 +131,8 @@ class Property extends Component {
       });
     }
   };
+
+
   editDemand= () =>{
     const {  propertyId, tenantId } = this.props;
 
@@ -143,6 +145,7 @@ class Property extends Component {
     //   urlToAppend: `/property-tax/assessment-form?assessmentId=${assessmentNo}&isReassesment=true&isAssesment=true&propertyId=${propertyId}&tenantId=${tenantId}`,
     // }); 
   }
+
   onEditPropertyClick = () => {
     const { latestPropertyDetails, propertyId, tenantId, selPropertyDetails } = this.props;
     const assessmentNo = latestPropertyDetails && latestPropertyDetails.assessmentNumber;
@@ -152,13 +155,12 @@ class Property extends Component {
         { labelName: "Property in Workflow", labelKey: "ERROR_PROPERTY_IN_WORKFLOW" },
         "error"
       );
-    } else if(selPropertyDetails.source === "LEGACY_RECORD"){
+    }
+    else if(selPropertyDetails.source === "LEGACY_RECORD"){
 
       this.props.history.push(`/property-tax/assessment-form-dataentry?assessmentId=0&purpose=update&propertyId=${propertyId}&tenantId=${tenantId}`);
       }
-      
-    else
-    {
+    else {
       this.props.history.push(getPropertyLink(propertyId, tenantId, PROPERTY_FORM_PURPOSE.UPDATE, -1, assessmentNo));
       // this.setState({
       //   dialogueOpen: true,
@@ -333,20 +335,7 @@ class Property extends Component {
     {
       isMigratedProperty =true;
     }
-
     let isCitizen = process.env.REACT_APP_NAME === "Citizen";
-
- /*    let button;
-    if(process.env.REACT_APP_NAME !='Citizen' && propertyDetails && propertyDetails[0] && propertyDetails[0].source ==='LEGACY_RECORD' && Payments.length <= 0){
-    button =
-    <Button
-      onClick={() => this.editDemand()}
-      label={<Label buttonLabel={true} label="PT_EDIT_DEMAND" fontSize="16px" />}
-      primary={true}
-      style={{ lineHeight: "auto", minWidth: "inherit" }}
-    />
-    } */
-
     return (
       <Screen className={clsName} loading={loading}>
         <PTHeader header="PT_PROPERTY_INFORMATION" subHeaderTitle="PT_PROPERTY_PTUID" subHeaderValue={propertyId} downloadPrintButton={true} download={() => this.download()} print={() => this.print()} />
@@ -366,41 +355,60 @@ class Property extends Component {
           />
         }
         <div id="tax-wizard-buttons" className="wizard-footer col-sm-12" style={{ textAlign: "right" }}>
-        {!isMigratedProperty && 
+          {/* <div className="button-container col-xs-4 property-info-access-btn" style={{ float: "right" }}>
 
-         <Button
-              onClick={() => this.onAssessPayClick()}
-              label={<Label buttonLabel={true} label="PT_ASSESS_PROPERTY" fontSize="16px" />}
-              primary={true}
-              style={{ lineHeight: "auto", minWidth: "inherit", marginLeft:"10px" }}
-            />  
-        }        
-
-                      
-         {!isCitizen && Payments.length<=0 &&
-           <Button
+            <Button
               label={
                 <Label buttonLabel={true}
-                  label={formWizardConstants[PROPERTY_FORM_PURPOSE.UPDATE].parentButton} 
-                  fontSize="16px"
+                  label={formWizardConstants[PROPERTY_FORM_PURPOSE.UPDATE].parentButton} fontSize="16px"
                   color="#fe7a51" />
               }
               onClick={() => this.onEditPropertyClick()}
-              //labelStyle={{ letterSpacing: 0.7, padding: 0, color: "#fe7a51" }}
-             // buttonStyle={{ border: "1px solid #fe7a51" }}
-             style={{ lineHeight: "auto", minWidth: "inherit" }}
-             />   
-            }
-              {isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
-              || !payLen ) &&
-                
-              <Button
-              onClick={() => this.editDemand()}
-              label={<Label buttonLabel={true} label="PT_EDIT_DATAENTRY_DEMAND" fontSize="16px" />}
+              labelStyle={{ letterSpacing: 0.7, padding: 0, color: "#fe7a51" }}
+              buttonStyle={{ border: "1px solid #fe7a51" }}
+              style={{ lineHeight: "auto", minWidth: "45%", marginRight: "10%" }}
+            />
+            <Button
+              onClick={() => this.onAssessPayClick()}
+              label={<Label buttonLabel={true} label={formWizardConstants[PROPERTY_FORM_PURPOSE.ASSESS].parentButton} fontSize="16px" />}
               primary={true}
               style={{ lineHeight: "auto", minWidth: "45%" }}
             />
-          }
+          </div> */}
+          {!isMigratedProperty && 
+
+<Button
+     onClick={() => this.onAssessPayClick()}
+     label={<Label buttonLabel={true} label="PT_ASSESS_PROPERTY" fontSize="16px" />}
+     primary={true}
+     style={{ lineHeight: "auto", minWidth: "inherit", marginLeft:"10px" }}
+   />  
+}        
+
+             
+{!isCitizen &&
+  <Button
+     label={
+       <Label buttonLabel={true}
+         label={formWizardConstants[PROPERTY_FORM_PURPOSE.UPDATE].parentButton} 
+         fontSize="16px"
+         color="#fe7a51" />
+     }
+     onClick={() => this.onEditPropertyClick()}
+     //labelStyle={{ letterSpacing: 0.7, padding: 0, color: "#fe7a51" }}
+    // buttonStyle={{ border: "1px solid #fe7a51" }}
+    style={{ lineHeight: "auto", minWidth: "inherit" }}
+    />   
+   }
+     {isMigratedProperty && !isCitizen  &&
+       
+     <Button
+     onClick={() => this.editDemand()}
+     label={<Label buttonLabel={true} label="PT_EDIT_DATAENTRY_DEMAND" fontSize="16px" />}
+     primary={true}
+     style={{ lineHeight: "auto", minWidth: "inherit" }}
+   />
+ }
         </div>
         {dialogueOpen && <YearDialogue open={dialogueOpen} history={history} urlToAppend={urlToAppend} closeDialogue={closeYearRangeDialogue} />}
       </Screen>

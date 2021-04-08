@@ -50,13 +50,7 @@ export const generatePTAcknowledgment = (property, generalMDMSDataById, UlbLogoF
     const addressCard = getAddressItems(property);
     const ownerCard = getMultipleItemCard(ownerInfo, 'PT_OWNER');
     const assessmentCard = getAssessmentInfo(get(property, 'propertyDetails[0]', {}), generalMDMSDataById,property);
-    let isLegacy =false;
-
-    if(property && property.source==='LEGACY_RECORD')
-    {
-            isLegacy=true
-    }
-    const documentCard = !isLegacy ? getDocumentsCard(property.documentsUploaded):"N/A";
+    const documentCard = getDocumentsCard(property.documentsUploaded);
 
     let pdfData = {
         header: "PT_ACKNOWLEDGEMENT", tenantId: property.tenantId,

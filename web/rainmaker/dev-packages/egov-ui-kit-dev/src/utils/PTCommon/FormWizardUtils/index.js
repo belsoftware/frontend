@@ -428,7 +428,7 @@ export const getHeaderLabel = (selected, role) => {
           containerStyle={{ marginTop: 12 }}
           fontSize="16px"
           color="#484848"
-          label={role === "citizen" ? "PT_FORM1_HEADER_MESSAGE" : "PT_PROPERTY_DETAILS_FORM_HEADING"}
+          label={role === "citizen" ? "PT_FORM1_HEADER_MESSAGE" : "PT_EMP_FORM1_HEADER_MESSAGE"}
         />
       );
     case 1:
@@ -437,7 +437,7 @@ export const getHeaderLabel = (selected, role) => {
           containerStyle={{ marginTop: 12 }}
           fontSize="16px"
           color="#484848"
-          label={role === "citizen" ? "PT_FORM2_HEADER_MESSAGE" : "PT_ASSESMENT_INFO_SUB_HEADER"}
+          label={role === "citizen" ? "PT_FORM2_HEADER_MESSAGE" : "PT_EMP_FORM2_HEADER_MESSAGE"}
         />
       );
     case 2:
@@ -446,7 +446,7 @@ export const getHeaderLabel = (selected, role) => {
           containerStyle={{ marginTop: 12 }}
           fontSize="16px"
           color="#484848"
-          label={role === "citizen" ? "PT_FORM3_HEADER_MESSAGE" : "PT_OWNERSHIP_INFO_SUB_HEADER"}
+          label={role === "citizen" ? "PT_FORM3_HEADER_MESSAGE" : "PT_EMP_FORM3_HEADER_MESSAGE"}
         />
       );
     case 3:

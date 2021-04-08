@@ -100,12 +100,6 @@ class PTInformation extends React.Component {
       properties.propertyDetails[0].institution = updatedOnwerInfo.institution;
       properties.propertyDetails[0].ownershipCategory = updatedOnwerInfo.ownershipCategory;
     }
-    let isLegary ;
-
-     if (properties && properties.source==='LEGACY_RECORD')
-     {
-      isLegary =true;
-     }
     return (
       <div className="form-without-button-cont-generic">
         {label && (
@@ -156,9 +150,8 @@ class PTInformation extends React.Component {
                   viewHistory={true}
                   propertiesAudit={propertiesAudit}
                 ></OwnerInfo>
-                        {!isLegary &&
-            <DocumentsInfo documentsUploaded={documentsUploaded}></DocumentsInfo> }
-           <div id="property-assess-form">
+                <DocumentsInfo documentsUploaded={documentsUploaded}></DocumentsInfo>
+                <div id="property-assess-form">
                   <AssessmentHistory></AssessmentHistory>
                   <PaymentHistory></PaymentHistory>
                   <ApplicationHistory></ApplicationHistory>

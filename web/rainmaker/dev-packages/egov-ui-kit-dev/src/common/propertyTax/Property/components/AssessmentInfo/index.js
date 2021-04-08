@@ -124,13 +124,13 @@ export const getUnitInfo = (units = [], propertyDetails, oldPropertydetails) => 
         oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && getOccupancyInfo(oldPropertydetails.units[index]) || "NA",
       }, {
 
-        key: getTranslatedLabel("PT_ASSESMENT_INFO_BUILT_UP_AREA", localizationLabelsData),
+        key: getTranslatedLabel("PT_FORM2_BUILT_AREA", localizationLabelsData),
         value: unit.unitArea ? unit.unitArea + '' : "NA",
         oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && (`${Math.round(oldPropertydetails.units[index].unitArea * 9 * 100) / 100}`) || "NA",
       }];
       if (unit.occupancyType === "RENTED") {
         floor.push({
-          key: getTranslatedLabel("PT_ASSESMENT_INFO_AREA_RENT", localizationLabelsData),
+          key: getTranslatedLabel("PT_FORM2_TOTAL_ANNUAL_RENT", localizationLabelsData),
           value: unit.arv ? unit.arv + '' : "NA",
           oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && (oldPropertydetails.units[index].arv + '') || "NA",
         })

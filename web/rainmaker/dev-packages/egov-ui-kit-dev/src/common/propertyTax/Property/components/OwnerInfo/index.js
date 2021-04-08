@@ -254,7 +254,7 @@ class OwnerInfo extends Component {
         }
       } else {
         owner = {
-          "PT_COMMON_TABLE_COL_OWNER_NAME": item.name || "NA",
+          "PT_OWNER_NAME": item.name || "NA",
           "PT_GUARDIANS_NAME": item.fatherOrHusbandName || "NA",
           "PT_GENDER": item.gender || "NA",
           // "PT_OWNERSHIP_INFO_DOB": convertEpochToDate(item.dob) || "NA",
@@ -391,12 +391,12 @@ class OwnerInfo extends Component {
                   </div>
                   {{ editIcon } && <span style={{ alignItems: "right" }}>{editIcon}</span>}
                   {/* Transfer ownership button and View History button */}
-                  {/* {(viewHistory || ownershipTransfer) && (
+                  {(viewHistory || ownershipTransfer) && (
                     <div id="pt-header-button-container" className="header-button-container">
                       <ViewHistory viewHistory={viewHistory} openDialog={this.openDialog} />
                       <TransferOwnership ownershipTransfer={ownershipTransfer} openDialog={this.openDialog} />
                     </div>
-                  )} */}
+                  )}
                   {/* ------------------------- */}
                 </div>
                 <div>
