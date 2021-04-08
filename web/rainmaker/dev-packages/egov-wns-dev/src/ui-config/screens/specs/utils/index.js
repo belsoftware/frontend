@@ -1666,11 +1666,13 @@ const setVisible = (key, status, action) => {
     `screenConfig.components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.${key}.visible`,
     status
   );
+
+  
 }
 export const triggerModificationsDisplay = (action, isModeEnable) => { 
   console.info("triggerModificationsDisplay=action=",action,"isModeEnable=",isModeEnable) ;
     //setVisible('modificationsEffectiveFrom', isModeEnable, action);
-    setVisible('activationDetailsContainer',isModeEnable, action);
+    //setVisible('activationDetailsContainer',isModeEnable, action);
     setVisible('plumberDetailsContainer',  !isModeEnable, action);
     setVisible('wsConnectionTaxHeadsContainer',!isModeEnable, action);
 }
