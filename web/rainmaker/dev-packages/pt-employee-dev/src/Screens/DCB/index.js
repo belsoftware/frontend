@@ -1074,7 +1074,7 @@ class FormWizardDataEntry extends Component {
     let buttonLabel = "";
    
     if (index == 0) {
-      buttonLabel = "PT_COMMONS_NEXT"
+      buttonLabel = "PT_COMMON_BUTTON_NEXT"
     }
     else if (index == 1) {
       edit ? buttonLabel = "PT_UPDATE_DEMAND": buttonLabel = "PT_CREATE_DEMAND"

@@ -12,7 +12,7 @@ const formConfig = {
       id: "ownerName",
       jsonPath: "Properties[0].propertyDetails[0].owners[0].name",
       type: "textfield",
-      floatingLabelText: "PT_COMMON_TABLE_COL_OWNER_NAMEE",
+      floatingLabelText: "PT_COMMON_TABLE_COL_OWNER_NAME",
       hintText: "PT_SEARCH_OWNER_NAME_PLACEHOLDER",
       required: true,
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
