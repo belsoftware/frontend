@@ -401,7 +401,7 @@ class Property extends Component {
               onClick={() => this.editDemand()}
               label={<Label buttonLabel={true} label="PT_EDIT_DATAENTRY_DEMAND" fontSize="16px" />}
               primary={true}
-              style={{ lineHeight: "auto", minWidth: "inherit" }}
+              style={{ lineHeight: "auto", minWidth: "inherit" , marginLeft:"10px"}}
             />
           }
         </div>
