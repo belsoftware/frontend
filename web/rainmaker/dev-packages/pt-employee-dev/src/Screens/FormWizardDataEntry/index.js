@@ -327,7 +327,8 @@ class FormWizardDataEntry extends Component {
       renderCustomTitleForPt,
       showSpinner,
       hideSpinner,
-      fetchGeneralMDMSData, history
+      fetchGeneralMDMSData, history,
+      prepareFinalObject
     } = this.props;
     let { search } = location;
     showSpinner();
@@ -897,7 +898,7 @@ class FormWizardDataEntry extends Component {
               ownershipType,
               "fields.typeOfOwnership.value"
             );
-            if (ownershipTypeSelected === "INDIVIDUAL.SINGLEOWNER") {
+            if (ownershipTypeSelected === "SINGLEOWNER") {
               const { ownerInfo } = form;
               const isOwnerInfoFormValid = validateForm(ownerInfo);
               if (isOwnerInfoFormValid) {
@@ -913,7 +914,7 @@ class FormWizardDataEntry extends Component {
               } else {
                 displayFormErrorsAction("ownerInfo");
               }
-            } else if (ownershipTypeSelected === "INDIVIDUAL.MULTIPLEOWNERS") {
+            } else if (ownershipTypeSelected === "MULTIPLEOWNERS") {
               let ownerValidation = true;
               for (const variable in form) {
                 if (variable.search("ownerInfo_") !== -1) {
@@ -1350,7 +1351,7 @@ class FormWizardDataEntry extends Component {
         const financeYear = { financialYear: financialYearFromQuery };
         const assessmentPayload = createAssessmentPayload(prepareFormData.Properties[0], financeYear);
         let estimateResponse = await httpRequest(
-          "pt-calculator-v2/propertytax/_estimate",
+          "pt-calculator-v2/propertytax/v2/_estimate",
           "_estimate",
           [],
           {
@@ -1390,7 +1391,8 @@ class FormWizardDataEntry extends Component {
   createAndUpdate = async (index, action) => {
     const {
       selected,
-      formValidIndexArray
+      formValidIndexArray,
+      prepareFinalObject
     } = this.state;
     const financialYearFromQuery = getFinancialYearFromQuery();
     let { form, common, location, hideSpinner } = this.props;
@@ -1399,7 +1401,7 @@ class FormWizardDataEntry extends Component {
     const assessmentId = getQueryValue(search, "assessmentId");
     const propertyMethodAction = !!propertyId ? "_update" : "_create";
     let prepareFormData = { ...this.props.prepareFormData };
-
+    const isModify = getQueryValue(search, "mode") == 'WORKFLOWEDIT';
     if (
       get(
         prepareFormData,
@@ -1429,7 +1431,7 @@ class FormWizardDataEntry extends Component {
         assessmentId
       );
     }
-    if (selectedownerShipCategoryType === "INDIVIDUAL.SINGLEOWNER") {
+    if (selectedownerShipCategoryType === "SINGLEOWNER") {
       set(
         prepareFormData,
         "Properties[0].propertyDetails[0].owners",
@@ -1456,7 +1458,7 @@ class FormWizardDataEntry extends Component {
       );
     }
 
-    if (selectedownerShipCategoryType === "INDIVIDUAL.MULTIPLEOWNERS") {
+    if (selectedownerShipCategoryType === "MULTIPLEOWNERS") {
       set(
         prepareFormData,
         "Properties[0].propertyDetails[0].owners",
@@ -1537,11 +1539,7 @@ class FormWizardDataEntry extends Component {
       this
     );
     // Create/Update property call, action will be either create or update
-    //this.createProperty(properties, propertySubmitAction);
-    showSpinner();
-
     propertySubmitAction(properties, action, this.props);
-
   };
 
   getAssessmentDetails = async () => {
@@ -1812,7 +1810,7 @@ class FormWizardDataEntry extends Component {
         assessmentId
       );
     }
-    if (selectedownerShipCategoryType === "INDIVIDUAL.SINGLEOWNER") {
+    if (selectedownerShipCategoryType === "SINGLEOWNER") {
       set(
         prepareFormData,
         "Properties[0].propertyDetails[0].owners",
@@ -1834,7 +1832,7 @@ class FormWizardDataEntry extends Component {
       );
     }
 
-    if (selectedownerShipCategoryType === "INDIVIDUAL.MULTIPLEOWNERS") {
+    if (selectedownerShipCategoryType === "MULTIPLEOWNERS") {
       set(
         prepareFormData,
         "Properties[0].propertyDetails[0].owners",
