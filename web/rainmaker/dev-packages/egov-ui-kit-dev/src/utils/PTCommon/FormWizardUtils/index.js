@@ -496,7 +496,7 @@ export const normalizePropertyDetails = (properties, self) => {
   }
   var sumOfUnitArea = 0;
   units.forEach((unit) => {
-    let unitAreaInSqYd = parseFloat(unit.unitArea) / 9;
+    let unitAreaInSqYd = parseFloat(unit.unitArea);
     unit.unitArea = Math.round(unitAreaInSqYd * 100) / 100;
     sumOfUnitArea += unit.unitArea;
   });

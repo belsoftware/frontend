@@ -101,8 +101,12 @@ export const createProperty = async (Properties, action, props, isModify, prepar
         return;
     }
     const propertyPayload = createPropertyPayload(Properties, documentsUploadRedux);
+    let  isLegacy = get(propertyPayload, "source",'');
     const propertyMethodAction = action;
     const currentAction = isEditInWorkflow ? 'CORRECTIONPENDING' : null;
+   
+    if(isLegacy !== "LEGACY_RECORD")
+    {
     if (action === "_update") {
         const workflow = {
             "businessService": "PT.CREATE",
@@ -114,6 +118,7 @@ export const createProperty = async (Properties, action, props, isModify, prepar
         } else {
             propertyPayload.workflow = workflow
         }
+    }
     }
     try {
         if(!isEditInWorkflow){
