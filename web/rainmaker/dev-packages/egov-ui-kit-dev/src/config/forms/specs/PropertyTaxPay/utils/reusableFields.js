@@ -222,7 +222,7 @@ export const floorName = {
     type: "AutocompleteDropdown",
     floatingLabelText: "PT_COMMON_NO_OF_FLOORS",
     localePrefix: { moduleName: "PropertyTax", masterName: "Floor" },
-    hintText: "PT_COMMON_NO_OF_FLOORS",
+    hintText: "PT_FLOOR_NO",
     numcols: 4,
     gridDefination: {
       xs: 12,

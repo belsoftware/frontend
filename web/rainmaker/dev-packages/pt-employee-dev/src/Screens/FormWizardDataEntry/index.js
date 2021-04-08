@@ -624,7 +624,7 @@ class FormWizardDataEntry extends Component {
     let isReassesment = Boolean(getQueryValue(search, "isReassesment").replace('false', ''));
     let isAssesment = Boolean(getQueryValue(search, "isAssesment").replace('false', ''));
 
-    let buttonLabel = "PT_COMMONS_NEXT";
+    let buttonLabel = "PT_COMMON_BUTTON_NEXT";
     if (index == 3) {
       propertyId ? buttonLabel = 'PT_UPDATE_PROPERTY' :  buttonLabel = "PT_ADD_ASSESS_PROPERTY" ;
     } else if (index == 5) {
