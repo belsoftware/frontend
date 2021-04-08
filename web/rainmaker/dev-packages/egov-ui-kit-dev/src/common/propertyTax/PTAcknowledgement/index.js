@@ -538,7 +538,7 @@ class PTAcknowledgement extends React.Component {
                         />
                       )}
                       {/* //&& properties.source != "MUNICIPAL_RECORDS" */}
-                     {properties  && Button3 && Button3.visibility && (
+                      {properties && properties.source != "MUNICIPAL_RECORDS" && Button3 && Button3.visibility && (
                         <Button
                           onClick={Button3.buttonClick}
                           label={<Label buttonLabel={true} label={Button3.name} fontSize="16px" />}
