@@ -74,7 +74,8 @@ const OwnerInformation = ({
             )}
           </div>
           <div className={`${formKey} col-sm-12`}>
-            <div className="col-sm-6">
+            <div className="row" style={{margin: "13px"}}>
+            <div className="col-sm-6" style={{paddingLeft: "4px"}} >
               <Field fieldKey="ownerName" field={fields["ownerName"]} handleFieldChange={handleFieldChange} disabled={disabled} />
             </div>
             <div className="col-sm-6">
@@ -96,9 +97,17 @@ const OwnerInformation = ({
                 radioButtonItemStyle={styles.childrenStyle}
               />
             </div>
+            </div>
+         
+            <div style={{width: "100%"}}></div>
             <div className="col-sm-6">
               <Field fieldKey="ownerMobile" field={fields["ownerMobile"]} handleFieldChange={handleFieldChange} disabled={disabled} />
             </div>
+            
+            <div className="col-sm-6" style={{ paddingBottom: "4px", paddingTop: "2px"}}>
+              <Field fieldKey="ownerEmail" field={fields["ownerEmail"]} handleFieldChange={handleFieldChange} disabled={disabled} />
+            </div>
+          
             <div style={{ padding: 0 }} className="col-sm-6">
               <div className="col-sm-6">
                 <Field fieldKey="ownerGuardian" field={fields["ownerGuardian"]} handleFieldChange={handleFieldChange} disabled={disabled} />
@@ -116,7 +125,7 @@ const OwnerInformation = ({
                 className="ownerCategory"
               />
             </div>
-            <div className="col-sm-6" style={{ paddingBottom: "4px", display: "flex", alignItems: "center" }}>
+            <div className="col-sm-6" style={{ display: "flex", alignItems: "center" }}>
               <Field
                 fieldKey="ownerCategoryIdType"
                 field={fields["ownerCategoryIdType"]}
@@ -134,10 +143,8 @@ const OwnerInformation = ({
                 <ToolTipUi id={"form-wizard-tooltip"} title={fields["ownerCategoryId"].toolTipMessage} />
               )}
             </div>
-            <div className="col-sm-6" style={{ paddingBottom: "4px", paddingTop: "2px" }}>
-              <Field fieldKey="ownerEmail" field={fields["ownerEmail"]} handleFieldChange={handleFieldChange} disabled={disabled} />
-            </div>
-            <div className="col-sm-6" style={{ paddingBottom: "8px" }}>
+           
+            <div className="col-sm-6" style={{ paddingBottom: "8px",marginLeft: "1px" }}>
               <Field fieldKey="ownerAddress" field={fields["ownerAddress"]} handleFieldChange={handleFieldChange} disabled={disabled} />
             </div>
             {!checkBox && (
