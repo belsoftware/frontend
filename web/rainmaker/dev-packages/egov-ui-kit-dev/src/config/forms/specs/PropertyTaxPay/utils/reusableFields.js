@@ -22,7 +22,7 @@ export const plotSize = {
     id: "assessment-plot-size",
     jsonPath: "Properties[0].propertyDetails[0].buildUpArea",
     type: "number",
-    floatingLabelText: "PT_FORM2_PLOT_SIZE",
+    floatingLabelText: "PT_ASSESMENT_INFO_PLOT_SIZE",
     hintText: "PT_FORM2_PLOT_SIZE_PLACEHOLDER",
     errorMessage: "PT_PLOT_SIZE_ERROR_MESSAGE",
     required: true,
