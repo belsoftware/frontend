@@ -29,9 +29,11 @@ const configs = {
                     {'pgr':{'services_name':'PGR','filterKey':'PGR'}},
                     {'lease':{'services_name':'Lease','filterKey':'LAMS'}},
                     {'ws':{'services_name':'Water','filterKey':'WS'}},
-                    {'sw':{'services_name':'Sewerage','filterKey':'SW'}}
+                    {'sw':{'services_name':'Sewerage','filterKey':'SW'}},
+                    {'Birth':{'services_name':'Birth','filterKey':'BIRTH'}},
+                    {'Death':{'services_name':'Death','filterKey':'DEATH'}}
                     ],
-    'SERVICES': ["Trade licence", "M Collect", "PGR", "Lease","Water", "Sewerage"]
+    'SERVICES': ["Trade licence", "M Collect", "PGR", "Lease","Water", "Sewerage", "Birth", "Death"]
     //'SERVICES': ["Property Tax", "Trade licence","PGR", "M Collect"]
 }
 export default configs;
