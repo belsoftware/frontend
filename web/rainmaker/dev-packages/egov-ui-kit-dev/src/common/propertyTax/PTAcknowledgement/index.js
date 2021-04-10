@@ -114,6 +114,7 @@ class PTAcknowledgement extends React.Component {
       receiptNo = "",
       generalMDMSDataById,
       propertiesById,
+      totalBillAmountDue
     } = this.props;
     const purpose = getPurpose();
     const status = getQueryArg(window.location.href, "status");
@@ -415,7 +416,7 @@ class PTAcknowledgement extends React.Component {
     return (
       <div>
         <div className="mainContainer flex-container">
-          <PTHeader header={ptHeader && ptHeader.labelKey} subHeaderTitle="PT_PROPERTY_ID" subHeaderValue={propertyId} />
+          <PTHeader header={ptHeader && ptHeader.labelKey} subHeaderTitle="PT_PROPERTY_ID" subHeaderValue={propertyId} totalBillAmountDue={totalBillAmountDue}/>
           {/* <Label
           label={ptHeader&&ptHeader.labelKey}
           color="rgba(0, 0, 0, 0.87)"

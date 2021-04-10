@@ -5,14 +5,17 @@ import { getLocale } from "egov-ui-kit/utils/localStorageUtils";
 import Label from "egov-ui-kit/utils/translationNode";
 import React from "react";
 import { generatePdfFromDiv } from "../../../utils/PTCommon";
+import { downloadPTBill  } from "egov-common/ui-utils/commons";
+import { getQueryArg} from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import "./index.css";
 
-const PTHeader = ({ header = '', headerValue = '', subHeaderTitle = '', subHeaderValue = '', downloadPrintButton = false ,download,print}) => {
+const PTHeader = ({ header = '', headerValue = '', subHeaderTitle = '', subHeaderValue = '', downloadPrintButton = false ,download,print,totalBillAmountDue=0}) => {
   const locale = getLocale() || "en_IN";
   const localizationLabelsData = initLocalizationLabels(locale);
   let downloadButton;
   let printButton
-
+  let tenantId = getTenantId();
   if (downloadPrintButton) {
     let applicationDownloadObject = {
       label: { labelName: "Application", labelKey: "PT_APPLICATION" },
@@ -30,10 +33,43 @@ download?download():generatePdfFromDiv("download", subHeaderValue, "#property-re
       leftIcon: "book"
 
     };
+
+    let billDownloadObject = {
+      label: { labelName: "Bill", labelKey: "PT_BILL" },
+      link: () => {
+        const billQueryStr = [
+          { key: "consumerCode", value: subHeaderValue },
+          { key: "tenantId", value: tenantId }
+        ]
+        downloadPTBill(billQueryStr,"download"); 
+      },
+      leftIcon: "assignment"
+    };
+
+    let billPrintObject = {
+      label: { labelName: "Bill", labelKey: "PT_BILL" },
+      link: () => {
+        const billQueryStr = [
+          { key: "consumerCode", value: applicationNumber },
+          { key: "tenantId", value: tenantId },
+          {key: "businessService", value: "PT"}
+        ]
+        downloadPTBill(billQueryStr,"print");       },
+      leftIcon: "book"
+
+    };
     let downloadMenu = [];
     let printMenu = [];
     downloadMenu.push(applicationDownloadObject);
+    
+
+
     printMenu.push(tlCertificatePrintObject);
+   
+    if(totalBillAmountDue!=0){
+      downloadMenu.push(billDownloadObject);
+      printMenu.push(billPrintObject);
+    }
     downloadButton = { menu: downloadMenu, visibility: true };
     printButton = { menu: printMenu, visibility: true };
   }
