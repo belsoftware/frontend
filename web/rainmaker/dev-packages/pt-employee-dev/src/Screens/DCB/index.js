@@ -1329,7 +1329,7 @@ class FormWizardDataEntry extends Component {
                         data.demand[data1][data2].PT_TAXHEAD,
                         parseInt(data.demand[data1][data2].PT_DEMAND),
                         data.demand[data1]
-                      ) <= parseInt(data.demand[data1][data2].PT_COLLECTED)
+                      ) < parseInt(data.demand[data1][data2].PT_COLLECTED)
                     ) {
                       if(errorCode === "FINE")
                       {
