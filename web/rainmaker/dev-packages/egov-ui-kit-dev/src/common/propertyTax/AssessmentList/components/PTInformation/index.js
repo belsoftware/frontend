@@ -159,7 +159,7 @@ class PTInformation extends React.Component {
                         {!isLegary &&
             <DocumentsInfo documentsUploaded={documentsUploaded}></DocumentsInfo> }
            <div id="property-assess-form">
-                  {/* <AssessmentHistory></AssessmentHistory> */}
+                 <AssessmentHistory></AssessmentHistory> 
                   <PaymentHistory></PaymentHistory>
                   <ApplicationHistory></ApplicationHistory>
                 </div>

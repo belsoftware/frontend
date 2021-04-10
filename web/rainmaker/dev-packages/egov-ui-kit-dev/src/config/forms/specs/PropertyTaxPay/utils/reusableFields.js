@@ -166,7 +166,7 @@ export const superArea = {
     id: "assessment-super-area",
     jsonPath: "Properties[0].propertyDetails[0].buildUpArea",
     type: "number",
-    floatingLabelText: "PT_ASSESMENT_INFO_AREA_RENT",
+    floatingLabelText: "PT_ASSESMENT_INFO_BUILT_UP_AREA",
     hintText: "PT_FORM2_TOTAL_BUILT_AREA_PLACEHOLDER",
     ErrorText: "Enter a valid super area size",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
@@ -220,7 +220,7 @@ export const floorName = {
   floorName: {
     id: "floorName",
     type: "AutocompleteDropdown",
-    floatingLabelText: "PT_COMMON_NO_OF_FLOORS",
+    floatingLabelText: "PT_FLOOR_NO",
     localePrefix: { moduleName: "PropertyTax", masterName: "Floor" },
     hintText: "PT_FLOOR_NO",
     numcols: 4,

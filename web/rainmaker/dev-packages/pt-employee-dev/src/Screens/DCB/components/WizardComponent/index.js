@@ -82,7 +82,7 @@ const WizardComponent = ({
             style={{ marginRight: 45, width: "30%" }}
           />} 
            {selected ==2 && paybtnShow &&<Button
-            label={<Label buttonLabel={true} label={'PT_DEMAND_PAY'} color="#fe7a51" />}
+            label={<Label buttonLabel={true} label={'PT_TOTALDUES_PAY'} color="#fe7a51" />}
             onClick={() => {              
               history.push(`../../egov-common/pay?consumerCode=${propertyId}&tenantId=${tenantId}&businessService=PT`) 
               }}
