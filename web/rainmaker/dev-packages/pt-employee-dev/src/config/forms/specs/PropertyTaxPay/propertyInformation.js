@@ -16,7 +16,7 @@ const formConfig = {
       id: "mohalla",
       jsonPath: "Properties[0].address.locality.code",
       type: "textfield",
-      floatingLabelText: "PT_PROPERTY_DETAILS_MOHALLA",
+      floatingLabelText: "PT_PROPERTY_ADDRESS_MOHALLA",
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
       fullWidth: true,
       boundary: true,
