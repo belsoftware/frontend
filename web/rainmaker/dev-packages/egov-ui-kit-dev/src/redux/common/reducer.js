@@ -144,8 +144,8 @@ const commonReducer = (state = intialState, action) => {
       return {
         ...state,
         loading: false,
-        generalMDMSDataById: {...state.generalMDMSDataById,
-          ...generalMDMSDataById},
+        generalMDMSDataById: {...state.generalMDMSDataById,...getTransformedDropdown(generalMDMSDataById, ["PropertyType", "OwnerShipCategory", "UsageCategory"])
+      },
       };
 
     case commonTypes.GENERAL_MDMS_FETCH_ERROR:
