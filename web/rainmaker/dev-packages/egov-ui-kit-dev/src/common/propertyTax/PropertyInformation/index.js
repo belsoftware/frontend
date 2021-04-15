@@ -243,7 +243,7 @@ const getAssessmentInfo = (propertyDetails, keys, generalMDMSDataById) => {
       tableHeaderItems: [
         {
           key: "Plot Size:",
-          value: propertyDetails.uom ? `${propertyDetails.landArea} ${propertyDetails.uom}` : `${propertyDetails.landArea} sq yards`,
+          value: propertyDetails.uom ? `${propertyDetails.landArea} ${propertyDetails.uom}` : `${propertyDetails.landArea} sq ft`,
         },
         {
           key: "Type of Building:",

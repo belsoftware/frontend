@@ -715,6 +715,37 @@ export const downloadChallan = async (queryStr, mode = 'download') => {
 
 }
 
+
+
+
+export const downloadPTBill = async (queryStr, mode = 'download') => {
+
+  const DOWNLOADBILL = {
+    GET: {
+      URL: "/egov-pdf/download/PT/pt-bill",
+      ACTION: "_get",
+    },
+  };
+  try {
+    httpRequest("post", DOWNLOADBILL.GET.URL, DOWNLOADBILL.GET.ACTION, queryStr, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
+      .then(res => {
+        res.filestoreIds[0]
+        if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+          res.filestoreIds.map(fileStoreId => {
+            downloadReceiptFromFilestoreID(fileStoreId, mode)
+          })
+        } else {
+          console.log("Error In Acknowledgement form Download");
+        }
+      });
+  } catch (exception) {
+    alert('Some Error Occured while downloading Acknowledgement form!');
+  }
+
+}
+
+
+
 export const downloadMultipleFileFromFilestoreIds = (fileStoreIds = [], mode, tenantId) => {
   getFileUrlFromAPI(fileStoreIds.join(','), tenantId).then(async (fileRes) => {
     fileStoreIds.map(fileStoreId => {

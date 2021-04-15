@@ -13,7 +13,7 @@ const transform = (floor, key, generalMDMSDataById, propertyDetails) => {
   const { propertySubType, usageCategoryMajor } = propertyDetails;
   const { masterName, dataKey } = key;
   if (!masterName) {
-    return floor["occupancyType"] === "RENTED" ? `INR ${floor["arv"]}` : `${Math.round(floor[dataKey] * 100) / 100} sq yards`;
+    return floor["occupancyType"] === "RENTED" ? `INR ${floor["arv"]}` : `${Math.round(floor[dataKey] * 100) / 100} sq ft`;
   } else {
     if (floor[dataKey]) {
       if (dataKey === "usageCategoryDetail") {
@@ -51,7 +51,7 @@ export const getUsageTypeInfo = (propertyDetails) => {
 
 export const getPlotSizeInfo = (propertyDetails) => {
   return propertyDetails.propertySubType === "SHAREDPROPERTY"
-    ? "NA" : propertyDetails.uom ? `${propertyDetails.landArea} ${propertyDetails.uom}` : `${Math.round(propertyDetails.landArea * 100) / 100} sq yards`;
+    ? "NA" : propertyDetails.uom ? `${propertyDetails.landArea} ${propertyDetails.uom}` : `${Math.round(propertyDetails.landArea * 100) / 100} sq ft`;
 }
 
 export const getRainWaterHarvestingInfo = (properties) => {

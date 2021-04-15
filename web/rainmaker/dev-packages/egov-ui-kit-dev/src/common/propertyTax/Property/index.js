@@ -352,7 +352,7 @@ class Property extends Component {
     });
     return (
       <Screen className={clsName} loading={loading}>
-        <PTHeader header="PT_PROPERTY_INFORMATION" subHeaderTitle="PT_PROPERTY_PTUID" subHeaderValue={propertyId} downloadPrintButton={true} download={() => this.download()} print={() => this.print()} />
+        <PTHeader header="PT_PROPERTY_INFORMATION" subHeaderTitle="PT_PROPERTY_PTUID" subHeaderValue={propertyId} downloadPrintButton={true} download={() => this.download()} print={() => this.print()} totalBillAmountDue={totalBillAmountDue} />
         {
           <AssessmentList
             onItemClick={this.onListItemClick}
@@ -479,7 +479,7 @@ const transform = (floor, key, generalMDMSDataById, propertyDetails) => {
   const { propertySubType, usageCategoryMajor } = propertyDetails;
   const { masterName, dataKey } = key;
   if (!masterName) {
-    return floor["occupancyType"] === "RENTED" ? `INR ${floor["arv"]}` : `${Math.round(floor[dataKey] * 100) / 100} sq yards`;
+    return floor["occupancyType"] === "RENTED" ? `INR ${floor["arv"]}` : `${Math.round(floor[dataKey] * 100) / 100} sq ft`;
   } else {
     if (floor[dataKey]) {
       if (dataKey === "usageCategoryDetail") {
@@ -533,7 +533,7 @@ const getAssessmentInfo = (propertyDetails, keys, generalMDMSDataById) => {
                 ? "NA"
                 : propertyDetails.uom
                   ? `${propertyDetails.landArea} ${propertyDetails.uom}`
-                  : `${Math.round(propertyDetails.landArea * 100) / 100} sq yards`,
+                  : `${Math.round(propertyDetails.landArea * 100) / 100} sq ft`,
           },
           {
             key: getTranslatedLabel("PT_ASSESMENT_INFO_NO_OF_FLOOR", localizationLabelsData),
