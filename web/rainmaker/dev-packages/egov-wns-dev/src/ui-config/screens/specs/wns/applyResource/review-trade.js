@@ -350,6 +350,20 @@ export const propertyDetails={
       callBack: handleNA      
     }
   ),
+  reviewArv: getLabelWithValueForModifiedLabel(
+    {
+      labelName: "Arv",
+      labelKey: "WS_PROPERTY_ARV_LABEL"
+    },
+    { jsonPath: "WaterConnection[0].property.units[0].arv",
+    callBack: handleNA },{
+      labelKey: "WS_OLD_LABEL_NAME"
+    },
+    {
+      jsonPath: "WaterConnectionOld[0].property.units[0].arv",
+      callBack: handleNA      
+    }
+  ),
   // rainwaterHarvestingFacility: getLabelWithValueForModifiedLabel(
   //   {
   //     labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC",
