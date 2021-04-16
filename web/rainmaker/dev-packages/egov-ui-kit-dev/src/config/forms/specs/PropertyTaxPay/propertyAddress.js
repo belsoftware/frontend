@@ -55,8 +55,42 @@ const formConfig = {
       },
     },
     dummy: {
+      id: "dummy",
+      jsonPath: "Properties[0].address.location",
+      required: true,
+      type: "singleValueList",
+      floatingLabelText: "PT_COMMON_PROPERTY_LOCATION",
+      hintText: "PT_COMMON_PROPERTY_LOCATION_PLACEHOLDER",
+      localePrefix: true,
       numcols: 6,
-      type: "dummy",
+      fullWidth: true,
+      errorMessage: "PT_PROPERTY_DETAILS_DOOR_NUMBER_ERRORMSG",
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      maxLength: 64,
+      dataFetchConfig: {
+        url: CITY.GET.URL,
+        action: CITY.GET.ACTION,
+        queryParams: [],
+        requestBody: {
+          MdmsCriteria: {
+            tenantId: commonConfig.tenantId,
+            moduleDetails: [
+              {
+                moduleName: "PropertyTax",
+                masterDetails: [
+                  {
+                    name: "PropertyLocation",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        dataPath: ["MdmsRes.PropertyTax.PropertyLocation"],
+       
+      },
+      formName: "propertyAddress",
+      
     },
     houseNumber: {
       id: "house-number",

@@ -73,6 +73,9 @@ class Property extends Component {
               {
                 name: "UsageCategory",
               },
+              {
+                name: "PropertyLocation"
+              },
             ],
           },
         ],
@@ -85,7 +88,8 @@ class Property extends Component {
       "UsageCategorySubMinor",
       "OccupancyType",
       "PropertyType",
-      "UsageCategory"
+      "UsageCategory",
+      "PropertyLocation"
     ]);
     fetchGeneralMDMSData(
       null,

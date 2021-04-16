@@ -146,6 +146,9 @@ export const generalMDMSDataRequestObj = (tenantId) => {
             {
               name: "UsageCategory",
             },
+            {
+              name: "PropertyLocation"
+            }
           ],
         },
       ],
@@ -163,7 +166,8 @@ export const getGeneralMDMSDataDropdownName = () => {
     "PropertySubType",
     "PropertyType",
     "SubOwnerShipCategory",
-    "UsageCategory"
+    "UsageCategory",
+    "PropertyLocation"
   ];
   return keys;
 }

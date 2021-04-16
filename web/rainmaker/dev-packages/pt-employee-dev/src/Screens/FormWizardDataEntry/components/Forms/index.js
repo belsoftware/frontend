@@ -108,14 +108,14 @@ const OwnerInformation = ({
               <Field fieldKey="ownerEmail" field={fields["ownerEmail"]} handleFieldChange={handleFieldChange} disabled={disabled} />
             </div>
           
-            <div style={{ padding: 0 }} className="col-sm-6">
+            {/* <div style={{ padding: 0 }} className="col-sm-6"> */}
               <div className="col-sm-6">
                 <Field fieldKey="ownerGuardian" field={fields["ownerGuardian"]} handleFieldChange={handleFieldChange} disabled={disabled} />
               </div>
               <div className="col-sm-6 owner-relationship">
                 <Field fieldKey="ownerRelationship" field={fields["ownerRelationship"]} handleFieldChange={handleFieldChange} disabled={disabled} />
               </div>
-            </div>
+            {/* </div> */}
             <div className="col-sm-6">
               <Field
                 fieldKey="ownerCategory"
@@ -144,11 +144,11 @@ const OwnerInformation = ({
               )}
             </div>
            
-            <div className="col-sm-6" style={{ paddingBottom: "8px",marginLeft: "1px" }}>
+            <div className="col-sm-6" >
               <Field fieldKey="ownerAddress" field={fields["ownerAddress"]} handleFieldChange={handleFieldChange} disabled={disabled} />
             </div>
             {!checkBox && (
-              <div>
+              <div >
                 <Field
                   fieldKey="isSameAsPropertyAddress"
                   field={fields.isSameAsPropertyAddress}

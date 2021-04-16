@@ -712,7 +712,8 @@ class FormWizardDataEntry extends Component {
           "Interest",
           "FireCess",
           "RoadType",
-          "Thana"
+          "Thana",
+          "PropertyLocation",
         ],
         "",
         tenantId

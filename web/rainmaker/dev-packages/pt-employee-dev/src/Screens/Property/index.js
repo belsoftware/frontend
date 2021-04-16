@@ -87,6 +87,9 @@ class Property extends Component {
               },
               {
                 name: "SubOwnerShipCategory"
+              },
+              {
+                name: "PropertyLocation"
               }
             ]
           }
@@ -103,7 +106,8 @@ class Property extends Component {
       "PropertySubType",
       "OwnerType",
       "UsageCategoryDetail",
-      "SubOwnerShipCategory"
+      "SubOwnerShipCategory",
+      "PropertyLocation"
     ]);
     fetchGeneralMDMSData(
       null,

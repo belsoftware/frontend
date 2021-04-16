@@ -363,7 +363,8 @@ class FormWizardDataEntry extends Component {
           "Rebate",
           "Penalty",
           "Interest",
-          "FireCess"
+          "FireCess",
+          "PropertyLocation",
         ],
         "",
         tenantId
