@@ -10,6 +10,24 @@ import get from 'lodash/get';
 import set from "lodash/set";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 
+export const renderARVData = (usageType, propType, dispatch, state) => {
+
+    console.log("usage type",usageType);
+    //let noOfFloors;
+    let propertyType = get(
+            state.screenConfiguration.preparedFinalObject,
+            "Property.propertyType"
+          ); 
+    console.log("propertyType",propertyType);
+    const additionalDetailsJson = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.arv"; 
+    if (propertyType === "VACANT") {
+        set(state.screenConfiguration.preparedFinalObject,"Property.arvValue", "");
+        dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", true));
+       // dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
+    }else{
+        dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", false));
+    }
+}
 
 export const renderNoOfFloorData = (usageType, propType, dispatch, state) => {
 
@@ -177,6 +195,7 @@ export const propertyAssemblyDetails = getCommonCard({
           renderNoOfFloorData(usageType, action.value, dispatch, state)
           renderNoOfFlatsData(usageType, action.value, dispatch, state)
           renderAreaData(usageType, action.value, dispatch, state)
+          renderARVData(usageType, action.value, dispatch, state)
         // }
       }
     }),
@@ -299,6 +318,22 @@ export const propertyAssemblyDetails = getCommonCard({
               pattern: /^[1-9]\d{0,9}?%?$/,
               errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               jsonPath: "Property.noOfFlats"
-            })
+            }),
+        arv:getTextField({
+                  label: {
+                    labelName: "ARV",
+                    labelKey: "PT_COMMON_ARV"
+                  },
+                  props: {
+                  },
+                  placeholder: {
+                    labelName: "Enter Arv",
+                    labelKey: "PT_COMMON_ARV_PLACEHOLDER"
+                  },
+                  required: false,
+                  pattern: /^([1-9]\d{0,7})(\.\d+)?$/,
+                  errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+                  jsonPath: "Property.arvValue"
+                })
   })
 });

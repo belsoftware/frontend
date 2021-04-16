@@ -4,6 +4,7 @@ import {
   getCommonContainer, getCommonHeader,
   getTextField,
   getSelectField,
+  getLabel,
   getPattern,
   getCommonParagraph, getCommonTitle, getStepperObject
 } from "egov-ui-framework/ui-config/screens/specs/utils";
@@ -108,16 +109,94 @@ const summaryScreenEMP = getCommonCard({
 
 let summaryScreen = process.env.REACT_APP_NAME === "Citizen" ? summaryScreenCitizen : summaryScreenEMP;
 export const documentDetails = getCommonCard({
-  header: getCommonTitle(
-    { labelName: "Required Documents", labelKey: "WS_DOCUMENT_DETAILS_HEADER" },
-    { style: { marginBottom: 18 } }
-  ),
-  subText: getCommonParagraph({
-    labelName:
-      "Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload",
-    labelKey: "WS_DOCUMENT_DETAILS_SUBTEXT"
-  }),
-  break: getBreak(),
+  // header: getCommonTitle(
+  //   { labelName: "Required Documents", labelKey: "WS_DOCUMENT_DETAILS_HEADER" },
+  //   { style: { marginBottom: 18 } }
+  // ),
+  // subText: getCommonParagraph({
+  //   labelName:
+  //     "Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload",
+  //   labelKey: "WS_DOCUMENT_DETAILS_SUBTEXT"
+  // }),
+  // break: getBreak(),
+  div: {
+    uiFramework: "custom-atoms",
+    componentPath: "Div",
+    children: {
+      
+      headerDiv: {
+        uiFramework: "custom-atoms",
+        componentPath: "Container",
+        children: {
+        
+            header: getCommonTitle(
+            { labelName: "Required Documents", labelKey: "WS_DOCUMENT_DETAILS_HEADER" },
+            { style: { marginBottom: 18 } },
+            { gridDefination: {
+              xs: 8,
+              sm: 8
+            },
+            }
+            ),
+       
+          helpSection: {
+            uiFramework: "custom-atoms",
+            componentPath: "Container",
+            props: {
+              color: "primary",
+              style: { justifyContent: "flex-end" }, 
+            },
+            gridDefination: {
+              xs:10,
+              sm: 10,
+              align: "right"
+            },
+            children : {
+              helpPdfButton:{
+                componentPath:"Button", 
+               
+         
+                props:{
+                  //variant: "outlined",
+                  color:"primary",                 
+                  style: { textAlign: "right", display: "flex" },
+                },
+                onClickDefination: {
+                  action: "condition",
+                  callBack: (state, dispatch) => {
+                  downloadSelfDeclerationForm(state, dispatch);
+                  }
+                },
+                children:{
+                  
+                  nextButtonIcon:{
+                    uiFramework:"custom-atoms",
+                    componentPath:"Icon",
+                    props:{
+                      iconName:"cloud_download"
+                    }
+                  },
+                  nextButtonLabel:getLabel({
+                    labelName:"Self Declearation Form",
+                    labelKey:"WS_SELFDECLERATION_FORM"
+                  }),
+                },
+                            
+               }
+            }
+          }
+        }
+       },
+       
+      
+      
+       paragraph: getCommonParagraph({
+        labelName:
+          "Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload",
+        labelKey: "WS_DOCUMENT_DETAILS_SUBTEXT"
+      }),
+    }
+  },
   documentList: {
     uiFramework: "custom-containers-local",
     moduleName: "egov-wns",
@@ -138,12 +217,25 @@ export const documentDetails = getCommonCard({
 });
 
 
+export const downloadSelfDeclerationForm = async (state, dispatch) => {  
+  try{
+    const helpurl = get(state.screenConfiguration.preparedFinalObject,
+      "selfDecFormURL",
+      ""
+    );  
+    window.open(helpurl,"_blank");
+  }catch(er){
+    console.log("errror in opening pdf ",er);
+  }
+  
+}
+
 export const getMdmsData = async dispatch => {
   let mdmsBody = {
     MdmsCriteria: {
       tenantId: commonConfig.tenantId,
       moduleDetails: [
-        { moduleName: "common-masters", masterDetails: [{ name: "OwnerType" }, { name: "OwnerShipCategory" }] },
+        { moduleName: "common-masters", masterDetails: [{ name: "OwnerType" }, { name: "OwnerShipCategory" },{ name: "Help" }] },
         { moduleName: "tenant", masterDetails: [{ name: "tenants" }, { name: "citymodule" }] },
         { moduleName: "sw-services-calculation", masterDetails: [{ name: "Documents" }, { name: "RoadType" }, { name: "PipeSize" }] },
         { moduleName: "ws-services-calculation", masterDetails: [{ name: "PipeSize" }] },
@@ -237,6 +329,16 @@ export const getMdmsData = async dispatch => {
 
 
     dispatch(prepareFinalObject("applyScreenMdmsData", payload.MdmsRes));
+    
+      let selfDecFormURL = get(
+        payload,
+        "MdmsRes.common-masters.Help",
+        []
+        ).filter(item =>item.code ==="WS_SELFDECLERATION_FORM" );
+  console.info("Self delcaration....",selfDecFormURL[0].URL);
+  dispatch(prepareFinalObject("selfDecFormURL", selfDecFormURL[0].URL)); 
+  
+  
   } catch (e) { console.log(e); }
 };
 
@@ -795,7 +897,7 @@ const setRoadCuttingEstimate = (item, index, dispatch) => {
             subHeader: getCommonTitle({
               // labelKey: `${getTransformedLocale(item.code)}`
               labelKey: `WS_ROADTYPE_${(item.code)}`,
-            },
+             },
               {
                 style: {
                   fontSize: "15px",
