@@ -33,7 +33,7 @@ const configs = {
                     {'Birth':{'services_name':'Birth','filterKey':'BIRTH'}},
                     {'Death':{'services_name':'Death','filterKey':'DEATH'}}
                     ],
-    'SERVICES': ["Trade licence", "M Collect", "PGR", "Lease","Water", "Sewerage", "Birth", "Death"]
+    'SERVICES': ["Property Tax","Trade licence", "M Collect", "PGR", "Lease","Water", "Sewerage", "Birth", "Death"]
     //'SERVICES': ["Property Tax", "Trade licence","PGR", "M Collect"]
 }
 export default configs;
