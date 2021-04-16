@@ -38,7 +38,7 @@ download?download():generatePdfFromDiv("download", subHeaderValue, "#property-re
       label: { labelName: "Bill", labelKey: "PT_BILL" },
       link: () => {
         const billQueryStr = [
-          { key: "consumerCode", value: subHeaderValue },
+          { key: "propertyId", value: subHeaderValue },
           { key: "tenantId", value: tenantId }
         ]
         downloadPTBill(billQueryStr,"download"); 
@@ -50,7 +50,7 @@ download?download():generatePdfFromDiv("download", subHeaderValue, "#property-re
       label: { labelName: "Bill", labelKey: "PT_BILL" },
       link: () => {
         const billQueryStr = [
-          { key: "consumerCode", value: applicationNumber },
+          { key: "propertyId", value: subHeaderValue },
           { key: "tenantId", value: tenantId },
           {key: "businessService", value: "PT"}
         ]
