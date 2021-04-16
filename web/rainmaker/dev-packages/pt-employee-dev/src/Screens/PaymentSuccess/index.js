@@ -119,6 +119,9 @@ class PaymentSuccess extends Component {
               },
               {
                 name: "UsageCategoryDetail"
+              },
+              {
+                name: "PropertyLocation"
               }
             ]
           }
@@ -133,7 +136,8 @@ class PaymentSuccess extends Component {
       "OccupancyType",
       "PropertyType",
       "PropertySubType",
-      "UsageCategoryDetail"
+      "UsageCategoryDetail",
+      "PropertyLocation"
     ]);
     fetchGeneralMDMSData(
       null,

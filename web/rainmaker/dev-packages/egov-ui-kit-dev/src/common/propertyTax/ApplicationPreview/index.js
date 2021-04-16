@@ -104,6 +104,9 @@ class ApplicationPreview extends Component {
               {
                 name: "SubOwnerShipCategory",
               },
+            {
+              name: "PropertyLocation"
+            },
             ],
           },
         ],
@@ -120,6 +123,7 @@ class ApplicationPreview extends Component {
       "OwnerType",
       "UsageCategoryDetail",
       "SubOwnerShipCategory",
+      "PropertyLocation",
     ]);
     
     const queryObject = [

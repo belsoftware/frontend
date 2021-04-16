@@ -10,6 +10,8 @@ import isEmpty from "lodash/isEmpty";
 import filter from "lodash/filter";
 import { localStorageSet, localStorageGet } from "egov-ui-kit/utils/localStorageUtils";
 import { setFieldProperty } from "egov-ui-kit/redux/form/actions";
+import { CITY } from "egov-ui-kit/utils/endPoints";
+import commonConfig from "config/common.js";
 
 let floorDropDownData = [];
 
@@ -509,8 +511,40 @@ export const city = {
 
 export const dummy = {
   dummy: {
+    id: "dummy",
+    jsonPath: "Properties[0].address.location",
+    required: true,
+    type: "singleValueList",
+    floatingLabelText: "PT_COMMON_PROPERTY_LOCATION",
+    hintText: "PT_COMMON_PROPERTY_LOCATION_PLACEHOLDER",
+    localePrefix: true,//{ moduleName: "PropertyTax", masterName: "PropertyLocation" },
     numcols: 6,
-    type: "dummy",
+    fullWidth: true,
+    errorMessage: "PT_PROPERTY_DETAILS_DOOR_NUMBER_ERRORMSG",
+    errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+    maxLength: 64,
+    dataFetchConfig: {
+      url: CITY.GET.URL,
+      action: CITY.GET.ACTION,
+      queryParams: [],
+      requestBody: {
+        MdmsCriteria: {
+          tenantId: commonConfig.tenantId,
+          moduleDetails: [
+            {
+              moduleName: "PropertyTax",
+              masterDetails: [
+                {
+                  name: "PropertyLocation",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      dataPath: ["MdmsRes.PropertyTax.PropertyLocation"],
+    },
+    formName: "propertyAddress",
   },
 };
 

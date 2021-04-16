@@ -90,6 +90,9 @@ const formConfig = {
                   },
                   {
                     name: "UsageCategorySubMinor"
+                  },
+                  {
+                    name: "PropertyLocation"
                   }
                 ]
               }
@@ -109,7 +112,8 @@ const formConfig = {
             "UsageCategoryDetail",
             "UsageCategoryMajor",
             "UsageCategoryMinor",
-            "UsageCategorySubMinor"
+            "UsageCategorySubMinor",
+            "PropertyLocation"
           ])
         );
         dispatch(fetchGeneralMDMSData(
