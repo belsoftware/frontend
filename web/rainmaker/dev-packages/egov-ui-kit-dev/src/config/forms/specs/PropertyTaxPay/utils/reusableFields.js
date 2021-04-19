@@ -559,6 +559,7 @@ export const houseNumber = {
     errorMessage: "PT_PROPERTY_DETAILS_DOOR_NUMBER_ERRORMSG",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
     maxLength: 64,
+    pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,50}$/i,
   },
 };
 
@@ -587,6 +588,7 @@ export const street = {
     errorMessage: "PT_PROPERTY_DETAILS_STREET_ERRORMSG",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
     maxLength: 64,
+    pattern:/^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,64}$/i,
   },
 };
 
@@ -635,7 +637,7 @@ export const mohalla = {
 export const pincode = {
   pincode: {
     id: "pincode",
-    type: "number",
+    type: "textfield",
     jsonPath: "Properties[0].address.pincode",
     floatingLabelText: "PT_PROPERTY_ADDRESS_PINCODE",
     hintText: "PT_PROPERTY_DETAILS_PINCODE_PLACEHOLDER",
@@ -643,7 +645,7 @@ export const pincode = {
     //errorMessage: "PT_PROPERTY_DETAILS_PINCODE_ERRORMSG",
     errorMessage: "PT_PINCODE_ERROR_MESSAGE",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-    pattern: "^([0-9]){6}$",
+    pattern: /^[1-9][0-9]{5}$/i,
   },
 };
 
