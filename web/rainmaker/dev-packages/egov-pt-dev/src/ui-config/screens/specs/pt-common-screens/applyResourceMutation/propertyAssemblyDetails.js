@@ -39,10 +39,10 @@ export const renderNoOfFloorData = (usageType, propType, dispatch, state) => {
           ); 
     console.log("propertyType",propertyType);
     const additionalDetailsJson = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.noOfFloors"; 
-    if (propertyType === "BUILTUP.INDEPENDENTPROPERTY" || propertyType === "VACANT") {
+    if (propertyType === "VACANT") {
         set(state.screenConfiguration.preparedFinalObject,"Property.noOfFloors", "");
         dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", true));
-       // dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
+       //dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
     }else{
         dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", false));
     }
@@ -80,7 +80,7 @@ export const renderNoOfFlatsData = (usageType, propType, dispatch, state) => {
           ); 
     console.log("propertyType",propertyType);
     const additionalDetailsJson = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.noOfFlats"; 
-    if (propertyType === "BUILTUP.INDEPENDENTPROPERTY" || propertyType === "VACANT") {
+    if (propertyType === "VACANT") {
         set(state.screenConfiguration.preparedFinalObject,"Property.noOfFlats", "");
         dispatch(handleField('register-property', additionalDetailsJson, "props.disabled", true));
        // dispatch(handleField('register-property', additionalDetailsJson, "props.visible", false));
