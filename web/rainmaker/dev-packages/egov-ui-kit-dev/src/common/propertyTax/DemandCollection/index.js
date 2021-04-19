@@ -113,7 +113,7 @@ class DemandCollection extends React.Component {
                                       return value = "" ;
                                       }
                                   }
-                                  if(taxData.code === 'PT_HOUSE_TAX' || taxData.code === 'PT_WATER_TAX' ||taxData.code === 'PT_COSERVANCY_TAX'
+                                  if(taxData.code === 'PT_HOUSE_TAX' || taxData.code === 'PT_WATER_TAX' ||taxData.code === 'PT_CONSERVANCY_TAX'
                                   || taxData.code === 'PT_LIGHTINING_TAX' || taxData.code === 'PT_EDUCATION_TAX' )
                                   {
                                       if (Math.sign(e.target.value)===-1) 
