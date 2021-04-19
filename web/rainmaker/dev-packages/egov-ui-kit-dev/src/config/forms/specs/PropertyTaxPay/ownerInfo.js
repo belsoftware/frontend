@@ -15,7 +15,7 @@ const formConfig = {
       hintText: "PT_SEARCH_OWNER_NAME_PLACEHOLDER",
       required: true,
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
+      pattern: /[A-Z][a-zA-Z]{1,64}$/,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
     },
     ownerMobile: {
@@ -35,7 +35,7 @@ const formConfig = {
       type: "textfield",
       floatingLabelText: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME",
       hintText: "PT_COMMON_ENTER_FATHER_OR_HUSBAND_NAME",
-      pattern: /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
+      pattern: /[A-Z][a-zA-Z]{1,64}$/,
       required: true,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
