@@ -86,7 +86,7 @@ download?download():generatePdfFromDiv("download", subHeaderValue, "#property-re
           fontSize={"20px"}
         />
         {subHeaderValue.length !== 0 && <Label
-          bold={true}
+         // bold={true}
           //"PT_PROPERTY_PTUID"
           label={`${getTranslatedLabel(subHeaderTitle, localizationLabelsData)} ${subHeaderValue}`}
           containerStyle={{ marginLeft: "13px", display: "inline-block" }}
@@ -94,13 +94,12 @@ download?download():generatePdfFromDiv("download", subHeaderValue, "#property-re
             backgroundColor: "rgba(0, 0, 0, 0.6)",
             color: "rgba(255, 255, 255, 0.87)",
             marginLeft: "8px",
-            paddingLeft: "19px",
-            paddingRight: "19px",
+            padding: "8px 19px",
+            //paddingRight: "19px",
             textAlign: "center",
             verticalAlign: "middle",
-            lineHeight: "35px",
+            //lineHeight: "35px",
             fontSize: "16px",
-            whiteSpace: "nowrap"
           }}
           fontSize={"16px"}
         />}

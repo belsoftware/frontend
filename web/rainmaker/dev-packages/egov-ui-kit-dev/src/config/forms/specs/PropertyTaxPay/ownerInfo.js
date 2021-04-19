@@ -57,11 +57,12 @@ const formConfig = {
       floatingLabelText: "PT_OWNERSHIP_INFO_CORR_ADDR",
       hintText: "PT_COMMON_AUTHORISED_ADDRESS_PLACEHOLDER",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,256}$/,
+      pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,256}$/,
       errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
     },
     ownerRelationship: {
       id: "ownerRelationship",
+      required: true,
       jsonPath: "Properties[0].propertyDetails[0].owners[0].relationship",
       type: "AutocompleteDropdown",
       localePrefix: "PT_RELATION",
@@ -269,9 +270,9 @@ const formConfig = {
     try {
       const formKey = get(action, "form.name", "");
       const state = store.getState();
-      if (get(state, `form.${formKey}.fields.ownerRelationship.value`, "NONE") === "NONE") {
-        dispatch(handleFieldChange(formKey, "ownerRelationship", "FATHER"));
-      }
+      // if (get(state, `form.${formKey}.fields.ownerRelationship.value`, "NONE") === "NONE") {
+      //   dispatch(handleFieldChange(formKey, "ownerRelationship", "FATHER"));
+      // }
 
       if (get(state, `form.${formKey}.fields.ownerCategory.value`, "NONE") === "NONE") {
         dispatch(setFieldProperty(formKey, "ownerCategoryId", "hideField", true));
