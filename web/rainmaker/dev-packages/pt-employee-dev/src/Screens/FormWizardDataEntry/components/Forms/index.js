@@ -125,13 +125,13 @@ const OwnerInformation = ({
                 className="ownerCategory"
               />
             </div>
-            <div className="col-sm-6" style={{ display: "flex", alignItems: "center" }}>
+            <div className="col-sm-6 ownerCategoryIdType" style={{ display: "flex", alignItems: "center" }}>
               <Field
                 fieldKey="ownerCategoryIdType"
                 field={fields["ownerCategoryIdType"]}
                 handleFieldChange={handleFieldChange}
                 disabled={disabled}
-                className="ownerCategoryIdType"
+               className="ownerCategoryIdType"
               />
               {fields["ownerCategoryIdType"] && fields["ownerCategoryIdType"].toolTip && !fields["ownerCategoryIdType"].hideField && (
                 <ToolTipUi id={"form-wizard-tooltip"} title={fields["ownerCategoryIdType"].toolTipMessage} />

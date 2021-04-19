@@ -87,17 +87,17 @@ export const getAssessmentInfo = (propertyDetails, generalMDMSDataById, properti
         value: getPlotSizeInfo(propertyDetails),
         oldValue: oldPropertydetails && getPlotSizeInfo(oldPropertydetails),
       },
-      propertyDetails.propertySubType === "SHAREDPROPERTY"
-        ? {
-          key: getTranslatedLabel("PT_FLOOR_NO", localizationLabelsData),
-          value: units.length > 0 ? `${units[0].floorNo}` : "NA",
-          oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units.length > 0 ? `${oldPropertydetails.units[0].floorNo}` : "NA"
-        } :
-        {
-          key: getTranslatedLabel("PT_ASSESMENT_INFO_NO_OF_FLOOR", localizationLabelsData),
-          value: noOfFloors ? `${noOfFloors}` : "NA", //noOfFloors
-          oldValue: oldPropertydetails && oldPropertydetails.noOfFloors ? `${noOfFloors}` : "NA"
-        },
+      // propertyDetails.propertySubType === "SHAREDPROPERTY"
+      //   ? {
+      //     key: getTranslatedLabel("PT_FLOOR_NO", localizationLabelsData),
+      //     value: units.length > 0 ? `${units[0].floorNo}` : "NA",
+      //     oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units.length > 0 ? `${oldPropertydetails.units[0].floorNo}` : "NA"
+      //   } :
+      //   {
+      //     key: getTranslatedLabel("PT_ASSESMENT_INFO_NO_OF_FLOOR", localizationLabelsData),
+      //     value: noOfFloors ? `${noOfFloors}` : "NA", //noOfFloors
+      //     oldValue: oldPropertydetails && oldPropertydetails.noOfFloors ? `${noOfFloors}` : "NA"
+      //   },
       {
         key: getTranslatedLabel("PT_COMMONS_IS_RAINWATER_HARVESTING", localizationLabelsData),
         value: getRainWaterHarvestingInfo(properties),
