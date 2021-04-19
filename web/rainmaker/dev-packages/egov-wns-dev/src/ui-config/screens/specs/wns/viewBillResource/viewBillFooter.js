@@ -3,10 +3,12 @@ import { getCommonApplyFooter } from "../../utils";
 import { downloadBill } from "../../../../../ui-utils/commons";
 import "./index.css";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import get from "lodash/get";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
-const connectionNo = getQueryArg(window.location.href, "connectionNumber");
-const tenantId = getQueryArg(window.location.href, "tenantId");
-const businessService = connectionNo.includes("WS") ? "WS" : "SW";
+// const connectionNo = getQueryArg(window.location.href, "connectionNumber");
+// const tenantId = getQueryArg(window.location.href, "tenantId");
+// const businessService = connectionNo.includes("WS") ? "WS" : "SW";
 
 const callDownloadBill = ( mode) => {
   const val = [
@@ -20,6 +22,15 @@ const callDownloadBill = ( mode) => {
     }
   ]
   downloadBill(val, mode);
+}
+
+const getRedirectionUrl=(state,dispatch) =>{ 
+ 
+  let connectionNo = get(state.screenConfiguration.preparedFinalObject, `WaterConnection[0].connectionNo`, null);  
+  let tenantId = get(state.screenConfiguration.preparedFinalObject, `WaterConnection[0].tenantId`, null);
+  let businessService = connectionNo.includes("WS") ? "WS" : "SW"; 
+  let paymentUrl =`/egov-common/pay?consumerCode=${connectionNo}&tenantId=${tenantId}&businessService=${businessService}`  
+  dispatch(setRoute(paymentUrl));
 }
 
 
@@ -64,8 +75,14 @@ export const viewBillFooter = getCommonApplyFooter("BOTTOM",{
       })
     },
     onClickDefination: {
-      action: "page_change",
-      path: `/egov-common/pay?consumerCode=${connectionNo}&tenantId=${tenantId}&businessService=${businessService}`
-    }
+      action: "condition",
+      callBack: (state, dispatch) => {
+        getRedirectionUrl( state, dispatch);
+      }
+    },
+    // onClickDefination: {
+    //   action: "page_change",
+    //   path: `/egov-common/pay?consumerCode=${connectionNo}&tenantId=${tenantId}&businessService=${businessService}`
+    // }
   }
 });
