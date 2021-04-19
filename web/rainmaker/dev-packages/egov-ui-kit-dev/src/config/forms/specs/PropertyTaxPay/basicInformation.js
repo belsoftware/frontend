@@ -67,7 +67,7 @@ const formConfig = {
         dispatch(prepareFormData(`Properties[0].propertyDetails[0].units`, []));
         dispatch(prepareFormData(`Properties[0].propertyDetails[0].landArea`, null));
         dispatch(prepareFormData(`Properties[0].propertyDetails[0].buildUpArea`, null));
-        dispatch(removeForm("plotDetails"));
+        //dispatch(removeForm("plotDetails"));
         removeFormKey(formKey, field, dispatch, state);
         let subTypeObject = get(state, `common.generalMDMSDataById.PropertySubType[${field.value}]`);
         if (!isEmpty(subTypeObject)) {
@@ -76,6 +76,7 @@ const formConfig = {
           dispatch(prepareFormData("Properties[0].propertyDetails[0].propertyType", field.value));
           dispatch(prepareFormData("Properties[0].propertyDetails[0].propertySubType", null));
         }
+        
       },
       dropDownData: [],
     },

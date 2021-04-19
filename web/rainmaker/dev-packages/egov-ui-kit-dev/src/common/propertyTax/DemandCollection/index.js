@@ -118,7 +118,7 @@ class DemandCollection extends React.Component {
                                   {
                                       if (Math.sign(e.target.value)===-1) 
                                       {  
-                                      alert( "Please enter valid value for Property tax");
+                                      alert( "Please enter valid value for House Taxax/Water Tax/Conservancy Tax/Lightining Tax/Education Tax");
                                       return value = "" ;
                                       }
                                   }
