@@ -10,15 +10,23 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 // const tenantId = getQueryArg(window.location.href, "tenantId");
 // const businessService = connectionNo.includes("WS") ? "WS" : "SW";
 
-const callDownloadBill = ( mode) => {
+const callDownloadBill = ( state,mode) => { 
+  let connectionNo = get(state.screenConfiguration.preparedFinalObject, `WaterConnection[0].connectionNo`, null);
+  let tenantId = get(state.screenConfiguration.preparedFinalObject, `WaterConnection[0].tenantId`, null)
+  const businessService = connectionNo.includes("WS") ? "WS" : "SW";
+
   const val = [
     {
-      key: 'consumerCode',
-      value: getQueryArg(window.location.href, "connectionNumber")
+      key: 'consumerCode',    
+     value:connectionNo
     },
-    { key: 'tenantId', value: tenantId },
     {
-      key: "businessService", value: businessService
+       key: 'tenantId',
+       value: tenantId       
+      },
+    {
+      key: "businessService", 
+      value: businessService
     }
   ]
   downloadBill(val, mode);
@@ -54,7 +62,7 @@ export const viewBillFooter = getCommonApplyFooter("BOTTOM",{
     onClickDefination: {
       action: "condition",
       callBack: (state, dispatch) => {
-        callDownloadBill( "download");
+        callDownloadBill(state, "download");
       }
     },
   },
