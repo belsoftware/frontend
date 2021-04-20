@@ -80,9 +80,7 @@ const formConfig = {
       hintText: "",
       dropDownData: [
         { label: "Father", value: "FATHER" },
-        { label: "Husband", value: "HUSBAND" },
-        { code: 'MOTHER', name: 'Mother' },
-        { code: 'OTHERS', name: 'Others' }
+        { label: "Husband", value: "HUSBAND" }
       ],
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       disabled: true
