@@ -188,7 +188,7 @@ const formConfig = {
       floatingLabelText: "PT_FORM3_DOCUMENT_ID_TYPE",
       fullWidth: true,
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
-      toolTip: true,
+    //  toolTip: true,
      // toolTipMessage: "PT_DOCUMENT_ID_TYPE_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       dropDownData: [],
