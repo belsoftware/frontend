@@ -236,7 +236,7 @@ const formConfig = {
       hintText: "PT_FORM3_DOCUMENT_ID_NO_PLACEHOLDER",
       hideField: true,
       toolTip: true,
-      toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
+     // toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       disabled: true
     },
@@ -251,7 +251,7 @@ const formConfig = {
       fullWidth: true,
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
       toolTip: true,
-      toolTipMessage: "PT_DOCUMENT_ID_TYPE_TOOLTIP_MESSAGE",
+     // toolTipMessage: "PT_DOCUMENT_ID_TYPE_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       dropDownData: [], //[{ label: "AADHAR", value: "Aadhar" }, { label: "Driving License", value: "Driving License" }],
       updateDependentFields: ({

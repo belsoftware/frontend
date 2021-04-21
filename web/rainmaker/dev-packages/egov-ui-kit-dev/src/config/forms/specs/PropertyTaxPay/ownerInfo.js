@@ -73,7 +73,7 @@ const formConfig = {
         xs: 12,
         sm: 6
       },
-      dropDownData: [{ label: "Parent", value: "PARENT" }, { label: "Spouse", value: "SPOUSE" },  { label: "Gaurdian", value: 'GAURDIAN' }
+      dropDownData: [{ label: "Parent", value: "PARENT" }, { label: "Spouse", value: "SPOUSE" },  { label: "Guardian", value: 'GUARDIAN' }
      ],
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       formName: "ownerInfo"
@@ -175,7 +175,7 @@ const formConfig = {
       floatingLabelText: "PT_FORM3_DOCUMENT_ID_NO",
       hintText: "PT_FORM3_DOCUMENT_ID_NO_PLACEHOLDER",
       toolTip: true,
-      toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
+     // toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       hideField: true,
     },
@@ -189,7 +189,7 @@ const formConfig = {
       fullWidth: true,
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
       toolTip: true,
-      toolTipMessage: "PT_DOCUMENT_ID_TYPE_TOOLTIP_MESSAGE",
+     // toolTipMessage: "PT_DOCUMENT_ID_TYPE_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       dropDownData: [],
       hideField: true,
