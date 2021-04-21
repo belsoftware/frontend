@@ -1,25 +1,13 @@
 import React from "react";
 import { Dialog, DropDown, Button, DatePicker} from "components";
 import Label from "egov-ui-kit/utils/translationNode";
-import "./index.css";
-import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
-import { handleFieldChange } from "egov-ui-kit/redux/form/actions";
-import { prepareFormData } from "egov-ui-kit/redux/common/actions";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions"
 import { httpRequest } from "egov-ui-kit/utils/api";
 import {toggleSnackbar} from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { LabelContainer } from "egov-ui-framework/ui-containers";
 import Grid from '@material-ui/core/Grid';
 import { TextField } from '@material-ui/core';
-
 import get from "lodash/get";
-
 import store from "ui-redux/store";
-import { async } from "regenerator-runtime";
-
-const pickBtn = {
-  display: "block",
-};
 
 const DeclarationDialog = ({ popupClose, popupOpen }) => {
 
@@ -41,7 +29,6 @@ const DeclarationDialog = ({ popupClose, popupOpen }) => {
 
   let dateToEpoch = (datestring) => {
     let tdate = datestring.split("-");
-    console.log("New Date is ", new Date(tdate[0], tdate[1] - 1, tdate[2]));
     return new Date(tdate[0], tdate[1] - 1, tdate[2]).getTime();
   }
 
