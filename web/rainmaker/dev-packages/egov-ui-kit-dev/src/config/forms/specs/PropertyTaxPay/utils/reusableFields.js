@@ -170,7 +170,7 @@ export const superArea = {
     type: "number",
     floatingLabelText: "PT_ASSESMENT_INFO_BUILT_UP_AREA",
     hintText: "PT_FORM2_TOTAL_BUILT_AREA_PLACEHOLDER",
-    ErrorText: "Enter a valid super area size",
+    ErrorText: "Enter a valid super built area size",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
     toolTip: true,
     toolTipMessage: "Total Carpet Area + Total balcony area + Total thickness of outer walls + Total common area (lift, stairs, lobby etc.)",
