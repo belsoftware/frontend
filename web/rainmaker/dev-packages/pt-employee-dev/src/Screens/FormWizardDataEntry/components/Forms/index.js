@@ -125,7 +125,7 @@ const OwnerInformation = ({
                 className="ownerCategory"
               />
             </div>
-            <div className="col-sm-6 ownerCategoryIdType" style={{ display: "flex", alignItems: "center" }}>
+            <div className="col-sm-6 ownerCategoryIdType" style={{ alignItems: "center" }}>
               <Field
                 fieldKey="ownerCategoryIdType"
                 field={fields["ownerCategoryIdType"]}
