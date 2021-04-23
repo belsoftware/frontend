@@ -17,6 +17,8 @@ import store from "ui-redux/store";
 import PTHeader from "../../common/PTHeader";
 import { AcknowledgementReceipt } from "../AcknowledgementReceipt";
 import PTInformation from "../AssessmentList/components/PTInformation";
+import { fetchLocalizationLabel } from "egov-ui-kit/redux/app/actions";
+import { getLocale} from "egov-ui-kit/utils/localStorageUtils";
 import "./index.css";
 
 class PTAcknowledgement extends React.Component {
@@ -28,10 +30,12 @@ class PTAcknowledgement extends React.Component {
   };
 
   componentDidMount = () => {
-    const { fetchProperties, location } = this.props;
+    const { fetchProperties, location,fetchLocalizationLabel } = this.props;
     const { search } = location;
     const propertyId = getQueryValue(search, "propertyId");
     const tenantId = getQueryValue(search, "tenantId");
+    const locale = getLocale() || "en_IN";
+    fetchLocalizationLabel(locale, tenantId, tenantId);
     fetchProperties([
       { key: "propertyIds", value: propertyId },
       { key: "tenantId", value: tenantId },
@@ -608,6 +612,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchProperties: (queryObjectProperty) => dispatch(fetchProperties(queryObjectProperty)),
+    fetchLocalizationLabel: (locale, moduleName, tenantId)=> dispatch(fetchLocalizationLabel(locale, moduleName, tenantId))
   };
 };
 
