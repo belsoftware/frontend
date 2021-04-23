@@ -90,6 +90,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
   // "div", {}));
   dispatch(unMountScreen("apply"));
   dispatch(unMountScreen("search"));
+  dispatch(unMountScreen("meter-reading"));
   dispatch(prepareFinalObject("WaterConnection",[]));
   dispatch(prepareFinalObject("SewerageConnection",[]));
   dispatch(prepareFinalObject("WaterConnectionOld",[]));

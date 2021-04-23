@@ -63,7 +63,7 @@ export const searchResults = {
               )
             }
             else {
-              return ("NA")
+              return ("NO DUES")
             }
           }
         }
