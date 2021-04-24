@@ -143,12 +143,12 @@ const OwnerInformation = ({
                 <ToolTipUi id={"form-wizard-tooltip"} title={fields["ownerCategoryId"].toolTipMessage} />
               )}
             </div>
-           
+            <br />
             <div className="col-sm-6" >
               <Field fieldKey="ownerAddress" field={fields["ownerAddress"]} handleFieldChange={handleFieldChange} disabled={disabled} />
             </div>
             {!checkBox && (
-              <div >
+              <div className="col-sm-6">
                 <Field
                   fieldKey="isSameAsPropertyAddress"
                   field={fields.isSameAsPropertyAddress}

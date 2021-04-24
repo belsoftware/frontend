@@ -15,7 +15,7 @@ import commonConfig from "config/common.js";
 
 let floorDropDownData = [];
 
-for (var i = 1; i <= 25; i++) {
+for (var i = 1; i <= 17; i++) {
   floorDropDownData.push({ label: i.toString(), value: i });
 }
 
