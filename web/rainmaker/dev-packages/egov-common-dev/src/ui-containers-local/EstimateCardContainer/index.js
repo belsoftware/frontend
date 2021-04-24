@@ -59,22 +59,6 @@ if(totalAmount>0){
   arrears=totalAmount-billDetails[0].amount;
   arrears = arrears.toFixed(2);
 }
-
-
-
-for (let billDetail of billDetails) {
-    if(billDetail.fromPeriod < Date.now() && Date.now() < billDetail.toPeriod) {
-      current = billDetail.amount;
-    }
-    totalAmount += billDetail.amount;
-
-  }
-if(totalAmount>0){
-  if(businesService=="PT")
-  {
-   arrears=totalAmount-current;
-  }
-}
   const estimate = {
     header: { labelName: "Fee Estimate", labelKey: "NOC_FEE_ESTIMATE_HEADER" },
     fees,
