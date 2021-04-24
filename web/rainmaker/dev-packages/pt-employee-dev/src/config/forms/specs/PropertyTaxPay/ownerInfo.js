@@ -235,10 +235,10 @@ const formConfig = {
       floatingLabelText: "PT_FORM3_DOCUMENT_ID_NO",
       hintText: "PT_FORM3_DOCUMENT_ID_NO_PLACEHOLDER",
       hideField: true,
-      toolTip: true,
+      //toolTip: true,
      // toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      disabled: true
+      disabled: true,
     },
     ownerCategoryIdType: {
       id: "ownerCategoryIdType",
@@ -279,9 +279,9 @@ const formConfig = {
             )
           );
         } else {
-          dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", ""));
+          dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", /^[a-zA-Z0-9_.-]{1,20}$/i));
           dispatch(
-            setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "")
+            setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter upto 20 character ID number.Only Special characters allowed are _ . -")
           );
         }
       },
