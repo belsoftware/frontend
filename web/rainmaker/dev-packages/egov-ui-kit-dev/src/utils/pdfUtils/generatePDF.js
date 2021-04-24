@@ -726,6 +726,7 @@ export const downloadPDFFileUsingBase64 = (receiptPDF, filename) => {
     if (typeof mSewaApp === "undefined" )
     {
       // we are running in browser
+      console.log("mSewaApp is undefined");
       receiptPDF.download(filename);
       if(JSON.parse(localStorageGet('isMobileApp')) == true)
       {
@@ -757,7 +758,7 @@ export const downloadPDFFileUsingBase64 = (receiptPDF, filename) => {
   }
   
   export const printPDFFileUsingBase64 = (receiptPDF, filename) => {
-    if (typeof mSewaApp === "undefined" && !mobileCheck())
+    if (typeof mSewaApp === "undefined" )
     {
       // we are running in browser
       receiptPDF.print();

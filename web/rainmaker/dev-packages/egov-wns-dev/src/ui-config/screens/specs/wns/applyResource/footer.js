@@ -30,7 +30,7 @@ const isMode = isModifyMode();
 const isModeAction = isModifyModeAction();
 const setReviewPageRoute = (state, dispatch) => {
 
-  console.info("setReview=====>",setReviewPageRoute);
+
   let tenantId = getQueryArg(window.location.href, "tenantId");
   const applicationNumber = get(state, "screenConfiguration.preparedFinalObject.applyScreen.applicationNo");
   const appendUrl =
@@ -49,48 +49,65 @@ const moveToReview = (state, dispatch) => {
     get(state.screenConfiguration.preparedFinalObject, "documentsUploadRedux")
   );
 
-  let validateDocumentField = false;
-    console.info("move to Review====");
+  let validateDocumentField = false;    
   for (let i = 0; i < documentsFormat.length; i++) {
     let isDocumentRequired = get(documentsFormat[i], "isDocumentRequired");
-    let isDocumentTypeRequired = get(documentsFormat[i], "isDocumentTypeRequired");
-
+    let isDocumentTypeRequired = get(documentsFormat[i], "isDocumentTypeRequired");    
     if (isDocumentRequired) {
-      let documents = get(documentsFormat[i], "documents");
-      if (documents && documents.length > 0) {
-        if (isDocumentTypeRequired) {
-          let dropdownData = get(documentsFormat[i], "dropdown.value");
-          if (dropdownData) {
-            // if (get(documentsFormat[i], "dropdown.value") !== null && get(documentsFormat[i]).dropdown !==undefined ){
-            validateDocumentField = true;
-          } else {
+      let documents = get(documentsFormat[i], "documents");      
+      if(documents != undefined){
+          if (documents && documents.length > 0) {           
+            if (isDocumentTypeRequired) {             
+              let dropdownData = get(documentsFormat[i], "dropdown.value");
+              if (dropdownData) {
+                // if (get(documentsFormat[i], "dropdown.value") !== null && get(documentsFormat[i]).dropdown !==undefined ){
+                validateDocumentField = true;
+              } else {
+                dispatch(
+                  toggleSnackbar(
+                    true,
+                    { labelName: "Please select type of Document!", labelKey: "" },
+                    "warning"
+                  )
+                );
+                validateDocumentField = false;
+                break;
+              }
+            } else {
+              validateDocumentField = true;
+            }
+          } 
+          else if (!isModifyMode()) {
+           
             dispatch(
               toggleSnackbar(
                 true,
-                { labelName: "Please select type of Document!", labelKey: "" },
+                { labelName: "Please uplaod mandatory documents!", labelKey: "" },
                 "warning"
               )
             );
             validateDocumentField = false;
             break;
+          } 
+          else {
+            validateDocumentField = true;
           }
-        } else {
-          validateDocumentField = true;
         }
-      } else if (!isModifyMode()) {
-        dispatch(
-          toggleSnackbar(
-            true,
-            { labelName: "Please uplaod mandatory documents!", labelKey: "" },
-            "warning"
-          )
-        );
-        validateDocumentField = false;
-        break;
-      } else {
-        validateDocumentField = true;
-      }
-    } else {
+        else{
+         
+          dispatch(
+            toggleSnackbar(
+              true,
+              { labelName: "Please uplaod mandatory documents!", labelKey: "" },
+              "warning"
+            )
+          );
+          validateDocumentField = false;
+          break;
+        }
+    }
+    
+    else {
       validateDocumentField = true;
     }
   }
@@ -122,13 +139,14 @@ const getMdmsData = async (state, dispatch) => {
 };
 
 const callBackForNext = async (state, dispatch) => {
-  console.info("DC-Call back to next");
+
   window.scrollTo(0, 0);
   let activeStep = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.stepper.props.activeStep", 0);
   let isFormValid = true;
   let hasFieldToaster = false;
   /* validations for property details screen */
   if (activeStep === 0) {
+    
      validateFields("components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyID.children", state, dispatch)
      validateFields("components.div.children.formwizardFirstStep.children.connectionHolderDetails.children.cardContent.children.holderDetails.children.holderDetails.children", state, dispatch)
      var connectionDetailValidation =  validateFields("components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children", state, dispatch)
@@ -185,7 +203,7 @@ const callBackForNext = async (state, dispatch) => {
     }
       
     else {
-     
+    
       const water = get(
         state.screenConfiguration.preparedFinalObject,
         "applyScreen.water"
@@ -216,7 +234,7 @@ const callBackForNext = async (state, dispatch) => {
         arrayHolderData.push(holderData);
         applyScreenObject.connectionHolders = arrayHolderData;
       }
-      console.info("DC-searchPropertyId",searchPropertyId);
+      
       if (searchPropertyId !== undefined && searchPropertyId !== "") {
 
         if (!isActiveProperty(applyScreenObject.property)) {
@@ -225,10 +243,11 @@ const callBackForNext = async (state, dispatch) => {
           return false;
         }
         // TODO else part update propertyId.
-
+      
         if (validateConnHolderDetails(applyScreenObject)) {
           isFormValid = true;
           hasFieldToaster = false;
+          
           if (applyScreenObject.water || applyScreenObject.sewerage) {
             if (
               applyScreenObject.hasOwnProperty("property") &&
@@ -269,6 +288,7 @@ const callBackForNext = async (state, dispatch) => {
                   )
                 }
               } else if (sewerage) {
+               
                 if (validateFeildsForSewerage(applyScreenObject)) {
                   isFormValid = true;
                   hasFieldToaster = false;
@@ -320,6 +340,7 @@ const callBackForNext = async (state, dispatch) => {
                       _.capitalize(serviceConst.SEWERAGE)
                     )
                   );
+                 
                   await applyForSewerage(state, dispatch);
                 } else if ((waterChecked && waterData.length === 0) || (isModifyMode() && waterData.length === 1 && !modifyAppCreated)) {
                   dispatch(
@@ -337,7 +358,10 @@ const callBackForNext = async (state, dispatch) => {
                     "Water And Sewerage"
                   )
                 );
-                if (waterData.length === 0 && sewerData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch); }
+                if (waterData.length === 0 && sewerData.length === 0) { 
+                  isFormValid = await applyForWaterOrSewerage(state, dispatch); 
+                 
+                }
               } else if (waterChecked) {
                 dispatch(
                   prepareFinalObject(
@@ -345,10 +369,10 @@ const callBackForNext = async (state, dispatch) => {
                     _.capitalize(serviceConst.WATER)
                   )
                 );
-                if (waterData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch); }
+                if (waterData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch);  }
               } else if (sewerChecked) {
                 dispatch(prepareFinalObject("applyScreen.service", _.capitalize(serviceConst.SEWERAGE)))
-                if (sewerData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch); }
+                if (sewerData.length === 0) { isFormValid = await applyForWaterOrSewerage(state, dispatch);  }
               }
             }
           } else {
@@ -368,7 +392,7 @@ const callBackForNext = async (state, dispatch) => {
           )
         }
       } else {
-        console.info("DC-else case=>isFormValid",isFormValid);
+        
         isFormValid = false;
         dispatch(
           toggleSnackbar(
@@ -382,17 +406,28 @@ const callBackForNext = async (state, dispatch) => {
       }
     }
     prepareDocumentsUploadData(state, dispatch);
-  }
+   }
 
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 1) {
     if (isModifyMode()) {
-      isFormValid = true;
-      hasFieldToaster = false;
+      
+      // isFormValid = true;
+      // hasFieldToaster = false;
+
+      
+      let addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
+      let modificationContainerValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
+      
+      isFormValid = (addConnDetailValid &&modificationContainerValid)? true:false;
+      hasFieldToaster = true;
+
     } else {
+      
       if (moveToReview(state, dispatch)) {
         await pushTheDocsUploadedToRedux(state, dispatch);
-        isFormValid = true; hasFieldToaster = false;
+        isFormValid = true; 
+        hasFieldToaster = false;
         if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {
           setReviewPageRoute(state, dispatch);
         }
@@ -406,19 +441,44 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 2 && process.env.REACT_APP_NAME !== "Citizen") {
 
-    console.info("Validate third step"); 
+    
     let plumberValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children", state, dispatch);
-    let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
-    let addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
+    //let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
+    // let addConnDetailValid = true;
+    // if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")){ // Validate this only for water.
+    //   // addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
+    //      addConnDetailValid = validateWaterConnectionDetails(state);
+    // }
+    // else{
+    //     addConnDetailValid = validateSewerageConnectionDetails(state);
+    // }
+    
     let wsConnectionTaxHeadsValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.wsConnectionTaxHeads.children",state,dispatch);
+    let wsTaxheadsFilledOrNotFlag =  true;
+    let addConnDetailValid = true;
+    let applicationStatus = get(state.screenConfiguration.preparedFinalObject, "applyScreen.applicationStatus");
+     //Tax estimate must be filled by Field inspector
+    if(applicationStatus == "PENDING_FOR_FIELD_INSPECTION"){
+      wsTaxheadsFilledOrNotFlag = checkTaxHeadsFilledOrNot(state);
+      if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water")){ // Validate this only for water.
+        // addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
+           addConnDetailValid = validateWaterConnectionDetails(state);
+      }
+      else{
+       
+          addConnDetailValid = validateSewerageConnectionDetails(state);
+         
+      }
+
+    }
+        
     //Check one full row is filled/not
     let roadCuttingDataRowValidation =  checkRoadCuttingRowFilledOrNot(state,dispatch,isFormValid);
-    let roadCuttingDataValiation = true;
-    console.info("All rows filled or not?",roadCuttingDataRowValidation);
+    let roadCuttingDataValiation = true;      
     if(roadCuttingDataRowValidation){ //Full row is filled so check the data is valid or not
       var objectJsonPath = "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.roadCuttingChargeContainer.children";
       const fields = get(state.screenConfiguration.screenConfig["apply"],objectJsonPath,{});
-     
+     //Check data entered in road cutting are valid/not
       for (var eachItem in fields) { 
         if(eachItem.includes('_')){
           let eachRoadCuttingValidation = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.roadCuttingChargeContainer.children."+eachItem+".children",state, dispatch);
@@ -427,21 +487,37 @@ const callBackForNext = async (state, dispatch) => {
             break;
           }
         }          
-     }
+      }     
     }
+    let activationDetailsFilledFlag = true;
+    let activationDetailsConnectionTypeFlag = true;//checks for the date of activation filled or not
+   
+    if(applicationStatus == "PENDING_FOR_CONNECTION_ACTIVATION"){
+      activationDetailsFilledFlag  = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children",state,dispatch);
+      let data = get(state.screenConfiguration.preparedFinalObject, "applyScreen")
+      if (data.connectionType === "Metered") {
+        activationDetailsConnectionTypeFlag = connectionTypeValidation(state);
+        if(!activationDetailsConnectionTypeFlag){
+          let  errorMessage = {
+            labelName:"Please fill all fields for meter info",
+            labelKey: "ERR_METERDETAILS_TOAST"
+          };
+          dispatch(toggleSnackbar(true, errorMessage, "warning"));
+          return;
+        }
+      }
+          
+    }
+    
 
-    // const applicationStatus = get(state, "screenConfiguration.preparedFinalObject.applyScreen.applicationStatus");
-      
-    // if(applicationStatus === "PENDING_FOR_FIELD_INSPECTION"){
-    //   console.info("Check any road cutting / tax is filled");
-    //   let roadTypeEstimate = get(state.screenConfiguration.preparedFinalObject, "applyScreen.roadTypeEst");
-    //   let taxEstimate = get(state.screenConfiguration.preparedFinalObject, "applyScreen.wsTaxHeads");
-    //   console.info("Data==",taxEstimate);
-    //   console.info("empty=", isEmpty(taxEstimate));
-
-
-    // }
-
+    if(!addConnDetailValid){
+      let  errorMessage = {
+        labelName:"Please fill connection details",
+        labelKey: "ERR_CONNECTIONDETAILS_TOAST"
+      };
+      dispatch(toggleSnackbar(true, errorMessage, "warning"));
+      return;
+    }
 
     let errorMessage = {
       labelName: "Please provide valid inputs!",
@@ -455,35 +531,46 @@ const callBackForNext = async (state, dispatch) => {
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
       return;
     }
-    else if(!plumberValid|| !activateDetailValid||!addConnDetailValid || !wsConnectionTaxHeadsValid || !roadCuttingDataValiation){
+    else if(!wsTaxheadsFilledOrNotFlag){
+      let  errorMessage = {
+        labelName:"Please fill Tax head estimate",
+        labelKey: "ERR_WSTAXHEAD_EST"
+      };
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
       return;
     }
+
+    
+    else if(!plumberValid|| !wsConnectionTaxHeadsValid || !roadCuttingDataValiation || !wsTaxheadsFilledOrNotFlag || !activationDetailsFilledFlag){
+       dispatch(toggleSnackbar(true, errorMessage, "warning"));
+      return;
+    }
     // let roadCuttingValidation =  checkRoadCuttingRowFilledOrNot(state,dispatch,isFormValid);
-    // console.info("check result==",roadCuttingValidation);
+   
     
     // isFormValid = roadCuttingValidation;
     hasFieldToaster = !isFormValid;
     if(isFormValid){
       if (isModifyMode()) {
-        console.info("inside the modify ");             
+               
           if (moveToReview(state, dispatch)) {
             await pushTheDocsUploadedToRedux(state, dispatch);
-            // isFormValid = true; 
-            // hasFieldToaster = false;
+
+             isFormValid = true; 
+             hasFieldToaster = false;
                 // if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {
                 //   setReviewPageRoute(state, dispatch);
                 // }
           }
-          // else {
-          //   isFormValid = true;
-          //   hasFieldToaster = false;
-          // }
+           else {
+             isFormValid = false;
+            hasFieldToaster = true;
+          }
         
       
       } 
       else {
-            console.info("in else part");
+           
           if (getQueryArg(window.location.href, "action") === "edit" && (!isModifyMode() || (isModifyMode() && isModifyModeAction()))) {
             setReviewPageRoute(state, dispatch);
           }
@@ -505,19 +592,20 @@ const callBackForNext = async (state, dispatch) => {
 
    }
    if (activeStep === 3) {
-    let waterId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].id");
-    let sewerId = get(state, "screenConfiguration.preparedFinalObject.SewerageConnection[0].id");
-    if (waterId && sewerId) {
-      isFormValid = await acknoledgementForBothWaterAndSewerage(state, activeStep, isFormValid, dispatch);
-    } else if (waterId) {
-      isFormValid = await acknoledgementForWater(state, activeStep, isFormValid, dispatch);
-    } else {
-      isFormValid = await acknoledgementForSewerage(state, activeStep, isFormValid, dispatch);
-    }
-    // responseStatus === "success" && changeStep(activeStep, state, dispatch);
+      let sewerageForm = get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage");
+      let waterForm = get(state.screenConfiguration.preparedFinalObject, "applyScreen.water");
+      if (sewerageForm && waterForm) {
+        isFormValid = await acknoledgementForBothWaterAndSewerage(state, activeStep, isFormValid, dispatch);
+      } else if (waterForm) {
+        isFormValid = await acknoledgementForWater(state, activeStep, isFormValid, dispatch);
+      } else {
+        isFormValid = await acknoledgementForSewerage(state, activeStep, isFormValid, dispatch);
+      }
+      // responseStatus === "success" && changeStep(activeStep, state, dispatch);
    }
   if (activeStep !== 3) {
-    console.info("DC-going to change step---",activeStep,"isformvalid==",isFormValid);
+    
+    
     if (isFormValid) {
       changeStep(state, dispatch);
     } else if (hasFieldToaster) {
@@ -525,35 +613,111 @@ const callBackForNext = async (state, dispatch) => {
         labelName: "Please fill all mandatory fields!",
         labelKey: "WS_FILL_REQUIRED_FIELDS"
       };
-      switch (activeStep) {
-        case 1:
-          errorMessage = {
-            labelName:
-              "Please upload all Mandatory Document!",
-            labelKey: "WS_UPLOAD_MANDATORY_DOCUMENTS"
-          };
-          break;
-        case 2:
-          console.info("PG= 484");
-          errorMessage = {
-            labelName:
-              "Please fill all mandatory fields for Applicant Details, then proceed!",
-            labelKey: "ERR_ROADCUTTING_TOAST"
-          };
-          break;
+      if(!isModifyMode()){
+        
+        switch (activeStep) {
+          case 1:
+            errorMessage = {
+              labelName:
+                "Please upload all Mandatory Document!",
+                labelKey: "WS_UPLOAD_MANDATORY_DOCUMENTS"
+              // labelKey:"WS_FILL_REQUIRED_FIELDS"
+            };
+            break;
+          case 2:
+          
+            errorMessage = {
+              labelName:"Please fill valid road cutting",
+              labelKey: "ERR_ROADCUTTING_TOAST"
+            };
+            break;
+        }
       }
+      else{
+      
+         switch (activeStep) {
+          case 1:
+             errorMessage = {
+              labelName: "Please fill all mandatory fields!",
+              labelKey: "WS_FILL_REQUIRED_FIELDS"
+            };
+            break;
+          case 2:
+            
+            errorMessage = {
+              labelName:"Please upload all Mandatory Document!",
+              labelKey: "WS_UPLOAD_MANDATORY_DOCUMENTS"
+            };
+            
+            break;
+          
+        }
+      }
+     
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
     }
   }
-};
+ };
 
-const checkRoadCuttingRowFilledOrNot = (state,dispatch,isFormValid) =>{
+ const checkTaxHeadsFilledOrNot =(state) =>{
+  let taxEstimateFilled = get(state.screenConfiguration.preparedFinalObject, "applyScreen.wsTaxHeads");
+  for(var i=0;i<taxEstimateFilled.length;i++){
+     var amt = parseFloat(taxEstimateFilled[i].amount);
+    if(isNaN(amt) == false){
+       return true;
+    }  
+  }
+   return false;
+ }
+
+ const connectionTypeValidation = (state) =>{
+   let meterId = get(state.screenConfiguration.preparedFinalObject, "applyScreen.meterId");
+   let meterInstallationDate =get(state.screenConfiguration.preparedFinalObject, "applyScreen.meterInstallationDate");
+   let initialMeterReading =get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.initialMeterReading");
+   
+   if( initialMeterReading !== null && meterInstallationDate !==null && meterId !== null)
+      return true;
+   else
+       return false;
+
+ }
+
+ const validateSewerageConnectionDetails =(state) =>{
+
+  let noOfCloset = get(state.screenConfiguration.preparedFinalObject, "applyScreen.noOfWaterClosets");
+  let noOfToilets = get(state.screenConfiguration.preparedFinalObject, "applyScreen.noOfToilets");
+  let drainangePipeSize = get(state.screenConfiguration.preparedFinalObject, "applyScreen.drainageSize");
+ 
+   if(noOfCloset !== "" && noOfToilets !== "" && drainangePipeSize !==null){
+     return true;
+   }
+   else
+    return false;
+ }
+ const validateWaterConnectionDetails =(state)=>{
+  let connectionType = get(state.screenConfiguration.preparedFinalObject, "applyScreen.connectionType");
+  let  noOfTaps =get(state.screenConfiguration.preparedFinalObject, "applyScreen.noOfTaps");
+  let pipeSize = get(state.screenConfiguration.preparedFinalObject, "applyScreen.pipeSize");
+  let authorizedConnection = get(state.screenConfiguration.preparedFinalObject, "applyScreen.authorizedConnection");
+  let motorInfo = get(state.screenConfiguration.preparedFinalObject, "applyScreen.motorInfo");
+  let waterSource = get(state.screenConfiguration.preparedFinalObject, "DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType");
+  let waterSubSource = get(state.screenConfiguration.preparedFinalObject, "DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource");
+  
+  if(connectionType !==null && noOfTaps !==null && pipeSize!==null && authorizedConnection!==null && motorInfo!==null && waterSource!==null && waterSubSource !=="null.null" )
+     return true;
+  else
+    return false;
+ 
+
+ }
+
+ const checkRoadCuttingRowFilledOrNot = (state) =>{
    let roadTypeEstimate = get(state.screenConfiguration.preparedFinalObject, "applyScreen.roadTypeEst");
    const roadEstimateValidation = [];
    roadTypeEstimate.forEach(element => {
     var arr =[parseFloat(element.length,10),parseFloat(element.breadth,10),parseFloat(element.depth,10),parseFloat(element.rate,10)];
     const NanResult = arr.filter(each => isNaN(each));
-    console.info("NanResult=",NanResult.length,"NaN Result for element==",element);
+    
     if(NanResult.length < 4 && NanResult.length >0){
         roadEstimateValidation.push(element);
        }
@@ -566,6 +730,7 @@ const checkRoadCuttingRowFilledOrNot = (state,dispatch,isFormValid) =>{
     }
  
   }
+
 
 
 
@@ -604,6 +769,7 @@ const acknoledgementForBothWaterAndSewerage = async (state, activeStep, isFormVa
     }
     if (activeStep === 3) {
       isFormValid = await applyForWaterOrSewerage(state, dispatch);
+     
       let WaterConnection = get(state.screenConfiguration.preparedFinalObject, "WaterConnection");
       let SewerageConnection = get(state.screenConfiguration.preparedFinalObject, "SewerageConnection");
       let combinedArray = WaterConnection.concat(SewerageConnection)
@@ -631,7 +797,7 @@ const acknoledgementForBothWaterAndSewerage = async (state, activeStep, isFormVa
         };
         break;
       case 2:
-        console.info("PG= 589");
+        
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -651,6 +817,7 @@ const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) 
     }
     if (activeStep === 3) {
       isFormValid = await applyForWaterOrSewerage(state, dispatch);
+      
       let combinedArray = get(state.screenConfiguration.preparedFinalObject, "WaterConnection");
       if (isFormValid) { moveToSuccess(combinedArray, dispatch) }
     }
@@ -669,7 +836,7 @@ const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) 
         };
         break;
       case 2:
-        console.info("PG= 627");
+        
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -684,13 +851,17 @@ const acknoledgementForWater = async (state, activeStep, isFormValid, dispatch) 
 }
 
 const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatch) => {
+ 
   if (isFormValid) {
     if (activeStep === 0) {
       prepareDocumentsUploadData(state, dispatch);
     }
     if (activeStep === 3) {
+
       isFormValid = await applyForWaterOrSewerage(state, dispatch);
+     
       let combinedArray = get(state.screenConfiguration.preparedFinalObject, "SewerageConnection");
+     
       if (isFormValid) { moveToSuccess(combinedArray, dispatch) }
     }
     return true;
@@ -708,7 +879,7 @@ const acknoledgementForSewerage = async (state, activeStep, isFormValid, dispatc
         };
         break;
       case 2:
-        console.info("PG= 664");
+      
         errorMessage = {
           labelName:
             "Please fill all mandatory fields for Applicant Details, then proceed!",
@@ -727,7 +898,7 @@ export const changeStep = (
   mode = "next",
   defaultActiveStep = -1
 ) => {
-  console.info("DC-changeStep");
+ 
   window.scrollTo(0, 0);
   let activeStep = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.stepper.props.activeStep", 0);
   if (defaultActiveStep === -1) {

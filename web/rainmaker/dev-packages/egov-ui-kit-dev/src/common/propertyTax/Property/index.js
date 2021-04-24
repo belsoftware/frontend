@@ -95,6 +95,7 @@ class Property extends Component {
     fetchReceipt([
       { key: "consumerCodes", value: decodeURIComponent(this.props.match.params.propertyId) },
       { key: "tenantId", value: this.props.match.params.tenantId },
+      { key: "businessService", value: 'PT' }
     ]);
 
     loadUlbLogo(this.props.match.params.tenantId);
@@ -681,6 +682,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    
     addBreadCrumbs: (url) => dispatch(addBreadCrumbs(url)),
     fetchGeneralMDMSData: (requestBody, moduleName, masterName) => dispatch(fetchGeneralMDMSData(requestBody, moduleName, masterName)),
     fetchProperties: (queryObjectProperty) => dispatch(fetchProperties(queryObjectProperty)),

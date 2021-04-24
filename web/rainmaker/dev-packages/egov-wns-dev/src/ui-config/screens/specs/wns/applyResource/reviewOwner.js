@@ -7,7 +7,7 @@ import {
   getDivider,
   getLabelWithValueForModifiedLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { convertEpochToDateAndHandleNA, handleNA } from '../../utils';
+import { convertEpochToDateAndHandleNA, handleNA,handleMeterReading } from '../../utils';
 import { changeStep } from "./footer";
 
 const getHeader = label => {
@@ -394,20 +394,21 @@ export const reviewMeterInstallationDate = getLabelWithValueForModifiedLabel(
   }
 );
 
-export const reviewInitialMeterReading = getLabelWithValueForModifiedLabel(
+export const reviewInitialMeterReading = getLabelWithValue(
   {
     labelName: "Initial Meter Reading",
     labelKey: "WS_ADDN_DETAILS_INITIAL_METER_READING"
   },
   { jsonPath: "applyScreen.additionalDetails.initialMeterReading",
-    callBack: handleNA },
-  {
-    labelKey: "WS_OLD_LABEL_NAME"
-  },
-  {
-    jsonPath: "applyScreenOld.additionalDetails.initialMeterReading",
-    callBack: handleNA
-  }
+    callBack: handleMeterReading }
+  //   ,
+  // {
+  //   labelKey: "WS_OLD_LABEL_NAME"
+  // },
+  // {
+  //   jsonPath: "applyScreenOld.additionalDetails.initialMeterReading",
+  //   callBack: handleNA
+  // }
 );
 
 export const reviewOwner = (isEditable = true) => {

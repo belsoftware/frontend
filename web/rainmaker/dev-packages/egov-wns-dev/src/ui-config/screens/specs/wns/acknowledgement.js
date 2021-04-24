@@ -33,11 +33,12 @@ import {localStorageGet} from "egov-ui-kit/utils/localStorageUtils";
 let headerLabel = "WS_APPLICATION_NEW_CONNECTION_HEADER";
 const applicationNo = getQueryArg(window.location.href, "applicationNumber");
 if(isModifyMode()){
-  if(applicationNo.includes("WS")){
-  headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
-  }else{
-  headerLabel = "SW_APPLICATION_MODIFY_CONNECTION_HEADER";
-  }
+  headerLabel = "WS_MODIFY_CONNECTION_HEADER";
+  // if(applicationNo.includes("WS")){
+  // headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
+  // }else{
+  // headerLabel = "SW_APPLICATION_MODIFY_CONNECTION_HEADER";
+  // }
 }
 
 const headerrow = getCommonContainer({

@@ -140,13 +140,12 @@ export const additionDetails = getCommonCard({
           required: false,
           sourceJsonPath: "applyScreenMdmsData.ws-services-masters.connectionType",
           gridDefination: { xs: 12, sm: 6 },
-          errorMessage: "ERR_INVALID_BILLING_PERIOD",
-          jsonPath: "applyScreen.connectionType"
+          errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+          jsonPath: "applyScreen.connectionType",
+          required:false,
         }),
         afterFieldChange: async (action, state, dispatch) => {
           let connType = await get(state, "screenConfiguration.preparedFinalObject.applyScreen.connectionType");
-          console.log('connType');
-          console.log(connType);
           if (connType === undefined || connType === "Non Metered" || connType === "Bulk-supply" || connType !== "Metered") {
             showHideFeilds(dispatch, false);
           }
@@ -192,14 +191,21 @@ export const additionDetails = getCommonCard({
       dynamicMdmsWaterSource : {
         uiFramework: "custom-containers",
         componentPath: "DynamicMdmsContainer",
+        
         props: {
           dropdownFields: [
             {
               key : 'waterSourceType',
+              isRequired: false,
+              requiredValue : false,
+              errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               callBack: waterSourceTypeChange 
             },
             {
               key : 'waterSubSource',
+              isRequired: false,
+              requiredValue : false,
+              errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               callBack: waterSubSourceChange 
             }
           ],
@@ -250,12 +256,13 @@ export const additionDetails = getCommonCard({
         jsonPath: "applyScreen.drainageSize"
       })
     }),
+    
   }),
   plumberDetailsContainer: getCommonGrayCard({
     subHeader: getCommonTitle({
       labelKey: "WS_COMMON_PLUMBER_DETAILS"
     }),
-    plumberDetails: getCommonContainer({
+     plumberDetails: getCommonContainer({
       getPlumberRadioButton,
       plumberLicenceNo: getTextField({
         label: {
@@ -397,7 +404,7 @@ export const additionDetails = getCommonCard({
           xs: 12,
           sm: 6
         },
-        required: false,
+        required: true,
         pattern: getPattern("Date"),
         errorMessage: "ERR_INVALID_DATE",
         jsonPath: "applyScreen.connectionExecutionDate"
@@ -462,7 +469,7 @@ export const additionDetails = getCommonCard({
           xs: 12,
           sm: 6
         },
-        required: false,
+        required: true,
         pattern: getPattern("Date"),
         errorMessage: "ERR_INVALID_DATE",
         jsonPath: "applyScreen.dateEffectiveFrom",

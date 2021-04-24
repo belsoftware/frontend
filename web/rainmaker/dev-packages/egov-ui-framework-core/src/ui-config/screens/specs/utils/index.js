@@ -655,3 +655,12 @@ export const getPattern = type => {
 export const checkValueForNA = value => {
   return value && value !== "null" ? value : "NA";
 };
+
+export const downloadHelpFile = async (state) => {  
+  console.info("download the help file");
+  const helpurl = get(state.screenConfiguration.preparedFinalObject,
+    "helpFileUrl",
+    ""
+  );   
+  window.open(helpurl,"_blank");
+};

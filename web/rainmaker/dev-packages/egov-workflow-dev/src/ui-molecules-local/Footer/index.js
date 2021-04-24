@@ -209,7 +209,7 @@ class Footer extends React.Component {
           labelName: { buttonLabel },
           labelKey: `WF_${appName.toUpperCase()}_${moduleName.toUpperCase()}_${buttonLabel}`,
           link: () => {
-            (moduleName === "NewTL" || moduleName === "EDITRENEWAL" ) && buttonLabel==="APPLY" ? onDialogButtonClick(buttonLabel, isDocRequired) : 
+           ((moduleName === "NewTL" || moduleName === "EDITRENEWAL" ) && buttonLabel==="APPLY") || (((moduleName === "NewWS1" || moduleName === "ModifyWSConnection" || moduleName === "ModifySWConnection" || moduleName === "NewSW1")) && buttonLabel==="SUBMIT_APPLICATION") ? onDialogButtonClick(buttonLabel, isDocRequired) : 
             this.openActionDialog(item);
           }
         };

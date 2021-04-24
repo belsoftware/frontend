@@ -3,11 +3,10 @@ import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getPropertyResults, isActiveProperty, showHideFieldsFirstStep, getSearchResults, getSearchResultsForSewerage , getCBMdmsData,prepareDocumentsUploadData } from "../../../../../ui-utils/commons";
 import { getUserInfo, getTenantIdCommon } from "egov-ui-kit/utils/localStorageUtils";
-
 export const propertySearchApiCall = async (state, dispatch) => {
   showHideFields(dispatch, false);
   let tenantId = getTenantIdCommon();
-  let queryObject = [{ key: "tenantId", value: tenantId }];
+  let queryObject = process.env.REACT_APP_NAME === "Citizen"?[]:[{ key: "tenantId", value: tenantId }];
   let searchScreenObject = get(state.screenConfiguration.preparedFinalObject, "searchScreen", {});
   dispatch(
     handleField(
@@ -100,8 +99,41 @@ export const propertySearchApiCall = async (state, dispatch) => {
               }
             }    
           }
+          if (propertyData && propertyData.owners && propertyData.owners.length > 0) {
+            propertyData.owners = propertyData.owners.filter(
+              (owner) => owner.status == "ACTIVE"
+            );
+          }
           dispatch(prepareFinalObject("applyScreen.property", propertyData))
           showHideFields(dispatch, true);
+          let tenantIdProp = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.tenantId");
+          if(tenantIdProp){
+            const wsTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='WS')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
+            const swTenant = get(state.screenConfiguration.preparedFinalObject, "applyScreenMdmsData.tenant.citymodule").filter(city=>city.code=='SW')[0].tenants.filter(tenant=>tenant.code==tenantIdProp);
+           
+            if(wsTenant.length>0){
+              if(swTenant.length==0){
+              dispatch(prepareFinalObject("applyScreen.water", true));
+            dispatch(prepareFinalObject("applyScreen.sewerage", false));
+              }
+            dispatch(prepareFinalObject("disableWS", false));
+            }
+            else{
+              dispatch(prepareFinalObject("disableWS", true));
+            }
+            if(swTenant.length>0){
+              if(wsTenant.length==0){
+              dispatch(prepareFinalObject("applyScreen.water", false));
+              dispatch(prepareFinalObject("applyScreen.sewerage", true));
+              }
+              dispatch(prepareFinalObject("disableSW", false));
+            }
+            else{
+              dispatch(prepareFinalObject("disableSW", true));
+            }
+            
+    
+          }
         }
         if(searchScreenObject["propertyIds"].trim()){
         let ownershipCategory = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.ownershipCategory", "");

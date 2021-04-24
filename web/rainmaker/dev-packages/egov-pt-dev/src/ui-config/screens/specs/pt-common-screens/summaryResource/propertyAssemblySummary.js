@@ -149,7 +149,8 @@ export const propertyAssemblySummary = getCommonGrayCard({
             let propertyType = get( state.screenConfiguration.preparedFinalObject, "Property.propertyType" );
             let usageType = get( state.screenConfiguration.preparedFinalObject, "Property.usageCategory" );
             if (propertyType === "BUILTUP.SHAREDPROPERTY" || propertyType === "BUILTUP.INDEPENDENTPROPERTY") {
-              if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL") {
+              if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL"
+              || usageType === "NONRESIDENTIAL.OTHERS") {
                 finalValue = value;
               }
             }

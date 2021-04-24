@@ -7,7 +7,7 @@ import {
   getLabel,
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import { convertEpochToDateAndHandleNA, handleNA,handleRoadType } from "../../utils";
+import { convertEpochToDateAndHandleNA, handleNA,handleRoadType,handleMeterReading } from "../../utils";
 import { serviceConst } from "../../../../../ui-utils/commons";
 const getHeader = label => {
   return {
@@ -42,7 +42,7 @@ const activationDetailsHeader = getHeader({
 });
 
 export const getReviewOwner = (isEditable = true) => {
-  console.info("DC- getReviewOwner");
+  
   return getCommonGrayCard({
     headerDiv: {
       uiFramework: "custom-atoms",
@@ -103,6 +103,7 @@ export const getReviewOwner = (isEditable = true) => {
     viewSeven: connectionChargeDetailsHeader,
     viewEight: connectionChargeDetails,
     viewNine: roadCuttingChargesHeader,
+    //viewTen: getRoadCharges(),
     viewTen: getRoadCharges(),
     viewThirteen: getRoadCuttingChargesNA(),
     viewEleven: activationDetailsHeader,
@@ -191,6 +192,7 @@ export const plumberDetails={
 
 }
 const connectionChargeDetails = getCommonContainer(plumberDetails);
+
 export const roadDetails={
   getCommonContainerreviewRoadType : getLabelWithValue(
     {
@@ -246,13 +248,14 @@ export const roadDetails={
       jsonPath: "WaterConnection[0].tempRoadType[0].rate",
       callBack: handleNA
     }
-  ),
- 
-
+  )
 }
 
-
-  const getRoadCharges = ()=>{
+// This code was used earlier using multi-item
+// Issues:- 1)Sometimes data not getting populated
+//          2)Rate is displayed on next line.
+//Can be removed once fine turning of pdf is done
+const getRoadCharges1 = ()=>{
   return({
   uiFramework: "custom-containers",
   componentPath: "MultiItem",
@@ -275,6 +278,10 @@ export const roadDetails={
   })
 }
 
+
+const getRoadCharges = () =>{ 
+  return  getCommonContainer({  })     
+}
 export const activateDetailsMeter={
   reviewConnectionExecutionDate : getLabelWithValueForModifiedLabel(
     {
@@ -320,17 +327,22 @@ export const activateDetailsMeter={
       callBack: convertEpochToDateAndHandleNA
     }
   ),
-  reviewInitialMeterReading : getLabelWithValueForModifiedLabel(
+  reviewInitialMeterReading : getLabelWithValue(
     {
       labelName: "Initial Meter Reading",
       labelKey: "WS_ADDN_DETAILS_INITIAL_METER_READING"
     },
-    { jsonPath: "WaterConnection[0].additionalDetails.initialMeterReading",
-      callBack: handleNA }, {
-        labelKey: "WS_OLD_LABEL_NAME"
-      },
-      { jsonPath: "WaterConnectionOld[0].additionalDetails.initialMeterReading",
-      callBack: handleNA }
+    {
+       jsonPath: "WaterConnection[0].additionalDetails.initialMeterReading",
+      callBack: handleMeterReading 
+    }
+    // , 
+    //   {
+    //     labelKey: "WS_OLD_LABEL_NAME"
+    //   },
+    //   { jsonPath: "WaterConnectionOld[0].additionalDetails.initialMeterReading",
+    //   callBack: handleMeterReading
+    //  }
   )
 
 }
@@ -490,21 +502,21 @@ export const connectionWater={
 }
 
 export const connectionSewerage={
-  reviewConnectionType : getLabelWithValueForModifiedLabel(
-    {
-      labelName: "Connection Type",
-      labelKey: "WS_SERV_DETAIL_CONN_TYPE"
-    },
-    {
-      jsonPath: "WaterConnection[0].connectionType",
-      callBack: handleNA
-    }, {
-      labelKey: "WS_OLD_LABEL_NAME"
-    }, {
-      jsonPath: "WaterConnectionOld[0].connectionType",
-      callBack: handleNA
-    }
-  ),
+  // reviewConnectionType : getLabelWithValueForModifiedLabel(
+  //   {
+  //     labelName: "Connection Type",
+  //     labelKey: "WS_SERV_DETAIL_CONN_TYPE"
+  //   },
+  //   {
+  //     jsonPath: "WaterConnection[0].connectionType",
+  //     callBack: handleNA
+  //   }, {
+  //     labelKey: "WS_OLD_LABEL_NAME"
+  //   }, {
+  //     jsonPath: "WaterConnectionOld[0].connectionType",
+  //     callBack: handleNA
+  //   }
+  // ),
    reviewWaterClosets : getLabelWithValueForModifiedLabel(
     {
       labelName: "No. of Water Closets",

@@ -15,8 +15,8 @@ const header = getCommonHeader({
 });
 
 const cardItems = [
-    //hide pay bill by vidya
-//     {
+ //Hide pay bill    
+// {
 //     label: {
 //         labelKey: "WS_COMMON_PAY_WS_BILL_HEADER",
 //     },
