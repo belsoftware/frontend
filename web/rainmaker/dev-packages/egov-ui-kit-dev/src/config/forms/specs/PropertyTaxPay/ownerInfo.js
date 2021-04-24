@@ -56,6 +56,7 @@ const formConfig = {
       type: "textfield",
       floatingLabelText: "PT_OWNERSHIP_INFO_CORR_ADDR",
       hintText: "PT_COMMON_AUTHORISED_ADDRESS_PLACEHOLDER",
+      errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,256}$/,
       errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
@@ -174,7 +175,7 @@ const formConfig = {
       type: "textfield",
       floatingLabelText: "PT_FORM3_DOCUMENT_ID_NO",
       hintText: "PT_FORM3_DOCUMENT_ID_NO_PLACEHOLDER",
-      toolTip: true,
+    //  toolTip: true,
      // toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       hideField: true,
@@ -204,8 +205,8 @@ const formConfig = {
           dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", /^[0-9]{12}$/i));
           dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter valid 12 digits aadhar no"));
         } else {
-          dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", ""));
-          dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", ""));
+          dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", /^[a-zA-Z0-9_.-]{1,20}$/i));
+          dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter upto 20 character ID number.Only Special characters allowed are _ . -"));
         }
       },
     },
