@@ -7,6 +7,8 @@ import React from "react";
 import PropertyInfoCard from "../PropertyInfoCard";
 
 const locale = getLocale() || "en_IN";
+
+
 const localizationLabelsData = initLocalizationLabels(locale);
 
 const transform = (floor, key, generalMDMSDataById, propertyDetails) => {
@@ -59,12 +61,17 @@ export const getRainWaterHarvestingInfo = (properties) => {
 }
 
 export const getUnitUsageTypeInfo = (unit, propertyDetails) => {
-  return unit && unit.usageCategoryMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit && unit.usageCategoryMinor, localizationLabelsData) : (propertyDetails && propertyDetails.usageCategoryMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + propertyDetails && propertyDetails.usageCategoryMinor, localizationLabelsData) :
-    (unit && unit.usageCategoryMajor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit && unit.usageCategoryMajor, localizationLabelsData) : "NA"));
+  return unit && unit.usageCategoryMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' +  unit.usageCategoryMinor, localizationLabelsData) : (propertyDetails && propertyDetails.usageCategoryMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' +  propertyDetails.usageCategoryMinor, localizationLabelsData) :
+    (unit && unit.usageCategoryMajor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' +  unit.usageCategoryMajor, localizationLabelsData) : "NA"));
+}
+export const getUnitSubUsageTypeInfo = (unit, propertyDetails) => {
+return unit && unit.usageCategorySubMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit.usageCategorySubMinor, localizationLabelsData) 
+  : "NA";
+
 }
 
 export const getOccupancyInfo = (unit) => {
-  return unit && unit.occupancyType ? getTranslatedLabel('PROPERTYTAX_OCCUPANCYTYPE_' + unit && unit.occupancyType, localizationLabelsData) : "NA";
+  return unit && unit.occupancyType ? getTranslatedLabel('PROPERTYTAX_OCCUPANCYTYPE_' +  unit.occupancyType, localizationLabelsData) : "NA";
 }
 
 export const getAssessmentInfo = (propertyDetails, generalMDMSDataById, properties, oldPropertydetails, OldProperty) => {
@@ -88,11 +95,13 @@ export const getAssessmentInfo = (propertyDetails, generalMDMSDataById, properti
         oldValue: oldPropertydetails && getPlotSizeInfo(oldPropertydetails),
       },
       propertyDetails.propertySubType === "SHAREDPROPERTY"
-        ? {
+        ? //(
+          {
           key: getTranslatedLabel("PT_FLOOR_NO", localizationLabelsData),
           value: units.length > 0 ? `${units[0].floorNo}` : "NA",
           oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units.length > 0 ? `${oldPropertydetails.units[0].floorNo}` : "NA"
-        } :
+         }:
+      
         propertyDetails.propertyType === "VACANT"
         ?
         {
@@ -134,7 +143,14 @@ export const getUnitInfo = (units = [], propertyDetails, oldPropertydetails) => 
         key: getTranslatedLabel("PT_ASSESMENT_INFO_BUILT_UP_AREA", localizationLabelsData),
         value: unit.unitArea ? unit.unitArea + '' : "NA",
         oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && (`${Math.round(oldPropertydetails.units[index].unitArea * 9 * 100) / 100}`) || "NA",
-      }];
+      },
+      {
+        key: getTranslatedLabel("PT_ASSESMENT_INFO_SUB_USAGE_TYPE", localizationLabelsData),
+        value: getUnitSubUsageTypeInfo(unit, propertyDetails),
+        oldValue: oldPropertydetails && oldPropertydetails.units.name && oldPropertydetails.units[index].name && getUnitSubUsageTypeInfo(oldPropertydetails.units[index].name, oldPropertydetails) || "NA",
+      }
+    ];
+    
       if (unit.occupancyType === "RENTED") {
         floor.push({
           key: getTranslatedLabel("PT_ASSESMENT_INFO_AREA_RENT", localizationLabelsData),
@@ -147,6 +163,8 @@ export const getUnitInfo = (units = [], propertyDetails, oldPropertydetails) => 
       } else {
         floors[unit['floorNo']].push(floor);
       }
+     
+      
     }
   }
   )

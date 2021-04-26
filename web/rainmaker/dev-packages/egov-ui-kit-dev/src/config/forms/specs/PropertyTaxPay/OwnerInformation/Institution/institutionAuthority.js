@@ -95,7 +95,7 @@ const formConfig = {
   beforeInitForm: (action, store, dispatch) => {
     // Since designation field was not prefilling while doing edit in assessment operation. Making designation prefill. Root cause was designation data getting lost in propertydetails object of property. Hence taking it from Properties.
     let state = store.getState();
-    const designation = get(state, "common.prepareFormData.Properties[0].institution.designation", "");
+    const designation = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].institution.designation","");
     dispatch(setFieldProperty("institutionAuthority", "designation", "value", designation));
     dispatch(handleFieldChange("institutionAuthority", "designation", designation));
     return action;

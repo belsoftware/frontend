@@ -147,6 +147,9 @@ const OwnerInformation = ({
             <div className="col-sm-6" >
               <Field fieldKey="ownerAddress" field={fields["ownerAddress"]} handleFieldChange={handleFieldChange} disabled={disabled} />
             </div>
+            <div className="col-sm-6">
+
+            </div>
             {!checkBox && (
               <div className="col-sm-6">
                 <Field

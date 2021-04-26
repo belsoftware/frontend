@@ -86,26 +86,44 @@ class DemandCollection extends React.Component {
                                 max={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`)}
                                 // min={taxData.isDebit?-99999:0}
                                 // max={taxData.isDebit?-1:0}
-                                type="number"
+                                type="textfield"
                                 value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`)}
+                           
+                            
                                 onChange={(e) => {  
                                  
                                    let value = "";
-                                  /*value = e.target.value;
-                                  if(e.target.value.includes("."))
+                               
+                                   var NumbersOnly = /^\d{0,8}(\.(\d{1,2})?)?$/i
+                                   
+                                 // value = e.target.value;
+                                 let input = e.target.value ;
+                                 var isValidinput = !!input.match(NumbersOnly)
+                                  if(isValidinput || !input)
                                   {
-                                     
-                                    value = '';
-                                    alert( "Integer numbers are only allowed.");  
-                                        
-                                  } */
-                                  if (e.target.value.includes(".")) 
-                                  {  
-                                   alert( "Integer numbers are only allowed.");
-                                   return value = "" ;
+                                   
+                                    this.setState({value:input})
+                                 
+                                  
+                                  } 
+                                  else if(taxData.code ==='PT_TIME_REBATE'){
+                                    input[0].includes("-")
+                                    this.setState({value:input})
                                   }
+                                  else
+                                  {
+                                    alert( "Integer numbers are only allowed and enter upto two decimal places.");  
+                                    return value = "" ; 
+                                  }
+                                 
+                            
+                                  // if (e.target.value.includes(".")) 
+                                  // {  
+                                  //  alert( "Integer numbers are only allowed.");
+                                  //  return value = "" ;
+                                  // }
 
-                                  if(taxData.code === 'SWATCHATHA_TAX' ||taxData.code === 'PT_TIME_INTEREST' )
+                                  if(taxData.code === 'SWATCHATHA_TAX' ||taxData.code === 'PT_TIME_INTEREST')
                                   {
                                       if (Math.sign(e.target.value)===-1) 
                                       {  
@@ -129,6 +147,7 @@ class DemandCollection extends React.Component {
                                    }
 
                                   }
+
                                 onWheel={event => { event.preventDefault(); }}
                               />
                             </div>
