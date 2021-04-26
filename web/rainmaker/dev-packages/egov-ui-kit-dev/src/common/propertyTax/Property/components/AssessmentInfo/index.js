@@ -61,16 +61,17 @@ export const getRainWaterHarvestingInfo = (properties) => {
 }
 
 export const getUnitUsageTypeInfo = (unit, propertyDetails) => {
-  return unit && unit.usageCategoryMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit && unit.usageCategoryMinor, localizationLabelsData) : (propertyDetails && propertyDetails.usageCategoryMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + propertyDetails && propertyDetails.usageCategoryMinor, localizationLabelsData) :
-    (unit && unit.usageCategoryMajor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit && unit.usageCategoryMajor, localizationLabelsData) : "NA"));
+  return unit && unit.usageCategoryMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' +  unit.usageCategoryMinor, localizationLabelsData) : (propertyDetails && propertyDetails.usageCategoryMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' +  propertyDetails.usageCategoryMinor, localizationLabelsData) :
+    (unit && unit.usageCategoryMajor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' +  unit.usageCategoryMajor, localizationLabelsData) : "NA"));
 }
 export const getUnitSubUsageTypeInfo = (unit, propertyDetails) => {
-  return unit && unit.usageCategorySubMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit && unit.usageCategorySubMinor, localizationLabelsData) : (propertyDetails && propertyDetails.usageCategorySubMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + propertyDetails && propertyDetails.usageCategorySubMinor, localizationLabelsData) :
-    (unit && unit.usageCategorySubMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit && unit.usageCategorySubMinor, localizationLabelsData) : "NA"));
+return unit && unit.unitType ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit.unitType, localizationLabelsData) 
+  : "NA";
+
 }
 
 export const getOccupancyInfo = (unit) => {
-  return unit && unit.occupancyType ? getTranslatedLabel('PROPERTYTAX_OCCUPANCYTYPE_' + unit && unit.occupancyType, localizationLabelsData) : "NA";
+  return unit && unit.occupancyType ? getTranslatedLabel('PROPERTYTAX_OCCUPANCYTYPE_' +  unit.occupancyType, localizationLabelsData) : "NA";
 }
 
 export const getAssessmentInfo = (propertyDetails, generalMDMSDataById, properties, oldPropertydetails, OldProperty) => {
