@@ -15,23 +15,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 import Label from "egov-ui-kit/utils/translationNode";
 class DemandCollection extends React.Component {
-//   state = { errorText: ""
-// };
-// onDemabndChange = e => {
-//   const value = e.target.value;
-//   this.setState({ value });
-//   if(e.target.value.match("^[1-9]*$")) {
-//     this.setState({
-//       errorText: ""
-//     });
-//   } else {
-//     this.setState({ errorText: "enter valid number" });
-//   }
-// };
   render() {
-    // const {
-    //   errorText
-    // } = this.state;
     const { prepareFinalObject, preparedFinalObject,Properties = [] } = this.props;
     const finalData=getFinalData();
      
@@ -104,13 +88,13 @@ class DemandCollection extends React.Component {
                                 // max={taxData.isDebit?-1:0}
                                 type="textfield"
                                 value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`)}
-                             //   errorText={<Label label={errorText} />}
+                           
                             
                                 onChange={(e) => {  
                                  
                                    let value = "";
-                                 //  var NumbersOnly = /^[1-9]\d*(\.\d+)?$/
-                                   var NumbersOnly = /^\d{0,8}(\.\d{1,2})?$/g
+                               
+                                   var NumbersOnly = /^\d{0,8}(\.(\d{1,2})?)?$/i
                                    
                                  // value = e.target.value;
                                  let input = e.target.value ;
@@ -119,7 +103,7 @@ class DemandCollection extends React.Component {
                                   {
                                    
                                     this.setState({value:input})
-                                  //  errorText = 'Integer numbers are only allowed.';
+                                 
                                   
                                   } 
                                   else if(taxData.code ==='PT_TIME_REBATE'){
@@ -128,13 +112,11 @@ class DemandCollection extends React.Component {
                                   }
                                   else
                                   {
-                                    alert( "Integer numbers are only allowed.");  
+                                    alert( "Integer numbers are only allowed and enter upto two decimal places.");  
                                     return value = "" ; 
                                   }
-                                  // else {
-                                  //   errorText = "";
-                                  // }
-                             //    this.onDemabndChange(e)
+                                 
+                            
                                   // if (e.target.value.includes(".")) 
                                   // {  
                                   //  alert( "Integer numbers are only allowed.");
