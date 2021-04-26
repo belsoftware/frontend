@@ -51,14 +51,15 @@ const mapStateToProps = (state, ownProps) => {
   const billDetails = get(screenConfiguration, "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails", []);
   let totalAmount = 0;
   let arrears=0;
-  for (let billDetail of billDetails) {
+  let current = 0;
+ /* for (let billDetail of billDetails) {
     totalAmount += billDetail.amount;
 
   }
-// if(totalAmount>0){
-//   arrears=totalAmount-billDetails[0].amount;
-//   arrears = arrears.toFixed(2);
-// }
+if(totalAmount>0){
+  arrears=totalAmount-billDetails[0].amount;
+  arrears = arrears.toFixed(2);
+}*/
 for (let billDetail of billDetails) {
   if(billDetail.fromPeriod < Date.now() && Date.now() < billDetail.toPeriod) {
     current = billDetail.amount;
@@ -67,10 +68,7 @@ for (let billDetail of billDetails) {
 
 }
 if(totalAmount>0){
-if(businesService=="PT")
-{
  arrears=totalAmount-current;
-}
 }
   const estimate = {
     header: { labelName: "Fee Estimate", labelKey: "NOC_FEE_ESTIMATE_HEADER" },
