@@ -454,7 +454,7 @@ class FormWizardDataEntry extends Component {
       case "INSTITUTIONALGOVERNMENT":
         return (
           <div>
-            <InstitutionHOC disabled={propertiesEdited} />
+            <InstitutionHOC/>
             <InstitutionAuthorityHOC
               cardTitle={
                 <Label
@@ -462,7 +462,7 @@ class FormWizardDataEntry extends Component {
                   defaultLabel="Details of authorised person"
                 />
               }
-              disabled={propertiesEdited}
+              //disabled={propertiesEdited}
             />
           </div>
         );
