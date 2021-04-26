@@ -218,7 +218,7 @@ class Home extends React.Component {
 
     setLangfromUrl() {
         let lang = getQueryArg(window.location.href,"lang");
-        if(["en_IN","hi_IN","kn_IN","ml_IN","ta_IN", "te_IN","mr_IN"].indexOf(lang) > -1)
+        if(["en_IN","hi_IN","kn_IN","ml_IN","ta_IN", "te_IN","mr_IN","bn_IN"].indexOf(lang) > -1)
         {
             localStorage.setItem("Employee.locale", lang);
         }
