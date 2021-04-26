@@ -65,7 +65,7 @@ export const getUnitUsageTypeInfo = (unit, propertyDetails) => {
     (unit && unit.usageCategoryMajor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' +  unit.usageCategoryMajor, localizationLabelsData) : "NA"));
 }
 export const getUnitSubUsageTypeInfo = (unit, propertyDetails) => {
-return unit && unit.unitType ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit.unitType, localizationLabelsData) 
+return unit && unit.usageCategorySubMinor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + unit.usageCategorySubMinor, localizationLabelsData) 
   : "NA";
 
 }
