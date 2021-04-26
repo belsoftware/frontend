@@ -29,9 +29,9 @@ class DemandCollection extends React.Component {
 //   }
 // };
   render() {
-    const {
-      errorText
-    } = this.state;
+    // const {
+    //   errorText
+    // } = this.state;
     const { prepareFinalObject, preparedFinalObject,Properties = [] } = this.props;
     const finalData=getFinalData();
      
@@ -110,7 +110,7 @@ class DemandCollection extends React.Component {
                                  
                                    let value = "";
                                  //  var NumbersOnly = /^[1-9]\d*(\.\d+)?$/
-                                   var NumbersOnly = /^\d{0,8}(\.\d{1,2})?$/i
+                                   var NumbersOnly = /^\d{0,8}(\.\d{1,2})?$/g
                                    
                                  // value = e.target.value;
                                  let input = e.target.value ;
