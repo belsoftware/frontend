@@ -15,7 +15,23 @@ import get from "lodash/get";
 import set from "lodash/set";
 import Label from "egov-ui-kit/utils/translationNode";
 class DemandCollection extends React.Component {
+//   state = { errorText: ""
+// };
+// onDemabndChange = e => {
+//   const value = e.target.value;
+//   this.setState({ value });
+//   if(e.target.value.match("^[1-9]*$")) {
+//     this.setState({
+//       errorText: ""
+//     });
+//   } else {
+//     this.setState({ errorText: "enter valid number" });
+//   }
+// };
   render() {
+    const {
+      errorText
+    } = this.state;
     const { prepareFinalObject, preparedFinalObject,Properties = [] } = this.props;
     const finalData=getFinalData();
      
@@ -86,26 +102,46 @@ class DemandCollection extends React.Component {
                                 max={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`)}
                                 // min={taxData.isDebit?-99999:0}
                                 // max={taxData.isDebit?-1:0}
-                                type="number"
+                                type="textfield"
                                 value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`)}
+                             //   errorText={<Label label={errorText} />}
+                            
                                 onChange={(e) => {  
                                  
                                    let value = "";
-                                  /*value = e.target.value;
-                                  if(e.target.value.includes("."))
+                                 //  var NumbersOnly = /^[1-9]\d*(\.\d+)?$/
+                                   var NumbersOnly = /^\d{0,8}(\.\d{1,2})?$/i
+                                   
+                                 // value = e.target.value;
+                                 let input = e.target.value ;
+                                 var isValidinput = !!input.match(NumbersOnly)
+                                  if(isValidinput || !input)
                                   {
-                                     
-                                    value = '';
-                                    alert( "Integer numbers are only allowed.");  
-                                        
-                                  } */
-                                  if (e.target.value.includes(".")) 
-                                  {  
-                                   alert( "Integer numbers are only allowed.");
-                                   return value = "" ;
+                                   
+                                    this.setState({value:input})
+                                  //  errorText = 'Integer numbers are only allowed.';
+                                  
+                                  } 
+                                  else if(taxData.code ==='PT_TIME_REBATE'){
+                                    input[0].includes("-")
+                                    this.setState({value:input})
                                   }
+                                  else
+                                  {
+                                    alert( "Integer numbers are only allowed.");  
+                                    return value = "" ; 
+                                  }
+                                  // else {
+                                  //   errorText = "";
+                                  // }
+                             //    this.onDemabndChange(e)
+                                  // if (e.target.value.includes(".")) 
+                                  // {  
+                                  //  alert( "Integer numbers are only allowed.");
+                                  //  return value = "" ;
+                                  // }
 
-                                  if(taxData.code === 'SWATCHATHA_TAX' ||taxData.code === 'PT_TIME_INTEREST' )
+                                  if(taxData.code === 'SWATCHATHA_TAX' ||taxData.code === 'PT_TIME_INTEREST')
                                   {
                                       if (Math.sign(e.target.value)===-1) 
                                       {  
@@ -129,6 +165,7 @@ class DemandCollection extends React.Component {
                                    }
 
                                   }
+
                                 onWheel={event => { event.preventDefault(); }}
                               />
                             </div>
