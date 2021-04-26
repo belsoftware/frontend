@@ -538,14 +538,15 @@ const getAssessmentInfo = (propertyDetails, keys, generalMDMSDataById) => {
           {
             key: getTranslatedLabel("PT_ASSESMENT_INFO_NO_OF_FLOOR", localizationLabelsData),
             value: propertyDetails.noOfFloors ? `${propertyDetails.noOfFloors}` : "NA", //noOfFloors
-          },
+           }
+
         ],
         items: {
           header: units
             ? [
               getTranslatedLabel("PT_ASSESMENT_INFO_FLOOR", localizationLabelsData),
               getTranslatedLabel("PT_ASSESMENT_INFO_USAGE_TYPE", localizationLabelsData),
-              // getTranslatedLabel("PT_ASSESMENT_INFO_SUB_USAGE_TYPE", localizationLabelsData),
+              getTranslatedLabel("PT_ASSESMENT_INFO_SUB_USAGE_TYPE", localizationLabelsData),
               getTranslatedLabel("PT_ASSESMENT_INFO_OCCUPLANCY", localizationLabelsData),
               getTranslatedLabel("PT_ASSESMENT_INFO_AREA_RENT", localizationLabelsData),
             ]
