@@ -744,7 +744,26 @@ export const downloadPTBill = async (queryStr, mode = 'download') => {
 
 }
 
+export const downloadMultipleBill = async (bills = [], configKey) => {
+  try {
+    const DOWNLOADRECEIPT = {
+      GET: {
+        URL: "/pdf-service/v1/_create",
+        ACTION: "_get",
+      },
+    };
+    const queryStr = [
+      { key: "key", value: configKey },
+      { key: "tenantId", value: commonConfig.tenantId }
+    ]
+    const pfResponse = await httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Bill: bills }, { 'Accept': 'application/pdf' }, { responseType: 'arraybuffer' })
+    downloadReceiptFromFilestoreID(pfResponse.filestoreIds[0], 'download');
+  } catch (error) {
+    console.log(error);
 
+  }
+
+}
 
 export const downloadMultipleFileFromFilestoreIds = (fileStoreIds = [], mode, tenantId) => {
   getFileUrlFromAPI(fileStoreIds.join(','), tenantId).then(async (fileRes) => {
