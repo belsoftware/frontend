@@ -521,6 +521,43 @@ const getAcknowledgementCard = (
         tenant
       )
     };
+  } else if (purpose === "resubmit" && status === "success") {
+    return {
+      commonHeader: commonHeader(state,
+        dispatch,
+        applicationNumber,
+        tenant),
+      applicationSuccessCard: {
+        uiFramework: "custom-atoms",
+        componentPath: "Div",
+        children: {
+          card: acknowledgementCard({
+            icon: "done",
+            backgroundColor: "#39CB74",
+            header: {
+              labelName: "Application Re-Submitted Successfully",
+              labelKey: "TL_APPLICATION_RESUBMIT_SUCCESS_MESSAGE_MAIN"
+            },
+            body: {
+              labelName:
+                "A notification regarding above application status has been sent to registered Mobile No.",
+              labelKey: "WS_APPLICATION_FORWARD_SUCCESS_SUBHEAD"
+            },
+            tailText: {
+              labelName: "Application No.",
+              labelKey: "WS_ACK_COMMON_APP_NO_LABEL"
+            },
+            number: applicationNumber
+          })
+        }
+      },
+      applicationSuccessFooter: applicationSuccessFooter(
+        state,
+        dispatch,
+        applicationNumber,
+        tenant
+      )
+    };
   } else if (purpose === "activate" && status === "success") {
 
     return {
