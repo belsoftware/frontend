@@ -31,7 +31,8 @@ const configs = {
                     {'ws':{'services_name':'Water','filterKey':'WS'}},
                     {'sw':{'services_name':'Sewerage','filterKey':'SW'}},
                     {'Birth':{'services_name':'Birth','filterKey':'BIRTH'}},
-                    {'Death':{'services_name':'Death','filterKey':'DEATH'}}
+                    {'Death':{'services_name':'Death','filterKey':'DEATH'}},
+                    {'ors':{'services_name':'Ors','filterKey':'ORS'}}
                     ],
     'SERVICES': ["Property Tax","Trade licence", "M Collect", "PGR", "Lease","Water", "Sewerage", "Birth", "Death"]
     //'SERVICES': ["Property Tax", "Trade licence","PGR", "M Collect"]
