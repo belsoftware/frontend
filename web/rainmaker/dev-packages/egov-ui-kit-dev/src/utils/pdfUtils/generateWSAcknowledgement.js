@@ -126,7 +126,7 @@ export const generateWSAcknowledgement = (preparedFinalObject, fileName = "print
             { header: 'PDF_STATIC_LABEL_WS_CONSOLIDATED_ACKNOWELDGMENT_PLUMBER_DETAILS_HEADER', items: plumberDetail, hide: plumberDetail.length === 0 },
             { header: 'PDF_STATIC_LABEL_WS_CONSOLIDATED_ACKNOWELDGMENT_ROAD_CHARGES_HEADER', items: roadDetail, hide: roadDetail.length === 0,type: roadDetailInfo.length > 1 ? 'multiItem' : 'singleItem' },
             { header: 'PDF_STATIC_LABEL_WS_CONSOLIDATED_ACKNOWELDGMENT_ACTIVATION_DETAILS_HEADER', items: activateDetail },
-            { header: 'PDF_STATIC_LABEL_WS_CONSOLIDATED_ACKNOWELDGMENT_MODIFY_EFFECTIVE_DATE_HEADER', items: reviewModificationsEffective, hide: reviewModificationsEffective.length === 0 },
+            { header: 'PDF_STATIC_LABEL_WS_CONSOLIDATED_ACKNOWELDGMENT_MODIFY_EFFECTIVE_FROM_HEADER', items: reviewModificationsEffective, hide: reviewModificationsEffective.length === 0 },
 
         ]
  
