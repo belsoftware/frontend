@@ -8,7 +8,7 @@ import {
   getCommonParagraph, getCommonTitle, getStepperObject
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, toggleSnackbar, unMountScreen } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import {disableField,enableField, getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { set } from "lodash";
 import cloneDeep from "lodash/cloneDeep";
 import get from "lodash/get";
@@ -516,6 +516,26 @@ export const getData = async (action, state, dispatch) => {
       //For Modify Connection hide the connection details card
       if (isModifyMode()) {
         showHideFieldModifyConnection(action);
+
+        if(data.waterSource == "OTHERS")
+        {         
+          console.log("its in others---")       
+          enableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo', dispatch);
+       
+        }
+        else
+        {
+          disableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo', dispatch);
+        //   dispatch(
+        //    handleField(
+        //      "apply",
+        //      "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo",
+        //      "props.value",
+        //      "NA"
+        //    )
+        //  );
+         
+        }
       }
       let docs = get(state, "screenConfiguration.preparedFinalObject");
       await prefillDocuments(docs, "displayDocs", dispatch);
