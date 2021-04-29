@@ -29,6 +29,7 @@ class Footer extends React.Component {
       applicationNos,
       businessService,
       bill,
+      oldConnectionNo
     } = this.props;
     const editButton = {
       label: "Edit",
@@ -60,7 +61,9 @@ class Footer extends React.Component {
         ];
 
         let isApplicationApproved = await isWorkflowExists(queryObj);
-        if (!isApplicationApproved) {
+        let isOldWorkflow = oldConnectionNo!=null && oldConnectionNo !="" && oldConnectionNo !="NA" ?true :false;
+        console.log("oldConnectionNo:::'"+ (oldConnectionNo)+"'");
+        if (!isApplicationApproved && !isOldWorkflow ) {
           toggleSnackbar(
             true,
             {
@@ -199,12 +202,16 @@ const mapStateToProps = (state) => {
     connectionObj && connectionObj.length > 0
       ? connectionObj[0].applicationNo
       : "";
+  const oldConnectionNo =
+  connectionObj && connectionObj.length > 0
+    ? connectionObj[0].oldConnectionNo
+    : "";
   const businessService = connectDetailsData.BillingService.BusinessService.map(
     (item) => {
       return item.businessService;
     }
   );
-  return { state, applicationNo, applicationNos, businessService, bill };
+  return { state, applicationNo, applicationNos, businessService, bill, oldConnectionNo };
 };
 
 const mapDispatchToProps = (dispatch) => {
