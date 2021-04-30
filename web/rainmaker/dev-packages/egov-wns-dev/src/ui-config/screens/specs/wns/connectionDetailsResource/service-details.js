@@ -29,6 +29,8 @@ export const renderService1 = () => {
       return getCommonContainer({
         serviceType: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_SERV_LABEL" }, { jsonPath: "WaterConnection[0].service" }),
         //connectionCategory: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_CONN_CATEGORY" }, { jsonPath: "WaterConnection[0].connectionCategory" }),
+        oldConnectionNo : getLabelWithValue({ labelKey: "WS_SEARCH_CONNNECTION_OLD_CONSUMER_LABEL" }, { jsonPath: "WaterConnection[0].oldConnectionNo" }),
+
         connectionType: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_CONN_TYPE" }, { jsonPath: "WaterConnection[0].connectionType" }),
         meterID: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_METER_ID" }, { jsonPath: "WaterConnection[0].meterId" }),
         pipeSize: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_PIPE_SIZE" }, { jsonPath: "WaterConnection[0].pipeSize" }),
@@ -57,6 +59,8 @@ export const renderService1 = () => {
     } else {
       return getCommonContainer({
         serviceType: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_SERV_LABEL" }, { jsonPath: "WaterConnection[0].service" }),
+        oldConnectionNo : getLabelWithValue({ labelKey: "WS_SEARCH_CONNNECTION_OLD_CONSUMER_LABEL" }, { jsonPath: "WaterConnection[0].oldConnectionNo" }),
+
         //connectionCategory: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_CONN_CATEGORY" }, { jsonPath: "WaterConnection[0].connectionCategory" }),
         authorizedConnection: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_AUTHORIZED_CONN" }, { jsonPath: "WaterConnection[0].authorizedConnection" }),
         connectionType: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_CONN_TYPE" }, { jsonPath: "WaterConnection[0].connectionType" }),
