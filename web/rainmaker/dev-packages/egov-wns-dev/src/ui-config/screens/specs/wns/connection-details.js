@@ -280,15 +280,59 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
        });     
       let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
-      
-      if(waterConnection.waterSource.includes(".")){      
-           //Set water source and sub source    
-        waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
-        let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
-        let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
-        waterConnection.waterSource = waterSource;
-        waterConnection.waterSubSource = waterSubSource;   
+      console.info("waterConnection=",waterConnection)
+      console.info("DC-water src & sub src:",waterConnection.waterSource)
+      let waterSource;
+      let waterSubSource;
+
+      //waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+
+
+      if(waterConnection.waterSourceSubSource.includes("null")){
+        waterSource ="NA"
+        waterSubSource ="NA"
       }
+      else if(waterConnection.waterSourceSubSource.includes(".")){
+        waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSourceSubSource.split(".")[0];
+        waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSourceSubSource.split(".")[1];
+        console.info("DC-water src & sub src",waterSource,":",waterSubSource)   
+      }
+      else{
+        waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+        waterSubSource =  "NA" ;
+      }
+
+
+
+
+      // waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+
+      // if(waterConnection.waterSource.includes(".")){      
+      //   //Set water source and sub source    
+      //    waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
+      //    waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
+      //   console.info("DC-water src & sub src",waterSource,":",waterSubSource)       
+      // }
+      // else{
+      //   waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+      //   waterSubSource =  "NA" ;
+     
+        
+      // }
+
+      waterConnection.waterSource = waterSource;
+      waterConnection.waterSubSource = waterSubSource;   
+
+
+      // if(waterConnection.waterSource.includes(".")){      
+      //      //Set water source and sub source    
+      //   waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+      //   let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
+      //   let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
+      //  console.info("DC-water src & sub src",waterSource,":",waterSubSource)
+      //   waterConnection.waterSource = waterSource;
+      //   waterConnection.waterSubSource = waterSubSource;   
+      // }
       
    
 

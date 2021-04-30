@@ -77,14 +77,14 @@ const waterSourceTypeChange = (reqObj) => {
       console.log("mstep---",mStep);
       if(value!="OTHERS")
       {
-        // dispatch(
-        //   handleField(
-        //     "apply",
-        //     `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo`,
-        //     "disabled",
-        //     true
-        //   )
-        // );
+         dispatch(
+           handleField(
+             "apply",
+             "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo",
+             "props.value",
+             "NA"
+           )
+         );
         disableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo', dispatch);
         //enableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.waterSubSource', dispatch);
       }
