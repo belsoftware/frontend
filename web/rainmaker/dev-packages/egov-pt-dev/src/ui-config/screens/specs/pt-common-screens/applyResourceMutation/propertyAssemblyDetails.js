@@ -261,32 +261,50 @@ export const propertyAssemblyDetails = getCommonCard({
         rendersubUsageType(action.value, propType, dispatch, state)
       }
     }),
-    subUsageType: getSelectField({
-      label: {
-        labelName: "Sub Usage Type",
-        labelKey: "PT_COMMON_SUB_USAGE_TYPE"
-      },
-      placeholder: {
-        labelName: "Select Sub Usage Type",
-        labelKey: "PT_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
-      },
-      required: true,
-      visible: false,
-      jsonPath: "Property.subUsageCategory",
-      sourceJsonPath: "propsubusagetypeForSelectedusageCategory",
-      gridDefination: {
-        xs: 12,
-        sm: 12,
-        md: 6
-      },
-      props:{
-       
-      },
-      localePrefix: {
-        moduleName: "COMMON",
-        masterName: "PROPSUBUSGTYPE"
-      },
-    }),
+
+subUsageType:{
+    uiFramework: "custom-containers-local",
+    moduleName: "egov-pt",
+    componentPath: "AutosuggestContainer",
+    props: {
+        style: {
+            width: "100%",
+            cursor: "pointer"
+          },
+        label: {
+            labelName: "Sub Usage Type",
+            labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+        },
+  
+        placeholder: {
+            labelName: "Select Sub Usage Type",
+            labelKey: "PT_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
+        },
+     
+        localePrefix: {
+            moduleName: "COMMON",
+       			 masterName: "PROPSUBUSGTYPE"
+        },
+        jsonPath: "Property.subUsageCategory",
+        sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
+        className: "autocomplete-dropdown pds-search",
+        labelsFromLocalisation: true,
+        required: true,        
+        disabled: false,
+        isClearable: true,      
+        fullwidth: true,
+     
+    },
+    required: true,
+    visible: false,
+    jsonPath: "Property.subUsageCategory",
+    gridDefination: {
+        xs: 12,
+        sm:12,
+        md: 6
+    },
+    
+ },
     noOfFloors: getTextField({
           label: {
             labelName: "No of Floors",
@@ -336,4 +354,10 @@ export const propertyAssemblyDetails = getCommonCard({
                   jsonPath: "Property.arvValue"
                 })
   })
-});
+},
+{
+    style: {
+      overflow: "visible"
+    }
+  }
+  );
