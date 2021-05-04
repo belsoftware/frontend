@@ -26,7 +26,7 @@ import {
 } from "./connectionDetailsResource/owner-deatils";
 import { getPropertyDetails } from "./connectionDetailsResource/property-details";
 import { getServiceDetails } from "./connectionDetailsResource/service-details";
-//import { getRequiredDocData } from "egov-billamend/ui-config/screens/specs/utils";
+import { getRequiredDocData } from "egov-billamend/ui-config/screens/specs/utils";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import { httpRequest } from "../../../../ui-utils/api";
 import { getBill } from "egov-common/ui-config/screens/specs/utils";
@@ -500,12 +500,12 @@ const getMDMSData = async (action, state, dispatch) => {
     },
   };
   try {
-    // getRequiredDocData(action, dispatch, [
-    //   {
-    //     moduleName: "BillAmendment",
-    //     masterDetails: [{ name: "documentObj" }],
-    //   },
-    // ]);
+    getRequiredDocData(action, dispatch, [
+      {
+        moduleName: "BillAmendment",
+        masterDetails: [{ name: "documentObj" }],
+      },
+    ]);
     const payload = await httpRequest(
       "post",
       "/egov-mdms-service/v1/_search",
@@ -533,12 +533,12 @@ const screenConfig = {
     getDataForBillAmendment(action, state, dispatch);
 
     beforeInitFn(action, state, dispatch, connectionNo);
-    // getRequiredDocData(action, dispatch, [
-    //   {
-    //     moduleName: "BillAmendment",
-    //     masterDetails: [{ name: "documentObj" }],
-    //   },
-    // ]);
+    getRequiredDocData(action, dispatch, [
+      {
+        moduleName: "BillAmendment",
+        masterDetails: [{ name: "documentObj" }],
+      },
+    ]);
     set(
       action,
       "screenConfig.components.div.children.headerDiv.children.header1.children.connectionNumber.props.number",
