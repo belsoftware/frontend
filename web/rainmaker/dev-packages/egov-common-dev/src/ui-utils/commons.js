@@ -643,7 +643,16 @@ export const downloadAppFeeReceipt = (receiptQueryString, mode = "download" ,con
   }
 }
 
-export const downloadBill = async (consumerCode, tenantId, configKey = "consolidatedbill", url = "egov-searcher/bill-genie/billswithaddranduser/_get") => {
+export const downloadBill = async (consumerCode, tenantId, configKey = "consolidatedbill", url = "egov-searcher/bill-genie/billswithaddranduser/_get",businessService='') => {
+  if(businessService=='PT'){
+    
+    const billQueryStr = [
+      { key: "propertyId", value: consumerCode },
+      { key: "tenantId", value: tenantId }
+    ]
+    downloadPTBill(billQueryStr,"download"); 
+  }
+else{
   const searchCriteria = {
     consumerCode,
     tenantId
@@ -685,7 +694,7 @@ export const downloadBill = async (consumerCode, tenantId, configKey = "consolid
     console.log(error);
 
   }
-
+}
 }
 
 
@@ -745,6 +754,19 @@ export const downloadPTBill = async (queryStr, mode = 'download') => {
 }
 
 export const downloadMultipleBill = async (bills = [], configKey) => {
+  if(bills && bills[0].businessService=='PT'){
+    let propertyIds = '';
+    for (var i = 0; i < bills.length; i++) {
+      propertyIds += bills[i]['consumerCode'] + ",";
+    }
+    propertyIds = propertyIds.substring(0, propertyIds.length - 1);
+    const billQueryStr = [
+      { key: "propertyId", value: propertyIds },
+      { key: "tenantId", value: bills[0].tenantId }
+    ]
+    downloadPTBill(billQueryStr,"download"); 
+  }
+  else{
   try {
     const DOWNLOADRECEIPT = {
       GET: {
@@ -762,6 +784,7 @@ export const downloadMultipleBill = async (bills = [], configKey) => {
     console.log(error);
 
   }
+}
 
 }
 
