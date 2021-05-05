@@ -95,7 +95,8 @@ const onRowClick = rowData => {
   if(bussinessservice.indexOf("Property Tax") != -1){
     const receiptQueryString = [
       { key: "propertyId", value: rowData[1] },
-      { key: "tenantId", value: rowData[7] }
+      { key: "tenantId", value: rowData[7] },
+      { key: "receiptNo", value: rowData[0]}
   ]
 
   download(receiptQueryString, "download", "newpt-receipt");
