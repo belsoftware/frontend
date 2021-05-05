@@ -92,6 +92,39 @@ export const reviewWaterSource = getLabelWithValueForModifiedLabel(
     callBack: handleNA
   }
 );
+
+export const  reviewUsageType =getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Usage Type",
+    labelKey: "PT_COMMON_USAGE_TYPE"
+  },
+  {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPUSGTYPE"
+    },
+    jsonPath: "applyScreen.usageCategory",
+    callBack: handleNA
+  }
+);
+export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Usage Type",
+    labelKey: "PT_COMMON_USAGE_TYPE"
+  },
+  {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPSUBUSGTYPE"
+    },
+    jsonPath: "applyScreen.subUsageCategory",
+    callBack: handleNA
+  }
+);
+
+
+
+
 export const reviewWaterSubSource = getLabelWithValueForModifiedLabel(
   {
     labelName: "Water Sub Source",
@@ -488,7 +521,9 @@ const connectionDetails = getCommonContainer({
   // reviewBillingType,
   reviewWaterClosets,
   reviewNumberOfToilets,
-  reviewDrainageSize
+  reviewDrainageSize,
+  reviewUsageType,
+  reviewSubUsageType
 });
 
 const connectionChargeDetails = getCommonContainer({
