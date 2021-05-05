@@ -123,8 +123,8 @@ const showHideConnectionHolder = (dispatch, connectionHolders) => {
 
 export const sortpayloadDataObj =(connectionObj)=>{ 
  
-  connectionObj.sort(function(x, y){
-  return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+  return connectionObj.sort(function(x, y){
+    return  y.auditDetails.createdTime-x.auditDetails.createdTime;
   });
 }
 
