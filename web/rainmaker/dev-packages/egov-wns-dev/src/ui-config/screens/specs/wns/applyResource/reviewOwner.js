@@ -109,8 +109,8 @@ export const  reviewUsageType =getLabelWithValueForModifiedLabel(
 );
 export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
   {
-    labelName: "Usage Type",
-    labelKey: "PT_COMMON_USAGE_TYPE"
+    labelName: "Sub Usage Type",
+    labelKey: "PT_COMMON_SUB_USAGE_TYPE"
   },
   {
     localePrefix: {
