@@ -184,6 +184,15 @@ const getMultiCard = (items = [], color = 'grey') => {
     }
     return tableCard;
 }
+
+const getHeader = (header) => {
+    let cardWithHeader = header ? [{
+        "text": header == '-1' ? " " : getLocaleLabels(header, header),
+        "style": header == '-1' ? "pdf-card-no-title" : "pdf-card-title"
+    }] : [];
+  
+    return cardWithHeader;
+}
 const getCard = (keyValues = [], color = 'grey') => {
     let card = []
     let keys = [];
@@ -255,7 +264,7 @@ const getMultiItemCard = (header, items, color = 'grey') => {
 export const getMultiItems = (preparedFinalObject, cardInfo, sourceArrayJsonPath) => {
     let multiItem = [];
     let removedElements = [];
-    const arrayLength = get(preparedFinalObject, sourceArrayJsonPath, []).length;
+    const arrayLength = getFromObject(preparedFinalObject, sourceArrayJsonPath, []).length;
     for (let i = 0; i < arrayLength; i++) {
         let items = [];
         items = generateKeyValue(preparedFinalObject, cardInfo);
@@ -268,8 +277,8 @@ export const getMultiItems = (preparedFinalObject, cardInfo, sourceArrayJsonPath
     return multiItem;
 }
 export const getMultipleItemCard = (itemsInfo, itemHeader = "COMMON_OWNER", hideHeader = false) => {
-    let multipleItems = itemsInfo[0].items.filter(item => item);
-    if (itemsInfo.length > 1) {
+    let multipleItems = itemsInfo && itemsInfo[0].items.filter(item => item);
+    if (itemsInfo && itemsInfo.length > 1) {
         let items = [];
         itemsInfo.map((item, index) => {
             let rowElements = { header: `${getLocaleLabels(itemHeader, itemHeader)} - ${index+1}`, items: item.items.filter(element => element) };
@@ -682,6 +691,11 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                 if (!card.hide) {
                     if(card.items.length>0)
                     data.content.push(...getCardWithHeader(card.header, card.items, card.color));
+                }
+                break;
+            case "header":
+                if (!card.hide && card.header) {
+                    data.content.push(...getHeader(card.header));
                 }
                 break;
             case "multiItem":

@@ -1,7 +1,7 @@
 // import { tradeInstitutionDetails, tradeOwnerDetails } from "egov-tradelicence/ui-config/screens/specs/tradelicence/applyResource/review-owner";
 // import { tradeAccessoriesDetails, tradeLocationDetails, tradeReviewDetails, tradetypeDetails } from "egov-tradelicence/ui-config/screens/specs/tradelicence/applyResource/review-trade";
 import { billAmendDemandRevisionContainer } from "egov-billamend/ui-config/screens/specs/bill-amend/search-preview";
-import { generateKeyValue, generatePDF, getDocumentsCard, getEstimateCardDetails } from "egov-ui-kit/utils/pdfUtils/generatePDF";
+import { generateKeyValue, generatePDF, getDocumentsCard, getEstimateCardDetails } from "./generatePDF";
 import { getFromObject } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
 import { getLocaleLabels } from "egov-ui-framework/ui-utils/commons";
 
