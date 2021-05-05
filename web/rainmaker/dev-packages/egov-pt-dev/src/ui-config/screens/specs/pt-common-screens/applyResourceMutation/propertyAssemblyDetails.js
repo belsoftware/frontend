@@ -99,7 +99,7 @@ export const rendersubUsageType = (usageType, propType, dispatch, state) => {
     state.screenConfiguration.preparedFinalObject,
     "Property.propertyType"
   );  
-const additionalDetailsJson = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.subUsageType"; 
+  const additionalDetailsJson = "components.div.children.formwizardFirstStep.children.propertyAssemblyDetails.children.cardContent.children.propertyAssemblyDetailsContainer.children.subUsageType"; 
 
   let subUsage;
     if (propertyType === "BUILTUP.SHAREDPROPERTY" || propertyType === "BUILTUP.INDEPENDENTPROPERTY") {

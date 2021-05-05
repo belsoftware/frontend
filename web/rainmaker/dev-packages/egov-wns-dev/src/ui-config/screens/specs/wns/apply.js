@@ -250,7 +250,15 @@ export const getMdmsData = async dispatch => {
             { name: "workflowBasedCardPermission" }
           ]
         },
-        { moduleName: "PropertyTax", masterDetails: [{ name: "PTWorkflow" }, { name: "PropertyOwnershipCategory" }] }
+        { moduleName: "PropertyTax", 
+             masterDetails: 
+             [{ name: "PTWorkflow" }, 
+             { name: "PropertyOwnershipCategory" },
+             { name: "UsageCategory" },
+             { name: "UsageCategoryMajor" },
+             { name: "UsageCategoryMinor" },
+             { name: "UsageCategorySubMinor" },
+            ]}
       ]
     }
   };
@@ -326,6 +334,42 @@ export const getMdmsData = async dispatch => {
 
     payload.MdmsRes['common-masters'].Institutions = institutions;
     payload.MdmsRes['common-masters'].OwnerShipCategory = OwnerShipCategory;
+
+    //Property type addition
+    let UsageType = [];
+    payload.MdmsRes["PropertyTax"].UsageCategory.forEach(item => {
+      if (item.code.split(".").length <= 2 && item.code != "NONRESIDENTIAL") {
+        UsageType.push({
+          active: item.active,
+          name: item.name,
+          code: item.code,
+          fromFY: item.fromFY
+        })
+      }
+    })
+    console.info("DC- usage type >",UsageType)
+    payload.MdmsRes["PropertyTax"].UsageType = UsageType;
+    let array1 = [];
+    let array2 = [];
+    payload.MdmsRes["PropertyTax"].UsageCategory.forEach(item => {
+      let itemCode = item.code.split(".");
+      const codeLength = itemCode.length;
+      if (codeLength > 3) {
+        array1.push(item);
+      } else if (codeLength === 3) {
+        array2.push(item);
+      }
+    })
+    array1.forEach(item => {
+      array2 = array2.filter(item1 => {
+        return (!(item.code.includes(item1.code)));
+      })
+    });
+    array1 = array2.concat(array1);
+
+    payload.MdmsRes["PropertyTax"].subUsageType = array1;
+
+
 
 
     dispatch(prepareFinalObject("applyScreenMdmsData", payload.MdmsRes));

@@ -254,8 +254,75 @@ export const additionDetails = getCommonCard({
         
         gridDefination: { xs: 12, sm: 6 },
         jsonPath: "applyScreen.drainageSize"
-      })
+      }),
+      usageType: getSelectField({
+              label: {
+                labelName: "Usage Type",
+                labelKey: "PT_COMMON_USAGE_TYPE"
+              },
+              placeholder: {
+                labelName: "Select Usage Type",
+                labelKey: "PT_COMMON_USAGE_TYPE_PLACEHOLDER"
+              },
+              required: true,
+              jsonPath: "applyScreen.usageCategory",
+              sourceJsonPath: "applyScreenMdmsData.PropertyTax.UsageType",
+              gridDefination: { xs: 12, sm: 6 },
+              localePrefix: {
+                moduleName: "COMMON",
+                masterName: "PROPUSGTYPE"
+              },
+              beforeFieldChange: async (action, state, dispatch) => {
+                let propType = get(
+                  state.screenConfiguration.preparedFinalObject,
+                  "Property.propertyType"
+                );
+                console.info("DC-before field change")
+                rendersubUsageType(action.value, propType, dispatch, state)
+              }
+         }),
+        subUsageType:{
+          uiFramework: "custom-containers-local",
+          moduleName: "egov-pt",
+          componentPath: "AutosuggestContainer",
+          props: {
+              style: {
+                  width: "100%",
+                  cursor: "pointer"
+                },
+              label: {
+                  labelName: "Sub Usage Type",
+                  labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+              },
+        
+              placeholder: {
+                  labelName: "Select Sub Usage Type",
+                  labelKey: "PT_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
+              },
+           
+              localePrefix: {
+                  moduleName: "COMMON",
+             			 masterName: "PROPSUBUSGTYPE"
+              },
+              jsonPath: "applyScreen.subUsageCategory",
+              sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
+              className: "autocomplete-dropdown pds-search",
+              labelsFromLocalisation: true,
+              required: true,        
+              disabled: false,
+              isClearable: true,      
+              fullwidth: true,
+           
+          },
+          required: true,
+          visible: false,
+          jsonPath: "Property.subUsageCategory",
+          gridDefination: { xs: 12, sm: 6 },
+          
+       },
+
     }),
+ 
     
   }),
   plumberDetailsContainer: getCommonGrayCard({
@@ -484,6 +551,43 @@ export const additionDetails = getCommonCard({
   }),
  
 });
+
+export const rendersubUsageType = (usageType, propType, dispatch, state) => {
+ 
+    let subTypeValues = get(
+      state.screenConfiguration.preparedFinalObject,
+      "applyScreenMdmsData.PropertyTax.subUsageType"
+    );
+ 
+    const additionalDetailsJson = "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.subUsageType"; 
+  
+    let subUsage;      
+          if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL"
+          || usageType === "NONRESIDENTIAL.OTHERS") {
+              dispatch(handleField("apply", additionalDetailsJson, "visible", true));
+              dispatch(handleField("apply", additionalDetailsJson, "props.visible", true));
+              if (usageType === "MIXED") {
+                  subUsage = subTypeValues;
+              } else {
+                  subUsage = subTypeValues.filter(cur => {
+                      return (cur.code.startsWith(usageType))
+                  })
+              }
+          } else {
+              set(state.screenConfiguration.preparedFinalObject,"Property.subUsageCategory", ""); 
+              dispatch(handleField("apply", additionalDetailsJson, "visible", false));
+              dispatch(handleField("apply", additionalDetailsJson, "props.visible", false));        
+          }   
+  
+
+    dispatch(
+      prepareFinalObject(
+        "propsubusagetypeForSelectedusageCategory",
+        subUsage
+      )
+    )
+  
+  }
 
 const showHideFeilds = (dispatch, value) => {
   let mStep = (isModifyMode()) ? 'formwizardSecondStep' : 'formwizardThirdStep'; 
