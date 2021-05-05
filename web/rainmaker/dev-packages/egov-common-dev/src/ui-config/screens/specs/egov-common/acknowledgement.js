@@ -23,7 +23,9 @@ const downloadprintMenu = (state, applicationNumber, tenantId, uiCommonPayConfig
         link: () => {
             const receiptQueryString = [
                 { key: "propertyId", value: consumerCode },
-                { key: "tenantId", value: tenantId }
+                { key: "tenantId", value: tenantId },
+                { key: "receiptNo", value: applicationNumber}
+                
             ]
         
             download(receiptQueryString, "download", "newpt-receipt", state);
@@ -36,7 +38,8 @@ const downloadprintMenu = (state, applicationNumber, tenantId, uiCommonPayConfig
         link: () => {
             const receiptQueryString = [
                 { key: "propertyId", value: consumerCode },
-                { key: "tenantId", value: tenantId }
+                { key: "tenantId", value: tenantId },
+                { key: "receiptNo", value: applicationNumber}
             ]
        
             download(receiptQueryString, "print", receiptKey, state);
