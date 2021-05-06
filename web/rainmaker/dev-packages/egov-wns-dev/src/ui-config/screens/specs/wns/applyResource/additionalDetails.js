@@ -255,6 +255,7 @@ export const additionDetails = getCommonCard({
         gridDefination: { xs: 12, sm: 6 },
         jsonPath: "applyScreen.drainageSize"
       }),
+      
       usageType: getSelectField({
               label: {
                 labelName: "Usage Type",
@@ -316,7 +317,7 @@ export const additionDetails = getCommonCard({
           },
           required: true,
           visible: false,
-          jsonPath: "Property.subUsageCategory",
+          jsonPath: "applyScreen.subUsageCategory",
           gridDefination: { xs: 12, sm: 6 },
           
        },
@@ -403,59 +404,7 @@ export const additionDetails = getCommonCard({
   }),
 
 
-  // roadCuttingChargeContainer: getCommonGrayCard({
-  //   subHeader: getCommonTitle({
-  //     labelKey: "WS_ROAD_CUTTING_CHARGE_DETAILS"
-  //   }),
-  //   roadDetails: getCommonContainer({
-  //     roadType: getSelectField({
-  //       label: {
-  //         labelName: "Road Type",
-  //         labelKey: "WS_ADDN_DETAIL_ROAD_TYPE"
-  //       },
-  //     //   props: {
-  //     //     label: {
-  //     //       labelKey: "WS_ADDN_DETAIL_ROAD_TYPE"
-  //     //     },
-  //     //     placeholder: {
-  //     //       labelKey: "WS_ADDN_DETAILS_ROAD_TYPE_PLACEHOLDER"
-  //     //     }
-  //     // },
-  //       placeholder: {
-  //         labelKey: "WS_ADDN_DETAILS_ROAD_TYPE_PLACEHOLDER"
-  //       },
-  //       localePrefix: {
-  //         moduleName: "WS",
-  //         masterName: "ROADTYPE"
-  //       },
-  //       required: false,
-  //       sourceJsonPath: "applyScreenMdmsData.sw-services-calculation.RoadType",
-  //       gridDefination: {
-  //         xs: 12,
-  //         sm: 6
-  //       },
-  //       required: false,
-  //       errorMessage: "ERR_INVALID_BILLING_PERIOD",
-  //       jsonPath: "applyScreen.roadType"
-  //     }),
-  //     enterArea: getTextField({
-  //       label: {
-  //         labelKey: "WS_ADDN_DETAILS_AREA_LABEL"
-  //       },
-  //       placeholder: {
-  //         labelKey: "WS_ADDN_DETAILS_AREA_PLACEHOLDER"
-  //       },
-  //       gridDefination: {
-  //         xs: 12,
-  //         sm: 6
-  //       },
-  //       required: false,
-  //       pattern: getPattern("Amount"),
-  //       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
-  //       jsonPath: "applyScreen.roadCuttingArea"
-  //     })
-  //   }),
-  // }),
+  
   activationDetailsContainer: getCommonGrayCard({
     subHeader: getCommonTitle({
       labelKey: "WS_ACTIVATION_DETAILS"
@@ -559,9 +508,11 @@ export const rendersubUsageType = (usageType, propType, dispatch, state) => {
       "applyScreenMdmsData.PropertyTax.subUsageType"
     );
  
+
     const additionalDetailsJson = "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.subUsageType"; 
   
-    let subUsage;      
+    let subUsage;    
+  
           if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL"
           || usageType === "NONRESIDENTIAL.OTHERS") {
               dispatch(handleField("apply", additionalDetailsJson, "visible", true));
@@ -574,10 +525,12 @@ export const rendersubUsageType = (usageType, propType, dispatch, state) => {
                   })
               }
           } else {
-              set(state.screenConfiguration.preparedFinalObject,"Property.subUsageCategory", ""); 
+              set(state.screenConfiguration.preparedFinalObject,"applyScreen.subUsageCategory", ""); 
+              set(state.screenConfiguration.preparedFinalObject,"applyScreen.subUsageCategory", ""); 
               dispatch(handleField("apply", additionalDetailsJson, "visible", false));
               dispatch(handleField("apply", additionalDetailsJson, "props.visible", false));        
-          }   
+          } 
+ 
   
 
     dispatch(

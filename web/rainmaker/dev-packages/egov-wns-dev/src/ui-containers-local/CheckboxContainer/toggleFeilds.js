@@ -100,6 +100,43 @@ export const toggleWater = (onFieldChange, value) => {
     "visible",
     value
   );
+  //DC
+    onFieldChange(
+    "apply",
+    "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewUsageType",
+    "visible",
+    value
+  );
+  
+      onFieldChange(
+    "apply",
+    "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewSubUsageType",
+    "visible",
+    value
+  );
+  
+  
+    onFieldChange(
+    "apply",
+    `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.usageType`,
+    "visible",
+    value
+  );
+  
+  //   onFieldChange(
+  //   "apply",
+  //   `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.subUsageType`,
+  //   "visible",
+  //   value
+  // );
+  
+  
+  
+  
+  
+  
+  //DC
+  
   onFieldChange(
     "apply",
     "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewWaterSource",
