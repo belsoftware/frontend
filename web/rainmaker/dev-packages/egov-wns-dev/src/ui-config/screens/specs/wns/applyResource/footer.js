@@ -698,12 +698,12 @@ const callBackForNext = async (state, dispatch) => {
   let connectionType = get(state.screenConfiguration.preparedFinalObject, "applyScreen.connectionType");
   let  noOfTaps =get(state.screenConfiguration.preparedFinalObject, "applyScreen.noOfTaps");
   let pipeSize = get(state.screenConfiguration.preparedFinalObject, "applyScreen.pipeSize");
-  let authorizedConnection = get(state.screenConfiguration.preparedFinalObject, "applyScreen.authorizedConnection");
-  let motorInfo = get(state.screenConfiguration.preparedFinalObject, "applyScreen.motorInfo");
+ // let authorizedConnection = get(state.screenConfiguration.preparedFinalObject, "applyScreen.authorizedConnection");
+ // let motorInfo = get(state.screenConfiguration.preparedFinalObject, "applyScreen.motorInfo");
   let waterSource = get(state.screenConfiguration.preparedFinalObject, "DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType");
   let waterSubSource = get(state.screenConfiguration.preparedFinalObject, "DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource");
   
-  if(connectionType !==null && noOfTaps !==null && pipeSize!==null && authorizedConnection!==null && motorInfo!==null && waterSource!==null && waterSubSource !=="null.null" )
+  if(connectionType !==null && noOfTaps !==null && pipeSize!==null &&  waterSource!==null && waterSubSource !=="null.null" )
      return true;
   else
     return false;

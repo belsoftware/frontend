@@ -514,9 +514,14 @@ reviewUsageType : getLabelWithValueForModifiedLabel(
     labelKey: "WS_OLD_LABEL_NAME"
   },
   {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPUSGTYPE"
+    },
     jsonPath: "WaterConnectionOld[0].usageCategory",
     callBack: handleNA
-  }
+  },
+
 ),
 reviewSubUsageType: getLabelWithValueForModifiedLabel(
   {
@@ -535,9 +540,17 @@ reviewSubUsageType: getLabelWithValueForModifiedLabel(
     labelKey: "WS_OLD_LABEL_NAME"
   },
   {
-    jsonPath: "WaterConnectionOld[0].usageCategory",
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPSUBUSGTYPE"
+    },
+    jsonPath: "WaterConnectionOld[0].subUsageCategory",
     callBack: handleNA
-  }
+  },
+  // {
+  //   jsonPath: "WaterConnectionOld[0].usageCategory",
+  //   callBack: handleNA
+  // }
 ),
 
 

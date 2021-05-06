@@ -11,7 +11,7 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { serviceConst } from "../../../../../ui-utils/commons";
 import { getUserInfo, getTenantIdCommon } from "egov-ui-kit/utils/localStorageUtils";
 import { getPropertyDetails } from "../applyResource/property-locationDetails";
-
+import { handleNA } from "../../utils";
 
 const connectionType = getQueryArg(window.location.href, "connectionType")
 
@@ -39,6 +39,20 @@ export const renderService1 = () => {
         waterSource: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE" }, { jsonPath: "WaterConnection[0].waterSource" }),
         waterSubSource: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SUB_SOURCE" }, { jsonPath: "WaterConnection[0].waterSubSource" }),
         sourceInfo: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO" }, { jsonPath: "WaterConnection[0].sourceInfo" }),
+        usageCategory :getLabelWithValue (
+          {
+            labelName: "Usage Type",
+            labelKey: "PT_COMMON_USAGE_TYPE"
+          },
+          {
+            localePrefix: {
+              moduleName: "COMMON",
+              masterName: "PROPUSGTYPE"
+            },
+            jsonPath: "WaterConnection[0].usageCategory",
+            callBack: handleNA
+          },
+        ),
         editSection: {
           componentPath: "Button",
           props: { color: "primary", style: { margin: "-16px" } },
@@ -72,7 +86,20 @@ export const renderService1 = () => {
         waterSource: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE" }, { jsonPath: "WaterConnection[0].waterSource" }),
         waterSubSource: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SUB_SOURCE" }, { jsonPath: "WaterConnection[0].waterSubSource" }),
         sourceInfo: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO" }, { jsonPath: "WaterConnection[0].sourceInfo" }),
-       
+        usageCategory :getLabelWithValue (
+          {
+            labelName: "Usage Type",
+            labelKey: "PT_COMMON_USAGE_TYPE"
+          },
+          {
+            localePrefix: {
+              moduleName: "COMMON",
+              masterName: "PROPUSGTYPE"
+            },
+            jsonPath: "WaterConnection[0].usageCategory",
+            callBack: handleNA
+          },
+        ),
        
         
       })
