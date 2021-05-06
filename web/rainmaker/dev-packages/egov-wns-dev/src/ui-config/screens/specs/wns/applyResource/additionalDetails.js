@@ -142,7 +142,7 @@ export const additionDetails = getCommonCard({
           gridDefination: { xs: 12, sm: 6 },
           errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
           jsonPath: "applyScreen.connectionType",
-          required:false,
+          required:false,        
         }),
         afterFieldChange: async (action, state, dispatch) => {
           let connType = await get(state, "screenConfiguration.preparedFinalObject.applyScreen.connectionType");
@@ -162,6 +162,7 @@ export const additionDetails = getCommonCard({
         jsonPath: "applyScreen.noOfTaps",
         pattern :/^[1-9][0-9]*$/i,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+        
       }),
       pipeSize: getSelectField({
         label: { labelKey: "WS_SERV_DETAIL_PIPE_SIZE" },
@@ -265,9 +266,10 @@ export const additionDetails = getCommonCard({
                 labelName: "Select Usage Type",
                 labelKey: "PT_COMMON_USAGE_TYPE_PLACEHOLDER"
               },
-              required: true,
+              //required: true,
               jsonPath: "applyScreen.usageCategory",
-              sourceJsonPath: "applyScreenMdmsData.PropertyTax.UsageType",
+              sourceJsonPath: "applyScreenMdmsData.PropertyTax.UsageType",     
+             
               gridDefination: { xs: 12, sm: 6 },
               localePrefix: {
                 moduleName: "COMMON",
@@ -309,7 +311,7 @@ export const additionDetails = getCommonCard({
               sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
               className: "autocomplete-dropdown pds-search",
               labelsFromLocalisation: true,
-              required: true,        
+              //required: true,        
               disabled: false,
               isClearable: true,      
               fullwidth: true,
