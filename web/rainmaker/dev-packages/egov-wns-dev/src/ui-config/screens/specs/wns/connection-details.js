@@ -10,6 +10,7 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import set from "lodash/set";
+import get from "lodash/get";
 import {
   getDescriptionFromMDMS,
   getSearchResults,
@@ -281,25 +282,31 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
        });     
       let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
       console.info("waterConnection=",waterConnection)
-      console.info("DC-water src & sub src:",waterConnection.waterSource)
+      console.info("DC-water src & sub src:",waterConnection.waterSource , get(waterConnection,"waterSourceSubSource"))
       let waterSource;
       let waterSubSource;
 
       //waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
 
+      if(get(waterConnection,"waterSourceSubSource")!==undefined){
 
-      if(waterConnection.waterSourceSubSource.includes("null")){
-        waterSource ="NA"
-        waterSubSource ="NA"
-      }
-      else if(waterConnection.waterSourceSubSource.includes(".")){
-        waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSourceSubSource.split(".")[0];
-        waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSourceSubSource.split(".")[1];
-        console.info("DC-water src & sub src",waterSource,":",waterSubSource)   
-      }
-      else{
-        waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
-        waterSubSource =  "NA" ;
+       
+        if(waterConnection.waterSourceSubSource.includes("null")){
+          waterSource ="NA"
+          waterSubSource ="NA"
+        }
+        else if(waterConnection.waterSourceSubSource.includes(".")){
+          waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSourceSubSource.split(".")[0];
+          waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSourceSubSource.split(".")[1];
+          console.info("DC-water src & sub src",waterSource,":",waterSubSource)   
+        }
+        else{
+          waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+          waterSubSource =  "NA" ;
+        }
+      }else{
+          waterSource = waterConnection.waterSource == null ||waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+          waterSubSource =  "NA" ;
       }
 
 
