@@ -496,7 +496,62 @@ export const connectionWater={
     jsonPath: "WaterConnectionOld[0].authorizedConnection",
     callBack: handleNA
   }
-)
+),
+reviewUsageType : getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Usage Type",
+    labelKey: "PT_COMMON_USAGE_TYPE"
+  },
+  {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPUSGTYPE"
+    },
+    jsonPath: "WaterConnection[0].usageCategory",
+    callBack: handleNA
+  },
+   {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPUSGTYPE"
+    },
+    jsonPath: "WaterConnectionOld[0].usageCategory",
+    callBack: handleNA
+  },
+
+),
+reviewSubUsageType: getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Sub Usage Type",
+    labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+  },
+  {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPSUBUSGTYPE"
+    },
+    jsonPath: "WaterConnection[0].subUsageCategory",
+    callBack: handleNA
+  },
+   {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPSUBUSGTYPE"
+    },
+    jsonPath: "WaterConnectionOld[0].subUsageCategory",
+    callBack: handleNA
+  },
+  // {
+  //   jsonPath: "WaterConnectionOld[0].usageCategory",
+  //   callBack: handleNA
+  // }
+),
 
 
 }
