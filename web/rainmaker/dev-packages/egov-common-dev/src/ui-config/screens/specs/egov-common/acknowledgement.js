@@ -14,43 +14,43 @@ import {postPaymentSuccess} from "egov-bnd/ui-config/screens/specs/utils";
 const downloadprintMenu = (state, applicationNumber, tenantId, uiCommonPayConfig,businessService,consumerCode) => {
     let downloadMenu = [];
     let printMenu = [];
-    if(businessService === "PT"){
+    // if(businessService === "PT"){
 
-        const receiptKey = get(uiCommonPayConfig, "receiptKey","newpt-receipt")
-        let receiptDownloadObject = {
+    //     const receiptKey = get(uiCommonPayConfig, "receiptKey","newpt-receipt")
+    //     let receiptDownloadObject = {
 
-        label: { labelName: "DOWNLOAD RECEIPT", labelKey: "COMMON_DOWNLOAD_RECEIPT" },
-        link: () => {
-            const receiptQueryString = [
-                { key: "propertyId", value: consumerCode },
-                { key: "tenantId", value: tenantId },
-                { key: "receiptNo", value: applicationNumber}
+    //     label: { labelName: "DOWNLOAD RECEIPT", labelKey: "COMMON_DOWNLOAD_RECEIPT" },
+    //     link: () => {
+    //         const receiptQueryString = [
+    //             { key: "propertyId", value: consumerCode },
+    //             { key: "tenantId", value: tenantId },
+    //             { key: "receiptNo", value: applicationNumber}
                 
-            ]
+    //         ]
         
-            download(receiptQueryString, "download", "newpt-receipt", state);
+    //         download(receiptQueryString, "download", "newpt-receipt", state);
 
-        },
-        leftIcon: "receipt"
-    };
-    let receiptPrintObject = {
-        label: { labelName: "PRINT RECEIPT", labelKey: "COMMON_PRINT_RECEIPT" },
-        link: () => {
-            const receiptQueryString = [
-                { key: "propertyId", value: consumerCode },
-                { key: "tenantId", value: tenantId },
-                { key: "receiptNo", value: applicationNumber}
-            ]
+    //     },
+    //     leftIcon: "receipt"
+    // };
+    // let receiptPrintObject = {
+    //     label: { labelName: "PRINT RECEIPT", labelKey: "COMMON_PRINT_RECEIPT" },
+    //     link: () => {
+    //         const receiptQueryString = [
+    //             { key: "propertyId", value: consumerCode },
+    //             { key: "tenantId", value: tenantId },
+    //             { key: "receiptNo", value: applicationNumber}
+    //         ]
        
-            download(receiptQueryString, "print", receiptKey, state);
-        },
-        leftIcon: "receipt"
-    };
+    //         download(receiptQueryString, "print", receiptKey, state);
+    //     },
+    //     leftIcon: "receipt"
+    // };
 
-    downloadMenu = [receiptDownloadObject];
-    printMenu = [receiptPrintObject];
-    }
-    else{
+    // downloadMenu = [receiptDownloadObject];
+    // printMenu = [receiptPrintObject];
+    // }
+    // else{
 
         const receiptKey = get(uiCommonPayConfig, "receiptKey","consolidatedreceipt")
    let receiptDownloadObject = {
@@ -83,7 +83,7 @@ const downloadprintMenu = (state, applicationNumber, tenantId, uiCommonPayConfig
     downloadMenu = [receiptDownloadObject];
     printMenu = [receiptPrintObject];
 
-    }
+  //  }
 //    const receiptKey = get(uiCommonPayConfig, "receiptKey","consolidatedreceipt")
 //    let receiptDownloadObject = {
 
