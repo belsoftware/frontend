@@ -57,18 +57,11 @@ class PaymentHistory extends Component {
                                 label={<Label buttonLabel={true} label="PT_DOWNLOAD_RECEIPT" color="rgb(254, 122, 81)" fontSize="16px" height="35px" labelStyle={labelStyle} />}
                                 buttonStyle={buttonStyle}
                                 onClick={() => {
-                                    const receiptQueryString = [
-                                        { key: "propertyId",value:payment.paymentDetails[0].bill.consumerCode },
-                                        { key: "tenantId", value: payment.paymentDetails[0].tenantId },
-                                        { key: "receiptNo", value: payment.paymentDetails[0].receiptNumber}
-                                    ]
-                                  
-                                    downloadReceipt(receiptQueryString);
-                                    // const receiptQueryString= [
-                                    //         { key: "receiptNumbers", value: payment.paymentDetails[0].receiptNumber },
-                                    //         { key: "tenantId", value: payment.paymentDetails[0].tenantId }
-                                    //       ]
-                                    // downloadReceipt(receiptQueryString)
+                                    const receiptQueryString= [
+                                            { key: "receiptNumbers", value: payment.paymentDetails[0].receiptNumber },
+                                            { key: "tenantId", value: payment.paymentDetails[0].tenantId }
+                                          ]
+                                    downloadReceipt(receiptQueryString)
                                     // lastElement.onClick();
                                 }}
                             ></Button>
@@ -112,7 +105,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-     downloadReceipt: (receiptQueryString) => dispatch(downloadReceipt(receiptQueryString, "newpt-receipt")),
+     downloadReceipt: (receiptQueryString) => dispatch(downloadReceipt(receiptQueryString)),
     };
   };
 //   [

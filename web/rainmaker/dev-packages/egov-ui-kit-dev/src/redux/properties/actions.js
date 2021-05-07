@@ -3,7 +3,7 @@ import { getCreatePropertyResponse, setPTDocuments } from "egov-ui-kit/config/fo
 import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { httpRequest } from "egov-ui-kit/utils/api";
 import { transformById } from "egov-ui-kit/utils/commons";
-import { BOUNDARY, DOWNLOADRECEIPT, DRAFT, FETCHASSESSMENTS, FETCHBILL, FETCHRECEIPT, PGService, PROPERTY, RECEIPT ,DOWNLOADPTRECEIPT} from "egov-ui-kit/utils/endPoints";
+import { BOUNDARY, DOWNLOADRECEIPT, DRAFT, FETCHASSESSMENTS, FETCHBILL, FETCHRECEIPT, PGService, PROPERTY, RECEIPT } from "egov-ui-kit/utils/endPoints";
 import { getLatestPropertyDetails } from "egov-ui-kit/utils/PTCommon";
 import { getCommonTenant } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
 import cloneDeep from "lodash/cloneDeep";
@@ -676,14 +676,14 @@ export const getFileUrlFromAPI = async fileStoreId => {
   }
 };
 
-export const downloadReceipt = (receiptQueryString,configKey = "consolidatedreceipt") => {
+export const downloadReceipt = (receiptQueryString) => {
   return async (dispatch) => {
     if (receiptQueryString) {
       // dispatch(downloadReceiptPending());
       try {
         const payloadReceiptDetails = await httpRequest(FETCHRECEIPT.GET.URL, FETCHRECEIPT.GET.ACTION, receiptQueryString);
         const queryStr = [
-          { key: "key", value: configKey },
+          { key: "key", value: "consolidatedreceipt" },
           { key: "tenantId", value: receiptQueryString[1].value.split('.')[0] }
         ]
         const oldFileStoreId = get(payloadReceiptDetails.Payments[0], "fileStoreId")
@@ -691,8 +691,7 @@ export const downloadReceipt = (receiptQueryString,configKey = "consolidatedrece
           downloadReceiptFromFilestoreID(oldFileStoreId, "download")
         }
         else {
-          if(configKey == "newpt-receipt"){
-            httpRequest(DOWNLOADPTRECEIPT.GET.URL, DOWNLOADPTRECEIPT.GET.ACTION, receiptQueryString,  { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
+          httpRequest(DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Payments: payloadReceiptDetails.Payments }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
             .then(res => {
               getFileUrlFromAPI(res.filestoreIds[0]).then((fileRes) => {
                 var win = window.open(fileRes[res.filestoreIds[0]], '_blank');
@@ -700,21 +699,6 @@ export const downloadReceipt = (receiptQueryString,configKey = "consolidatedrece
               });
 
             });
-
-          }
-          else
-          {
-
-            httpRequest(DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Payments: payloadReceiptDetails.Payments }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
-            .then(res => {
-              getFileUrlFromAPI(res.filestoreIds[0]).then((fileRes) => {
-                var win = window.open(fileRes[res.filestoreIds[0]], '_blank');
-                win.focus();
-              });
-
-            });
-          }
-
         }
       } catch (error) {
         dispatch(downloadReceiptError(error.message));
