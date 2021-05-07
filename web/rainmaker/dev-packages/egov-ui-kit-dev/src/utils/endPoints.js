@@ -198,3 +198,9 @@ export const PAYMENTSEARCH = {
     ACTION: "_search",
   },
 };
+export const DOWNLOADPTRECEIPT = {
+  GET: {
+    URL: "/egov-pdf/download/PT/newpt-receipt",
+    ACTION: "_get",
+  },
+};
