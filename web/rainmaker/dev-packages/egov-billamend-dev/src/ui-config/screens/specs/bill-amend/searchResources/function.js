@@ -124,25 +124,48 @@ export const searchApiCall = async (state, dispatch) => {
     })
     let usedBills={}
     const billTableData = resp.Bill.map(item => {
+      let businessService = get(searchScreenObject, 'businessService', '');
       let amendTempObj = {}
-      if (amendObj[get(item, "connectionNo",get(item, "propertyId"))]) {
-        amendTempObj = {...amendObj[get(item, "connectionNo",get(item, "propertyId"))]};
-        usedBills[get(item, "connectionNo", get(item, "propertyId",''))] = { ...item }
-        delete amendObj[get(item, "connectionNo",get(item, "propertyId", ''))];
+      if(businessService==='PT'){
+        if (amendObj[get(item, "propertyId")]) {
+          amendTempObj = {...amendObj[get(item, "propertyId")]};
+          usedBills[ get(item, "propertyId",'')] = { ...item }
+          delete amendObj[get(item, "propertyId", '')];
+        }
+        usedBills[get(item, "propertyId")]={...item};
+  
+        return {
+  
+          businessService:  get(amendTempObj, "businessService", get(searchScreenObject, 'businessService', '')),
+          amendmentId:  get(amendTempObj, "amendmentId", "NA"),
+          consumerCode: get(item, "propertyId"),
+          status: get(amendTempObj, "status", "NA"),
+          consumerName: get(item, "owners[0].name",   "NA"),
+          consumerAddress:getAddress( get(item, "tenantId"),get(item, "address.locality.code")) ,
+          tenantId: get(item, "tenantId"),
+          connectionType: get(item, "connectionType", 'Metered'),
+        };
       }
-      usedBills[get(item, "connectionNo",get(item, "propertyId"))]={...item};
+      else if(businessService==='WS' || businessService==='SW'){
+      if (amendObj[get(item, "connectionNo")]) {
+        amendTempObj = {...amendObj[get(item, "connectionNo")]};
+        usedBills[get(item, "connectionNo",'')] = { ...item }
+        delete amendObj[get(item, "connectionNo",'')];
+      }
+      usedBills[get(item, "connectionNo")]={...item};
 
       return {
 
         businessService:  get(amendTempObj, "businessService", get(searchScreenObject, 'businessService', '')),
         amendmentId:  get(amendTempObj, "amendmentId", "NA"),
-        consumerCode: get(item, "connectionNo",get(item, "propertyId")),
+        consumerCode: get(item, "connectionNo"),
         status: get(amendTempObj, "status", "NA"),
         consumerName: get(item, "additionalDetails.ownerName",   "NA"),
         consumerAddress:getAddress( get(item, "tenantId"),get(item, "additionalDetails.locality")) ,
         tenantId: get(item, "tenantId"),
         connectionType: get(item, "connectionType", 'Metered'),
       };
+    }
     });
 
     Object.keys(addtionalObj).map(key=>{
