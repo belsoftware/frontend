@@ -73,7 +73,7 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
     const billAmendDemandRevisionSummary = generateKeyValue(preparedFinalObject, modifiedDemand);
 
     let pdfData = {
-        header: "BILLAMEND_APPLICATION", tenantId: 'pb.amritsar',
+        header: "BILLAMEND_APPLICATION", tenantId: Amendment.tenantId,
         applicationNoHeader: 'BILLAMEND_APPLICATIONNO', applicationNoValue: Amendment.amendmentId,
         additionalHeader: "BILLAMEND_APPLICATIONDATE", additionalHeaderValue:getDate(Amendment.auditDetails.createdTime) ,
         cards: [

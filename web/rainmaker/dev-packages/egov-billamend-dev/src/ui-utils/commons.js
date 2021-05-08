@@ -4,7 +4,7 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { uploadFile } from "egov-ui-framework/ui-utils/api";
 import { acceptedFiles } from "egov-ui-framework/ui-utils/commons";
-import { getSewerageDetails, getWaterDetails } from "../ui-config/screens/specs/bill-amend/utils";
+import { getSewerageDetails, getWaterDetails,getPropertyDetails } from "../ui-config/screens/specs/bill-amend/utils";
 import { httpRequest } from "./api";
 
 export const handleFileUpload = (event, handleDocument, props) => {
@@ -144,10 +144,18 @@ export const searchBill = async (queryObject, dispatch) => {
         "value": newQuery['mobileNumber']
       })
     } else {
+      if(newQuery['businessService']=='PT'){
+        newQueryObj.push({
+          "key": 'propertyIds',
+          "value": newQuery['consumerCode']
+        })
+      }
+      else{
       newQueryObj.push({
         "key": 'connectionNumber',
         "value": newQuery['consumerCode']
       })
+    }
     }
 let returnObject={'Bill':[]};
     if(newQuery['businessService']=='WS'){
@@ -183,6 +191,16 @@ let returnObject={'Bill':[]};
         response.SewerageConnections &&
         response.SewerageConnections.length > 0){
           returnObject.Bill.push(...response.SewerageConnections);
+      }
+      return returnObject;
+    } else  if(newQuery['businessService']=='PT'){
+      
+      const response = await getPropertyDetails(newQueryObj);
+      if(response !== null &&
+        response !== undefined &&
+        response.Properties &&
+        response.Properties.length > 0){
+          returnObject.Bill.push(...response.Properties);
       }
       return returnObject;
     }

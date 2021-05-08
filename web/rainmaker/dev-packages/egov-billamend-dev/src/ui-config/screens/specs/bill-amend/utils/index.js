@@ -473,3 +473,25 @@ export const getWaterDetails = async (queryObject) => {
     console.log(error)
   }
 }
+
+export const getPropertyDetails = async (queryObject) => {
+  try {
+    const response = await httpRequest(
+      "post",
+      "/property-services/property/_search",
+      "_search",
+      queryObject
+    );
+    if (
+      response !== null &&
+      response !== undefined &&
+      response.Properties &&
+      response.Properties.length > 0
+    ) {
+      return response;
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
