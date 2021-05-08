@@ -83,6 +83,7 @@ import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configurat
 import { httpRequest } from "egov-ui-kit/utils/api";
 import { httpRequest as httpRequestnew } from "egov-ui-framework/ui-utils/api";
 
+
 class FormWizardDataEntry extends Component {
   state = {
     dialogueOpen: false,
@@ -714,17 +715,22 @@ class FormWizardDataEntry extends Component {
           "RoadType",
           "Thana",
           "PropertyLocation",
+          "TaxHeadMaster"   
         ],
         "",
         tenantId
       );
+
+
+
       fetchGeneralMDMSData(
         null,
         "BillingService",
-        ["TaxPeriod", "TaxHeadMaster"],
+        ["TaxPeriod"],
         "",
         tenantId
       );
+
 
       let taxData;
 

@@ -82,12 +82,12 @@ class DemandCollection extends React.Component {
                               <TextField
                                 floatingLabelText={<Label label={taxData.code}/>}
                                 hintText={<Label label="PT_ENTER_AN_AMOUNT" />}
-                                min={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`)}
-                                max={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`)}
+                                min={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_DEMAND`)}
+                                max={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_DEMAND`)}
                                 // min={taxData.isDebit?-99999:0}
                                 // max={taxData.isDebit?-1:0}
                                 type="textfield"
-                                value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`)}
+                                value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_DEMAND`)}
                            
                             
                                 onChange={(e) => {  
@@ -141,8 +141,8 @@ class DemandCollection extends React.Component {
                                       }
                                   }
                                   value = e.target.value;                                
-                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_TAXHEAD`,taxData.code)
-                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_DEMAND`, taxData.isDebit?(Math.sign(value)===-1?value:-value):value)
+                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_TAXHEAD`,taxData.code)
+                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_DEMAND`, taxData.isDebit?(Math.sign(value)===-1?value:-value):value)
                                                             	
                                    }
 
@@ -170,9 +170,10 @@ class DemandCollection extends React.Component {
                               <TextField
                                 key={index1}
                                 type="textfield"
-                                min={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_COLLECTED`)}
-                                max={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_COLLECTED`)}
-                                value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_COLLECTED`)}
+
+                                min={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
+                                max={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
+                                value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
                                 floatingLabelText={<Label label={taxData.code}/>}
                                 hintText={<Label label="PT_ENTER_AN_AMOUNT"/>}
 
@@ -194,8 +195,9 @@ class DemandCollection extends React.Component {
                                      alert( "Integer numbers are only allowed and enter upto two decimal places.");  
                                      return value = "" ; 
                                    }
-                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_TAXHEAD`,taxData.code);
-                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${index1}].PT_COLLECTED`, e.target.value);
+
+                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_TAXHEAD`,taxData.code);
+                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`, e.target.value);
                                 }}
                                 onWheel={event => { event.preventDefault(); }}
                                 disabled={taxData.isDebit}
