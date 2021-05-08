@@ -105,6 +105,13 @@ export const  reviewUsageType =getLabelWithValueForModifiedLabel(
     },
     jsonPath: "applyScreen.usageCategory",
     callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    jsonPath: "applyScreenOld.usageCategory",
+    callBack: handleNA
   }
 );
 export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
@@ -118,6 +125,13 @@ export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
       masterName: "PROPSUBUSGTYPE"
     },
     jsonPath: "applyScreen.subUsageCategory",
+    callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    jsonPath: "applyScreenOld.subUsageCategory",
     callBack: handleNA
   }
 );

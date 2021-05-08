@@ -347,7 +347,7 @@ export const getMdmsData = async dispatch => {
         })
       }
     })
-    console.info("DC- usage type >",UsageType)
+
     payload.MdmsRes["PropertyTax"].UsageType = UsageType;
     let array1 = [];
     let array2 = [];
@@ -379,7 +379,7 @@ export const getMdmsData = async dispatch => {
         "MdmsRes.common-masters.Help",
         []
         ).filter(item =>item.code ==="WS_SELFDECLERATION_FORM" );
-  console.info("Self delcaration....",selfDecFormURL[0].URL);
+ 
   dispatch(prepareFinalObject("selfDecFormURL", selfDecFormURL[0].URL)); 
   
   
@@ -672,15 +672,7 @@ export const getData = async (action, state, dispatch) => {
         else
         {
           disableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo', dispatch);
-        //   dispatch(
-        //    handleField(
-        //      "apply",
-        //      "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo",
-        //      "props.value",
-        //      "NA"
-        //    )
-        //  );
-         
+             
         }
       }
       let docs = get(state, "screenConfiguration.preparedFinalObject");
@@ -1337,6 +1329,7 @@ const screenConfig = {
 
     let mode = getQueryArg(window.location.href, "mode");
     let modifyLink;
+    //When application comes for modification comes here
     if (isMode === "MODIFY" || action1 === "edit") {
       modifyLink = `/wns/apply?`;
       modifyLink = applicationNumber ? modifyLink + `applicationNumber=${applicationNumber}` : modifyLink;
