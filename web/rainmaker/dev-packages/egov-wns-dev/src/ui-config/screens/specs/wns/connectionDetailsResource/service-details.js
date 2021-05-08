@@ -63,7 +63,7 @@ export const renderService1 = () => {
               moduleName: "COMMON",
               masterName: "PROPSUBUSGTYPE"
             },
-            jsonPath: "WaterConnectionOld[0].subUsageCategory",
+            jsonPath: "WaterConnection[0].subUsageCategory",
             callBack: handleNA
           },
         ),
@@ -125,7 +125,7 @@ export const renderService1 = () => {
               moduleName: "COMMON",
               masterName: "PROPSUBUSGTYPE"
             },
-            jsonPath: "WaterConnectionOld[0].subUsageCategory",
+            jsonPath: "WaterConnection[0].subUsageCategory",
             callBack: handleNA
           },
         ),
