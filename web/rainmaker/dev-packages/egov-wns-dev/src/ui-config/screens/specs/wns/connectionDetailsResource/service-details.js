@@ -53,6 +53,21 @@ export const renderService1 = () => {
             callBack: handleNA
           },
         ),
+        subUsageCategory: getLabelWithValue (
+          {
+            labelName: "Sub Usage Type",
+            labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+          },
+          {
+            localePrefix: {
+              moduleName: "COMMON",
+              masterName: "PROPSUBUSGTYPE"
+            },
+            jsonPath: "WaterConnectionOld[0].subUsageCategory",
+            callBack: handleNA
+          },
+        ),
+
         editSection: {
           componentPath: "Button",
           props: { color: "primary", style: { margin: "-16px" } },
@@ -97,6 +112,20 @@ export const renderService1 = () => {
               masterName: "PROPUSGTYPE"
             },
             jsonPath: "WaterConnection[0].usageCategory",
+            callBack: handleNA
+          },
+        ),
+        subUsageCategory: getLabelWithValue (
+          {
+            labelName: "Sub Usage Type",
+            labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+          },
+          {
+            localePrefix: {
+              moduleName: "COMMON",
+              masterName: "PROPSUBUSGTYPE"
+            },
+            jsonPath: "WaterConnectionOld[0].subUsageCategory",
             callBack: handleNA
           },
         ),

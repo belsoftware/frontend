@@ -280,7 +280,7 @@ export const additionDetails = getCommonCard({
                   state.screenConfiguration.preparedFinalObject,
                   "Property.propertyType"
                 );
-                console.info("DC-before field change")
+                
                 rendersubUsageType(action.value, propType, dispatch, state)
               }
          }),
@@ -311,13 +311,13 @@ export const additionDetails = getCommonCard({
               sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
               className: "autocomplete-dropdown pds-search",
               labelsFromLocalisation: true,
-              //required: true,        
+             required: false,        
               disabled: false,
               isClearable: true,      
               fullwidth: true,
            
           },
-          required: true,
+          required: false,
           visible: false,
           jsonPath: "applyScreen.subUsageCategory",
           gridDefination: { xs: 12, sm: 6 },
