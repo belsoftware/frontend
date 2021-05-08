@@ -289,6 +289,11 @@ class Property extends Component {
       renderCustomTitleForPt(nextProps.customTitle);
     }
   };
+  onAmendBtnClick = () => {
+    const {  propertyId, tenantId } = this.props;
+   // dispatch(prepareFinalObject("FireNOCs", []));
+      this.props.history.push(`/bill-amend/apply?connectionNumber=${propertyId}&tenantId=${tenantId}&businessService=PT`);
+  };
 
   closeYearRangeDialogue = () => {
     this.setState({ dialogueOpen: false });
@@ -369,6 +374,13 @@ class Property extends Component {
           />
         }
         <div id="tax-wizard-buttons" className="wizard-footer col-sm-12" style={{ textAlign: "right" }}>
+        <Button
+              onClick={() => this.onAmendBtnClick()}
+              label={<Label buttonLabel={true} label="PT_BILL_AMENDMENT_BUTTON" fontSize="16px" />}
+              primary={true}
+              style={{ lineHeight: "auto", minWidth: "inherit", marginLeft:"10px" }}
+            />
+        
         {!isMigratedProperty && 
 
          <Button
