@@ -10,6 +10,7 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import set from "lodash/set";
+import get from "lodash/get";
 import {
   getDescriptionFromMDMS,
   getSearchResults,
@@ -123,8 +124,8 @@ const showHideConnectionHolder = (dispatch, connectionHolders) => {
 
 export const sortpayloadDataObj =(connectionObj)=>{ 
  
-  connectionObj.sort(function(x, y){
-  return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+  return connectionObj.sort(function(x, y){
+    return  y.auditDetails.createdTime-x.auditDetails.createdTime;
   });
 }
 
