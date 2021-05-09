@@ -108,11 +108,15 @@ export const  reviewUsageType =getLabelWithValueForModifiedLabel(
   },
   {
     labelKey: "WS_OLD_LABEL_NAME"
-  },
-  {
+  },  
+    {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPUSGTYPE"
+    },
     jsonPath: "applyScreenOld.usageCategory",
     callBack: handleNA
-  }
+  },
 );
 export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
   {
@@ -131,9 +135,14 @@ export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
     labelKey: "WS_OLD_LABEL_NAME"
   },
   {
+    localePrefix: {
+      moduleName: "COMMON",
+      masterName: "PROPSUBUSGTYPE"
+    },
     jsonPath: "applyScreenOld.subUsageCategory",
     callBack: handleNA
-  }
+  },
+  
 );
 
 

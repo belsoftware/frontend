@@ -1043,7 +1043,10 @@ export const applyForWater = async (state, dispatch) => {
             set(queryObjectForUpdate, "tenantId", tenantId);
             queryObjectForUpdate = { ...queryObjectForUpdate, ...queryObject }
             set(queryObjectForUpdate, "processInstance.action", "SUBMIT_APPLICATION");
-            set(queryObjectForUpdate, "waterSource", getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource));
+            let finalWaterSource = getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource);
+            set(queryObjectForUpdate, "waterSource",finalWaterSource);
+            set(queryObjectForUpdate, "waterSourceSubSource", finalWaterSource);
+            //set(queryObjectForUpdate, "waterSource", getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource));
             disableField('apply', "components.div.children.footer.children.nextButton", dispatch);
             disableField('apply', "components.div.children.footer.children.payButton", dispatch);
             if (typeof queryObjectForUpdate.additionalDetails !== 'object') {
@@ -2144,7 +2147,7 @@ export const getWaterSource = (waterSource, waterSubSource) => {
         if (waterSubSource && waterSubSource !== 'NA') {
             waterSource += "." + waterSubSource;
         }
-    }
+    }    
     return waterSource;
 }
 
