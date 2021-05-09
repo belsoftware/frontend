@@ -272,7 +272,7 @@ export const additionDetails = getCommonCard({
              
               gridDefination: { xs: 12, sm: 6 },
               localePrefix: {
-                moduleName: "COMMON",
+                moduleName: "WS",
                 masterName: "PROPUSGTYPE"
               },
               beforeFieldChange: async (action, state, dispatch) => {
@@ -304,7 +304,7 @@ export const additionDetails = getCommonCard({
               },
            
               localePrefix: {
-                  moduleName: "COMMON",
+                  moduleName: "WS",
              			 masterName: "PROPSUBUSGTYPE"
               },
               jsonPath: "applyScreen.subUsageCategory",
