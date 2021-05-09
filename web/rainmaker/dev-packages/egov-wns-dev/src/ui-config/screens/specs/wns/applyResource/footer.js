@@ -555,7 +555,9 @@ const callBackForNext = async (state, dispatch) => {
                
           if (moveToReview(state, dispatch)) {
             await pushTheDocsUploadedToRedux(state, dispatch);
-
+            if (getQueryArg(window.location.href, "action") === "edit" && (!isModifyMode() || (isModifyMode() && isModifyModeAction()))) {
+              setReviewPageRoute(state, dispatch);
+            } 
              isFormValid = true; 
              hasFieldToaster = false;
                 // if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {
