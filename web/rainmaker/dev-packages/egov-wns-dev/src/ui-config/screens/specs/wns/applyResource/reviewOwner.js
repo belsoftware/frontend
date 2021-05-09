@@ -100,7 +100,7 @@ export const  reviewUsageType =getLabelWithValueForModifiedLabel(
   },
   {
     localePrefix: {
-      moduleName: "COMMON",
+      moduleName: "WS",
       masterName: "PROPUSGTYPE"
     },
     jsonPath: "applyScreen.usageCategory",
@@ -111,7 +111,7 @@ export const  reviewUsageType =getLabelWithValueForModifiedLabel(
   },  
     {
     localePrefix: {
-      moduleName: "COMMON",
+      moduleName: "WS",
       masterName: "PROPUSGTYPE"
     },
     jsonPath: "applyScreenOld.usageCategory",
@@ -125,7 +125,7 @@ export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
   },
   {
     localePrefix: {
-      moduleName: "COMMON",
+      moduleName: "WS",
       masterName: "PROPSUBUSGTYPE"
     },
     jsonPath: "applyScreen.subUsageCategory",
@@ -136,7 +136,7 @@ export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
   },
   {
     localePrefix: {
-      moduleName: "COMMON",
+      moduleName: "WS",
       masterName: "PROPSUBUSGTYPE"
     },
     jsonPath: "applyScreenOld.subUsageCategory",

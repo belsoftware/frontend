@@ -46,7 +46,7 @@ export const renderService1 = () => {
           },
           {
             localePrefix: {
-              moduleName: "COMMON",
+              moduleName: "WS",
               masterName: "PROPUSGTYPE"
             },
             jsonPath: "WaterConnection[0].usageCategory",
@@ -60,7 +60,7 @@ export const renderService1 = () => {
           },
           {
             localePrefix: {
-              moduleName: "COMMON",
+              moduleName: "WS",
               masterName: "PROPSUBUSGTYPE"
             },
             jsonPath: "WaterConnection[0].subUsageCategory",
