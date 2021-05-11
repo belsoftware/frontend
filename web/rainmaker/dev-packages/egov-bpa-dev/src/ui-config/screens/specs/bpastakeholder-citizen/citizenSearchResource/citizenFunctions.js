@@ -245,3 +245,18 @@ const storeData = (data, dispatch, fromMyApplicationPage, fromStakeHolderPage) =
   }
 }
 
+export const fetchMDMSData = async(action, state, dispatch) =>{
+  const mdmsRes = await getMdmsData(dispatch);
+  let tenants =
+    mdmsRes &&
+    mdmsRes.MdmsRes &&
+    mdmsRes.MdmsRes.tenant.citymodule.find(item => {
+      if (item.code === "BPAAPPLY") return true;
+    });
+  dispatch(
+    prepareFinalObject(
+      "applyScreenMdmsData.cityModule.tenants", tenants
+    )
+  );
+}
+
