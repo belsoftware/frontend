@@ -2380,6 +2380,21 @@ class FormWizardDataEntry extends Component {
       hideSpinner();      
 
       const assessmentNumber= get(assessPropertyResponse, "Assessments[0].assessmentNumber",'');
+
+      if(assessPropertyResponse && assessPropertyResponse.Assessments.length > 0){
+
+        const queryObject = [
+          { key: "consumerCode", value: propertyId },
+          { key: "tenantId", value: getTenantId() },
+          { key: "businessService", value: "PT" },
+        ];
+        try {
+          const payload = await httpRequest("billing-service/bill/v2/_fetchbill", "_search", queryObject);
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
       
       switch (propertyMethodAction) {
         case "_update":
