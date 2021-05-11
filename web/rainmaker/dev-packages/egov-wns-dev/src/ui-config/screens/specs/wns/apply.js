@@ -1141,7 +1141,7 @@ const screenConfig = {
         );
 
 
-        if (!isModifyMode()) {
+      //  if (!isModifyMode()) {
 
           let chkplumberDetailsContainer = checkCardPermission(state, "plumberDetailsContainer");
           dispatch(
@@ -1226,8 +1226,8 @@ const screenConfig = {
             setRoadCuttingEstimate(roadTypes[i], i, dispatch);
           }
 
-        }
-        else {
+     //   }
+     //   else {
           dispatch(
             handleField(
               "apply",
@@ -1245,10 +1245,7 @@ const screenConfig = {
               true
             )
           );
-
-
-
-        }
+      //  }
 
       }
       if (applicationNumber && getQueryArg(window.location.href, "action") === "edit") {
@@ -1305,9 +1302,9 @@ const screenConfig = {
     }
 
 
-    if (isModifyMode()) {
-      triggerModificationsDisplay(action, true);
-    }
+    // if (isModifyMode()) {
+    //   triggerModificationsDisplay(action, true);
+    // }
     // else {
     //   triggerModificationsDisplay(action, false);
     // }
