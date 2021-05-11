@@ -30,10 +30,12 @@ import get from "lodash/get";
 import some from "lodash/some";
 import jp from "jsonpath";
 import commonConfig from "config/common.js";
+import store from "ui-redux/store";
 
 const moveToSuccess = (LicenseData, dispatch) => {
   const applicationNo = get(LicenseData, "applicationNumber");
-  const tenantId = getTenantId();//process.env.REACT_APP_DEFAULT_TENANT_ID;
+  const state = store.getState();
+  const tenantId =  get(state.screenConfiguration.preparedFinalObject, "bpaReg.tenantId", []);//getTenantId();//process.env.REACT_APP_DEFAULT_TENANT_ID;
   const financialYear = get(LicenseData, "financialYear");
   const purpose = "apply";
   const status = "success";

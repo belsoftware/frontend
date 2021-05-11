@@ -14,6 +14,55 @@ import get from "lodash/get";
 
 import { setLicenseeSubTypeDropdownData } from "../../utils";
 
+export const dropdown = {
+  uiFramework: "custom-containers",
+  componentPath: "AutosuggestContainer",
+  jsonPath:
+    "bpaReg.tenantId",
+  required: true,
+  props: {
+    style: {
+      width: "100%",
+      cursor: "pointer"
+    },
+    label: {
+      labelName: "CITY",
+      labelKey: "EDCR_SCRUTINY_CITY"
+    },
+    placeholder: {
+      labelName: "Select City",
+      labelKey: "EDCR_SCRUTINY_CITY_PLACEHOLDER"
+    },
+    localePrefix: {
+      moduleName: "TENANT",
+      masterName: "TENANTS"
+    },
+    sourceJsonPath: "applyScreenMdmsData.tenant.tenants",
+    labelsFromLocalisation: true,
+    errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+    suggestions: [],
+    fullwidth: true,
+    required: true,
+    isClearable: true,
+    inputLabelProps: {
+      shrink: true
+    }
+    // className: "tradelicense-mohalla-apply"
+  },
+  beforeFieldChange: async (action, state, dispatch) => {
+    // dispatch(
+    //   prepareFinalObject(
+    //     "Licenses[0].tradeLicenseDetail.address.locality.name",
+    //     action.value && action.value.label
+    //   )
+    // );
+  },
+  gridDefination: {
+    xs: 12,
+    sm: 6
+  }
+}
+
 export const LicenseeCard = getCommonCard({
   header: getCommonSubHeader(
     {
@@ -27,6 +76,7 @@ export const LicenseeCard = getCommonCard({
     }
   ),
   tradeUnitCardContainer: getCommonContainer({
+    dropdown,
     container1: getCommonContainer({
       licenseeType: {
         ...getSelectField({
