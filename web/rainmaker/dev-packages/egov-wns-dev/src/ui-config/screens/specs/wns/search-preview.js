@@ -241,11 +241,11 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
     }
 
     if (isModifyMode()) {
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.estimate.visible",
-        false
-      );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.estimate.visible",
+      //   false
+      // );
       set(
         action.screenConfig,
         "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven.visible",
