@@ -150,6 +150,8 @@ export const getMdmsData = async (action, state, dispatch) => {
   const connectionNumber = getQueryArg( window.location.href, "connectionNumber");
   const businessService = getQueryArg( window.location.href, "businessService");
   const tenantId = getTenantId() || getQueryArg( window.location.href, "tenantId");
+  let ptpayload = null;
+  let demandPropertyResponse = null;
 
   let mdmsBody = {
     MdmsCriteria: {
@@ -171,7 +173,9 @@ export const getMdmsData = async (action, state, dispatch) => {
         {
           moduleName: "BillingService",
           masterDetails: [
-            { name: "TaxHeadMaster" } ]
+            { name: "TaxHeadMaster" },
+            { name:"TaxPeriod" }
+         ]
         }
       ]
     }
@@ -185,7 +189,75 @@ export const getMdmsData = async (action, state, dispatch) => {
       [],
       mdmsBody
     );
-    let taxHeadMasterMdmsDetails = get(payload, "MdmsRes.BillingService.TaxHeadMaster", []), taxHeadMasterDetails;
+    if(businessService == "PT"){
+      let mdmsBody = {
+        MdmsCriteria: {
+          tenantId: tenantId,
+          moduleDetails: [
+            {
+              moduleName: "PropertyTax",
+              masterDetails: [
+                { name: "TaxHeadMaster" } ]
+            }
+          ]
+        }
+      };
+      try {
+        
+        ptpayload = await httpRequest(
+          "post",
+          "/egov-mdms-service/v1/_search",
+          "_search",
+          [],
+          mdmsBody
+        );
+      }
+      catch (e) {
+        console.log(e);
+      }
+
+    }
+    try {
+      const queryString = [
+        { key: "consumerCode", value: connectionNumber },
+        { key: "tenantId", value: tenantId }
+      ]
+    
+    demandPropertyResponse = await httpRequest(
+        "post",
+        "/billing-service/demand/_search",
+        "_demand",
+        queryString
+    );
+    if(demandPropertyResponse && demandPropertyResponse.Demands.length >0){
+    const demands =
+      demandPropertyResponse.Demands.sort(function(a, b) {
+        return b.taxPeriodFrom - a.taxPeriodFrom;
+      })
+      // dispatch( prepareFinalObject(
+      //       "DemandPropertiesResponse",
+      //       demandPropertyResponse.Demands
+      //     ))
+        
+      }
+    }
+      catch (e) {
+        console.log(e);
+      }
+    let taxHeadMasterMdmsDetails = null;
+    let taxHeadMasterDetails = null;
+    let demandDetails = null;
+    let demandResponse = null;
+    if(businessService==="PT"){
+      taxHeadMasterMdmsDetails=get(ptpayload, "MdmsRes.PropertyTax.TaxHeadMaster", []), taxHeadMasterDetails;
+      demandResponse = get(demandPropertyResponse, "Demands", []), demandDetails;
+      console.log("demandResponse---",demandResponse);
+
+    }
+    else{
+      taxHeadMasterMdmsDetails=get(payload, "MdmsRes.BillingService.TaxHeadMaster", []), taxHeadMasterDetails;
+
+    }
     if (taxHeadMasterMdmsDetails && taxHeadMasterMdmsDetails.length > 0) {
       taxHeadMasterDetails = taxHeadMasterMdmsDetails.filter(service => (service.service == businessService));
       let billTaxHeadMasterDetails = taxHeadMasterDetails.filter(data => (data.IsBillamend== true));
@@ -194,7 +266,15 @@ export const getMdmsData = async (action, state, dispatch) => {
           bill.reducedAmountValue = 0;
           bill.additionalAmountValue = 0;
           bill.taxHeadCode = bill.code;
+          const currentdemand = demandResponse[0];
+          currentdemand.demandDetails.forEach(demand => {
+            if(bill.taxHeadCode == demand.taxHeadMasterCode){
+              bill.demand = demand.taxAmount;
+            }
+            
+          });
         });
+
       }
       dispatch(prepareFinalObject("fetchBillDetails", billTaxHeadMasterDetails, []));
     } else {
@@ -228,6 +308,7 @@ const screenConfig = {
     dispatch(prepareFinalObject("documentsUploadRedux", {}));
     dispatch(prepareFinalObject("documentsContract", []));
     dispatch(prepareFinalObject("AmendmentTemp.isPreviousDemandRevBasisValue", true));
+    dispatch(prepareFinalObject("DemandPropertiesResponse", []));
     getData(action, state, dispatch).then(responseAction => {
 
     });
