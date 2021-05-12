@@ -699,8 +699,11 @@ const checkCardPermission = (state, cardName) => {
     "screenConfiguration.preparedFinalObject.applyScreenMdmsData.ws-services-masters.workflowBasedCardPermission",
     []
   );
-  cardList = cardList.filter((card) => card.code.includes(cardName));
+  
+  let appType =isModifyMode()?"MODIFY":"NEW";
 
+  cardList = cardList.filter((card) => card.code.includes(cardName) && card.workflow.includes(appType) );
+ 
   if (cardList.length > 0 && cardList[0].status.includes(workFlowStatus)) {
     return true;
   }
