@@ -124,6 +124,10 @@ const taxHeadsLabel = {
   alignItems: "center",
   fontWeight: 600,
 };
+const currentDemandLabel = {
+  display: "flex",
+  alignItems: "center"
+};
 
 class AdjustmentAmountContainer extends Component {
   constructor(props) {
@@ -204,10 +208,27 @@ class AdjustmentAmountContainer extends Component {
     return (
       <React.Fragment>
         <Grid container={true}>
-          <Grid item={true} xs={4} sm={4} md={3} style={lableStyle}>
+          <Grid item={true} xs={3} sm={3} md={3} style={lableStyle}>
             <LabelContainer labelKey={getTransformedLocale(`BILL_${card.taxHeadCode}`)} />
           </Grid>
-          <Grid item={true} xs={4} sm={4} md={3}>
+          <Grid item={true} xs={3} sm={3} md={3}>
+            <TextField
+              variant="outlined"
+              name={getTransformedLocale(card.taxHeadCode)}
+           
+              className={classes.textField}
+              value={card.demand ? card.demand : 0}
+              InputProps={{
+                className: classes.input,
+                disabled: true
+                
+              }}
+              inputProps={{
+                style: { textAlign: "right", paddingRight: "0.5rem" , color: "black"},
+              }}
+            />
+          </Grid>
+          <Grid item={true} xs={3} sm={3} md={3}>
             <TextField
               variant="outlined"
               name={getTransformedLocale(card.taxHeadCode)}
@@ -251,13 +272,20 @@ class AdjustmentAmountContainer extends Component {
   render() {
     const { data, amountType, ...rest } = this.props;
     let checkedValue = (amountType == "reducedAmount") ? true : false;
+    let checked=true;
     return (
       <div>
         <Grid container={true}>
-          <Grid item={true} xs={4} sm={4} md={3} style={taxHeadsLabel}>
+          <Grid item={true} xs={3} sm={3} md={3} style={taxHeadsLabel}>
             <LabelContainer labelKey={getTransformedLocale("TAX_HEADS")} />
           </Grid>
-          <Grid item={true} xs={4} sm={4} md={3}>
+          <Grid item={true} xs={3} sm={3} md={3} style={currentDemandLabel}>
+            <LabelContainer
+              labelName="Current Demand"
+              labelKey={getTransformedLocale("CURRENT_DEMAND")}
+            />
+          </Grid>
+          <Grid item={true} xs={3} sm={3} md={3}>
             <CheckBoxContainer
               labelName="Reduced Amount (Rs)"
               labelKey="BILL_REDUCED_AMOUNT_RS"
@@ -266,7 +294,7 @@ class AdjustmentAmountContainer extends Component {
               changeMethod={this.handleCheckBoxChange}
             />
           </Grid>
-          <Grid item={true} xs={4} sm={4} md={3}>
+          <Grid item={true} xs={3} sm={3} md={3}>
             <CheckBoxContainer
               labelName="Additional Amount (Rs)"
               labelKey="BILL_ADDITIONAL_AMOUNT_RS"
