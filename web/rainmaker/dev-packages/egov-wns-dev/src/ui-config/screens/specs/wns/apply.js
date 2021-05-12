@@ -247,25 +247,25 @@ export const getMdmsData = async dispatch => {
             { name: "TaxHeadMaster" },
             { name: "motorInfo" },
             { name: "authorizedConnection" },
-            { name: "workflowBasedCardPermission" }
+            { name: "workflowBasedCardPermission" },
+            { name: "waterUsage"}
           ]
         },
         { moduleName: "PropertyTax", 
              masterDetails: 
              [{ name: "PTWorkflow" }, 
-             { name: "PropertyOwnershipCategory" },
-             { name: "UsageCategory" },
-             { name: "UsageCategoryMajor" },
-             { name: "UsageCategoryMinor" },
-             { name: "UsageCategorySubMinor" },
+             { name: "PropertyOwnershipCategory" }
+            //  { name: "UsageCategory" },
+            //  { name: "UsageCategoryMajor" },
+            //  { name: "UsageCategoryMinor" },
+            //  { name: "UsageCategorySubMinor" },
             ]}
       ]
     }
   };
   try {
-    let payload = null;
-    payload = await httpRequest("post", "/egov-mdms-service/v1/_search", "_search", [], mdmsBody);
-
+    let payload = null;    
+    payload = await httpRequest("post", "/egov-mdms-service/v1/_search", "_search", [], mdmsBody);   
     if (payload.MdmsRes['sw-services-calculation'].PipeSize !== undefined && payload.MdmsRes['sw-services-calculation'].PipeSize.length > 0) {
       let drainageSize = [];
       payload.MdmsRes['sw-services-calculation'].PipeSize.forEach(obj => drainageSize.push({ code: obj.size, name: obj.id, isActive: obj.isActive }));
@@ -312,6 +312,26 @@ export const getMdmsData = async dispatch => {
       payload.MdmsRes['ws-services-masters'].SURFACE = SURFACE;
       payload.MdmsRes['ws-services-masters'].PIPE = PIPE;
     }
+    //Water usage type
+    let waterUsage = []       
+    payload.MdmsRes['ws-services-masters'].waterUsage.forEach(obj => {
+      waterUsage.push({
+        code: obj.code.split(".")[0],
+        name: obj.name,
+        isActive: obj.active
+      });      
+    })    
+    let filteredWaterUsage = waterUsage.reduce((filteredWaterUsage, item) => {
+      if (!filteredWaterUsage.some(filteredItem => JSON.stringify(filteredItem.code) == JSON.stringify(item.code)))
+      filteredWaterUsage.push(item)
+      return filteredWaterUsage
+    }, [])
+    
+    payload.MdmsRes['ws-services-masters'].waterSubUsage = payload.MdmsRes['ws-services-masters'].waterUsage;
+    payload.MdmsRes['ws-services-masters'].waterUsage = filteredWaterUsage;
+    
+    //Water usage type
+
 
     //related to ownershipcategory
     let OwnerShipCategory = get(
@@ -334,43 +354,6 @@ export const getMdmsData = async dispatch => {
 
     payload.MdmsRes['common-masters'].Institutions = institutions;
     payload.MdmsRes['common-masters'].OwnerShipCategory = OwnerShipCategory;
-
-    //Property type addition
-    let UsageType = [];
-    payload.MdmsRes["PropertyTax"].UsageCategory.forEach(item => {
-      if (item.code.split(".").length <= 2 && item.code != "NONRESIDENTIAL") {
-        UsageType.push({
-          active: item.active,
-          name: item.name,
-          code: item.code,
-          fromFY: item.fromFY
-        })
-      }
-    })
-
-    payload.MdmsRes["PropertyTax"].UsageType = UsageType;
-    let array1 = [];
-    let array2 = [];
-    payload.MdmsRes["PropertyTax"].UsageCategory.forEach(item => {
-      let itemCode = item.code.split(".");
-      const codeLength = itemCode.length;
-      if (codeLength > 3) {
-        array1.push(item);
-      } else if (codeLength === 3) {
-        array2.push(item);
-      }
-    })
-    array1.forEach(item => {
-      array2 = array2.filter(item1 => {
-        return (!(item.code.includes(item1.code)));
-      })
-    });
-    array1 = array2.concat(array1);
-
-    payload.MdmsRes["PropertyTax"].subUsageType = array1;
-
-
-
 
     dispatch(prepareFinalObject("applyScreenMdmsData", payload.MdmsRes));
     
