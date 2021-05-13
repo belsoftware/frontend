@@ -20,7 +20,7 @@ export const searchApiCall = async (state, dispatch) => {
   let queryObject = [
     {
       key: "tenantId",
-      value: (getTenantId().lastIndexOf(".") > 0 ? getTenantId().substr(0, getTenantId().lastIndexOf(".")) : getTenantId())
+      value: getTenantId(),//(getTenantId().lastIndexOf(".") > 0 ? getTenantId().substr(0, getTenantId().lastIndexOf(".")) : getTenantId())
     },
     { key: "offset", value: "0" },
     { key: "limit", value: "100" }

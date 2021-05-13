@@ -101,7 +101,7 @@ class WorkFlowContainer extends React.Component {
       case "SUBMIT_APPLICATION":
         return "purpose=apply&status=success";
       case "RESUBMIT_APPLICATION":
-        return "purpose=forward&status=success";
+        return "purpose=resubmit&status=success";
       case "SEND_BACK_TO_CITIZEN":
         return "purpose=sendback&status=success";
       case "VERIFY_AND_FORWARD":
@@ -200,6 +200,17 @@ class WorkFlowContainer extends React.Component {
         data.workflow.documents = data.workflow.wfDocuments;
       }
     }
+    if (moduleName === "Amendment") {
+      data.workflow = {};
+      data.workflow.documents = get(data[0], "wfDocuments", []);
+      data.workflow.comment = get(data[0], "comment", "");
+      data.workflow.assignee = get(data[0], "assignee", []);
+      data.workflow.action = get(data[0], "action", "");
+      data.workflow.businessId = get(data, "amendmentId", "");
+      data.workflow.tenantId = get(data, "tenantId", "");
+      data.workflow.businessService = "BS.AMENDMENT";
+      data.workflow.moduleName = "BS";
+    }
 
     const applicationNumber = getQueryArg(
       window.location.href,
@@ -249,6 +260,12 @@ class WorkFlowContainer extends React.Component {
           this.props.setRoute(`/pt-mutation/acknowledgement?${this.getPurposeString(
             label
           )}&moduleName=${moduleName}&applicationNumber=${get(payload, 'Assessments[0].assessmentNumber', "")}&tenantId=${get(payload, 'Assessments[0].tenantId', "")}`);
+          return;
+        }
+        if (moduleName == 'Amendment') {
+          this.props.setRoute(`acknowledgement?${this.getPurposeString(
+            label
+          )}&applicationNumber=${applicationNumber}&tenantId=${tenant}&businessService=${get(payload, 'Amendments[0].businessService', "")}`);
           return;
         }
 
@@ -309,7 +326,7 @@ class WorkFlowContainer extends React.Component {
   };
 
   createWorkFLow = async (label, isDocRequired) => {
-    const { toggleSnackbar, dataPath, preparedFinalObject } = this.props;
+    const { toggleSnackbar, dataPath, preparedFinalObject,moduleName } = this.props;
     let data = {};
 
     if (dataPath == "BPA" || dataPath == "Assessment" || dataPath == "Property" || dataPath === "Noc") {
@@ -348,7 +365,7 @@ class WorkFlowContainer extends React.Component {
           "error"
         );
       }
-    } else if(tlAppStatus!=null) {
+    } else if((moduleName=='NewTL' || moduleName=='EDITRENEWAL') && tlAppStatus!=null) {
       let pattern = getPattern("Comments");
       const comments = get(
         preparedFinalObject,

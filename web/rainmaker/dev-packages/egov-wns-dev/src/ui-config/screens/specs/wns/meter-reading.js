@@ -8,42 +8,67 @@ import { meterReadingEditable } from "./meterReading/meterReadingEditable";
 import { getMdmsDataForMeterStatus } from "../../../../ui-utils/commons"
 import { getSearchResults, getMdmsDataForAutopopulated, isWorkflowExists } from "../../../../ui-utils/commons"
 import get from "lodash/get";
+import set from "lodash/set";
 import { convertEpochToDate } from "../utils";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { sortpayloadDataObj } from './connection-details'
+
 const addMeterReading = async (state, dispatch) => {
     dispatch(toggleSpinner());
     const tenantId = getQueryArg(window.location.href, "tenantId");
     const connectionNos = getQueryArg(window.location.href, "connectionNos");
-    let queryObject = [{ key: "tenantId", value: tenantId }, { key: "connectionNumber", value: connectionNos }];
+    let queryObject = [{ key: "tenantId", value: tenantId }, { key: "connectionNumber", value: connectionNos },{ key: "isConnectionSearch", value: true }];
     let payloadData = await getSearchResults(queryObject);
     if (payloadData !== null && payloadData !== undefined && payloadData.WaterConnection.length > 0) {
-        payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
+       
+        if(payloadData.WaterConnection.length >1)
+            payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
+       
         let applicationNos = getApplicationNo(payloadData.WaterConnection);
         const queryObj = [
             { key: "businessIds", value: applicationNos },
             { key: "tenantId", value: tenantId }
         ];        
-        
-        let isApplicationApproved = await isWorkflowExists(queryObj);
-        if(!isApplicationApproved){
-            dispatch(toggleSpinner());
-            dispatch(
-                toggleSnackbar(
-                    true,
-                    {
-                        labelName: "WorkFlow already Initiated",
-                        labelKey: "WS_WORKFLOW_ALREADY_INITIATED"
-                    },
-                    "error"
-                )
-            );
-            return;
-        } else {
+        //Check for legacy data 
+        let isLegacyData =false;
+        if(payloadData.WaterConnection.length==1){
+            let oldConnectionNo= get(payloadData,"WaterConnection[0].oldConnectionNo","NA");
+            let applicationType= get(payloadData,"WaterConnection[0].applicationType","");
+            
+            if(oldConnectionNo !=="NA" && applicationType==="NEW_WATER_CONNECTION"){
+                isLegacyData=true;
+            }
+            console.log("oldConnectionNoapplicationType  ",oldConnectionNo,applicationType);
+            
+        }
+        console.log("IsLegacyData",isLegacyData);
+        if(isLegacyData){
+
             await getMdmsDataForAutopopulated(dispatch)
             await getMdmsDataForMeterStatus(dispatch)
             await setAutopopulatedvalues(state, dispatch)
             showHideCard(true, dispatch); 
+        }else{
+            let isApplicationApproved = await isWorkflowExists(queryObj);
+            if(!isApplicationApproved){
+                dispatch(toggleSpinner());
+                dispatch(
+                    toggleSnackbar(
+                        true,
+                        {
+                            labelName: "WorkFlow already Initiated",
+                            labelKey: "WS_WORKFLOW_ALREADY_INITIATED"
+                        },
+                        "error"
+                    )
+                );
+                return;
+            } else {
+                await getMdmsDataForAutopopulated(dispatch)
+                await getMdmsDataForMeterStatus(dispatch)
+                await setAutopopulatedvalues(state, dispatch)
+                showHideCard(true, dispatch); 
+            }
         }
 
     }  
@@ -132,8 +157,12 @@ const setAutopopulatedvalues = async (state, dispatch) => {
 
 }
 
+
+
+
 const queryValueAN = getQueryArg(window.location.href, "connectionNos");
-// console.log('123', queryValueAN)
+
+
 const showHideCard = (booleanHideOrShow, dispatch) => {
     dispatch(
         handleField(
@@ -144,7 +173,8 @@ const showHideCard = (booleanHideOrShow, dispatch) => {
         )
     );
 }
-const header = getCommonContainer({
+
+ const header = getCommonContainer({
     header: getCommonHeader({
         labelKey: "WS_CONSUMPTION_DETAILS_HEADER"
     }),
@@ -153,7 +183,8 @@ const header = getCommonContainer({
         moduleName: "egov-wns",
         componentPath: "ConsumerNoContainer",
         props: {
-            number: queryValueAN
+            //number: getQueryArg(window.location.href, "connectionNos")
+            number :queryValueAN
         }
     },
     classes: {
@@ -162,11 +193,14 @@ const header = getCommonContainer({
 
 });
 
+
 const screenConfig = {
     uiFramework: "material-ui",
     name: "meter-reading",
     beforeInitScreen: (action, state, dispatch) => {
         getMeterReadingData(dispatch);
+        
+        set(action, "screenConfig.components.div.children.header.children.applicationNumber.props.number", getQueryArg(window.location.href, "connectionNos"));
         return action;
     },
     components: {
@@ -179,6 +213,7 @@ const screenConfig = {
             },
             children: {
                 header: header,
+             
                 newApplicationButton: {
                     componentPath: "Button",
                     gridDefination: {
