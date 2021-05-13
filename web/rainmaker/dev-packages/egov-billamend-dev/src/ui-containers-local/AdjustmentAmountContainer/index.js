@@ -211,7 +211,7 @@ class AdjustmentAmountContainer extends Component {
           <Grid item={true} xs={3} sm={3} md={3} style={lableStyle}>
             <LabelContainer labelKey={getTransformedLocale(`BILL_${card.taxHeadCode}`)} />
           </Grid>
-          <Grid item={true} xs={3} sm={3} md={3}>
+          <Grid item={true} xs={2} sm={2} md={2}>
             <TextField
               variant="outlined"
               name={getTransformedLocale(card.taxHeadCode)}
@@ -228,7 +228,7 @@ class AdjustmentAmountContainer extends Component {
               }}
             />
           </Grid>
-          <Grid item={true} xs={3} sm={3} md={3}>
+          <Grid item={true} xs={2} sm={2} md={2}>
             <TextField
               variant="outlined"
               name={getTransformedLocale(card.taxHeadCode)}
@@ -242,11 +242,11 @@ class AdjustmentAmountContainer extends Component {
                 disabled: !disableValue
               }}
               inputProps={{
-                style: { textAlign: "right", paddingRight: "0.5rem" },
+                style: { textAlign: "left", paddingRight: "0.5rem" },
               }}
             />
           </Grid>
-          <Grid item={true} xs={4} sm={4} md={3}>
+          <Grid item={true} xs={2} sm={2} md={2}>
             <TextField
               variant="outlined"
               value={card.additionalAmountValue ? card.additionalAmountValue : 0}
@@ -260,7 +260,22 @@ class AdjustmentAmountContainer extends Component {
                 disabled: disableValue
               }}
               inputProps={{
-                style: { textAlign: "right", paddingRight: "0.5rem" },
+                style: { textAlign: "left", paddingRight: "0.5rem" },
+              }}
+            />
+          </Grid>
+          <Grid item={true} xs={2} sm={2} md={2}>
+            <TextField
+              variant="outlined"
+              value={card.additionalAmountValue ? card.additionalAmountValue + card.demand: card.reducedAmountValue?card.demand -card.reducedAmountValue:0}
+              className={classes.textField}
+              name={getTransformedLocale(card.taxHeadCode)}
+              InputProps={{
+                className: classes.input,
+                disabled: true
+              }}
+              inputProps={{
+                style: { textAlign: "left", paddingRight: "0.5rem" },
               }}
             />
           </Grid>
@@ -285,7 +300,7 @@ class AdjustmentAmountContainer extends Component {
               labelKey={getTransformedLocale("CURRENT_DEMAND")}
             />
           </Grid>
-          <Grid item={true} xs={3} sm={3} md={3}>
+          <Grid item={true} xs={2} sm={2} md={2}>
             <CheckBoxContainer
               labelName="Reduced Amount (Rs)"
               labelKey="BILL_REDUCED_AMOUNT_RS"
@@ -294,13 +309,19 @@ class AdjustmentAmountContainer extends Component {
               changeMethod={this.handleCheckBoxChange}
             />
           </Grid>
-          <Grid item={true} xs={3} sm={3} md={3}>
+          <Grid item={true} xs={2} sm={2} md={2}>
             <CheckBoxContainer
               labelName="Additional Amount (Rs)"
               labelKey="BILL_ADDITIONAL_AMOUNT_RS"
               name="additionalAmount"
               checked={checkedValue}
               changeMethod={this.handleCheckBoxChange}
+            />
+          </Grid>
+          <Grid item={true} xs={2} sm={2} md={2} style={currentDemandLabel}>
+            <LabelContainer
+              labelName="Total Adjustment Tax Amount"
+              labelKey={getTransformedLocale("TOTAL_REVISED_TAX_AMT")}
             />
           </Grid>
         

@@ -267,13 +267,18 @@ export const getMdmsData = async (action, state, dispatch) => {
           bill.additionalAmountValue = 0;
           bill.taxHeadCode = bill.code;
           bill.demand =0;
-          const currentdemand = demandResponse[0];
-          currentdemand.demandDetails.forEach(demand => {
-            if(bill.taxHeadCode == demand.taxHeadMasterCode){
-              bill.demand = bill.demand + demand.taxAmount;
+          if(demandResponse && demandResponse.length > 0 && demandResponse[0].demandDetails &&
+            demandResponse[0].demandDetails.length > 0 ){
+              const currentdemand = demandResponse[0];
+              currentdemand.demandDetails.forEach(demand => {
+                if(bill.taxHeadCode == demand.taxHeadMasterCode){
+                  bill.demand = bill.demand + demand.taxAmount;
+                }
+                
+              });
+
             }
-            
-          });
+
         });
 
       }
