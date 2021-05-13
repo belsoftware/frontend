@@ -266,10 +266,11 @@ export const getMdmsData = async (action, state, dispatch) => {
           bill.reducedAmountValue = 0;
           bill.additionalAmountValue = 0;
           bill.taxHeadCode = bill.code;
+          bill.demand =0;
           const currentdemand = demandResponse[0];
           currentdemand.demandDetails.forEach(demand => {
             if(bill.taxHeadCode == demand.taxHeadMasterCode){
-              bill.demand = demand.taxAmount;
+              bill.demand = bill.demand + demand.taxAmount;
             }
             
           });
