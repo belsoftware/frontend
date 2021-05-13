@@ -78,9 +78,13 @@ const getBusinessService=async(businessService, dispatch)=>{
         dispatch(prepareFinalObject("applyScreenMdmsData.searchScreen.applicationStatusNew", applicationStatus));
     
     }else{
-      if (payload.BusinessServices[0].businessService === "ModifyWSConnection" || payload.BusinessServices[0].businessService === "ModifySWConnection") {
+      if (payload.BusinessServices[0].businessService === "ModifyWSConnection"  ) {
         const applicationStatus=commonGetAppStatus(payload);
-          dispatch(prepareFinalObject("applyScreenMdmsData.searchScreen.applicationStatusModify", applicationStatus));
+          dispatch(prepareFinalObject("applyScreenMdmsData.searchScreen.applicationStatusModifyWS", applicationStatus));
+      }
+      if ( payload.BusinessServices[0].businessService === "ModifySWConnection") {
+        const applicationStatus=commonGetAppStatus(payload);
+          dispatch(prepareFinalObject("applyScreenMdmsData.searchScreen.applicationStatusModifySW", applicationStatus));
       }
     }
 }
