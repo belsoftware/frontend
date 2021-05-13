@@ -246,26 +246,26 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
       //   "components.div.children.taskDetails.children.cardContent.children.estimate.visible",
       //   false
       // );
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven.visible",
-        false
-      );
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewEight.visible",
-        false
-      );
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewNine.visible",
-        false
-      );
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewTen.visible",
-        false
-      );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven.visible",
+      //   false
+      // );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewEight.visible",
+      //   false
+      // );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewNine.visible",
+      //   false
+      // );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewTen.visible",
+      //   false
+      // );
     } else {
       set(
         action.screenConfig,
