@@ -689,6 +689,7 @@ const getApplicationNoLabel = () => {
 }
 
 const checkCardPermission = (state, cardName) => {
+  console.info("DC-check card permission",cardName)
   let workFlowStatus = get(
     state,
     "screenConfiguration.preparedFinalObject.applyScreen.applicationStatus",
@@ -703,13 +704,31 @@ const checkCardPermission = (state, cardName) => {
   let appType =isModifyMode()?"MODIFY":"NEW";
 
   cardList = cardList.filter((card) => card.code.includes(cardName) && card.workflow.includes(appType) );
- 
-  if (cardList.length > 0 && cardList[0].status.includes(workFlowStatus)) {
-    return true;
+  if(cardName == "connectiondetailscontainer"){
+    console.info("DC-cardList",cardList)
+    //console.info("DC-Status=>",cardList[0].status)
+     console.info("DC-workFlowStatus=>",workFlowStatus)
   }
-  return false;
-
-}
+  let accessFlag = false;
+  if(cardList.length > 0 ){    
+    for(var i=0;i<cardList.length;i++){
+        if(cardList[i].status.includes(workFlowStatus)){
+          console.info("YES, present so return true")
+          accessFlag = true;
+          break;
+        }                
+    }   
+  }
+  return accessFlag;    
+  }
+ 
+ 
+ 
+//   if (cardList.length > 0 && cardList[0].status.includes(workFlowStatus)) {
+//     return true;
+//   }
+//   return false;
+// }
 
 const getApplyPropertyDetails = async (queryObject, dispatch, propertyID, state) => {
   let payload = await getPropertyResults(queryObject, dispatch);
@@ -1212,25 +1231,35 @@ const screenConfig = {
             setRoadCuttingEstimate(roadTypes[i], i, dispatch);
           }
 
-     //   }
-     //   else {
+          let chkModificationsEffectiveFrom = checkCardPermission(state, "modificationsEffectiveFrom");
           dispatch(
             handleField(
               "apply",
               "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom",
               "visible",
-              true
+              chkModificationsEffectiveFrom
             )
           );
 
-          dispatch(
-            handleField(
-              "apply",
-              "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
-              "visible",
-              true
-            )
-          );
+     //   }
+     //   else {
+          // dispatch(
+          //   handleField(
+          //     "apply",
+          //     "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom",
+          //     "visible",
+          //     true
+          //   )
+          // );
+
+          // dispatch(
+          //   handleField(
+          //     "apply",
+          //     "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer",
+          //     "visible",
+          //     true
+          //   )
+          // );
       //  }
 
       }
