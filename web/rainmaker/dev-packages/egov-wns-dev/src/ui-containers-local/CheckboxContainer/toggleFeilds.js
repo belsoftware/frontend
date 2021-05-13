@@ -285,7 +285,8 @@ export const toggleSewerage = (onFieldChange, value) => {
 
 export const togglePlumberFeilds = (onFieldChange, value) => {
   let isMode = isModifyMode();
-  let mStep = (isMode) ? 'formwizardThirdStep' : 'formwizardThirdStep';
+ // let mStep = (isMode) ? 'formwizardSecondStep' : 'formwizardThirdStep';
+ let mStep = 'formwizardThirdStep';
   onFieldChange(
     "apply",
     `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children.plumberLicenceNo`,
