@@ -14,7 +14,7 @@ const formConfig = {
       floatingLabelText: "PT_OWNER_NAME",
       hintText: "PT_SEARCH_OWNER_NAME_PLACEHOLDER",
       required: true,
-      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
       pattern:  /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
     },
@@ -27,7 +27,7 @@ const formConfig = {
       required: true,
       pattern: /^([0]|((\+\d{1,2}[-]{0,1})))?\(?[6-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i,
       errorMessage: "PT_MOBILE_NUMBER_ERROR_MESSAGE",
-      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     },
     ownerGuardian: {
       id: "ownerGuardian",
@@ -38,7 +38,7 @@ const formConfig = {
       pattern:  /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
       required: true,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
-      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     },
     ownerEmail: {
       id: "ownerEmail",

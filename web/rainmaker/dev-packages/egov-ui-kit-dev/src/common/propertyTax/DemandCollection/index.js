@@ -149,6 +149,8 @@ class DemandCollection extends React.Component {
                                   }
 
                                 onWheel={event => { event.preventDefault(); }}
+                                disabled={taxData.code==='PT_TIME_REBATE' || taxData.code==='PT_TIME_INTEREST' || taxData.code==='PT_TIME_PENALTY'? true : false  }
+                                
                               />
                             </div>
                           );
@@ -168,6 +170,7 @@ class DemandCollection extends React.Component {
                               <TextField
                                 key={index1}
                                 type="textfield"
+
                                 min={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
                                 max={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
                                 value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
@@ -176,7 +179,7 @@ class DemandCollection extends React.Component {
                                 hintText={<Label label="PT_ENTER_AN_AMOUNT"/>}
 
                                 onChange={(e) => {
-                                  
+
                                   let value = "";
                                   var NumbersOnly = /^\d{0,8}(\.(\d{1,2})?)?$/i
                                   let input = e.target.value ;
@@ -194,8 +197,10 @@ class DemandCollection extends React.Component {
                                      alert( "Integer numbers are only allowed and enter upto two decimal places.");  
                                      return value = "" ; 
                                    }
-                                   prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_TAXHEAD`,taxData.code);
-                                   prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`, e.target.value);
+
+                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_TAXHEAD`,taxData.code);
+                                  prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`, e.target.value);
+
                                 }}
                                 onWheel={event => { event.preventDefault(); }}
                                 disabled={taxData.isDebit}

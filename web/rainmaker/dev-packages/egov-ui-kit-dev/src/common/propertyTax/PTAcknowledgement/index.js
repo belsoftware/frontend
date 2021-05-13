@@ -50,7 +50,7 @@ class PTAcknowledgement extends React.Component {
     store.dispatch(setRoute(`/property-tax/demand-and-collection?propertyId=${propertyId}`));
   };
   onGoHomeClick = () => {
-    process.env.REACT_APP_NAME === "Employee" ? store.dispatch(setRoute("/pt-mutation/propertySearch")) : store.dispatch(setRoute("/property-tax"));
+    process.env.REACT_APP_NAME === "Employee" ? store.dispatch(setRoute("/inbox")) : store.dispatch(setRoute("/property-tax"));
   };
   download() {
     const { UlbLogoForPdf, selPropertyDetails, generalMDMSDataById } = this.props;

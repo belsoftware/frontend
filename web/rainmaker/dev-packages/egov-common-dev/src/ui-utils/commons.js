@@ -655,7 +655,16 @@ export const downloadAppFeeReceipt = (receiptQueryString, mode = "download" ,con
   }
 }
 
-export const downloadBill = async (consumerCode, tenantId, configKey = "consolidatedbill", url = "egov-searcher/bill-genie/billswithaddranduser/_get") => {
+export const downloadBill = async (consumerCode, tenantId, configKey = "consolidatedbill", url = "egov-searcher/bill-genie/billswithaddranduser/_get",businessService='') => {
+  if(businessService=='PT'){
+    
+    const billQueryStr = [
+      { key: "propertyId", value: consumerCode },
+      { key: "tenantId", value: tenantId }
+    ]
+    downloadPTBill(billQueryStr,"download"); 
+  }
+else{
   const searchCriteria = {
     consumerCode,
     tenantId
@@ -697,7 +706,7 @@ export const downloadBill = async (consumerCode, tenantId, configKey = "consolid
     console.log(error);
 
   }
-
+}
 }
 
 
@@ -756,7 +765,40 @@ export const downloadPTBill = async (queryStr, mode = 'download') => {
 
 }
 
+export const downloadMultipleBill = async (bills = [], configKey) => {
+  if(bills && bills[0].businessService=='PT'){
+    let propertyIds = '';
+    for (var i = 0; i < bills.length; i++) {
+      propertyIds += bills[i]['consumerCode'] + ",";
+    }
+    propertyIds = propertyIds.substring(0, propertyIds.length - 1);
+    const billQueryStr = [
+      { key: "propertyId", value: propertyIds },
+      { key: "tenantId", value: bills[0].tenantId }
+    ]
+    downloadPTBill(billQueryStr,"download"); 
+  }
+  else{
+  try {
+    const DOWNLOADRECEIPT = {
+      GET: {
+        URL: "/pdf-service/v1/_create",
+        ACTION: "_get",
+      },
+    };
+    const queryStr = [
+      { key: "key", value: configKey },
+      { key: "tenantId", value: commonConfig.tenantId }
+    ]
+    const pfResponse = await httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Bill: bills }, { 'Accept': 'application/pdf' }, { responseType: 'arraybuffer' })
+    downloadReceiptFromFilestoreID(pfResponse.filestoreIds[0], 'download');
+  } catch (error) {
+    console.log(error);
 
+  }
+}
+
+}
 
 export const downloadMultipleFileFromFilestoreIds = (fileStoreIds = [], mode, tenantId) => {
   getFileUrlFromAPI(fileStoreIds.join(','), tenantId).then(async (fileRes) => {
