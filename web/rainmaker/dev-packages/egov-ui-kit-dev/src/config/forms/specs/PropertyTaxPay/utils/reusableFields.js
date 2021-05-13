@@ -27,6 +27,7 @@ export const plotSize = {
     floatingLabelText: "PT_ASSESMENT_INFO_PLOT_SIZE",
     hintText: "PT_FORM2_PLOT_SIZE_PLACEHOLDER",
     errorMessage: "PT_PLOT_SIZE_ERROR_MESSAGE",
+    errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     required: true,
     fullWidth: true,
     pattern: /^([1-9]\d{0,7})(\.\d+)?$/,
@@ -59,6 +60,7 @@ export const floorCount = {
       xs: 12,
       sm: 6
     },
+    
     dropDownData: floorDropDownData,
     formName: "plotDetails",
     updateDependentFields: ({ formKey, field, dispatch, state }) => {
@@ -153,6 +155,7 @@ export const builtArea = {
     floatingLabelText: "PT_ASSESMENT_INFO_BUILT_UP_AREA",
     hintText: "PT_FORM2_BUILT_UP_AREA_PLACEHOLDER",
     errorMessage: "PT_BUILT_AREA_ERROR_MESSAGE",
+    errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     toolTip: true,
     toolTipMessage: "PT_BUILT_UP_AREA_TOOLTIP_MESSAGE",
     required: true,
@@ -231,6 +234,7 @@ export const floorName = {
       sm: 4
     },
     errorMessage: "",
+    errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     required: true,
     jsonPath: "Properties[0].propertyDetails[0].units[0].floorNo",
     hideField: true,
@@ -521,7 +525,7 @@ export const dummy = {
     numcols: 6,
     fullWidth: true,
     errorMessage: "PT_PROPERTY_DETAILS_DOOR_NUMBER_ERRORMSG",
-    errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+    errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     maxLength: 64,
     dataFetchConfig: {
       url: CITY.GET.URL,
