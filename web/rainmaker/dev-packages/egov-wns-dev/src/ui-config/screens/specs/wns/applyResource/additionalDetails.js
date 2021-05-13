@@ -316,13 +316,13 @@ export const additionDetails = getCommonCard({
         
               placeholder: {
                   labelName: "Select Sub Usage Type",
-                  labelKey: "PT_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
+                  labelKey: "WS_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
               },
            
-              localePrefix: {
-                  moduleName: "WS",
-             			 masterName: "PROPSUBUSGTYPE"
-              },
+      //         localePrefix: {
+      //             moduleName: "WS",
+      //        			 masterName: "PROPSUBUSGTYPE"
+      //         },
               jsonPath: "applyScreen.subUsageCategory",
               sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
               className: "autocomplete-dropdown pds-search",
