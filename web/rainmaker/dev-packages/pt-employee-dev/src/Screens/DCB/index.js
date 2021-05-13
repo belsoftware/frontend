@@ -589,10 +589,12 @@ class FormWizardDataEntry extends Component {
         } else {
           demand.demandDetails = [];
         }
+
         return demand.demandDetails.forEach((demandData, demandKey) => {
 
        
           if (demandData.order > -1 && demandData.isLegacy) {
+
             //year is greater, till get equarl to i have to null 
              
             let yearkeys = Object.keys(generalMDMSDataById.TaxPeriod).forEach(
@@ -615,14 +617,27 @@ class FormWizardDataEntry extends Component {
               if(finalYear===latestFinalData[i].financialYear)
               yearKey =i;
             }
+
+
+            let amount = 0
+
+                    let existingdemanddetails = demand.demandDetails;
+                    existingdemanddetails.forEach((detail)=>{
+                      if(detail.taxHeadMasterCode == demandData.taxHeadMasterCode){
+                        amount = amount + detail.taxAmount
+                      }
+                    });
                    
             prepareFinalObject(
               `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_TAXHEAD`, 
                demandData.taxHeadMasterCode
              ),
+              
+             
+
                prepareFinalObject(
                  `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_DEMAND`,
-                 `${Math.trunc(demandData.taxAmount)}`
+                 `${Math.trunc(amount)}`
                ),
                prepareFinalObject(
                  `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_COLLECTED`,
@@ -2386,6 +2401,21 @@ class FormWizardDataEntry extends Component {
       hideSpinner();      
 
       const assessmentNumber= get(assessPropertyResponse, "Assessments[0].assessmentNumber",'');
+
+      if(assessPropertyResponse && assessPropertyResponse.Assessments.length > 0){
+
+        const queryObject = [
+          { key: "consumerCode", value: propertyId },
+          { key: "tenantId", value: getTenantId() },
+          { key: "businessService", value: "PT" },
+        ];
+        try {
+          const payload = await httpRequest("billing-service/bill/v2/_fetchbill", "_search", queryObject);
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
       
       switch (propertyMethodAction) {
         case "_update":
