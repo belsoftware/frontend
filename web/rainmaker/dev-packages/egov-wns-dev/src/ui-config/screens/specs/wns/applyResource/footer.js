@@ -82,7 +82,7 @@ const moveToReview = (state, dispatch) => {
             dispatch(
               toggleSnackbar(
                 true,
-                { labelName: "Please uplaod mandatory documents!", labelKey: "" },
+                { labelName: "Please upload mandatory documents!", labelKey: "" },
                 "warning"
               )
             );
@@ -98,7 +98,7 @@ const moveToReview = (state, dispatch) => {
           dispatch(
             toggleSnackbar(
               true,
-              { labelName: "Please uplaod mandatory documents!", labelKey: "" },
+              { labelName: "Please upload mandatory documents!", labelKey: "" },
               "warning"
             )
           );
@@ -414,11 +414,15 @@ const callBackForNext = async (state, dispatch) => {
       
       // isFormValid = true;
       // hasFieldToaster = false;
-
+      let modificationContainerValid = true;
+      let applicationStatus = get(state.screenConfiguration.preparedFinalObject, "applyScreen.applicationStatus");
+      if(applicationStatus == "PENDING_FOR_CONNECTION_ACTIVATION"){
+        console.info("DC-appln in FI and modify mode")
+        modificationContainerValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
       
+      }
       let addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
-      let modificationContainerValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
-      
+     
       isFormValid = (addConnDetailValid &&modificationContainerValid)? true:false;
       hasFieldToaster = true;
 
