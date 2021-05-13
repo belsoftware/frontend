@@ -11,48 +11,8 @@ import {localStorageGet} from "egov-ui-kit/utils/localStorageUtils";
 import {postPaymentSuccess} from "egov-bnd/ui-config/screens/specs/utils";
 
 
-const downloadprintMenu = (state, applicationNumber, tenantId, uiCommonPayConfig,businessService,consumerCode) => {
-    let downloadMenu = [];
-    let printMenu = [];
-    if(businessService === "PT"){
-
-        const receiptKey = get(uiCommonPayConfig, "receiptKey","newpt-receipt")
-        let receiptDownloadObject = {
-
-        label: { labelName: "DOWNLOAD RECEIPT", labelKey: "COMMON_DOWNLOAD_RECEIPT" },
-        link: () => {
-            const receiptQueryString = [
-                { key: "propertyId", value: consumerCode },
-                { key: "tenantId", value: tenantId },
-                { key: "receiptNo", value: applicationNumber}
-                
-            ]
-        
-            download(receiptQueryString, "download", "newpt-receipt", state);
-
-        },
-        leftIcon: "receipt"
-    };
-    let receiptPrintObject = {
-        label: { labelName: "PRINT RECEIPT", labelKey: "COMMON_PRINT_RECEIPT" },
-        link: () => {
-            const receiptQueryString = [
-                { key: "propertyId", value: consumerCode },
-                { key: "tenantId", value: tenantId },
-                { key: "receiptNo", value: applicationNumber}
-            ]
-       
-            download(receiptQueryString, "print", receiptKey, state);
-        },
-        leftIcon: "receipt"
-    };
-
-    downloadMenu = [receiptDownloadObject];
-    printMenu = [receiptPrintObject];
-    }
-    else{
-
-        const receiptKey = get(uiCommonPayConfig, "receiptKey","consolidatedreceipt")
+const downloadprintMenu = (state, applicationNumber, tenantId, uiCommonPayConfig) => {
+   const receiptKey = get(uiCommonPayConfig, "receiptKey","consolidatedreceipt")
    let receiptDownloadObject = {
 
         label: { labelName: "DOWNLOAD RECEIPT", labelKey: "COMMON_DOWNLOAD_RECEIPT" },
@@ -79,41 +39,10 @@ const downloadprintMenu = (state, applicationNumber, tenantId, uiCommonPayConfig
         },
         leftIcon: "receipt"
     };
-
+    let downloadMenu = [];
+    let printMenu = [];
     downloadMenu = [receiptDownloadObject];
     printMenu = [receiptPrintObject];
-
-    }
-//    const receiptKey = get(uiCommonPayConfig, "receiptKey","consolidatedreceipt")
-//    let receiptDownloadObject = {
-
-//         label: { labelName: "DOWNLOAD RECEIPT", labelKey: "COMMON_DOWNLOAD_RECEIPT" },
-//         link: () => {
-//             const receiptQueryString = [
-//                 { key: "receiptNumbers", value: applicationNumber },
-//                 { key: "tenantId", value: tenantId }
-//             ]
-        
-//             download(receiptQueryString, "download", receiptKey, state);
-
-//         },
-//         leftIcon: "receipt"
-//     };
-//     let receiptPrintObject = {
-//         label: { labelName: "PRINT RECEIPT", labelKey: "COMMON_PRINT_RECEIPT" },
-//         link: () => {
-//             const receiptQueryString = [
-//                 { key: "receiptNumbers", value: applicationNumber },
-//                 { key: "tenantId", value: tenantId }
-//             ]
-       
-//             download(receiptQueryString, "print", receiptKey, state);
-//         },
-//         leftIcon: "receipt"
-//     };
-
-//     downloadMenu = [receiptDownloadObject];
-//     printMenu = [receiptPrintObject];
 
 
     return {
@@ -175,7 +104,7 @@ const getAcknowledgementCard = (
     if (status === "success") {
         return {
             header,
-            headerdownloadprint: downloadprintMenu(state, receiptNumber, tenant, uiCommonPayConfig,businessService,consumerCode),
+            headerdownloadprint: downloadprintMenu(state, receiptNumber, tenant, uiCommonPayConfig),
             applicationSuccessCard: {
                 uiFramework: "custom-atoms",
                 componentPath: "Div",

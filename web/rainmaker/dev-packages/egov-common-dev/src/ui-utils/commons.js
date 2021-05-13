@@ -508,25 +508,13 @@ export const download = (receiptQueryString, mode = "download", configKey = "con
     const uiCommonPayConfig = get(state.screenConfiguration.preparedFinalObject, "commonPayInfo");
     configKey = get(uiCommonPayConfig, "receiptKey", "consolidatedreceipt");
   }
-
-if(configKey == "newpt-receipt"){
-  DOWNLOADRECEIPT = {
-    GET: {
-      URL: "/egov-pdf/download/PT/newpt-receipt",
-      ACTION: "_get",
-    },
-  };
-
-}
-else{
   DOWNLOADRECEIPT = {
     GET: {
       URL: "/egov-pdf/download/PAYMENT/consolidatedreceipt",
       ACTION: "_get",
     },
   };
-
-}
+  
 
   try {
 
