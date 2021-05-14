@@ -1153,7 +1153,7 @@ const screenConfig = {
         );
 
 
-      //  if (!isModifyMode()) {
+         //  if (!isModifyMode()) {
 
           let chkplumberDetailsContainer = checkCardPermission(state, "plumberDetailsContainer");
           dispatch(
@@ -1200,13 +1200,16 @@ const screenConfig = {
           let taxHeads = {};
           existingTaxHeads.forEach(obj => taxHeads[obj.taxHeadCode] = obj);
 
-          for (var i = 0; i < taxHeadDetails.length; i++) {
+       
+          for (var i = 0; i < taxHeadDetails.length; i++) {           
             taxHeadDetails[i] = { ...taxHeadDetails[i], amount: null, taxHeadCode: taxHeadDetails[i].code, id: null };
-            if (taxHeads[taxHeadDetails[i].code]) {
-              taxHeadDetails[i].amount = taxHeads[taxHeadDetails[i].code].amount;
+           
+            if (taxHeads[taxHeadDetails[i].code]) { //If amt = 0 then put amt = null else estimate page will be populated with all 0 values
+              taxHeadDetails[i].amount = taxHeads[taxHeadDetails[i].code].amount !=0 ? taxHeads[taxHeadDetails[i].code].amount : null;
               taxHeadDetails[i].id = taxHeads[taxHeadDetails[i].code].id;
             }
           }
+         
           dispatch(prepareFinalObject(`applyScreen.wsTaxHeads`, taxHeadDetails));
 
           //Filter for road types
@@ -1219,11 +1222,11 @@ const screenConfig = {
           let roadDetails = {};
           existingRoadDetail.forEach(obj => obj['code'] = obj.roadType);
           existingRoadDetail.forEach(obj => roadDetails[obj.roadType] = obj);
-
+           //If road cutting filled then populate that value else put null else 0 will be populated 
           for (var i = 0; i < roadTypes.length; i++) {
             roadTypes[i] = { ...roadTypes[i], roadType: roadTypes[i].code, length: null, depth: null, breadth: null, rate: null };
             if (roadDetails[roadTypes[i].code]) {
-              roadTypes[i] = roadDetails[roadTypes[i].code];
+              roadTypes[i] = (roadDetails[roadTypes[i].code].length != 0 && roadDetails[roadTypes[i].code].breadth != 0 && roadDetails[roadTypes[i].code].depth != 0 && roadDetails[roadTypes[i].code].rate != 0)? roadDetails[roadTypes[i].code] : roadTypes[i];
             }
           }
           dispatch(
