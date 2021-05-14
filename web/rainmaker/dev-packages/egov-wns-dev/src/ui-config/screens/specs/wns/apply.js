@@ -313,22 +313,36 @@ export const getMdmsData = async dispatch => {
       payload.MdmsRes['ws-services-masters'].PIPE = PIPE;
     }
     //Water usage type
-    let waterUsage = []       
+    let waterUsage = [], waterSubUsage = [];   
     payload.MdmsRes['ws-services-masters'].waterUsage.forEach(obj => {
-      waterUsage.push({
-        code: obj.code.split(".")[0],
-        name: obj.name,
-        isActive: obj.active
-      });      
+      if(obj.code.includes('.')){
+        waterSubUsage.push({
+          code: obj.code,
+          name: obj.name,
+          isActive: obj.active
+        });
+      }
+      else{
+        waterUsage.push({
+          code: obj.code,
+          name: obj.name,
+          isActive: obj.active
+        }); 
+      }
+         
     })    
-    let filteredWaterUsage = waterUsage.reduce((filteredWaterUsage, item) => {
-      if (!filteredWaterUsage.some(filteredItem => JSON.stringify(filteredItem.code) == JSON.stringify(item.code)))
-      filteredWaterUsage.push(item)
-      return filteredWaterUsage
-    }, [])
     
-    payload.MdmsRes['ws-services-masters'].waterSubUsage = payload.MdmsRes['ws-services-masters'].waterUsage;
-    payload.MdmsRes['ws-services-masters'].waterUsage = filteredWaterUsage;
+    payload.MdmsRes['ws-services-masters'].waterSubUsage = waterSubUsage;
+    payload.MdmsRes['ws-services-masters'].waterUsage = waterUsage;
+
+    // let filteredWaterUsage = waterUsage.reduce((filteredWaterUsage, item) => {
+    //   if (!filteredWaterUsage.some(filteredItem => JSON.stringify(filteredItem.code) == JSON.stringify(item.code)))
+    //   filteredWaterUsage.push(item)
+    //   return filteredWaterUsage
+    // }, [])
+    
+    // payload.MdmsRes['ws-services-masters'].waterSubUsage = payload.MdmsRes['ws-services-masters'].waterUsage;
+    // payload.MdmsRes['ws-services-masters'].waterUsage = filteredWaterUsage;
     
     //Water usage type
 
@@ -373,8 +387,8 @@ const showHideFieldModifyConnection = (action) => {
   let fieldsChanges = [
     ["components.div.children.formwizardFirstStep.children.OwnerInfoCard", false],
     ["components.div.children.formwizardFourthStep.children.snackbarWarningMessage.children.clickHereLink", true],
-    ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven", false],
-    ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewEight", false],
+   // ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven", false],
+   // ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewEight", false],
     ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewNine", false],
     ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewTen", false],
   ]
@@ -689,7 +703,7 @@ const getApplicationNoLabel = () => {
 }
 
 const checkCardPermission = (state, cardName) => {
-  console.info("DC-check card permission",cardName)
+  
   let workFlowStatus = get(
     state,
     "screenConfiguration.preparedFinalObject.applyScreen.applicationStatus",
@@ -704,11 +718,7 @@ const checkCardPermission = (state, cardName) => {
   let appType =isModifyMode()?"MODIFY":"NEW";
 
   cardList = cardList.filter((card) => card.code.includes(cardName) && card.workflow.includes(appType) );
-  if(cardName == "connectiondetailscontainer"){
-    console.info("DC-cardList",cardList)
-    //console.info("DC-Status=>",cardList[0].status)
-     console.info("DC-workFlowStatus=>",workFlowStatus)
-  }
+
   let accessFlag = false;
   if(cardList.length > 0 ){    
     for(var i=0;i<cardList.length;i++){

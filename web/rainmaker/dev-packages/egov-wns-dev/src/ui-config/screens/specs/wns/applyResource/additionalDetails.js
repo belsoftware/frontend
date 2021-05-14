@@ -283,10 +283,7 @@ export const additionDetails = getCommonCard({
                 labelName: "Usage Type",
                 labelKey: "WS_COMMON_USAGE_TYPE"
               },
-              placeholder: {
-                labelName: "Select Usage Type",
-                labelKey: "WS_USAGE_TYPE_PLACEHOLDER"
-              },
+             
               //required: true,
               jsonPath: "applyScreen.usageCategory",
               sourceJsonPath: "applyScreenMdmsData.ws-services-masters.waterUsage",     
@@ -313,15 +310,15 @@ export const additionDetails = getCommonCard({
                   labelName: "Sub Usage Type",
                   labelKey: "WS_SUB_USAGE_TYPE"
               },
-        
               placeholder: {
-                  labelName: "Select Sub Usage Type",
-                  labelKey: "WS_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
-              },
-           
+                labelName: "Select Sub usage",
+                labelKey: "WS_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
+            },
+        
+                        
               localePrefix: {
                   moduleName: "WS",
-             			 masterName: "PROPSUBUSGTYPE"
+             			 masterName: "WSSUBUSGTYPE"
               },
               jsonPath: "applyScreen.subUsageCategory",
               sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
