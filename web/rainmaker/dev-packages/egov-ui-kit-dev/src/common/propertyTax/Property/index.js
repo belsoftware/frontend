@@ -394,8 +394,8 @@ class Property extends Component {
              style={{ lineHeight: "auto", minWidth: "inherit" }}
              />   
             }
-              {isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
-              || !payLen ) &&
+              {/* {isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
+              || !payLen ) && */}
                 
               <Button
               onClick={() => this.editDemand()}
@@ -403,7 +403,7 @@ class Property extends Component {
               primary={true}
               style={{ lineHeight: "auto", minWidth: "inherit" , marginLeft:"10px"}}
             />
-          }
+          {/* } */}
         </div>
         {dialogueOpen && <YearDialogue open={dialogueOpen} history={history} urlToAppend={urlToAppend} closeDialogue={closeYearRangeDialogue} />}
       </Screen>
