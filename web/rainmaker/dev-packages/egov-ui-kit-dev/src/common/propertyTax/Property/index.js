@@ -430,7 +430,7 @@ class Property extends Component {
               onClick={() => this.onEditPropertyClick()}
               //labelStyle={{ letterSpacing: 0.7, padding: 0, color: "#fe7a51" }}
              // buttonStyle={{ border: "1px solid #fe7a51" }}
-             style={{ lineHeight: "auto", minWidth: "inherit" }}
+             style={{ lineHeight: "auto", minWidth: "inherit" , marginLeft: "10px"}}
              />   
             }
               {isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
