@@ -56,7 +56,7 @@ export const renderService1 = () => {
         subUsageCategory: getLabelWithValue (
           {
             labelName: "Sub Usage Type",
-            labelKey: "WS_COMMON_SUB_USAGE_TYPE"
+            labelKey: "WS_SUB_USAGE_TYPE"
           },
           {
             localePrefix: {

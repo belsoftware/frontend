@@ -531,7 +531,7 @@ reviewSubUsageType: getLabelWithValueForModifiedLabel(
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
+      masterName: "WSSUBUSGTYPE"
     },
     jsonPath: "WaterConnection[0].subUsageCategory",
     callBack: handleNA
@@ -542,7 +542,7 @@ reviewSubUsageType: getLabelWithValueForModifiedLabel(
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
+      masterName: "WSSUBUSGTYPE"
     },
     jsonPath: "WaterConnectionOld[0].subUsageCategory",
     callBack: handleNA
