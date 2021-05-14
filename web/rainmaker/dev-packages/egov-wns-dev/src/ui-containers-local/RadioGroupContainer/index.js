@@ -59,7 +59,7 @@ class RadioButtonsGroup extends React.Component {
     const { applyScreen } = preparedFinalObject;
     const { additionalDetails } = applyScreen;
     let value = (additionalDetails !== undefined && additionalDetails.detailsProvidedBy !== undefined) ? additionalDetails.detailsProvidedBy : "";
-    if(!value) value = "ULB";
+    if(!value || value =="NA") value = "ULB"; 
     return (
       <div className={classes.root}>
         <FormControl
