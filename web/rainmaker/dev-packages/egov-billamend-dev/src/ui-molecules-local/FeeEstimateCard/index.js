@@ -167,7 +167,7 @@ function FeesEstimateCard(props) {
                                         </Grid>
                                     );
                                 } else {
-                                    textLeft = <Grid xs={colLeft} />;
+                                    textLeft = <Grid xs={colLeft} className={'bill-estimate-infotext'} />;
                                 }
                                 if (item.textRight) {
                                     textRight = (
