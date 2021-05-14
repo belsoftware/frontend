@@ -204,6 +204,7 @@ const callBackForNext = async (state, dispatch) => {
       
     else {
     
+      
       const water = get(
         state.screenConfiguration.preparedFinalObject,
         "applyScreen.water"
@@ -410,8 +411,17 @@ const callBackForNext = async (state, dispatch) => {
 
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 1) {
-    if (isModifyMode()) {
-      
+     if (isModifyMode()) {
+      // setting of plumber dtls
+      var plumberInfo = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].plumberInfo", null); 
+      if(plumberInfo && plumberInfo.length>0)
+      {
+        if(plumberInfo[0].licenseNo || plumberInfo[0].licenseNo || plumberInfo[0].licenseNo)
+        {
+        if(get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null) === "NA") 
+         dispatch(prepareFinalObject("WaterConnection[0].additionalDetails.detailsProvidedBy", "ULB"));
+      } 
+      }
       // isFormValid = true;
       // hasFieldToaster = false;
       let modificationContainerValid = true;
