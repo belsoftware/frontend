@@ -344,7 +344,8 @@ class Property extends Component {
       totalBillAmountDue,
       documentsUploaded,
       loading,
-      Payments = []
+      Payments = [],
+      Assessments = []
     } = this.props;
     const { closeYearRangeDialogue,closeDocsDialogue,onAmendBtnClickFromDialog } = this;
     const { dialogueOpen, urlToAppend, showAssessmentHistory,amendDialogOpen } = this.state;
@@ -399,13 +400,14 @@ class Property extends Component {
           />
         }
         <div id="tax-wizard-buttons" className="wizard-footer col-sm-12" style={{ textAlign: "right" }}>
+        {!isCitizen && Assessments && Assessments.length > 0 &&
         <Button
               onClick={() => this.onAmendBtnClick()}
               label={<Label buttonLabel={true} label="PT_BILL_AMENDMENT_BUTTON" fontSize="16px" />}
               primary={true}
               style={{ lineHeight: "auto", minWidth: "inherit", marginLeft:"10px" }}
             />
-        
+        }
         {!isMigratedProperty && 
 
          <Button
