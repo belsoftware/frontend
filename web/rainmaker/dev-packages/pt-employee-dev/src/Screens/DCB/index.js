@@ -1294,9 +1294,9 @@ class FormWizardDataEntry extends Component {
         if (!demandLength) {
           errorCode = "ERR01_DEMAND_ENTER_THE_DATA";
         } else {
-          if (!demand[0]) {
-            errorCode = "ERR02_DEMAND_ENTER_THE_DATA";
-          }
+          // if (!demand[0]) {
+          //   errorCode = "ERR02_DEMAND_ENTER_THE_DATA";
+          // }
           demand.forEach((data, key) => {
             data &&
               Object.keys(data.demand).forEach((data1, key1) => {
@@ -1408,9 +1408,9 @@ class FormWizardDataEntry extends Component {
           errorCode = "ERR01_DEMAND_ENTER_THE_DATA";
         }
 
-        if (arrayOfEmptyYears.indexOf(0) != -1) {
-          errorCode = "ERR02_DEMAND_ENTER_THE_DATA";
-        }
+        // if (arrayOfEmptyYears.indexOf(0) != -1) {
+        //   errorCode = "ERR02_DEMAND_ENTER_THE_DATA";
+        // }
 
         switch (errorCode) {
           case "ERR01_DEMAND_ENTER_THE_DATA":
