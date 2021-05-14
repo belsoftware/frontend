@@ -7,7 +7,11 @@ import {
 import { download, downloadReceiptFromFilestoreID, downloadChallan } from "egov-common/ui-utils/commons";
 import {  getLocaleLabels} from "egov-ui-framework/ui-utils/commons";
 import {downloadCert} from "../../utils"
-
+import store from "ui-redux/store";
+import {
+  prepareFinalObject,
+} from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import {showHideConfirmationPopup} from "./birthSearchCard";
 
 export const searchResults = {
   uiFramework: "custom-molecules",
@@ -74,6 +78,8 @@ export const searchResults = {
         labelName: "Action",
         labelKey: "BND_COMMON_TABLE_ACTION",
         options: {
+          display: (process.env.REACT_APP_NAME === "Citizen"),
+          viewColumns  :(process.env.REACT_APP_NAME === "Citizen"),
           filter: false,
           customBodyRender: (value, tableMeta) => value === "PAY AND DOWNLOAD" ? (tableMeta.rowData[4] > 0 ? getActionButton(value, tableMeta):(tableMeta.rowData[4] <= 0 && tableMeta.rowData[13] ? getActionButton(value, tableMeta) : "")) : getActionButton(value, tableMeta)
         }
@@ -114,6 +120,16 @@ export const searchResults = {
           viewColumns  :false
         }
       },
+      {
+        labelName: "BND_VIEW_CERTIFICATE",
+        labelKey: "BND_VIEW_CERTIFICATE",
+        options: {
+          display: (process.env.REACT_APP_NAME === "Employee"),
+          viewColumns  :(process.env.REACT_APP_NAME === "Employee"),
+          customBodyRender: (value, tableMeta) => getViewButton(value, tableMeta)
+        }
+      }
+      
       // {
       //   labelName: "Pay Required",
       //   labelKey: "PAYREQUIRED",
@@ -125,7 +141,7 @@ export const searchResults = {
     ],
     title: {
       labelName: "Search Results for Birth",
-      labelKey: "BIRTH_SEARCH_TABLE_HEADER"
+      labelKey: "BND_SEARCH_TABLE_HEADER"
     },
     rows : "",
     options: {
@@ -163,66 +179,36 @@ const getActionButton = (value, tableMeta) => {
       }}
       onClick={value => {
 
-        // const appName =
-        //   process.env.REACT_APP_NAME === "Citizen"
-        //     ? "citizen"
-        //     : "employee";
-        // if (tableMeta.rowData[5] === "PAID") {
-        //   const receiptQueryString = [
-        //     { key: "billIds", value: tableMeta.rowData[11] },
-        //     { key: "tenantId", value: tableMeta.rowData[10] }
-        //   ];
-        //   download(receiptQueryString , "download" ,tableMeta.rowData[8]);
-        // } else {
-          //For gettting bill details and dow
-          //https://13.71.65.215.nip.io/egov-pdf/download/PAYMENT/consolidatedreceipt?billIds=b929366a-4c25-4191-8bb4-af750a0e2a48&tenantId=pb.agra
-
-          // const url =
-          // process.env.NODE_ENV === "development"
-          //   ? `/egov-common/pay?consumerCode=${
-          //       tableMeta.rowData[1]
-          //     }&tenantId=${tableMeta.rowData[10]}&businessService=${
-          //       tableMeta.rowData[7]
-          //     }`
-          //   : `/${appName}/egov-common/pay?consumerCode=${
-          //       tableMeta.rowData[1]
-          //     }&tenantId=${tableMeta.rowData[10]}&businessService=${
-          //       tableMeta.rowData[7]
-          //     }`;
-          // document.location.href = `${document.location.origin}${url}`;
-
           let tenantId = tableMeta.rowData[8];
           let id = tableMeta.rowData[0];
           let action = tableMeta.rowData[7];
+          let businessService = tableMeta.rowData[9];
 
-          downloadCert(tenantId,id).then((response) => {
+          store.dispatch(prepareFinalObject("bnd.birth.download.certificateId", id));
+          store.dispatch(prepareFinalObject("bnd.birth.download.tenantId", tenantId));
+          store.dispatch(prepareFinalObject("bnd.birth.download.businessService", businessService));
 
-            if(response && response.consumerCode) // Redirect to payment page
-            {
-              const url =
-              process.env.NODE_ENV === "development"
-                ? `/egov-common/pay?consumerCode=${
-                    response.consumerCode
-                  }&tenantId=${tableMeta.rowData[8]}&businessService=${
-                    tableMeta.rowData[9]
-                  }`
-                : `/${appName}/egov-common/pay?consumerCode=${
-                    response.consumerCode
-                  }&tenantId=${tableMeta.rowData[8]}&businessService=${
-                    tableMeta.rowData[9]
-                  }`;
-              document.location.href = `${document.location.origin}${url}`;
-            }
-            else 
-            if(response && response.filestoreId)
-            {
-              downloadReceiptFromFilestoreID(response.filestoreId,'download')
-            }
+          showHideConfirmationPopup(store.getState(), store.dispatch, "getCertificate")
 
-          });
-        
-      //}
+      }}
+    >
+      {getLocaleLabels(value,value)}
+    </a>
+  )
+}
 
+const getViewButton = (value, tableMeta) => {
+  return (
+    <a href="javascript:void(0)"
+      style={{
+        color: "#FE7A51",  
+        cursor: "pointer"
+      }}
+      onClick={value => {
+          let id = tableMeta.rowData[0];
+          let tenantId = tableMeta.rowData[8];
+          let url = `/employee/bnd-common/fullViewCertificate?tenantId=${tenantId}&certificateId=${id}&module=birth`;
+          document.location.href = `${document.location.origin}${url}`;
       }}
     >
       {getLocaleLabels(value,value)}

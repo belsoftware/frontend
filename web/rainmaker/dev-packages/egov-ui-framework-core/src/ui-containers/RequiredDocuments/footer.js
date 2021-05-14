@@ -30,12 +30,9 @@ export const footer = ( startApplyFlow, moduleName )=>{
   props: {
     className: "apply-wizard-footerReq",
 
-    // style: {
-    //   width: "93%",
-    //   textAlign: "center",
-    //   bottom: 52,
-    //   left:48
-    // }
+    style: {
+       position: "relative !important"
+     }
   },
 
   // props: {
