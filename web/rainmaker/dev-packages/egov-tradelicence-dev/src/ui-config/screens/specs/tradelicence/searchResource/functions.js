@@ -54,7 +54,7 @@ export const searchApiCall = async (state, dispatch) => {
     );
   } else if (
     Object.keys(searchScreenObject).length == 0 ||
-    Object.values(searchScreenObject).every(x => (x===null || x.trim() === "" ))
+    Object.values(searchScreenObject).every(x => x === "")
   ) {
     dispatch(toggleSpinner());
     dispatch(
@@ -84,7 +84,7 @@ export const searchApiCall = async (state, dispatch) => {
   } else {
     for (var key in searchScreenObject) {
       if (
-        searchScreenObject.hasOwnProperty(key) && searchScreenObject[key] != null &&
+        searchScreenObject.hasOwnProperty(key) &&
         searchScreenObject[key].trim() !== ""
       ) {
         if (key === "fromDate") {

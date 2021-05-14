@@ -260,15 +260,6 @@ export const handleNA = params => {
   } else { return "NA"; }
 }
 
-export const handleMeterReading = params =>{
-    if(params === 0 || params === null || isNaN(params)){
-    return "0";
-  }
- else if (params !== undefined && params !== null && params !== "") {
-       return params;
-  } else { return "NA"; }
-}
-
 export const handleRoadType = params =>{
   return handleNA(params)=="NA"?"NA":'WS_ROADTYPE_'+params;
 }
@@ -1666,14 +1657,11 @@ const setVisible = (key, status, action) => {
     `screenConfig.components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.${key}.visible`,
     status
   );
-
-  
 }
-export const triggerModificationsDisplay = (action, isModeEnable) => { 
-  console.info("triggerModificationsDisplay=action=",action,"isModeEnable=",isModeEnable) ;
-    //setVisible('modificationsEffectiveFrom', isModeEnable, action);
-    //setVisible('activationDetailsContainer',isModeEnable, action);
-    setVisible('plumberDetailsContainer',  !isModeEnable, action);
+export const triggerModificationsDisplay = (action, isModeEnable) => {  
+    setVisible('modificationsEffectiveFrom', isModeEnable, action);
+    setVisible('plumberDetailsContainer',  isModeEnable, action);
+    //setVisible('roadCuttingChargeContainer', !isModeEnable, action);
     setVisible('wsConnectionTaxHeadsContainer',!isModeEnable, action);
 }
 

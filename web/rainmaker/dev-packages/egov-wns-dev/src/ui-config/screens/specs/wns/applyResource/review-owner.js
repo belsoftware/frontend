@@ -7,7 +7,7 @@ import {
   getLabel,
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import { convertEpochToDateAndHandleNA, handleNA,handleRoadType,handleMeterReading } from "../../utils";
+import { convertEpochToDateAndHandleNA, handleNA,handleRoadType } from "../../utils";
 import { serviceConst } from "../../../../../ui-utils/commons";
 const getHeader = label => {
   return {
@@ -327,22 +327,17 @@ export const activateDetailsMeter={
       callBack: convertEpochToDateAndHandleNA
     }
   ),
-  reviewInitialMeterReading : getLabelWithValue(
+  reviewInitialMeterReading : getLabelWithValueForModifiedLabel(
     {
       labelName: "Initial Meter Reading",
       labelKey: "WS_ADDN_DETAILS_INITIAL_METER_READING"
     },
-    {
-       jsonPath: "WaterConnection[0].additionalDetails.initialMeterReading",
-      callBack: handleMeterReading 
-    }
-    // , 
-    //   {
-    //     labelKey: "WS_OLD_LABEL_NAME"
-    //   },
-    //   { jsonPath: "WaterConnectionOld[0].additionalDetails.initialMeterReading",
-    //   callBack: handleMeterReading
-    //  }
+    { jsonPath: "WaterConnection[0].additionalDetails.initialMeterReading",
+      callBack: handleNA }, {
+        labelKey: "WS_OLD_LABEL_NAME"
+      },
+      { jsonPath: "WaterConnectionOld[0].additionalDetails.initialMeterReading",
+      callBack: handleNA }
   )
 
 }
@@ -496,62 +491,7 @@ export const connectionWater={
     jsonPath: "WaterConnectionOld[0].authorizedConnection",
     callBack: handleNA
   }
-),
-reviewUsageType : getLabelWithValueForModifiedLabel(
-  {
-    labelName: "Usage Type",
-    labelKey: "PT_COMMON_USAGE_TYPE"
-  },
-  {
-    localePrefix: {
-      moduleName: "WS",
-      masterName: "PROPUSGTYPE"
-    },
-    jsonPath: "WaterConnection[0].usageCategory",
-    callBack: handleNA
-  },
-   {
-    labelKey: "WS_OLD_LABEL_NAME"
-  },
-  {
-    localePrefix: {
-      moduleName: "WS",
-      masterName: "PROPUSGTYPE"
-    },
-    jsonPath: "WaterConnectionOld[0].usageCategory",
-    callBack: handleNA
-  },
-
-),
-reviewSubUsageType: getLabelWithValueForModifiedLabel(
-  {
-    labelName: "Sub Usage Type",
-    labelKey: "PT_COMMON_SUB_USAGE_TYPE"
-  },
-  {
-    localePrefix: {
-      moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
-    },
-    jsonPath: "WaterConnection[0].subUsageCategory",
-    callBack: handleNA
-  },
-   {
-    labelKey: "WS_OLD_LABEL_NAME"
-  },
-  {
-    localePrefix: {
-      moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
-    },
-    jsonPath: "WaterConnectionOld[0].subUsageCategory",
-    callBack: handleNA
-  },
-  // {
-  //   jsonPath: "WaterConnectionOld[0].usageCategory",
-  //   callBack: handleNA
-  // }
-),
+)
 
 
 }

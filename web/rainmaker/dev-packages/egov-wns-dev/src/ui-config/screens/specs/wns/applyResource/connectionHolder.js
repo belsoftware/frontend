@@ -111,7 +111,7 @@ import {
       },
       required: true,
       jsonPath: "connectionHolders[0].relationship",
-      data: [{ code: "PARENT" }, { code: "SPOUSE" }, { code: "GUARDIAN" }],
+      data: [{ code: "FATHER" }, { code: "HUSBAND" }],
       localePrefix: {
         moduleName: "common-masters",
         masterName: "OwnerType"

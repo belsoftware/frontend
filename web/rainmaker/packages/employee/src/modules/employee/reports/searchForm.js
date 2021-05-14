@@ -13,9 +13,8 @@ import jp from "jsonpath";
 import _ from "lodash";
 import { getResultUrl } from "./commons/url";
 import commonConfig from "config/common.js";
-import { getTenantId, setReturnUrl, localStorageSet, localStorageGet,getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+import { getTenantId, setReturnUrl, localStorageSet, localStorageGet } from "egov-ui-kit/utils/localStorageUtils";
 import { LabelContainer } from "egov-ui-framework/ui-containers";
-
 
 class ShowForm extends Component {
   state = {
@@ -371,9 +370,6 @@ class ShowForm extends Component {
     let tabLabel = `Showing data upto : ${date}`;
     this.props.updateTabLabel(tabLabel);
 
-
-
-
     var tenantId = getTenantId() ? getTenantId() : commonConfig.tenantId;
     let self = this;
     if (!isDrilldown) {
@@ -417,19 +413,7 @@ class ShowForm extends Component {
       toggleSnackbarAndSetText
     } = this.props;
     let searchParams = [];
-
-    let userInfo = JSON.parse(`${localStorage.getItem('user-info')}` ? `${localStorage.getItem('user-info')}` : '');
-    let tenantIdsList = get(userInfo, "roles", []).map((role) => {
-      return role.tenantId;
-    });
-    let uniqList = tenantIdsList.reduce(function(a,b){
-      if (a.indexOf(b) < 0 ) a.push(b);
-      return a;
-    },[]);
-    console.log("uniqList Tenant Id List:",uniqList.toString());
-
     var tenantId = getTenantId() ? getTenantId() : commonConfig.tenantId;
-    var multipleTenantId = uniqList.toString();
     let self = this;
     let mandatoryfields=[]
     metaData.reportDetails.searchParams.forEach(param=>{
@@ -511,9 +495,9 @@ class ShowForm extends Component {
       clearReportHistory();
       let resulturl = getResultUrl(this.state.moduleName,this.state.reportName);
         resulturl &&
-        commonApiPost(resulturl, {}, { tenantId: tenantId, reportName: this.state.reportName, multipleTenantId:multipleTenantId, searchParams }).then(
+        commonApiPost(resulturl, {}, { tenantId: tenantId, reportName: this.state.reportName, searchParams }).then(
           function(response) {
-            pushReportHistory({ tenantId: tenantId, reportName: self.state.reportName, multipleTenantId:multipleTenantId, searchParams });
+            pushReportHistory({ tenantId: tenantId, reportName: self.state.reportName, searchParams });
             setReportResult(response);
             showTable(true);
             setFlag(1);

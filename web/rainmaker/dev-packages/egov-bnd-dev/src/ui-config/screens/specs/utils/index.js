@@ -3,7 +3,7 @@ import { validate } from "egov-ui-framework/ui-redux/screen-configuration/utils"
 import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
 import { getQueryArg,getTransformedLocalStorgaeLabels ,getLocaleLabels} from "egov-ui-framework/ui-utils/commons";
-import { handleScreenConfigurationFieldChange as handleField, toggleSpinner , toggleSnackbar} from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   getCommonCard,
   getCommonCaption
@@ -11,73 +11,7 @@ import {
 import { httpRequest } from "../../../../ui-utils";
 import commonConfig from "config/common.js";
 import {prepareFinalObject} from "egov-ui-framework/ui-redux/screen-configuration/actions";   //returns action object
-import store from "ui-redux/store";
-import { openPdf, printPdf } from "egov-ui-kit/utils/commons";
-import { getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
-
-
-export const downloadPdf = (link, openIn = '_blank') => {
-  var win = window.open(link, openIn);
-  if (win) {
-    win.focus();
-  }
-  else
-  {
-    toggleSnackbar(
-      true,
-      {
-        labelName: "",
-        labelKey: "Looks like your browser is blocking pop-ups. Allow pop-ups in your browser to download certificate."
-      },
-      "error"
-    );
-  }
-}
-
-export const downloadReceiptFromFilestoreID = (fileStoreId, mode, tenantId) => {
-  getFileUrlFromAPI(fileStoreId, tenantId).then(async (fileRes) => {
-    if (mode === 'download') {
-      downloadPdf(fileRes[fileStoreId]);
-    } else if (mode === 'open') {
-      openPdf(fileRes[fileStoreId], '_self')
-    }
-    else {
-      printPdf(fileRes[fileStoreId]);
-    }
-  });
-}
-
-export const convertEpochToDateCustom = dateEpoch => {
-  // Returning null in else case because new Date(null) returns initial date from calender
-  if(dateEpoch){
-    const dateFromApi = new Date(dateEpoch);
-    let month = dateFromApi.getMonth() + 1;
-    let day = dateFromApi.getDate();
-    let year = dateFromApi.getFullYear();
-    month = (month > 9 ? "" : "0") + month;
-    day = (day > 9 ? "" : "0") + day;
-    return `${year}-${month}-${day}`;
-  } else {
-    return null;
-  }
-};
-
-export const validateTimeZone = () =>{
-  try{
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if(tz != "Asia/Calcutta" && tz != "Asia/Kolkata")    
-    {
-      alert("Looks like your system's time zone is not correct! \nChange your system's time zone to Indian Standard Time (UTC+5:30 Chennai,Kolkata,Mumbai,NewDelhi)\nand try again.")
-      return false;
-    }
-  }
-  catch(e)
-  {
-    alert("Looks like this browser is very old. Please update your browser and continue");
-    return false;
-  }
-  return true;
-}
+import { downloadReceiptFromFilestoreID} from "egov-common/ui-utils/commons";
 
 export const getCommonApplyFooter = children => {
   return {
@@ -508,79 +442,6 @@ export const getTextToLocalMapping = label => {
   }
 };
 
-export const loadCertDetails = async (action, state, dispatch,data) => {
-
-  let requestBody = {};
-  const queryParams = [
-    { key: "tenantId", value: data.tenantId},
-    { key: "id", value: data.id}    
-  ];
-
-  if(data.birthcertificateno)
-    queryParams.push({ key: "birthcertificateno", value: data.birthcertificateno})
-  else
-  if(data.deathcertificateno)
-    queryParams.push({ key: "deathcertificateno", value: data.deathcertificateno})
-
-  try{
-    let payload = null;
-    payload = await httpRequest(
-      "post",
-      `/birth-death-services/${data.module}/_viewCertData`,
-      "_viewCertData",
-      queryParams,
-      requestBody
-    );
-    return payload;
-  }
-  catch (e) {
-    toggleSnackbar(
-      true,
-      {
-        labelName: "Api Error",
-        labelKey: "ERR_API_ERROR"
-      },
-      "error"
-    );
-    console.error(e);
-    //return {"RequestInfo":{"apiId":"Mihy","ver":".01","ts":null,"resMsgId":"uief87324","msgId":"20170310130900|en_IN","status":"successful"},"BirthCertificate":[{"id":"1","createdby":null,"createdtime":null,"dateofbirth":1614063655148,"dateofreport":1614063655148,"firstname":"san","gender":1,"hospitalname":null,"informantsaddress":null,"informantsname":null,"lastname":null,"middlename":null,"placeofbirth":"Bangalore","registrationno":"2021-1","remarks":null,"lastmodifiedby":null,"lastmodifiedtime":null,"counter":0,"tenantid":null,"fullname":"SRI V S","birthFatherInfo":{"id":null,"aadharno":null,"createdby":null,"createdtime":null,"education":null,"emailid":null,"firstname":"abc","lastname":null,"middlename":null,"mobileno":null,"nationality":null,"proffession":null,"religion":null,"lastmodifiedby":null,"lastmodifiedtime":null,"fullname":"R S H"},"birthMotherInfo":{"id":null,"aadharno":null,"createdby":null,"createdtime":null,"education":null,"emailid":null,"firstname":"abc1","lastname":null,"middlename":null,"mobileno":null,"nationality":null,"proffession":null,"religion":null,"lastmodifiedby":null,"lastmodifiedtime":null,"fullname":"S V H"},"birthPermaddr":{"fullAddress":"100 112 CROSS 108 Church Servant Qtr. Jalapahar"},"birthPresentaddr":{"fullAddress":"100 112 CROSS 108 Church Servant Qtr. Jalapahar"}}]};
-  }
-}
-
-export const loadFullCertDetails = async (action, state, dispatch,data) => {
-
-  let requestBody = {};
-  const queryParams = [
-    { key: "tenantId", value: data.tenantId},
-    { key: "id", value: data.id}    
-  ];
-
-  let payload = null;
-  try{
-    payload = await httpRequest(
-      "post",
-      `/birth-death-services/${data.module}/_viewfullCertData`,
-      "_viewCertData",
-      queryParams,
-      requestBody
-    );
-    return payload;
-  }
-  catch (e) {
-    toggleSnackbar(
-      true,
-      {
-        labelName: "Api Error",
-        labelKey: "ERR_API_ERROR"
-      },
-      "error"
-    );
-    console.error(e);
-    return payload;
-    //return {"RequestInfo":{"apiId":"Mihy","ver":".01","ts":null,"resMsgId":"uief87324","msgId":"20170310130900|en_IN","status":"successful"},"BirthCertificate":[{"id":"1","createdby":null,"createdtime":null,"dateofbirth":1614063655148,"dateofreport":1614063655148,"firstname":"san","gender":1,"hospitalname":null,"informantsaddress":null,"informantsname":null,"lastname":null,"middlename":null,"placeofbirth":"Bangalore","registrationno":"2021-1","remarks":null,"lastmodifiedby":null,"lastmodifiedtime":null,"counter":0,"tenantid":null,"fullname":"SRI V S","birthFatherInfo":{"id":null,"aadharno":null,"createdby":null,"createdtime":null,"education":null,"emailid":null,"firstname":"abc","lastname":null,"middlename":null,"mobileno":null,"nationality":null,"proffession":null,"religion":null,"lastmodifiedby":null,"lastmodifiedtime":null,"fullname":"R S H"},"birthMotherInfo":{"id":null,"aadharno":null,"createdby":null,"createdtime":null,"education":null,"emailid":null,"firstname":"abc1","lastname":null,"middlename":null,"mobileno":null,"nationality":null,"proffession":null,"religion":null,"lastmodifiedby":null,"lastmodifiedtime":null,"fullname":"S V H"},"birthPermaddr":{"fullAddress":"100 112 CROSS 108 Church Servant Qtr. Jalapahar"},"birthPresentaddr":{"fullAddress":"100 112 CROSS 108 Church Servant Qtr. Jalapahar"}}]};
-  }
-}
-
 export const loadMdmsData = async (action, state, dispatch) => {
 
   let requestBody = {
@@ -631,9 +492,11 @@ export const loadMdmsData = async (action, state, dispatch) => {
   }
 }
 
-export const loadHospitals = async (action, state, dispatch, module, tenantId) => {
+export const loadHospitals = async (action, state, dispatch) => {
   let requestBody = {};
   let payload = null;
+
+  const tenantId = get(state.screenConfiguration.preparedFinalObject.bnd.birth,"tenantId");
 
   const queryParams = [
     { key: "tenantId", value: tenantId }  
@@ -643,28 +506,29 @@ export const loadHospitals = async (action, state, dispatch, module, tenantId) =
   {
     payload = await httpRequest(
       "post",
-      "birth-death-services/common/getHospitals",
-      "getHospitals",
+      "/birth-death-services/hospital/_search",
+      "search",
       queryParams,
       requestBody
     );
   }
   catch(e)
   {
-    toggleSnackbar(
-      true,
-      {
-        labelName: "",
-        labelKey: "ERR_API_ERROR"
-      },
-      "error"
-    );
-    console.error(e);
+    //toBeRemoved
+    payload = {"hospitalDtls":[{"id":"asdf","name":"St Johns Hospital"},{"id":"mcd","name":"Government Hospital Pune"}]};
   }
-  return payload;
+  //console.log("Survey numbers recieved...",payload);
+  if(payload.hospitalDtls)
+  {
+    for (let hospital of payload.hospitalDtls) {
+      hospital.code = hospital.id;
+      hospital.name = hospital.name;
+    }
+    dispatch(prepareFinalObject("bnd.allHospitals", payload.hospitalDtls));
+  }
 }
 
-export const downloadCert = async (tenantId, id, module) => {
+export const downloadCert = async (tenantId, id) => {
   let requestBody = {};
   let payload = null;
 
@@ -676,7 +540,7 @@ export const downloadCert = async (tenantId, id, module) => {
   {
     payload = await httpRequest(
       "post",
-      `/birth-death-services/${module}/_download`,
+      "/birth-death-services/birth/_download",
       "_download",
       queryParams,
       requestBody
@@ -684,59 +548,39 @@ export const downloadCert = async (tenantId, id, module) => {
   }
   catch(e)
   {
-    console.error(e);
-    toggleSnackbar(
-      true,
-      {
-        labelName: "Could not initiate download",
-        labelKey: "ERR_API_ERROR"
-      },
-      "error"
-    );
     //toBeRemoved
-    //payload = {consumerCode:"CH-CB-AGRA-2020-001504", filestoreId:"4f0d9299-7fa0-4af6-9077-389ebf2367c4", tenantId: "pb.agra"};
+    payload = {consumerCode:"CH-CB-AGRA-2020-001504", filestoreId:"4f0d9299-7fa0-4af6-9077-389ebf2367c4", tenantId: "pb.agra"};
   }
 
   return payload;
 }
 
 
-export const postPaymentSuccess = async(data) => {
-
-  store.dispatch(toggleSpinner());
-  setTimeout(() => {     
-    postPaymentActivity(data);
-    store.dispatch(toggleSpinner());
-  }, 4000); //Give 2 sec gap so that the screen is loaded correctly
-    
-};
-
-export const postPaymentActivity = async(data) => {
+export const postPaymentSuccess = async(action,state,dispatch, data) => {
   try {
     if(data.tenantId && data.consumerCode)
     {
-      store.dispatch(toggleSpinner());
-      let queryParams = [{key:"tenantId",value:data.tenantId},{key:"consumerCode",value:data.consumerCode}];
-      let module = (data.businessService == "BIRTH_CERT")? "birth" : "death";
+      dispatch(toggleSpinner());
+      let queryParams = [{key:"tenantId",value:tenantId},{key:"consumerCode",value:consumerCode}];
       const response = await httpRequest(
         "post",
-        `birth-death-services/${module}/_getfilestoreid`,
+        "birth-death-services/common/getfilestoreid",
         "getfilestoreid",
         queryParams,
         {}//{ searchCriteria: queryObject }
       );
-      store.dispatch(toggleSpinner());
+      dispatch(toggleSpinner());
       if(response && response.filestoreId)
       {
         let mode = 'download';
-        downloadReceiptFromFilestoreID(response.filestoreId, mode);
+        downloadReceiptFromFilestoreID(response.filestoreId);
       }
       return response;
     }
   } catch (error) {
-    store.dispatch(toggleSpinner());
+    dispatch(toggleSpinner());
     console.error(error);
-    store.dispatch(
+    dispatch(
       toggleSnackbar(
         true,
         { labelName: error.message, labelCode: error.message },
@@ -745,75 +589,3 @@ export const postPaymentActivity = async(data) => {
     );
   }
 };
-
-export const triggerDownload = (module) => {
-
-  const state = store.getState();
-  const certificateId = get(state,`screenConfiguration.preparedFinalObject.bnd.${module}.download.certificateId`);
-  const tenantId = get(state,`screenConfiguration.preparedFinalObject.bnd.${module}.download.tenantId`);
-  const businessService = get(state,`screenConfiguration.preparedFinalObject.bnd.${module}.download.businessService`);
-
-  downloadCert(tenantId,certificateId, module).then((response) => {
-
-    if(response && response.consumerCode) // Redirect to payment page
-    {
-      const appName =
-          process.env.REACT_APP_NAME === "Citizen"
-            ? "citizen"
-            : "employee";
-            
-      const url =
-      process.env.NODE_ENV === "development"
-        ? `/egov-common/pay?consumerCode=${
-            response.consumerCode
-          }&tenantId=${tenantId}&businessService=${
-            businessService
-          }`
-        : `/${appName}/egov-common/pay?consumerCode=${
-            response.consumerCode
-          }&tenantId=${tenantId}&businessService=${
-            businessService
-          }`;
-      document.location.href = `${document.location.origin}${url}`;
-    }
-    else 
-    if(response && response.filestoreId)
-    {
-      downloadReceiptFromFilestoreID(response.filestoreId,'download')
-    }
-
-  });
-
-}
-
-export const downloadReceipt = async (consumerCode,tenantId) => {
-
-  const state = store.getState();
-
-  store.dispatch(toggleSpinner());
-  let queryParams = [{key:"tenantId",value:tenantId},{key:"consumerCodes",value:consumerCode}];
-  const response = await httpRequest(
-    "post",
-    "collection-services/payments/_search",
-    "_search",
-    queryParams,
-    {}//{ searchCriteria: queryObject }
-  );
-  store.dispatch(toggleSpinner());
-  if(response && response.Payments && response.Payments.length>0 && response.Payments[0].fileStoreId)
-  {
-    let mode = 'download';
-    downloadReceiptFromFilestoreID(response.Payments[0].fileStoreId, mode);
-  }else
-  {
-    store.dispatch(
-      setRoute(
-        `/uc-citizen/search`
-      )
-    );
-  }
-  return response;
-
-}
-
-

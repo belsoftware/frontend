@@ -48,8 +48,7 @@ export const searchResults = {
         options: {
           filter: false,
           customBodyRender: (value, data) => {
-         
-            if (data.rowData[4] !== undefined && typeof data.rowData[4] === 'number' && data.rowData[4] > 0) {
+            if (data.rowData[4] !== undefined && typeof data.rowData[4] === 'number') {
               return (
                 <div className="linkStyle" onClick={() => getViewBillDetails(data)} style={{ color: '#fe7a51', textTransform: 'uppercase' }}>
                   <LabelContainer
@@ -63,7 +62,7 @@ export const searchResults = {
               )
             }
             else {
-              return ("NO DUES")
+              return ("NA")
             }
           }
         }

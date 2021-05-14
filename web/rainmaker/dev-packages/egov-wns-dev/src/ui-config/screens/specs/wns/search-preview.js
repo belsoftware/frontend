@@ -10,7 +10,7 @@ import { getQueryArg, setBusinessServiceDataToLocalStorage, setDocuments } from 
 import { loadUlbLogo } from "egov-ui-kit/utils/pdfUtils/generatePDF";
 import get from "lodash/get";
 import set from "lodash/set";
-import { findAndReplace, getDescriptionFromMDMS, getSearchResults, getSearchResultsForSewerage, getWaterSource, getWorkFlowData, isModifyMode, serviceConst, swEstimateCalculation, waterEstimateCalculation, getConsumptionDetails } from "../../../../ui-utils/commons";
+import { findAndReplace, getDescriptionFromMDMS, getSearchResults, getSearchResultsForSewerage, getWaterSource, getWorkFlowData, isModifyMode, serviceConst, swEstimateCalculation, waterEstimateCalculation } from "../../../../ui-utils/commons";
 import {
   convertDateToEpoch, createEstimateData,
   getDialogButton, getFeesEstimateOverviewCard,
@@ -90,7 +90,6 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
   // "div", {}));
   dispatch(unMountScreen("apply"));
   dispatch(unMountScreen("search"));
-  dispatch(unMountScreen("meter-reading"));
   dispatch(prepareFinalObject("WaterConnection",[]));
   dispatch(prepareFinalObject("SewerageConnection",[]));
   dispatch(prepareFinalObject("WaterConnectionOld",[]));
@@ -125,7 +124,8 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
       let parsedObject = parserFunction(findAndReplace(applyScreenObject, "NA", null));
       dispatch(prepareFinalObject("WaterConnection[0]", parsedObject));
 
-    
+      console.info("data in apply screen===",applyScreenObject);
+
    //   if (!applyScreenObject.connectionHolders || payload.connectionHolders === 'NA') {
     if (!applyScreenObject.connectionHolders) {
         set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.visible", false);
@@ -382,7 +382,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
   //If Road cutting is not entered
   
    if(flag){
-  
+    console.info("if flat is kept true??",flag);
       dispatch(
       handleField(
         "search-preview",
@@ -393,7 +393,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
     );
    }
    else{
-
+    console.info("if flat is kept false??",flag);
     dispatch(
       handleField(
         "search-preview",
@@ -716,34 +716,9 @@ const screenConfig = {
             bserviceTemp: (service === serviceConst.WATER) ? "WS.ONE_TIME_FEE" : "SW.ONE_TIME_FEE",
             redirectQueryString: redirectQueryString,
             editredirect: editredirect,
-            beforeSubmitHook: (data) => {              
+            beforeSubmitHook: (data) => {
               data = data[0];
-              data.wsTaxHeads.forEach(item => {
-                if (!item.amount || item.length === null) {
-                  item.amount = 0;
-                }
-              });
-              data.roadTypeEst.forEach(item => {
-                if (!item.length || item.length === null) {
-                    item.length = 0;
-                  }
-                  if (!item.breadth || item.breadth === null) {
-                    item.breadth = 0;
-                  }
-                  if (!item.depth || item.depth === null) {
-                    item.depth = 0;
-                  }
-                  if (!item.rate || item.rate === null) {
-                    item.rate = 0;
-                  }
-              });
-
-              if(data.additionalDetails.initialMeterReading === null){               
-                data.additionalDetails.initialMeterReading = 0;
-              }              
-              
-
-              set(data, 'propertyId', get(data, 'property.propertyId', null));
+              set(data, 'propertyId', get(data, 'property.id', null));
               data.assignees = [];
               if (data.assignee) {
                 data.assignee.forEach(assigne => {
@@ -803,11 +778,12 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
     set(payload, 'WaterConnection[0].service', service);
     const convPayload = findAndReplace(payload, "NA", null)
 
-    payload.WaterConnection[0].wsTaxHeads.forEach(item => {   
-   if (!item.amount || item.amount == null) {
-     item.amount = 0;
-   }
- });
+    payload.WaterConnection[0].wsTaxHeads.forEach(item => {
+      console.info("amout in taxhead for estimate==",item.amount)
+     if (!item.amount || item.amount == null) {
+       item.amount = 0;
+     }
+   });
 
     let queryObjectForEst = [{
       applicationNo: applicationNumber,
@@ -838,7 +814,7 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
     } else {
       set(action.screenConfig, "components.div.children.headerDiv.children.header1.children.connection.children.connectionNumber.visible", false);
     }
-    dispatch(prepareFinalObject("DocumentsData",[]));
+
     // to set documents 
     if (payload.WaterConnection[0].documents !== null && payload.WaterConnection[0].documents !== "NA") {
       await setDocuments(
@@ -863,7 +839,7 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
 
     if (isModifyMode()) {
       let connectionNo = payload.WaterConnection[0].connectionNo;
-      let queryObjForSearchApplications = [{ key: "tenantId", value: tenantId }, { key: "isConnectionSearch", value: true }, { key: "connectionNumber", value: connectionNo }]
+      let queryObjForSearchApplications = [{ key: "tenantId", value: tenantId }, { key: "connectionNumber", value: connectionNo }, { key: "isConnectionSearch", value: true }]
       let oldApplicationPayload = await getSearchResults(queryObjForSearchApplications);
       oldApplicationPayload.WaterConnection = oldApplicationPayload.WaterConnection.sort((row1,row2)=>row2.auditDetails.createdTime - row1.auditDetails.createdTime);
       if(oldApplicationPayload.WaterConnection.length>1){
@@ -918,7 +894,7 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
     } else {
       set(action.screenConfig, "components.div.children.headerDiv.children.header1.children.connection.children.connectionNumber.visible", false);
     }
-    dispatch(prepareFinalObject("DocumentsData",[]));
+
     // to set documents 
     if (payload.SewerageConnections[0].documents !== null && payload.SewerageConnections[0].documents !== "NA") {
       await setDocuments(
@@ -951,7 +927,6 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
   if (estimate !== null && estimate !== undefined) {
     createEstimateData(estimate.Calculation[0].taxHeadEstimates, "taxHeadEstimates", dispatch, {}, {});
   }
-  
 };
 
 const parserFunction = (obj) => {
@@ -961,9 +936,8 @@ const parserFunction = (obj) => {
           item.amount = 0;
         }
       });
-      
+
       obj.roadTypeEst.forEach(item => {
-       
         if (!item.length) {
             item.length = 0;
           }
@@ -975,7 +949,7 @@ const parserFunction = (obj) => {
           }
           if (!item.rate) {
             item.rate = 0;
-          }       
+          }
       });
   let parsedObject = {
     roadCuttingArea: parseInt(obj.roadCuttingArea),

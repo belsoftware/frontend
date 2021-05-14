@@ -23,8 +23,7 @@ import "datatables.net-buttons/js/buttons.colVis.min.js";
 import { getResultUrl } from "./commons/url";
 import Label from "egov-ui-kit/utils/translationNode";
 import commonConfig from "config/common.js";
-import { getTenantId, setReturnUrl, localStorageSet,getLocale } from "egov-ui-kit/utils/localStorageUtils";
-import { getLocaleLabels ,getDefaultFontStyle} from "egov-ui-framework/ui-utils/commons.js";
+import { getTenantId, setReturnUrl, localStorageSet } from "egov-ui-kit/utils/localStorageUtils";
 import "./index.css";
 
 import pdfFonts from "./vfs_fonts";
@@ -111,7 +110,6 @@ class ShowField extends Component {
     const pageSize = (additionalConfig.print && additionalConfig.print.pdfPageSize)? additionalConfig.print.pdfPageSize: "LEGAL"
     let reportTitle = this.getReportTitle();
     let orientation = reportHeader.length > 6 ? "landscape" : "portrait";
-   // let fontStyle = getDefaultFontStyle("en_IN");
 
     const buttons = [
       {

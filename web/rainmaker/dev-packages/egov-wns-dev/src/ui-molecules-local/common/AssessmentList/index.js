@@ -12,7 +12,7 @@ import { download } from "egov-common/ui-utils/commons"
 const downloadReceipt = (tenantId, consumerCode,businessService) => {
   const val = [
     {
-      key: 'consumerCode',
+      key: 'consumerCodes',
       value: consumerCode
     },
     { key: 'tenantId', value: tenantId }

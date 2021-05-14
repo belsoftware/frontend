@@ -230,10 +230,6 @@ class DocumentList extends Component {
       jsonPath = `documentsUploadRedux[${key}].dropdown.value`;
     }
 
-    //To make default selection,if dropDownData is one
-    if(!_.isEmpty(documentsUploadRedux) && documentsUploadRedux[key] && card.dropdown && card.dropdown.menu.length==1){
-      jsonPath = `documentsUploadRedux[${key}].dropdown.value`;
-    }
     return (
       <Grid container={true}>
         <Grid item={true} xs={2} sm={1} className={classes.iconDiv}>
@@ -272,7 +268,6 @@ class DocumentList extends Component {
               data={card.dropdown.menu}
               optionValue="code"
               optionLabel="label"
-              autoSelect={true}
               required={(card.required)?true:false}
               onChange={event => this.handleChange(key, event)}
               jsonPath={jsonPath}

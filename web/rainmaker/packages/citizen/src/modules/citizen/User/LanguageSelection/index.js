@@ -20,25 +20,12 @@ class LanguageSelection extends Component {
     let lang = getQueryArg(window.location.href, "lang");
     if(["en_IN","hi_IN"].indexOf(lang) > -1)
       this.onClick(lang);
-    else if(["kn_IN","ml_IN","ta_IN","te_IN","mr_IN","bn_IN"].indexOf(lang) > -1)
-    {
-      var event = new Event('input', { bubbles: true });
-      event.value = lang
-      this.onChange(event);
-    }
-
   }
 
   onClick = (value) => {
     this.setState({ value });
     this.props.fetchLocalizationLabel(value);
   };
-
-  onChange = (event)=>{
-    this.setState({value:event.value})
-    this.props.fetchLocalizationLabel(event.value);
-  }
-
 
   onLanguageSelect = () => {
     
@@ -54,8 +41,8 @@ class LanguageSelection extends Component {
   render() {
 
     const { value,isMobile } = this.state;
-    const { onLanguageSelect, onClick,isMobileView,onChange } = this;
-    const { bannerUrl, logoUrl, languages,regionalLanguages,commonLanguages } = this.props;
+    const { onLanguageSelect, onClick,isMobileView } = this;
+    const { bannerUrl, logoUrl, languages } = this.props;
     return (
 
       <div>
@@ -64,7 +51,7 @@ class LanguageSelection extends Component {
         </div> */}
         <Banner className="language-selection" bannerUrl={bannerUrl} logoUrl={logoUrl}>
           <div>
-            <LanguageSelectionForm items={languages} value={value} onLanguageSelect={onLanguageSelect} onClick={onClick} regionalLanguages ={regionalLanguages} commonLanguages ={commonLanguages} onChange={onChange}/>
+            <LanguageSelectionForm items={languages} value={value} onLanguageSelect={onLanguageSelect} onClick={onClick} />
           </div>
         </Banner>
         {/* <div className="Wrapper">
@@ -94,9 +81,7 @@ const mapStateToProps = ({ common }) => {
   let bannerUrl = get(stateInfoById, "0.bannerUrl");
   let logoUrl = get(stateInfoById, "0.logoUrl");
   let languages = get(stateInfoById, "0.languages", []);
-  let regionalLanguages = get(stateInfoById, "0.languagesRegional", []);
-  let commonLanguages = get(stateInfoById, "0.languagesCommon", []);
-  return { bannerUrl, logoUrl, languages,regionalLanguages,commonLanguages};
+  return { bannerUrl, logoUrl, languages };
 };
 
 const mapDispatchToProps = (dispatch) => {

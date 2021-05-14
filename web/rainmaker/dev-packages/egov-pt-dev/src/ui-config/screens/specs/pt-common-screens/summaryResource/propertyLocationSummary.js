@@ -89,8 +89,7 @@ export const propertyLocationSummary = getCommonGrayCard({
         labelKey: "PT_COMMON_DOOR_NO_LABEL"
       },
       {
-        jsonPath: "Property.address.doorNo",
-        callBack: checkValueForNA
+        jsonPath: "Property.address.doorNo"
       }
     ),
     buildingOrColonyName: getLabelWithValue(
@@ -99,8 +98,7 @@ export const propertyLocationSummary = getCommonGrayCard({
         labelKey: "PT_COMMON_BUILDING_COLONY_LABEL"
       },
       {
-        jsonPath: "Property.address.buildingName",
-        callBack: checkValueForNA
+        jsonPath: "Property.address.buildingName"
       }
     )
   })

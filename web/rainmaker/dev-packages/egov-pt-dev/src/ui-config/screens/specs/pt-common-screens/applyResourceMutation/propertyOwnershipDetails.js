@@ -329,7 +329,7 @@ const commonApplicantInformation = () => {
         },
         required: true,
         jsonPath: "Property.owners[0].relationship",
-        data: [{ code: "PARENT" }, { code: "SPOUSE" }, { code: "GUARDIAN" }],
+        data: [{ code: "FATHER" }, { code: "HUSBAND" }],
         localePrefix: {
           moduleName: "common-masters",
           masterName: "OwnerType"

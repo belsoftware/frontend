@@ -13,25 +13,7 @@ const HowItWorks = Loadable({
   loading: () => <Loading />
 });
 
-const SingleApplication = Loadable({
-  loader: () => import("./SingleApplication"),
-  loading: () => <Loading />
-});
-
-const AutosuggestContainer = Loadable({
-  loader: () => import("./AutosuggestContainer"),
-  loading: () => <Loading />
-});
-
-const UploadSingleFile = Loadable({
-  loader: () => import("./UploadSingleFile"),
-  loading: () => <Loading />
-});
-
 export {
   TestMolecules,
-  HowItWorks,
-  AutosuggestContainer,
-  SingleApplication,
-  UploadSingleFile
+  HowItWorks
 };

@@ -303,7 +303,6 @@ class CheckList extends Component {
     const { classes } = this.props;
     const { checkListUploaRedux } = this.state;
     let jsonPath = (checkListUploaRedux[key] && checkListUploaRedux[key].dropDownValues) ? checkListUploaRedux[key].dropDownValues.value : "";
-    let jsonPathForRemarks = (checkListUploaRedux[key] && checkListUploaRedux[key].remarks) ? checkListUploaRedux[key].remarks : "";
     return (
       <Grid container={true}>
         <Grid item={true} xs={2} sm={1} className={classes.iconDiv}>
@@ -358,8 +357,7 @@ class CheckList extends Component {
         <TextFieldContainer
               select={false}
               label={{ labelKey: "Remarks" }}
-              placeholder={{ labelKey: "BPA_ENTER_REMARKS" }}
-              value={jsonPathForRemarks}
+              placeholder={{ labelKey: "Enter Remarks" }}
               onChange={event => this.handleFieldChange(key, event)}              
             />
           
