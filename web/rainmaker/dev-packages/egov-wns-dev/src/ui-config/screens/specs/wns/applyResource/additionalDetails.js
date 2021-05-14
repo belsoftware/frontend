@@ -75,7 +75,7 @@ const waterSourceTypeChange = (reqObj) => {
       dispatch(prepareFinalObject("WaterConnection[0].waterSubSource", ''));
       let mStep = (isModifyMode()) ? 'formwizardSecondStep' : 'formwizardThirdStep'; 
       console.log("mstep---",mStep);
-      if(value!="OTHERS")
+      if(value!=="OTHERS")
       {
          dispatch(
            handleField(
@@ -90,7 +90,6 @@ const waterSourceTypeChange = (reqObj) => {
       }
       else
       {
-        console.log("its in others---")
         // dispatch(
         //   handleField(
         //     "apply",
@@ -247,6 +246,7 @@ export const additionDetails = getCommonCard({
           sm: 6
         },
         required: false,
+        visible : false,
         pattern: getPattern("Name"),
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "applyScreen.sourceInfo"

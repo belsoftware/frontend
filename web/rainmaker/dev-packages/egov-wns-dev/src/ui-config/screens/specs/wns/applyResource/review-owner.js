@@ -433,22 +433,22 @@ export const connectionWater={
       callBack: handleNA
     }
   ),
-  reviewSourceInfo : getLabelWithValueForModifiedLabel(
-    {
-      labelName: "Water Source Info",
-      labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO"
-    },
-    {
-      jsonPath: "WaterConnection[0].sourceInfo",
-      callBack: handleNA
-    }, {
-      labelKey: "WS_OLD_LABEL_NAME"
-    },
-    {
-      jsonPath: "WaterConnectionOld[0].sourceInfo",
-      callBack: handleNA
-    }
-  ),
+  // reviewSourceInfo : getLabelWithValueForModifiedLabel(
+  //   {
+  //     labelName: "Water Source Info",
+  //     labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO"
+  //   },
+  //   {
+  //     jsonPath: "WaterConnection[0].sourceInfo",
+  //     callBack: handleNA
+  //   }, {
+  //     labelKey: "WS_OLD_LABEL_NAME"
+  //   },
+  //   {
+  //     jsonPath: "WaterConnectionOld[0].sourceInfo",
+  //     callBack: handleNA
+  //   }
+  // ),
    reviewPipeSize : getLabelWithValueForModifiedLabel(
     {
       labelName: "Pipe Size (in inches)",

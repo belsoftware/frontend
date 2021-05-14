@@ -540,7 +540,7 @@ const connectionDetails = getCommonContainer({
   reviewPipeSize,
   reviewAuthorizedConnection,
   reviewMotorInfo,
-  reviewSourceInfo,
+  // reviewSourceInfo,
   // reviewBillingType,
   reviewWaterClosets,
   reviewNumberOfToilets,

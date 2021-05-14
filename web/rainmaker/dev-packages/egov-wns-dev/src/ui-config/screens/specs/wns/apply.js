@@ -662,14 +662,11 @@ export const getData = async (action, state, dispatch) => {
 
         if(data.waterSource == "OTHERS")
         {         
-          console.log("its in others---")       
           enableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo', dispatch);
-       
         }
         else
         {
           disableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo', dispatch);
-             
         }
       }
       let docs = get(state, "screenConfiguration.preparedFinalObject");
