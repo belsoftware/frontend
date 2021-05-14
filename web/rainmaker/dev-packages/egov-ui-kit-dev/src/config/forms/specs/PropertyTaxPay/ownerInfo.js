@@ -47,7 +47,7 @@ const formConfig = {
       floatingLabelText: "PT_OWNERSHIP_INFO_EMAIL_ID",
       hintText: "PT_MUTATION_APPLICANT_EMAIL_PLACEHOLDER",
       errorMessage: "PT_EMAIL_ID_ERROR_MESSAGE",
-      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
       pattern: /^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/,
     },
     ownerAddress: {
@@ -59,7 +59,7 @@ const formConfig = {
       errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,256}$/,
-      errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
+    //  errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
     },
     ownerRelationship: {
       id: "ownerRelationship",
@@ -177,7 +177,7 @@ const formConfig = {
       hintText: "PT_FORM3_DOCUMENT_ID_NO_PLACEHOLDER",
     //  toolTip: true,
      // toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
-      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+     errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
       hideField: true,
     },
     ownerCategoryIdType: {
