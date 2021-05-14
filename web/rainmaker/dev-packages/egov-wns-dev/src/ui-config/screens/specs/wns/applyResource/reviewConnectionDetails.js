@@ -260,7 +260,7 @@ const getPropertyDetails = {
               jsonPath: "applyScreenOld.property.propertyType",
               callBack: handleNA,
               localePrefix: {
-                moduleName: "WS",
+                moduleName: "PT",
                 masterName: "PROPTYPE"
               }
             }

@@ -45,10 +45,10 @@ export const renderService1 = () => {
             labelKey: "WS_COMMON_USAGE_TYPE"
           },
           {
-            // localePrefix: {
-            //   moduleName: "WS",
-            //   masterName: "PROPUSGTYPE"
-            // },
+            localePrefix: {
+              moduleName: "WS",
+              masterName: "WSUSGTYPE"
+            },
             jsonPath: "WaterConnection[0].usageCategory",
             callBack: handleNA
           },
@@ -56,13 +56,13 @@ export const renderService1 = () => {
         subUsageCategory: getLabelWithValue (
           {
             labelName: "Sub Usage Type",
-            labelKey: "WS_SUB_USAGE_TYPE"
+            labelKey: "WS_COMMON_SUB_USAGE_TYPE"
           },
           {
-            // localePrefix: {
-            //   moduleName: "WS",
-            //   masterName: "PROPSUBUSGTYPE"
-            // },
+            localePrefix: {
+              moduleName: "WS",
+              masterName: "WSSUBUSGTYPE"
+            },
             jsonPath: "WaterConnection[0].subUsageCategory",
             callBack: handleNA
           },
@@ -107,10 +107,10 @@ export const renderService1 = () => {
             labelKey: "WS_COMMON_USAGE_TYPE"
           },
           {
-            // localePrefix: {
-            //   moduleName: "COMMON",
-            //   masterName: "PROPUSGTYPE"
-            // },
+            localePrefix: {
+              moduleName: "WS",
+              masterName: "WSUSGTYPE"
+            },
             jsonPath: "WaterConnection[0].usageCategory",
             callBack: handleNA
           },
@@ -118,13 +118,13 @@ export const renderService1 = () => {
         subUsageCategory: getLabelWithValue (
           {
             labelName: "Sub Usage Type",
-            labelKey: "WS_SUB_USAGE_TYPE"
+            labelKey: "WS_COMMON_SUB_USAGE_TYPE"
           },
           {
-            // localePrefix: {
-            //   moduleName: "COMMON",
-            //   masterName: "PROPSUBUSGTYPE"
-            // },
+            localePrefix: {
+              moduleName: "WS",
+              masterName: "WSSUBUSGTYPE"
+            },
             jsonPath: "WaterConnection[0].subUsageCategory",
             callBack: handleNA
           },

@@ -96,12 +96,12 @@ export const reviewWaterSource = getLabelWithValueForModifiedLabel(
 export const  reviewUsageType =getLabelWithValueForModifiedLabel(
   {
     labelName: "Usage Type",
-    labelKey: "PT_COMMON_USAGE_TYPE"
+    labelKey: "WS_COMMON_USAGE_TYPE"
   },
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPUSGTYPE"
+      masterName: "WSUSGTYPE"
     },
     jsonPath: "applyScreen.usageCategory",
     callBack: handleNA
@@ -112,7 +112,7 @@ export const  reviewUsageType =getLabelWithValueForModifiedLabel(
     {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPUSGTYPE"
+      masterName: "WSUSGTYPE"
     },
     jsonPath: "applyScreenOld.usageCategory",
     callBack: handleNA
@@ -121,12 +121,12 @@ export const  reviewUsageType =getLabelWithValueForModifiedLabel(
 export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
   {
     labelName: "Sub Usage Type",
-    labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+    labelKey: "WS_SUB_USAGE_TYPE"
   },
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
+      masterName: "WSSUBUSGTYPE"
     },
     jsonPath: "applyScreen.subUsageCategory",
     callBack: handleNA
@@ -137,7 +137,7 @@ export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
+      masterName: "WSSUBUSGTYPE"
     },
     jsonPath: "applyScreenOld.subUsageCategory",
     callBack: handleNA

@@ -25,7 +25,7 @@ export const propertyUsage = getLabelWithValue(
     {
         jsonPath: "WaterConnection[0].property.usageCategory",
         localePrefix: {
-            moduleName: "WS",
+            moduleName: "PT",
             masterName: "PROPUSGTYPE"
         } 
     }

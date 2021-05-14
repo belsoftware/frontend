@@ -294,7 +294,7 @@ export const additionDetails = getCommonCard({
               gridDefination: { xs: 12, sm: 6 },
               localePrefix: {
                 moduleName: "WS",
-                masterName: "PROPUSGTYPE"
+                masterName: "WSUSGTYPE"
               },
               beforeFieldChange: async (action, state, dispatch) => {
                    rendersubUsageType(action.value,  dispatch, state)
@@ -319,10 +319,10 @@ export const additionDetails = getCommonCard({
                   labelKey: "WS_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
               },
            
-      //         localePrefix: {
-      //             moduleName: "WS",
-      //        			 masterName: "PROPSUBUSGTYPE"
-      //         },
+              localePrefix: {
+                  moduleName: "WS",
+             			 masterName: "PROPSUBUSGTYPE"
+              },
               jsonPath: "applyScreen.subUsageCategory",
               sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
               className: "autocomplete-dropdown pds-search",

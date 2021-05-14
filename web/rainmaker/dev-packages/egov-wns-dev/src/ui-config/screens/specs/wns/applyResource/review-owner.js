@@ -503,10 +503,10 @@ reviewUsageType : getLabelWithValueForModifiedLabel(
     labelKey: "WS_COMMON_USAGE_TYPE"
   },
   {
-    // localePrefix: {
-    //   moduleName: "WS",
-    //   masterName: "PROPUSGTYPE"
-    // },
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "WSUSGTYPE"
+    },
     jsonPath: "WaterConnection[0].usageCategory",
     callBack: handleNA
   },
@@ -514,10 +514,10 @@ reviewUsageType : getLabelWithValueForModifiedLabel(
     labelKey: "WS_OLD_LABEL_NAME"
   },
   {
-    // localePrefix: {
-    //   moduleName: "WS",
-    //   masterName: "PROPUSGTYPE"
-    // },
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "WSUSGTYPE"
+    },
     jsonPath: "WaterConnectionOld[0].usageCategory",
     callBack: handleNA
   },
@@ -529,10 +529,10 @@ reviewSubUsageType: getLabelWithValueForModifiedLabel(
     labelKey: "WS_SUB_USAGE_TYPE"
   },
   {
-    // localePrefix: {
-    //   moduleName: "WS",
-    //   masterName: "PROPSUBUSGTYPE"
-    // },
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "PROPSUBUSGTYPE"
+    },
     jsonPath: "WaterConnection[0].subUsageCategory",
     callBack: handleNA
   },
@@ -540,10 +540,10 @@ reviewSubUsageType: getLabelWithValueForModifiedLabel(
     labelKey: "WS_OLD_LABEL_NAME"
   },
   {
-    // localePrefix: {
-    //   moduleName: "WS",
-    //   masterName: "PROPSUBUSGTYPE"
-    // },
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "PROPSUBUSGTYPE"
+    },
     jsonPath: "WaterConnectionOld[0].subUsageCategory",
     callBack: handleNA
   },

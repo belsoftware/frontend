@@ -260,15 +260,15 @@ export const propertyDetails={
   reviewPropertyUsageType: getLabelWithValueForModifiedLabel(
     {
       labelName: "Property Usage Type",
-      labelKey: "WS_COMMON_USAGE_TYPE"
+      labelKey: "WS_PROPERTY_USAGE_TYPE_LABEL"
     },
     {
       jsonPath: "WaterConnection[0].property.usageCategory",
       callBack: handleNA,
-      // localePrefix: {
-      //   moduleName: "WS",
-      //   masterName: "PROPUSGTYPE"
-      // }        
+      localePrefix: {
+        moduleName: "WS",
+        masterName: "PROPUSGTYPE"
+      }        
     },
     {
       labelKey: "WS_OLD_LABEL_NAME"
@@ -287,24 +287,24 @@ export const propertyDetails={
   reviewPropertySubUsageType: getLabelWithValueForModifiedLabel(
     {
       labelName: "Property Sub usage type",
-      labelKey: "WS_COMMON_USAGE_TYPE"
+      labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL"
     },
     { jsonPath: "WaterConnection[0].property.units[0].usageCategory",
       callBack: handlePropertySubUsageType,
-      // localePrefix: {
-      //   moduleName: "WS",
-      //   masterName: "PROPSUBUSGTYPE"
-      // }
+      localePrefix: {
+        moduleName: "WS",
+        masterName: "PROPSUBUSGTYPE"
+      }
     },{
       labelKey: "WS_OLD_LABEL_NAME"
     },
     {
       jsonPath: "WaterConnectionOld[0].property.units[0].usageCategory",
       callBack: handleNA,
-      // localePrefix: {
-      //   moduleName: "WS",
-      //   masterName: "PROPSUBUSGTYPE"
-      // }
+      localePrefix: {
+        moduleName: "WS",
+        masterName: "PROPSUBUSGTYPE"
+      }
       
     }
   ),
