@@ -88,9 +88,6 @@ const styles = {
   },
   nocTitle: {
     color: "rgba(0, 0, 0, 0.87)",
-  },
-  spanStyle : {
-    paddingLeft: "2px"
   }
 }
 // const LightTooltip = withStyles((theme) => ({
@@ -246,7 +243,6 @@ class NocDetailCard extends Component {
                       labelKey={getTransformedLocale(card.nocType)}
                       style={styles.nocTitle}
                     />
-                    {card.required && process.env.REACT_APP_NAME !== "Citizen" ? <span style = {styles.spanStyle}>*</span> : ""}
                     </Grid>
                     <Grid item xs={3}>
                       <LinkAtom 

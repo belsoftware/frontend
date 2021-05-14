@@ -28,7 +28,6 @@ import set from "lodash/set";
 import { edcrHttpRequest, httpRequest, wrapRequestBody } from "../../../../ui-utils/api";
 import { getBpaSearchResults, prepareNOCUploadData } from "../../../../ui-utils/commons";
 import "./index.css";
-import { getPaymentSearchAPI } from "egov-ui-kit/utils/commons";
 
 export const getCommonApplyFooter = children => {
   return {
@@ -512,11 +511,11 @@ export const getBill = async queryObject => {
   }
 };
 
-export const getReceipt = async (queryObject, businessService) => {
+export const getReceipt = async queryObject => {
   try {
     const response = await httpRequest(
       "post",
-      getPaymentSearchAPI(businessService),
+      "/collection-services/payments/_search",
       "",
       queryObject
     );
@@ -1208,7 +1207,7 @@ export const createEstimateData = async (
       getEstimateData(payload.billResponse.Bill[0], false, LicenseData);
   } else {
     payload = isPAID
-      ? await getReceipt(queryObjForGetReceipt, businessService)
+      ? await getReceipt(queryObjForGetReceipt)
       : await getBill(queryObjForGetBill);
     estimateData = payload
       ? isPAID
@@ -4736,12 +4735,6 @@ const prepareFinalCards = (state, dispatch, documentsPreview, requiredDocsFromMd
     sendBackCitizen = false;
   }
 
-  if(get(bpaDetails, "status") === "DOC_VERIFICATION_INPROGRESS" && isVisibleTrue) {
-      isVisibleTrue = true;
-  } else {
-    isVisibleTrue = false;
-  }
-
   documentCards && Object.keys(documentCards).map((doc) => {
     let card = {
       documentCode: doc,
@@ -5181,27 +5174,12 @@ export const downloadFeeReceipt = async (state, dispatch, status, serviceCode, m
     state.screenConfiguration.preparedFinalObject, "BPA"
   );
 
-  let queryObject = [
-    {
-      key: "tenantId",
-      value: bpaDetails.tenantId
-    },
-    {
-      key: "consumerCodes",
-      value: bpaDetails.applicationNo
-    }
-  ];
-
   let paymentPayload = await httpRequest(
     "post",
-    getPaymentSearchAPI(serviceCode),
-    "",
-    queryObject
+    `collection-services/payments/_search?tenantId=${bpaDetails.tenantId}&consumerCodes=${bpaDetails.applicationNo}`
   );
 
   let payments = [];
-
-//  if(process.env.REACT_APP_NAME == "Citizen") {
   if (window.location.href.includes("oc-bpa")) {
     if (paymentPayload.Payments && (paymentPayload.Payments).length > 1) {
       if (serviceCode === "BPA.NC_OC_APP_FEE") {
@@ -5227,9 +5205,6 @@ export const downloadFeeReceipt = async (state, dispatch, status, serviceCode, m
       payments.push(paymentPayload.Payments[0]);
     }
   }
-//  } else {
-//   payments.push(get (paymentPayload, "Payments[0]", []));
-//  }
 
 
   let res = await httpRequest(

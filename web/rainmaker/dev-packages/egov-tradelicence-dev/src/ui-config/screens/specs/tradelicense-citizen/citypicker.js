@@ -58,7 +58,7 @@ export const cityPicker = getCommonContainer({
             variant: "contained",
             color: "primary",
             style: {
-              width: "140px",
+              width: "40px",
               height: "20px",
               marginRight: "4px",
               marginTop: "16px"
@@ -81,7 +81,7 @@ export const cityPicker = getCommonContainer({
             variant: "outlined",
             color: "primary",
             style: {
-              width: "140px",
+              width: "40px",
               height: "20px",
               marginRight: "4px",
               marginTop: "16px"

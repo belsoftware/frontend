@@ -98,7 +98,7 @@ export const getAssessmentInfo = (propertyDetails, generalMDMSDataById, properti
         ? //(
           {
           key: getTranslatedLabel("PT_FLOOR_NO", localizationLabelsData),
-          value: units && units.length > 0 ? `${units[0].floorNo}` : "NA",
+          value: units.length > 0 ? `${units[0].floorNo}` : "NA",
           oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units.length > 0 ? `${oldPropertydetails.units[0].floorNo}` : "NA"
          }:
       

@@ -62,14 +62,6 @@ const propertyDetails = getCommonContainer({
     {
       jsonPath: "WaterConnection[0].property.landArea"
     }
-  ),
-  constructedArea: getLabelWithValue(
-    {
-      labelKey: "WS_PROP_DETAIL_CONSTRUCTION_SIZE_LABEL"
-    },
-    { 
-      jsonPath: "WaterConnection[0].property.superBuiltUpArea"
-    }
   )
 })
 

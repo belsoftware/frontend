@@ -299,22 +299,8 @@ const callBackForApply = async (state, dispatch) => {
     try {
       if (propertyPayload.propertyType === 'BUILTUP.SHAREDPROPERTY') {
         let unit = {};
-        if(propertyPayload.units && propertyPayload.units.length!=0){
-          propertyPayload.units[0].usageCategory = propertyPayload.subUsageCategory ? propertyPayload.subUsageCategory : propertyPayload.usageCategory;
-          propertyPayload.units[0].occupancyType = "SELFOCCUPIED";
-          propertyPayload.units[0].arv = propertyPayload.arvValue
-          propertyPayload.units[0].constructionDetail = {
-          // carpetArea :  propertyPayload.superBuiltUpArea,
-          // builtUpArea : propertyPayload.superBuiltUpArea,
-          superBuiltUpArea : propertyPayload.superBuiltUpArea,
-          plinthArea : propertyPayload.superBuiltUpArea,
-
-        };
-        }
-        else{
         unit.usageCategory = propertyPayload.subUsageCategory ? propertyPayload.subUsageCategory : propertyPayload.usageCategory;
         unit.occupancyType = "SELFOCCUPIED";
-        unit.arv = propertyPayload.arvValue
         unit.constructionDetail = {
           // carpetArea :  propertyPayload.superBuiltUpArea,
           // builtUpArea : propertyPayload.superBuiltUpArea,
@@ -324,7 +310,6 @@ const callBackForApply = async (state, dispatch) => {
         };
         propertyPayload.units = [];
         propertyPayload.units.push(unit);
-      }
       }
       propertyPayload.creationReason = propertyPayload.creationReason || 'CREATE';
       let payload = null;

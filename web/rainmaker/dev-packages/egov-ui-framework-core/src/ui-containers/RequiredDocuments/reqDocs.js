@@ -210,8 +210,8 @@ export const getRequiredDocuments = ( documents, moduleName, footerCallback ) =>
       footer: {
         uiFramework: "custom-atoms",
         props:{
-           className:"footerSticky footerFixed",
-         },
+          className:"footerSticky",
+        },
         componentPath: "Container",
         children: {
           footerChildElement

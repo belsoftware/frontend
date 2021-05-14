@@ -33,12 +33,11 @@ import {localStorageGet} from "egov-ui-kit/utils/localStorageUtils";
 let headerLabel = "WS_APPLICATION_NEW_CONNECTION_HEADER";
 const applicationNo = getQueryArg(window.location.href, "applicationNumber");
 if(isModifyMode()){
-  headerLabel = "WS_MODIFY_CONNECTION_HEADER";
-  // if(applicationNo.includes("WS")){
-  // headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
-  // }else{
-  // headerLabel = "SW_APPLICATION_MODIFY_CONNECTION_HEADER";
-  // }
+  if(applicationNo.includes("WS")){
+  headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
+  }else{
+  headerLabel = "SW_APPLICATION_MODIFY_CONNECTION_HEADER";
+  }
 }
 
 const headerrow = getCommonContainer({
@@ -521,43 +520,6 @@ const getAcknowledgementCard = (
         tenant
       )
     };
-  } else if (purpose === "resubmit" && status === "success") {
-    return {
-      commonHeader: commonHeader(state,
-        dispatch,
-        applicationNumber,
-        tenant),
-      applicationSuccessCard: {
-        uiFramework: "custom-atoms",
-        componentPath: "Div",
-        children: {
-          card: acknowledgementCard({
-            icon: "done",
-            backgroundColor: "#39CB74",
-            header: {
-              labelName: "Application Re-Submitted Successfully",
-              labelKey: "TL_APPLICATION_RESUBMIT_SUCCESS_MESSAGE_MAIN"
-            },
-            body: {
-              labelName:
-                "A notification regarding above application status has been sent to registered Mobile No.",
-              labelKey: "WS_APPLICATION_FORWARD_SUCCESS_SUBHEAD"
-            },
-            tailText: {
-              labelName: "Application No.",
-              labelKey: "WS_ACK_COMMON_APP_NO_LABEL"
-            },
-            number: applicationNumber
-          })
-        }
-      },
-      applicationSuccessFooter: applicationSuccessFooter(
-        state,
-        dispatch,
-        applicationNumber,
-        tenant
-      )
-    };
   } else if (purpose === "activate" && status === "success") {
 
     return {
@@ -772,7 +734,7 @@ export const downloadPrintContainer = (
               label: { labelName: "DOWNLOAD", labelKey: "WS_COMMON_BUTTON_DOWNLOAD" },
               leftIcon: "cloud_download",
               rightIcon: "arrow_drop_down",
-              props: { variant: "outlined", style: { height: "60px", width: "210px",color: "#FE7A51", maxWidth: "95%", marginRight: "-15px" }, className: "tl-download-button" },
+              props: { variant: "outlined", style: { height: "60px", color: "#FE7A51", maxWidth: "95%", marginRight: "-15px" }, className: "tl-download-button" },
               menu: downloadMenu
             }
           }
@@ -786,7 +748,7 @@ export const downloadPrintContainer = (
               label: { labelName: "PRINT", labelKey: "WS_COMMON_BUTTON_PRINT" },
               leftIcon: "print",
               rightIcon: "arrow_drop_down",
-              props: { variant: "outlined", style: { height: "60px", width: "170px",color: "#FE7A51", maxWidth: "85%" }, className: "tl-print-button" },
+              props: { variant: "outlined", style: { height: "60px", color: "#FE7A51", maxWidth: "85%" }, className: "tl-print-button" },
               menu: printMenu
             }
           },

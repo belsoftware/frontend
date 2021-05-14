@@ -165,13 +165,10 @@ const commonApplicantInformation = () => {
           "Property.ownersTemp[0].relationship",
         data: [
           {
-            code: "PARENT"
+            code: "FATHER"
           },
           {
-            code: "SPOUSE"
-          },
-          {
-            code: "GUARDIAN"
+            code: "HUSBAND"
           }
         ],
         localePrefix: {

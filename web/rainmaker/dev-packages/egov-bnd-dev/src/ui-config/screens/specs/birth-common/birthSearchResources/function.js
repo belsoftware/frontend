@@ -24,19 +24,9 @@ export const searchApiCall = async (state, dispatch) => {
     queryParams.push({ key: "tenantId",value: tenantId});
 
   let dateOfBirth = get(state.screenConfiguration.preparedFinalObject,"bnd.birth.dob");
-  let fromdate = get(state.screenConfiguration.preparedFinalObject,"bnd.birth.fromdate");
-  let todate = get(state.screenConfiguration.preparedFinalObject,"bnd.birth.todate");
   if(dateOfBirth)
   {
     queryParams.push({ key: "dateOfBirth",value: convertEpochToDate(convertDateToEpoch(dateOfBirth)).replaceAll("/","-")});
-  }
-  if(fromdate)
-  {
-    queryParams.push({ key: "fromDate",value: convertEpochToDate(convertDateToEpoch(fromdate)).replaceAll("/","-")});
-  }
-  if(todate)
-  {
-    queryParams.push({ key: "toDate",value: convertEpochToDate(convertDateToEpoch(todate)).replaceAll("/","-")});
   }
   let gender = get(state.screenConfiguration.preparedFinalObject,"bnd.birth.gender");
   if(gender)
@@ -96,55 +86,37 @@ export const searchApiCall = async (state, dispatch) => {
     );
     return;
   }
-  if (fromdate && todate ) {
-    let fromdateofsearch=get(state.screenConfiguration.preparedFinalObject,"bnd.birth.fromdate")
-    let todateepochofsearch=get(state.screenConfiguration.preparedFinalObject,"bnd.birth.todate")
-    if(fromdateofsearch>todateepochofsearch)
-    {
+
+  if(!registrationNo && !hospitalName && !mothersName && !fathersName)
+  {
     dispatch(
       toggleSnackbar(
         true,
         {
-          labelName: "",
-          labelKey: "From Date should not be before To Date "
+          labelName: "Please fill enter atleast one attribute in the non mandatory list",
+          labelKey: "BND_COMMON_REQ_FIELDS_ERR2"
         },
         "warning"
       )
     );
     return;
-      }
   }
 
-  // if(!registrationNo && !hospitalId && !mothersName && !fathersName)
-  // {
-  //   dispatch(
-  //     toggleSnackbar(
-  //       true,
-  //       {
-  //         labelName: "Please fill enter atleast one attribute in the non mandatory list",
-  //         labelKey: "BND_COMMON_REQ_FIELDS_ERR2"
-  //       },
-  //       "warning"
-  //     )
-  //   );
-  //   return;
-  // }
-
   const responseFromAPI = await searchForBirth(dispatch, queryParams)
-  const births = (responseFromAPI && responseFromAPI.birthCerts) || []; //|| [{"id":"1","dateofbirth":1614241552,"firstname":"san","gender":"1","registrationno":"2021-1","counter":0,"birthFatherInfo":{"firstname":"abc"},"birthMotherInfo":{"firstname":"abc1"},"tenantid":"pb.agra"},{"id":"2","dateofbirth":1614241552,"firstname":"san1","gender":"1","registrationno":"2021-2","counter":0,"birthFatherInfo":{"firstname":"abcd"},"birthMotherInfo":{"firstname":"abcd1"},"tenantid":"pb.agra"}];
+  const births = (responseFromAPI && responseFromAPI.birthCerts) || [{"id":"1","dateofbirth":1614241552,"firstname":"san","gender":"1","registrationno":"2021-1","counter":0,"birthFatherInfo":{"firstname":"abc"},"birthMotherInfo":{"firstname":"abc1"},"tenantid":"pb.agra"},{"id":"2","dateofbirth":1614241552,"firstname":"san1","gender":"1","registrationno":"2021-2","counter":0,"birthFatherInfo":{"firstname":"abcd"},"birthMotherInfo":{"firstname":"abcd1"},"tenantid":"pb.agra"}];
 
   const birthTableData = births.map(item => {
     return {
       id: get(item, "id"),
       registrationNo: get(item, "registrationno"),
-      nameOfChild: get(item, "fullName"),
+      nameOfChild: get(item, "firstname"),
       dateOfbirth: get(item, "dateofbirth"),
       gender:  getGenderValue(get(item, "gender")),
-      mothersName: get(item, "birthMotherInfo.fullName"),
-      fathersName: get(item, "birthFatherInfo.fullName"),
+      mothersName: get(item, "birthMotherInfo.firstname"),
+      fathersName: get(item, "birthFatherInfo.firstname"),
       action: getActionItem(get(item, "counter")),
       tenantId: get(item, "tenantid"),
-      payRequired: get(item, "payRequired"),
+      payRequired: get(item, "payRequired")
     };
   });
   dispatch(
@@ -164,9 +136,8 @@ export const searchApiCall = async (state, dispatch) => {
       ['BND_COMMON_MOTHERSNAME']: item.mothersName || "-",
       ['BND_COMMON_FATHERSNAME']: item.fathersName || "-",
       ['BND_COMMON_TABLE_ACTION']: item.action || "-",
-      ["BUSINESS_SERVICE"]: "BIRTH_CERT",
+      ["BUSINESS_SERVICE"]: "BIRTH_CERT_FEE",
       ["TENANT_ID"]: item.tenantId,
-      ["BND_VIEW_CERTIFICATE"]: "BND_VIEW_CERTIFICATE"
       //["PAYREQUIRED"]: item.payRequired,
       // ["BILL_ID"]: item.billId,
       // ["BILL_SEARCH_URL"]: searchScreenObject.url,

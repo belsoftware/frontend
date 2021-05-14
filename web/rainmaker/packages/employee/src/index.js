@@ -25,7 +25,6 @@ import { MuiThemeProvider as V0MuiThemeProvider } from "material-ui";
 
 const muiThemeV0 = getMuiTheme(theme);
 const themeVX = createMuiTheme(themeNew);
-console.info("DC-employee index")
 // to eliminate the click delay
 // injectTapEventPlugin();
 

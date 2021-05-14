@@ -4,7 +4,7 @@ import { getSearchResults, getSearchResultsForSewerage, fetchBill, getDescriptio
 import set from "lodash/set";
 import get from "lodash/get";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import { prepareFinalObject} from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { 
   createEstimateData,
   getFeesEstimateCard,
@@ -124,8 +124,7 @@ const searchResults = async (action, state, dispatch, consumerCode) => {
     let meterReadingsData = await getConsumptionDetails(queryObjectForConsumptionDetails, dispatch);
     let payload = await getSearchResults(queryObjForSearch,true);
     let queryObjectForFetchBill = [{ key: "tenantId", value: tenantId }, { key: "consumerCode", value: consumerCode }, { key: "businessService", value: "WS" }];
-    data = await fetchBill(queryObjectForFetchBill, dispatch);  
-
+    data = await fetchBill(queryObjectForFetchBill, dispatch);
     if (payload !== null && payload !== undefined && data !== null && data !== undefined) {
       if (payload.WaterConnection.length > 0 && data.Bill.length > 0) {
         payload.WaterConnection[0].service = service

@@ -20,7 +20,7 @@ import jp from "jsonpath";
 import get from "lodash/get";
 import set from "lodash/set";
 import { edcrHttpRequest, httpRequest } from "../../../../ui-utils/api";
-import { getAppSearchResults, getNocSearchResults, prepareNOCUploadData, nocapplicationUpdate, getStakeHolderRoles } from "../../../../ui-utils/commons";
+import { getAppSearchResults, getNocSearchResults, prepareNOCUploadData, nocapplicationUpdate } from "../../../../ui-utils/commons";
 import "../egov-bpa/applyResource/index.css";
 import "../egov-bpa/applyResource/index.scss";
 import { permitConditions } from "../egov-bpa/summaryResource/permitConditions";
@@ -49,7 +49,6 @@ import { scrutinySummary } from "./summaryResource/scrutinySummary";
 import { nocDetailsSearch } from "./noc";
 import store from "ui-redux/store";
 import commonConfig from "config/common.js";
-import { getPaymentSearchAPI } from "egov-ui-kit/utils/commons";
 
 export const ifUserRoleExists = role => {
   let userInfo = JSON.parse(getUserInfo());
@@ -248,11 +247,6 @@ const setDownloadMenu = async (action, state, dispatch, applicationNumber, tenan
     state,
     "screenConfiguration.preparedFinalObject.BPA.riskType"
   );
-
-  const service = get(
-    state,
-    "screenConfiguration.preparedFinalObject.BPA.businessService"
-  );
   let downloadMenu = [];
   let printMenu = [];
   let appFeeDownloadObject = {
@@ -326,39 +320,10 @@ const setDownloadMenu = async (action, state, dispatch, applicationNumber, tenan
     leftIcon: "assignment"
   };
 
-  let queryObject = [
-    {
-      key: "tenantId",
-      value: tenantId
-    },
-    {
-      key: "consumerCodes",
-      value: applicationNumber
-    }
-  ];
-  
-  let paymentPayload = {}; 
-  paymentPayload.Payments = [];
-  if(riskType === "LOW") {
-    let lowAppPaymentPayload = await httpRequest(
-      "post",
-      getPaymentSearchAPI("BPA.LOW_RISK_PERMIT_FEE"),
-      "",
-      queryObject
-    );
-    if(lowAppPaymentPayload && lowAppPaymentPayload.Payments && lowAppPaymentPayload.Payments.length > 0) paymentPayload.Payments.push(lowAppPaymentPayload.Payments[0]);
-  } else {
-    let businessServicesList = ["BPA.NC_APP_FEE", "BPA.NC_SAN_FEE" ];
-    for(let fee = 0; fee < businessServicesList.length; fee++ ) {
-      let lowAppPaymentPayload = await httpRequest(
-        "post",
-        getPaymentSearchAPI(businessServicesList[fee]),
-        "",
-        queryObject
-      );
-      if(lowAppPaymentPayload && lowAppPaymentPayload.Payments) paymentPayload.Payments.push(lowAppPaymentPayload.Payments[0]);
-    }
-  }
+  let paymentPayload = await httpRequest(
+    "post",
+    `collection-services/payments/_search?tenantId=${tenantId}&consumerCodes=${applicationNumber}`
+  );
 
   if (riskType === "LOW") {
     if (paymentPayload && paymentPayload.Payments.length == 1) {
@@ -441,8 +406,6 @@ const setDownloadMenu = async (action, state, dispatch, applicationNumber, tenan
   );
   /** END */
 };
-
-const stakeholerRoles = getStakeHolderRoles();
 
 const getRequiredMdmsDetails = async (state, dispatch) => {
   let mdmsBody = {
@@ -572,7 +535,7 @@ const setSearchResponse = async (
     let userInfo = JSON.parse(getUserInfo()), roles = get(userInfo, "roles"), isArchitect = false;
     if (roles && roles.length > 0) {
       roles.forEach(role => {
-        if (stakeholerRoles.includes(role.code)) {
+        if (role.code === "BPA_ARCHITECT") {
           isArchitect = true;
         }
       })
@@ -601,10 +564,11 @@ const setSearchResponse = async (
     let userInfo = JSON.parse(getUserInfo()),
       roles = get(userInfo, "roles"),
       owners = get(response.BPA["0"].landInfo, "owners"),
+      archtect = "BPA_ARCHITECT",
       isTrue = false, isOwner = true;
     if (roles && roles.length > 0) {
       roles.forEach(role => {
-        if (stakeholerRoles.includes(role.code)) {
+        if (role.code === archtect) {
           isTrue = true;
         }
       })
@@ -615,7 +579,7 @@ const setSearchResponse = async (
         if (owner.mobileNumber === userInfo.mobileNumber) { //owner.uuid === userInfo.uuid
           if (owner.roles && owner.roles.length > 0) {
             owner.roles.forEach(owrRole => {
-              if (stakeholerRoles.includes(owrRole.code)) {
+              if (owrRole.code === archtect) {
                 isOwner = false;
               }
             })

@@ -149,8 +149,7 @@ export const propertyAssemblySummary = getCommonGrayCard({
             let propertyType = get( state.screenConfiguration.preparedFinalObject, "Property.propertyType" );
             let usageType = get( state.screenConfiguration.preparedFinalObject, "Property.usageCategory" );
             if (propertyType === "BUILTUP.SHAREDPROPERTY" || propertyType === "BUILTUP.INDEPENDENTPROPERTY") {
-              if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL"
-              || usageType === "NONRESIDENTIAL.OTHERS") {
+              if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL") {
                 finalValue = value;
               }
             }
@@ -188,26 +187,6 @@ export const propertyAssemblySummary = getCommonGrayCard({
       },
       {
         jsonPath: "Property.noOfFlats",
-        //callBack: checkValueForNA
-        callBack: value => {
-          let state = store.getState();
-          let finalValue;
-            let propertyType = get( state.screenConfiguration.preparedFinalObject, "Property.propertyType" );
-            //let usageType = get( state.screenConfiguration.preparedFinalObject, "Property.usageCategory" );
-            if ( propertyType !== "VACANT") {
-                finalValue = value;
-            }
-          return finalValue ? finalValue : "NA";
-        }
-      }
-    ),
-    arv: getLabelWithValue(
-      {
-        labelName: "ARV",
-        labelKey: "PT_COMMON_ARV"
-      },
-      {
-        jsonPath: "Property.units[0].arv",
         //callBack: checkValueForNA
         callBack: value => {
           let state = store.getState();

@@ -210,16 +210,6 @@ const propertyDetails = getCommonContainer({
       callBack: handleNA
     }
   ),
-  arv: getLabelWithValue(
-    {
-      labelKey: "WS_PROP_DETAIL_ARV_LABEL"
-    },
-    {
-      jsonPath: "applyScreen.property.units[0].arv",
-      callBack: handleNA
-
-    }
-  ),
   // rainwaterHarvestingFacility: getLabelWithValue(
   //   {
   //     labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC",

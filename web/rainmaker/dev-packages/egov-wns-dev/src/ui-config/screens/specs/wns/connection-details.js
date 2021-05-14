@@ -10,7 +10,6 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import set from "lodash/set";
-import get from "lodash/get";
 import {
   getDescriptionFromMDMS,
   getSearchResults,
@@ -27,7 +26,7 @@ import {
 } from "./connectionDetailsResource/owner-deatils";
 import { getPropertyDetails } from "./connectionDetailsResource/property-details";
 import { getServiceDetails } from "./connectionDetailsResource/service-details";
-import { getRequiredDocData } from "egov-billamend/ui-config/screens/specs/utils";
+//import { getRequiredDocData } from "egov-billamend/ui-config/screens/specs/utils";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import { httpRequest } from "../../../../ui-utils/api";
 import { getBill } from "egov-common/ui-config/screens/specs/utils";
@@ -60,7 +59,7 @@ const showHideServiceDetails = (dispatch,data)=>{
         "visible",
         false
   )
-  );  
+);  
   }
   else{
      dispatch(
@@ -123,9 +122,10 @@ const showHideConnectionHolder = (dispatch, connectionHolders) => {
 // };
 
 export const sortpayloadDataObj =(connectionObj)=>{ 
- 
-  return connectionObj.sort(function(x, y){
-    return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+  ////console.info("connectionObj for sorting===",connectionObj);
+  connectionObj.sort(function(x, y){
+  console.log("sort in connection details=>", y.auditDetails.createdTime,"-",x.auditDetails.createdTime);
+  return  y.auditDetails.createdTime-x.auditDetails.createdTime;
   });
 }
 
@@ -172,14 +172,10 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       payloadData !== undefined &&
       payloadData.SewerageConnections.length > 0
     ) {
-      //sorting
-      payloadData.SewerageConnections = payloadData.SewerageConnections.sort(function(x, y){
-        return  y.auditDetails.createdTime-x.auditDetails.createdTime;
-        });
-       
-      // payloadData.SewerageConnections = sortpayloadDataObj(payloadData.SewerageConnections);
-    
-      //let sewerageConnection = payloadData.SewerageConnections[0];
+      //console.info("data to sort==",payloadData.SewerageConnections);
+      if(payloadData.SewerageConnections.length >1)
+          payloadData.SewerageConnections = sortpayloadDataObj(payloadData.SewerageConnections);
+      //console.info("sorted sw==",payloadData.SewerageConnections);
       let sewerageConnection = getActiveConnectionObj(payloadData.SewerageConnections);
       let propTenantId = sewerageConnection.property.tenantId.split(".")[0];
       sewerageConnection.service = serviceReq;
@@ -269,33 +265,34 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       getApplicationNumber(dispatch, payloadData.SewerageConnections);
       showHideServiceDetails(dispatch, sewerageConnection);
     }
-  } else if (serviceReq === serviceConst.WATER) {  
-    
-    let payloadData = await getSearchResults(queryObject, true);  
-   
+  } else if (serviceReq === serviceConst.WATER) {   
+    let payloadData = await getSearchResults(queryObject, true);    
     if (
       payloadData !== null &&
       payloadData !== undefined &&
       payloadData.WaterConnection.length > 0
     ) {
-     //payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
+      //console.info("DC before sorting==",payloadData.WaterConnection);
+      //payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
       payloadData.WaterConnection = payloadData.WaterConnection.sort(function(x, y){
             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
-       });    
-
-       let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
-          
-      if(waterConnection.waterSubSource == undefined ){  //"undefined" case for OTHERS use case       
-        waterConnection.waterSubSource = "NA"
-      }
-      if(waterConnection.waterSource.includes('.')){ // waterConnection have ACTIVE and OTHER-STATE connection obj
-        let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
-        let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
-        waterConnection.waterSource = waterSource;
-        waterConnection.waterSubSource = waterSubSource;       
+       });
       
-      }
 
+      //  let applicationNo = getQueryArg(window.location.href, "applicationNumber");
+      //  let connectionNo = getQueryArg(window.location.href, "connectionNumber");
+      //  //console.info("Appl/Consumer=",applicationNo,"::",connectionNo);
+      //  let waterConnection;
+      //  if (applicationNo){
+      //    //console.info("Its edit flow==get latest request");
+      //    waterConnection = payloadData.WaterConnection[0];
+      //  }
+      //  else{
+      //   //console.info("view consumer deatils");
+      //   waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
+      //  }
+      let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
+     // let waterConnection = payloadData.WaterConnection[0];
       waterConnection.service = serviceReq;
       let propTenantId = waterConnection.property.tenantId.split(".")[0];
       if (waterConnection.connectionExecutionDate !== undefined) {
@@ -460,12 +457,12 @@ const getMDMSData = async (action, state, dispatch) => {
     },
   };
   try {
-    getRequiredDocData(action, dispatch, [
-      {
-        moduleName: "BillAmendment",
-        masterDetails: [{ name: "documentObj" }],
-      },
-    ]);
+    // getRequiredDocData(action, dispatch, [
+    //   {
+    //     moduleName: "BillAmendment",
+    //     masterDetails: [{ name: "documentObj" }],
+    //   },
+    // ]);
     const payload = await httpRequest(
       "post",
       "/egov-mdms-service/v1/_search",
@@ -493,12 +490,12 @@ const screenConfig = {
     getDataForBillAmendment(action, state, dispatch);
 
     beforeInitFn(action, state, dispatch, connectionNo);
-    getRequiredDocData(action, dispatch, [
-      {
-        moduleName: "BillAmendment",
-        masterDetails: [{ name: "documentObj" }],
-      },
-    ]);
+    // getRequiredDocData(action, dispatch, [
+    //   {
+    //     moduleName: "BillAmendment",
+    //     masterDetails: [{ name: "documentObj" }],
+    //   },
+    // ]);
     set(
       action,
       "screenConfig.components.div.children.headerDiv.children.header1.children.connectionNumber.props.number",

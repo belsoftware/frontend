@@ -22,7 +22,6 @@ import { connect } from "react-redux";
 import PTHeader from "../../common/PTHeader";
 import AssessmentList from "../AssessmentList";
 import YearDialogue from "../YearDialogue";
-import AmendmentDialogue from "../AmendmentDialogue"
 import PropertyInformation from "./components/PropertyInformation";
 import "./index.css";
 
@@ -61,7 +60,6 @@ class Property extends Component {
       dialogueOpen: false,
       urlToAppend: "",
       showAssessmentHistory: false,
-      amendDialogOpen: false,
     };
   }
 
@@ -115,31 +113,6 @@ class Property extends Component {
 
     route && getSingleAssesmentandStatus(route);
   };
-  onAmendBtnClick = () => {
-    const { latestPropertyDetails, propertyId, tenantId, selPropertyDetails } = this.props;    
-    const assessmentNo = latestPropertyDetails && latestPropertyDetails.assessmentNumber;
-
-     // this.props.history.push(`/bill-amend/apply?connectionNumber=${propertyId}&tenantId=${tenantId}&businessService=PT`);
-     if (selPropertyDetails.status != "ACTIVE") {
-      this.props.toggleSnackbarAndSetText(
-        true,
-        { labelName: "Property in Workflow", labelKey: "ERROR_PROPERTY_IN_WORKFLOW" },
-        "error"
-      );
-    } else {
-
-      this.setState({
-        amendDialogOpen: true,
-        urlToAppend: `/bill-amend/apply?connectionNumber=${propertyId}&tenantId=${tenantId}&businessService=PT`,
-      });
-    }
-  
-    };
-    onAmendBtnClickFromDialog = () => {
-      const {  propertyId, tenantId } = this.props;
-     // dispatch(prepareFinalObject("FireNOCs", []));
-        this.props.history.push(`/bill-amend/apply?connectionNumber=${propertyId}&tenantId=${tenantId}&businessService=PT`);
-    };
 
   onAssessPayClick = () => {
     const { latestPropertyDetails, propertyId, tenantId, selPropertyDetails } = this.props;
@@ -316,12 +289,9 @@ class Property extends Component {
       renderCustomTitleForPt(nextProps.customTitle);
     }
   };
- 
+
   closeYearRangeDialogue = () => {
     this.setState({ dialogueOpen: false });
-  };
-  closeDocsDialogue = () => {
-    this.setState({ amendDialogOpen: false });
   };
   download() {
     const { UlbLogoForPdf, selPropertyDetails, generalMDMSDataById } = this.props;
@@ -347,8 +317,8 @@ class Property extends Component {
       Payments = [],
       Assessments = []
     } = this.props;
-    const { closeYearRangeDialogue,closeDocsDialogue,onAmendBtnClickFromDialog } = this;
-    const { dialogueOpen, urlToAppend, showAssessmentHistory,amendDialogOpen } = this.state;
+    const { closeYearRangeDialogue } = this;
+    const { dialogueOpen, urlToAppend, showAssessmentHistory } = this.state;
     let urlArray = [];
     let assessmentHistory = [];
     const { pathname } = location;
@@ -433,8 +403,8 @@ class Property extends Component {
              style={{ lineHeight: "auto", minWidth: "inherit" }}
              />   
             }
-              {isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
-              || !payLen ) &&
+              {/* {isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
+              || !payLen ) && */}
                 
               <Button
               onClick={() => this.editDemand()}
@@ -442,10 +412,8 @@ class Property extends Component {
               primary={true}
               style={{ lineHeight: "auto", minWidth: "inherit" , marginLeft:"10px"}}
             />
-          }
+          {/* } */}
         </div>
-        {amendDialogOpen && <AmendmentDialogue open={amendDialogOpen} history={history} urlToAppend={urlToAppend} closeDialogue={closeDocsDialogue} onAmendBtnClick={onAmendBtnClickFromDialog} />}
-
         {dialogueOpen && <YearDialogue open={dialogueOpen} history={history} urlToAppend={urlToAppend} closeDialogue={closeYearRangeDialogue} />}
       </Screen>
     );

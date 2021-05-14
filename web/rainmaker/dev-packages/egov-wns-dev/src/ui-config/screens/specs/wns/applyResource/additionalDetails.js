@@ -77,14 +77,14 @@ const waterSourceTypeChange = (reqObj) => {
       console.log("mstep---",mStep);
       if(value!="OTHERS")
       {
-         dispatch(
-           handleField(
-             "apply",
-             "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo",
-             "props.value",
-             "NA"
-           )
-         );
+        // dispatch(
+        //   handleField(
+        //     "apply",
+        //     `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo`,
+        //     "disabled",
+        //     true
+        //   )
+        // );
         disableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo', dispatch);
         //enableField('apply', 'components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.waterSubSource', dispatch);
       }
@@ -142,10 +142,12 @@ export const additionDetails = getCommonCard({
           gridDefination: { xs: 12, sm: 6 },
           errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
           jsonPath: "applyScreen.connectionType",
-          required:false,        
+          required:true,
         }),
         afterFieldChange: async (action, state, dispatch) => {
           let connType = await get(state, "screenConfiguration.preparedFinalObject.applyScreen.connectionType");
+          console.log('connType');
+          console.log(connType);
           if (connType === undefined || connType === "Non Metered" || connType === "Bulk-supply" || connType !== "Metered") {
             showHideFeilds(dispatch, false);
           }
@@ -162,7 +164,6 @@ export const additionDetails = getCommonCard({
         jsonPath: "applyScreen.noOfTaps",
         pattern :/^[1-9][0-9]*$/i,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
-        
       }),
       pipeSize: getSelectField({
         label: { labelKey: "WS_SERV_DETAIL_PIPE_SIZE" },
@@ -197,16 +198,13 @@ export const additionDetails = getCommonCard({
           dropdownFields: [
             {
               key : 'waterSourceType',
-              isRequired: false,
-              requiredValue : false,
+              isRequired: true,
+              requiredValue : true,
               errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               callBack: waterSourceTypeChange 
             },
             {
               key : 'waterSubSource',
-              isRequired: false,
-              requiredValue : false,
-              errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
               callBack: waterSubSourceChange 
             }
           ],
@@ -255,77 +253,8 @@ export const additionDetails = getCommonCard({
         
         gridDefination: { xs: 12, sm: 6 },
         jsonPath: "applyScreen.drainageSize"
-      }),
-      
-      usageType: getSelectField({
-              label: {
-                labelName: "Usage Type",
-                labelKey: "PT_COMMON_USAGE_TYPE"
-              },
-              placeholder: {
-                labelName: "Select Usage Type",
-                labelKey: "PT_COMMON_USAGE_TYPE_PLACEHOLDER"
-              },
-              //required: true,
-              jsonPath: "applyScreen.usageCategory",
-              sourceJsonPath: "applyScreenMdmsData.PropertyTax.UsageType",     
-             
-              gridDefination: { xs: 12, sm: 6 },
-              localePrefix: {
-                moduleName: "WS",
-                masterName: "PROPUSGTYPE"
-              },
-              beforeFieldChange: async (action, state, dispatch) => {
-                let propType = get(
-                  state.screenConfiguration.preparedFinalObject,
-                  "Property.propertyType"
-                );
-                
-                rendersubUsageType(action.value, propType, dispatch, state)
-              }
-         }),
-        subUsageType:{
-          uiFramework: "custom-containers-local",
-          moduleName: "egov-pt",
-          componentPath: "AutosuggestContainer",
-          props: {
-              style: {
-                  width: "100%",
-                  cursor: "pointer"
-                },
-              label: {
-                  labelName: "Sub Usage Type",
-                  labelKey: "PT_COMMON_SUB_USAGE_TYPE"
-              },
-        
-              placeholder: {
-                  labelName: "Select Sub Usage Type",
-                  labelKey: "PT_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
-              },
-           
-              localePrefix: {
-                  moduleName: "WS",
-             			 masterName: "PROPSUBUSGTYPE"
-              },
-              jsonPath: "applyScreen.subUsageCategory",
-              sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
-              className: "autocomplete-dropdown pds-search",
-              labelsFromLocalisation: true,
-             required: false,        
-              disabled: false,
-              isClearable: true,      
-              fullwidth: true,
-           
-          },
-          required: false,
-          visible: false,
-          jsonPath: "applyScreen.subUsageCategory",
-          gridDefination: { xs: 12, sm: 6 },
-          
-       },
-
+      })
     }),
- 
     
   }),
   plumberDetailsContainer: getCommonGrayCard({
@@ -406,7 +335,59 @@ export const additionDetails = getCommonCard({
   }),
 
 
-  
+  // roadCuttingChargeContainer: getCommonGrayCard({
+  //   subHeader: getCommonTitle({
+  //     labelKey: "WS_ROAD_CUTTING_CHARGE_DETAILS"
+  //   }),
+  //   roadDetails: getCommonContainer({
+  //     roadType: getSelectField({
+  //       label: {
+  //         labelName: "Road Type",
+  //         labelKey: "WS_ADDN_DETAIL_ROAD_TYPE"
+  //       },
+  //     //   props: {
+  //     //     label: {
+  //     //       labelKey: "WS_ADDN_DETAIL_ROAD_TYPE"
+  //     //     },
+  //     //     placeholder: {
+  //     //       labelKey: "WS_ADDN_DETAILS_ROAD_TYPE_PLACEHOLDER"
+  //     //     }
+  //     // },
+  //       placeholder: {
+  //         labelKey: "WS_ADDN_DETAILS_ROAD_TYPE_PLACEHOLDER"
+  //       },
+  //       localePrefix: {
+  //         moduleName: "WS",
+  //         masterName: "ROADTYPE"
+  //       },
+  //       required: false,
+  //       sourceJsonPath: "applyScreenMdmsData.sw-services-calculation.RoadType",
+  //       gridDefination: {
+  //         xs: 12,
+  //         sm: 6
+  //       },
+  //       required: false,
+  //       errorMessage: "ERR_INVALID_BILLING_PERIOD",
+  //       jsonPath: "applyScreen.roadType"
+  //     }),
+  //     enterArea: getTextField({
+  //       label: {
+  //         labelKey: "WS_ADDN_DETAILS_AREA_LABEL"
+  //       },
+  //       placeholder: {
+  //         labelKey: "WS_ADDN_DETAILS_AREA_PLACEHOLDER"
+  //       },
+  //       gridDefination: {
+  //         xs: 12,
+  //         sm: 6
+  //       },
+  //       required: false,
+  //       pattern: getPattern("Amount"),
+  //       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+  //       jsonPath: "applyScreen.roadCuttingArea"
+  //     })
+  //   }),
+  // }),
   activationDetailsContainer: getCommonGrayCard({
     subHeader: getCommonTitle({
       labelKey: "WS_ACTIVATION_DETAILS"
@@ -438,8 +419,8 @@ export const additionDetails = getCommonCard({
           xs: 12,
           sm: 6
         },
-        required: false,
-        pattern :/^[#.\\/0-9a-zA-Z\s,-]+$/i,
+        required: true,
+        pattern: /^[a-z0-9]+$/i,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "applyScreen.meterId"
       }),
@@ -453,7 +434,7 @@ export const additionDetails = getCommonCard({
           xs: 12,
           sm: 6
         },
-        required: false,
+        required: true,
         pattern: getPattern("Date"),
         errorMessage: "ERR_INVALID_DATE",
         jsonPath: "applyScreen.meterInstallationDate"
@@ -469,7 +450,7 @@ export const additionDetails = getCommonCard({
           xs: 12,
           sm: 6
         },
-        required: false,
+        required: true,
         pattern: /^[0-9]\d{0,9}(\.\d{1,3})?%?$/,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "applyScreen.additionalDetails.initialMeterReading"
@@ -502,47 +483,6 @@ export const additionDetails = getCommonCard({
   }),
  
 });
-
-export const rendersubUsageType = (usageType, propType, dispatch, state) => {
- 
-    let subTypeValues = get(
-      state.screenConfiguration.preparedFinalObject,
-      "applyScreenMdmsData.PropertyTax.subUsageType"
-    );
- 
-
-    const additionalDetailsJson = "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.subUsageType"; 
-  
-    let subUsage;    
-  
-          if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL"
-          || usageType === "NONRESIDENTIAL.OTHERS") {
-              dispatch(handleField("apply", additionalDetailsJson, "visible", true));
-              dispatch(handleField("apply", additionalDetailsJson, "props.visible", true));
-              if (usageType === "MIXED") {
-                  subUsage = subTypeValues;
-              } else {
-                  subUsage = subTypeValues.filter(cur => {
-                      return (cur.code.startsWith(usageType))
-                  })
-              }
-          } else {
-              set(state.screenConfiguration.preparedFinalObject,"applyScreen.subUsageCategory", ""); 
-              set(state.screenConfiguration.preparedFinalObject,"applyScreen.subUsageCategory", ""); 
-              dispatch(handleField("apply", additionalDetailsJson, "visible", false));
-              dispatch(handleField("apply", additionalDetailsJson, "props.visible", false));        
-          } 
- 
-  
-
-    dispatch(
-      prepareFinalObject(
-        "propsubusagetypeForSelectedusageCategory",
-        subUsage
-      )
-    )
-  
-  }
 
 const showHideFeilds = (dispatch, value) => {
   let mStep = (isModifyMode()) ? 'formwizardSecondStep' : 'formwizardThirdStep'; 

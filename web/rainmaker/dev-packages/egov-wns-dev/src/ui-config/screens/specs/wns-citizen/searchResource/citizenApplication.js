@@ -61,72 +61,37 @@ export const citizenApplication = getCommonCard({
         labelKey: "WS_HOME_SEARCH_CONN_RESULTS_DESC"
     }),
     cityPropertyAndMobNumContainer: getCommonContainer({
-        // city: getSelectField({
-        //     label: {
-        //         labelKey: "WS_PROP_DETAIL_CITY"
-        //     },
-        //     props: {
-        //         label: {
-        //           labelKey: "WS_PROP_DETAIL_CITY"
-        //         },
-        //         placeholder: {
-        //           labelKey: "WS_PROP_DETAIL_CITY_PLACEHOLDER"
-        //         },
-        //         localePrefix: {
-        //           moduleName: "TENANT",
-        //           masterName: "TENANTS"
-        //         }
-        //     },
-        //     placeholder: {
-        //         labelKey: "WS_PROP_DETAIL_CITY_PLACEHOLDER"
-        //     },
-        //     labelPrefix: {
-        //         moduleName: "TENANT",
-        //         masterName: "TENANTS"
-        //     },
-        //     sourceJsonPath: "applyScreenMdmsData.tenant.tenants",
-        //     jsonPath: "searchScreen.tenantId",//db sake
-        //     required: true,
-        //     gridDefination: {
-        //         xs: 12,
-        //         sm: 4
-        //     },
-        // }),
-       
-       city:{
-        uiFramework: "custom-containers-local",
-        moduleName: "egov-pt",
-        componentPath: "AutosuggestContainer",
-        props: {
+        city: getSelectField({
             label: {
-                labelName: "ULB/City",
                 labelKey: "WS_PROP_DETAIL_CITY"
             },
+            props: {
+                label: {
+                  labelKey: "WS_PROP_DETAIL_CITY"
+                },
+                placeholder: {
+                  labelKey: "WS_PROP_DETAIL_CITY_PLACEHOLDER"
+                },
+                localePrefix: {
+                  moduleName: "TENANT",
+                  masterName: "TENANTS"
+                }
+            },
             placeholder: {
-                labelName: "Select ULB/City",
                 labelKey: "WS_PROP_DETAIL_CITY_PLACEHOLDER"
             },
-            localePrefix: {
+            labelPrefix: {
                 moduleName: "TENANT",
                 masterName: "TENANTS"
             },
-            jsonPath: "searchScreen.tenantId",
             sourceJsonPath: "applyScreenMdmsData.tenant.tenants",
-            className: "autocomplete-dropdown pds-search",
-            labelsFromLocalisation: true,
+            jsonPath: "searchScreen.tenantId",//db sake
             required: true,
-            disabled: false,
-            isClearable: true
-        },
-        required: true,
-        jsonPath: "searchScreen.tenantId",
-        gridDefination: {
-            xs: 12,
-            sm: 4
-        },
-        
-    },
-       
+            gridDefination: {
+                xs: 12,
+                sm: 4
+            },
+        }),
         propertyid: getTextField({
             label: {
                 labelKey: "WS_PROPERTY_ID_LABEL"

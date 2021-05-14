@@ -7,7 +7,7 @@ import {
   getDivider,
   getLabelWithValueForModifiedLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { convertEpochToDateAndHandleNA, handleNA,handleMeterReading } from '../../utils';
+import { convertEpochToDateAndHandleNA, handleNA } from '../../utils';
 import { changeStep } from "./footer";
 
 const getHeader = label => {
@@ -92,62 +92,6 @@ export const reviewWaterSource = getLabelWithValueForModifiedLabel(
     callBack: handleNA
   }
 );
-
-export const  reviewUsageType =getLabelWithValueForModifiedLabel(
-  {
-    labelName: "Usage Type",
-    labelKey: "PT_COMMON_USAGE_TYPE"
-  },
-  {
-    localePrefix: {
-      moduleName: "WS",
-      masterName: "PROPUSGTYPE"
-    },
-    jsonPath: "applyScreen.usageCategory",
-    callBack: handleNA
-  },
-  {
-    labelKey: "WS_OLD_LABEL_NAME"
-  },  
-    {
-    localePrefix: {
-      moduleName: "WS",
-      masterName: "PROPUSGTYPE"
-    },
-    jsonPath: "applyScreenOld.usageCategory",
-    callBack: handleNA
-  },
-);
-export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
-  {
-    labelName: "Sub Usage Type",
-    labelKey: "PT_COMMON_SUB_USAGE_TYPE"
-  },
-  {
-    localePrefix: {
-      moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
-    },
-    jsonPath: "applyScreen.subUsageCategory",
-    callBack: handleNA
-  },
-  {
-    labelKey: "WS_OLD_LABEL_NAME"
-  },
-  {
-    localePrefix: {
-      moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
-    },
-    jsonPath: "applyScreenOld.subUsageCategory",
-    callBack: handleNA
-  },
-  
-);
-
-
-
-
 export const reviewWaterSubSource = getLabelWithValueForModifiedLabel(
   {
     labelName: "Water Sub Source",
@@ -450,21 +394,20 @@ export const reviewMeterInstallationDate = getLabelWithValueForModifiedLabel(
   }
 );
 
-export const reviewInitialMeterReading = getLabelWithValue(
+export const reviewInitialMeterReading = getLabelWithValueForModifiedLabel(
   {
     labelName: "Initial Meter Reading",
     labelKey: "WS_ADDN_DETAILS_INITIAL_METER_READING"
   },
   { jsonPath: "applyScreen.additionalDetails.initialMeterReading",
-    callBack: handleMeterReading }
-  //   ,
-  // {
-  //   labelKey: "WS_OLD_LABEL_NAME"
-  // },
-  // {
-  //   jsonPath: "applyScreenOld.additionalDetails.initialMeterReading",
-  //   callBack: handleNA
-  // }
+    callBack: handleNA },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    jsonPath: "applyScreenOld.additionalDetails.initialMeterReading",
+    callBack: handleNA
+  }
 );
 
 export const reviewOwner = (isEditable = true) => {
@@ -544,9 +487,7 @@ const connectionDetails = getCommonContainer({
   // reviewBillingType,
   reviewWaterClosets,
   reviewNumberOfToilets,
-  reviewDrainageSize,
-  reviewUsageType,
-  reviewSubUsageType
+  reviewDrainageSize
 });
 
 const connectionChargeDetails = getCommonContainer({

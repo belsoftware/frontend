@@ -5,7 +5,7 @@ import {
     getLabelWithValue,
     getLabel
   } from "egov-ui-framework/ui-config/screens/specs/utils";
-  import { handleNA } from '../../utils';
+  
   export const propertyLocationDetails = getCommonContainer({
     city: getLabelWithValue(
       {
@@ -35,7 +35,6 @@ import {
       },
       {
         jsonPath: "applyScreen.property.address.doorNo",
-        callBack: handleNA
       }
     ),
     buildingOrColonyName: getLabelWithValue(
@@ -43,8 +42,7 @@ import {
         labelKey: "WS_PROP_DETAIL_BUILD_NAME_LABEL"
       },
       {
-        jsonPath: "applyScreen.property.address.buildingName",
-        callBack: handleNA
+        jsonPath: "applyScreen.property.address.buildingName"
       }
     ),
     // streetName: getLabelWithValue(

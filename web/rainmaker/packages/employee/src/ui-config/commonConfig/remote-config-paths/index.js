@@ -49,11 +49,7 @@ const remoteConfigPath = (path, screenKey) => {
     case "death-citizen":
     case "death-employee":
     case "death-common":
-    case "bnd-common":
       config = require(`egov-bnd/ui-config/screens/specs/${path}/${screenKey}`).default;
-      break;
-    case "bill-amend":
-      config = require(`egov-billamend/ui-config/screens/specs/${path}/${screenKey}`).default;
       break;
     default:
       config = require(`ui-config/screens/specs/${path}/${screenKey}`).default;

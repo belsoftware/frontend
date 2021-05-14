@@ -975,7 +975,7 @@ export const applyTradeLicense = async (state, dispatch, activeIndex) => {
     set(queryObject[0], "licenseType", "PERMANENT");
     set(queryObject[0], "businessService", "BPAREG");
 
-    let tenantId = get(state.screenConfiguration.preparedFinalObject, "bpaReg.tenantId", []);//getTenantId();
+    let tenantId = getTenantId();
     if((tenantId == "null") || (tenantId == null)) {
       tenantId = process.env.REACT_APP_DEFAULT_TENANT_ID;
     }
@@ -1615,16 +1615,4 @@ export const nocapplicationUpdate = (state) => {
       }
     }
   }
-}
-
-export const getStakeHolderRoles = () => {
-  let roles = [
-    "BPA_ARCHITECT",
-    "BPA_ENGINEER",
-    "BPA_BUILDER",
-    "BPA_STRUCTURALENGINEER",
-    "BPA_SUPERVISOR",
-    "BPA_TOWNPLANNER"
-  ];
-  return roles;
 }

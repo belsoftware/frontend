@@ -19,8 +19,7 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 2
   },
   button: {
-    borderBottom : "1px solid rgb(0,0,0,0.12)",
-    whiteSpace : "normal"
+    borderBottom : "1px solid rgb(0,0,0,0.12)"
   },
   leftIcon: {
     marginRight: theme.spacing.unit

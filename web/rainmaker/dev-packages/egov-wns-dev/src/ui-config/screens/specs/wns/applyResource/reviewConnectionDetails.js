@@ -362,17 +362,6 @@ const getPropertyDetails = {
             },
             { jsonPath: "applyScreenOld.property.noOfFlats", callBack: handleNA },
           ),
-          reviewArv: getLabelWithValueForModifiedLabel(
-            {
-              labelName: "ARV",
-              labelKey: "WS_PROP_DETAIL_ARV_LABEL"
-            },
-            { jsonPath: "applyScreen.property.units[0].arv", callBack: handleNA },
-            {
-              labelKey: "WS_OLD_LABEL_NAME"
-            },
-            { jsonPath: "applyScreenOld.property.units[0].arv", callBack: handleNA },
-          ),
           // rainwaterHarvestingFacility: getLabelWithValueForModifiedLabel(
           //   {
           //     labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC",

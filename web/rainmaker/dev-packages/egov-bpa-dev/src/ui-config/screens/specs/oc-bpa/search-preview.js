@@ -22,8 +22,7 @@ import {
   getAppSearchResults,
   getNocSearchResults,
   prepareNOCUploadData,
-  nocapplicationUpdate,
-  getStakeHolderRoles
+  nocapplicationUpdate
 } from "../../../../ui-utils/commons";
 import "../egov-bpa/applyResource/index.css";
 import "../egov-bpa/applyResource/index.scss";
@@ -50,7 +49,7 @@ import { scrutinySummary } from "./summaryResource/scrutinySummary";
 import { nocDetailsSearch } from "../egov-bpa/noc";
 import store from "ui-redux/store";
 import commonConfig from "config/common.js";
-import { getPaymentSearchAPI } from "egov-ui-kit/utils/commons";
+
 
 export const ifUserRoleExists = role => {
   let userInfo = JSON.parse(getUserInfo());
@@ -239,39 +238,17 @@ const setDownloadMenu = async (action, state, dispatch, applicationNumber, tenan
     comparisonReportPrintObject = {
       label: { labelName: "Comparison Report", labelKey: "BPA_COMPARISON_REPORT_LABEL" },
       link: () => {
-        let comparisonReports;
-        if(!comparisonReport.includes("https") && window.location.href.includes("https")) {
-          comparisonReports = comparisonReport.replace(/http/g, "https");
-        }
-        let downloadLink = comparisonReports ? comparisonReports : comparisonReport;
-        printPdf(downloadLink);
+        let comparisonReports = comparisonReport.replace(/http/g, "https");;
+        printPdf(comparisonReports);
       },
       leftIcon: "assignment"
     }
   }
 
-  let queryObject = [
-    {
-      key: "tenantId",
-      value: tenantId
-    },
-    {
-      key: "consumerCodes",
-      value: applicationNumber
-    }
-  ];
-  let paymentPayload = {}; 
-  paymentPayload.Payments = [];
-  let businessServicesList = ["BPA.NC_OC_APP_FEE", "BPA.NC_OC_SAN_FEE" ];
-    for(let fee = 0; fee < businessServicesList.length; fee++ ) {
-      let lowAppPaymentPayload = await httpRequest(
-        "post",
-        getPaymentSearchAPI(businessServicesList[fee]),
-        "",
-        queryObject
-      );
-      if(lowAppPaymentPayload && lowAppPaymentPayload.Payments && lowAppPaymentPayload.Payments.length > 0) paymentPayload.Payments.push(lowAppPaymentPayload.Payments[0]);
-    }
+  let paymentPayload = await httpRequest(
+    "post",
+    `collection-services/payments/_search?tenantId=${tenantId}&consumerCodes=${applicationNumber}`
+  );
 
   if (paymentPayload && paymentPayload.Payments.length == 1) {
     if (get(paymentPayload, "Payments[0].paymentDetails[0].businessService") === "BPA.NC_OC_APP_FEE") {
@@ -331,8 +308,6 @@ const setDownloadMenu = async (action, state, dispatch, applicationNumber, tenan
   );
   /** END */
 };
-
-const stakeholerRoles = getStakeHolderRoles();
 
 const getRequiredMdmsDetails = async (state, dispatch) => {
   let mdmsBody = {
@@ -453,7 +428,7 @@ const setSearchResponse = async (
     let userInfo = JSON.parse(getUserInfo()), roles = get(userInfo, "roles"), isArchitect = false;
     if (roles && roles.length > 0) {
       roles.forEach(role => {
-        if (stakeholerRoles.includes(role.code)) {
+        if (role.code === "BPA_ARCHITECT") {
           isArchitect = true;
         }
       })
@@ -482,10 +457,11 @@ const setSearchResponse = async (
     let userInfo = JSON.parse(getUserInfo()),
       roles = get(userInfo, "roles"),
       owners = get(response.BPA["0"].landInfo, "owners"),
+      archtect = "BPA_ARCHITECT",
       isTrue = false, isOwner = true;
     if (roles && roles.length > 0) {
       roles.forEach(role => {
-        if (stakeholerRoles.includes(role.code)) {
+        if (role.code === archtect) {
           isTrue = true;
         }
       })
@@ -496,7 +472,7 @@ const setSearchResponse = async (
         if (owner.mobileNumber === userInfo.mobileNumber) {
           if (owner.roles && owner.roles.length > 0) {
             owner.roles.forEach(owrRole => {
-              if (stakeholerRoles.includes(owrRole.code)) {
+              if (owrRole.code === archtect) {
                 isOwner = false;
               }
             })
