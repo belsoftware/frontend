@@ -411,16 +411,25 @@ const callBackForNext = async (state, dispatch) => {
 
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 1) {
+    //console.log("in active step 1 for plumber info");
      if (isModifyMode()) {
       // setting of plumber dtls
+      //console.log("setting of plumber dtls");
       var plumberInfo = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].plumberInfo", null); 
+      //console.log("plumber info--"+JSON.stringify(plumberInfo));
       if(plumberInfo && plumberInfo.length>0)
       {
         if(plumberInfo[0].licenseNo || plumberInfo[0].licenseNo || plumberInfo[0].licenseNo)
         {
-        if(get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null) === "NA") 
+        //console.log("additionalDetails--"+get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null));
+        if(get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null) === "NA" || get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null) === "") 
+        {
          dispatch(prepareFinalObject("WaterConnection[0].additionalDetails.detailsProvidedBy", "ULB"));
-      } 
+         //console.log("plumber dtl--"+get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null));
+        }
+        }
+        else if(get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null) === "ULB")
+        dispatch(prepareFinalObject("WaterConnection[0].additionalDetails.detailsProvidedBy", "NA"));
       }
       // isFormValid = true;
       // hasFieldToaster = false;
