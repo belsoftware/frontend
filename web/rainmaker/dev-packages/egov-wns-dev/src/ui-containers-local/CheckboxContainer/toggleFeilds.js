@@ -570,6 +570,11 @@ export const toggleWaterFeilds = (action, value) => {
     );
     set(
       action.screenConfig,
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.usageType.visible`,
+      value
+    );
+    set(
+      action.screenConfig,
       `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.pipeSize.visible`,
       value
     );
