@@ -119,6 +119,9 @@ class PaymentSuccess extends Component {
               },
               {
                 name: "UsageCategoryDetail"
+              },
+              {
+                name: "PropertyLocation"
               }
             ]
           }
@@ -133,8 +136,16 @@ class PaymentSuccess extends Component {
       "OccupancyType",
       "PropertyType",
       "PropertySubType",
-      "UsageCategoryDetail"
+      "UsageCategoryDetail",
+      "PropertyLocation"
     ]);
+    fetchGeneralMDMSData(
+      null,
+      "BillingService",
+      ["TaxPeriod", "TaxHeadMaster"],
+      "",
+      commonConfig.tenantId
+    );
     fetchProperties([
       { key: "propertyIds", value: match.params.propertyId },
       { key: "tenantId", value: match.params.tenantId }

@@ -428,7 +428,7 @@ export const getHeaderLabel = (selected, role) => {
           containerStyle={{ marginTop: 12 }}
           fontSize="16px"
           color="#484848"
-          label={role === "citizen" ? "PT_FORM1_HEADER_MESSAGE" : "PT_EMP_FORM1_HEADER_MESSAGE"}
+          label={role === "citizen" ? "PT_FORM1_HEADER_MESSAGE" : "PT_PROPERTY_DETAILS_FORM_HEADING"}
         />
       );
     case 1:
@@ -437,7 +437,7 @@ export const getHeaderLabel = (selected, role) => {
           containerStyle={{ marginTop: 12 }}
           fontSize="16px"
           color="#484848"
-          label={role === "citizen" ? "PT_FORM2_HEADER_MESSAGE" : "PT_EMP_FORM2_HEADER_MESSAGE"}
+          label={role === "citizen" ? "PT_FORM2_HEADER_MESSAGE" : "PT_ASSESMENT_INFO_SUB_HEADER"}
         />
       );
     case 2:
@@ -446,7 +446,7 @@ export const getHeaderLabel = (selected, role) => {
           containerStyle={{ marginTop: 12 }}
           fontSize="16px"
           color="#484848"
-          label={role === "citizen" ? "PT_FORM3_HEADER_MESSAGE" : "PT_EMP_FORM3_HEADER_MESSAGE"}
+          label={role === "citizen" ? "PT_FORM3_HEADER_MESSAGE" : "PT_OWNERSHIP_INFO_SUB_HEADER"}
         />
       );
     case 3:
@@ -496,7 +496,7 @@ export const normalizePropertyDetails = (properties, self) => {
   }
   var sumOfUnitArea = 0;
   units.forEach((unit) => {
-    let unitAreaInSqYd = parseFloat(unit.unitArea) / 9;
+    let unitAreaInSqYd = parseFloat(unit.unitArea);
     unit.unitArea = Math.round(unitAreaInSqYd * 100) / 100;
     sumOfUnitArea += unit.unitArea;
   });
@@ -531,7 +531,7 @@ export const validateUnitandPlotSize = (plotDetails, form) => {
       }, 0);
       const plotSizeInFt = parseFloat(plotDetails.fields.plotSize.value) * 9;
       if (unitTotal > plotSizeInFt) {
-        alert(`Total area of floor ${floorNo} has exceeded the plot size`);
+        alert(`Built-up area of floor ${floorNo} has exceeded the plot size`);
         isValid = false;
       }
     }

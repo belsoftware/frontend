@@ -41,6 +41,40 @@ const combinationToFormkeyMapping = {
     hasPlot: true,
     hasFloor: false,
   },
+  "NONRESIDENTIAL-INDEPENDENTPROPERTY": {
+    path: "PropertyTaxPay/NonResidentialIndependantProperty",
+    plotForm: formHoc({
+      formKey: "plotDetails",
+      isCoreConfiguration: true,
+      path: "PropertyTaxPay/NonResidentialIndependantProperty",
+      isCoreConfiguration: true,
+    })(GenericForm),
+    floorForm: formHoc({ formKey: "floorDetails", makeCopy: true, path: "PropertyTaxPay/NonResidentialIndependantProperty", isCoreConfiguration: true })(
+      GenericForm
+    ),
+    floorObject: {
+      formKey: "floorDetails",
+      isCoreConfiguration: true,
+      makeCopy: true,
+      copyName: "floorDetails",
+      path: "PropertyTaxPay/NonResidentialIndependantProperty",
+    },
+    hasPlot: true,
+    hasFloor: true,
+  },
+  "NONRESIDENTIAL-SHAREDPROPERTY": {
+    path: "PropertyTaxPay/NonResidentialIndependantProperty",
+    floorObject: {
+      formKey: "floorDetails",
+      isCoreConfiguration: true,
+      makeCopy: true,
+      copyName: "floorDetails",
+      path: "PropertyTaxPay/NonResidentialIndependantProperty",
+    },
+    // plotForm: formHoc({ formKey: "plotDetails",isCoreConfiguration:true, path: "PropertyTaxPay/CommercialSharedProperty" ,isCoreConfiguration:true})(GenericForm),
+    hasPlot: false,
+    hasFloor: true,
+  },
   "MIXED-INDEPENDENTPROPERTY": {
     path: "PropertyTaxPay/MixedIndependantProperty",
     plotForm: formHoc({

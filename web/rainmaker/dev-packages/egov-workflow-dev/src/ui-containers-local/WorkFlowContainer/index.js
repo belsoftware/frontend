@@ -200,6 +200,17 @@ class WorkFlowContainer extends React.Component {
         data.workflow.documents = data.workflow.wfDocuments;
       }
     }
+    if (moduleName === "Amendment") {
+      data.workflow = {};
+      data.workflow.documents = get(data[0], "wfDocuments", []);
+      data.workflow.comment = get(data[0], "comment", "");
+      data.workflow.assignee = get(data[0], "assignee", []);
+      data.workflow.action = get(data[0], "action", "");
+      data.workflow.businessId = get(data, "amendmentId", "");
+      data.workflow.tenantId = get(data, "tenantId", "");
+      data.workflow.businessService = "BS.AMENDMENT";
+      data.workflow.moduleName = "BS";
+    }
 
     const applicationNumber = getQueryArg(
       window.location.href,
@@ -249,6 +260,12 @@ class WorkFlowContainer extends React.Component {
           this.props.setRoute(`/pt-mutation/acknowledgement?${this.getPurposeString(
             label
           )}&moduleName=${moduleName}&applicationNumber=${get(payload, 'Assessments[0].assessmentNumber', "")}&tenantId=${get(payload, 'Assessments[0].tenantId', "")}`);
+          return;
+        }
+        if (moduleName == 'Amendment') {
+          this.props.setRoute(`acknowledgement?${this.getPurposeString(
+            label
+          )}&applicationNumber=${applicationNumber}&tenantId=${tenant}&businessService=${get(payload, 'Amendments[0].businessService', "")}`);
           return;
         }
 

@@ -936,7 +936,13 @@ export const getDefaultFontStyle = (locale = "en_IN") => {
         break;
       case 'te_IN':
         fontStyle = 'telugu'
+        break;
+      case 'ta_IN':
+          fontStyle = 'tamil'
           break;
+      case 'bn_IN':
+            fontStyle = 'bangla'
+            break;
       case 'hi_IN':
       case 'en_IN':
           fontStyle = 'Camby'

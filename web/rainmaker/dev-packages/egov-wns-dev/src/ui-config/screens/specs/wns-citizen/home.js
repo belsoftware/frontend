@@ -16,7 +16,6 @@ const header = getCommonHeader({
 
 const cardItems = [
  //Hide pay bill    
-
 {
     label: {
         labelKey: "WS_COMMON_PAY_WS_BILL_HEADER",

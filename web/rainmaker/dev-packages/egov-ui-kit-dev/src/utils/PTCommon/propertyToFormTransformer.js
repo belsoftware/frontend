@@ -99,14 +99,14 @@ export const getInstituteAuthority = (propertyResponse) => {
       };
     }
   });
-  set(instituteAuthorityForm, "institutionAuthority.fields.designation.value", get(propertyResponse.Properties[0], designationPath, ""));
   if (
     get(instituteAuthorityForm, "institutionAuthority.fields.mobile.value", "") ===
     get(instituteAuthorityForm, "institutionAuthority.fields.telephone.value", "")
   ) {
     set(instituteAuthorityForm, "institutionAuthority.fields.mobile.value", "");
   }
-
+  console.log("get(propertyResponse, designationPath, ):::",get(propertyResponse, designationPath, ""))
+  set(instituteAuthorityForm, "institutionAuthority.fields.designation.value", get(propertyResponse, designationPath, ""));
   return instituteAuthorityForm;
 };
 
@@ -128,7 +128,6 @@ export const convertRawDataToFormConfig = (propertyResponse) => {
   const ownershipType = get(ownerShipForm, "ownershipType.fields.typeOfOwnership.value", "");
   const typeOfOwnershipPath = get(ownerShipForm, "ownershipType.fields.ownershipCategory.jsonPath", "");
   const ownershipCategoryFromApi = get(properties[0], "propertyDetails[0].ownershipCategory", "");
-
   if (ownershipType === "MULTIPLEOWNERS" || ownershipType === "SINGLEOWNER") {
     ownerForms = getAllOwnerDetails(properties[0], ownershipType === "SINGLEOWNER");
   } else if (ownershipType.toLowerCase().indexOf("insti") !== -1 || ownershipCategoryFromApi.toLowerCase().indexOf("insti") !== -1) {

@@ -159,7 +159,7 @@ const billSearchAndResult = {
                     ? `/egov-ui-framework/abg/groupBills`
                     : `/abg/groupBills`
               },
-              visible: false
+              visible: true
             },
             howitWorksButton:{
               componentPath:"Button",

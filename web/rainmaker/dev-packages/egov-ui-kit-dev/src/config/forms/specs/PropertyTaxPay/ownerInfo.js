@@ -12,40 +12,40 @@ const formConfig = {
       jsonPath: "Properties[0].propertyDetails[0].owners[0].name",
       type: "textfield",
       floatingLabelText: "PT_OWNER_NAME",
-      hintText: "PT_FORM3_OWNER_NAME_PLACEHOLDER",
+      hintText: "PT_SEARCH_OWNER_NAME_PLACEHOLDER",
       required: true,
-      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
+      pattern:  /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
     },
     ownerMobile: {
       id: "ownerMobile",
       jsonPath: "Properties[0].propertyDetails[0].owners[0].mobileNumber",
       type: "textfield",
-      floatingLabelText: "PT_FORM3_MOBILE_NO",
-      hintText: "PT_FORM3_MOBILE_NO_PLACEHOLDER",
+      floatingLabelText: "PT_OWNER_MOBILE_NO",
+      hintText: "PT_COMMON_APPLICANT_MOBILE_NO_PLACEHOLDER",
       required: true,
       pattern: /^([0]|((\+\d{1,2}[-]{0,1})))?\(?[6-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i,
       errorMessage: "PT_MOBILE_NUMBER_ERROR_MESSAGE",
-      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     },
     ownerGuardian: {
       id: "ownerGuardian",
       jsonPath: "Properties[0].propertyDetails[0].owners[0].fatherOrHusbandName",
       type: "textfield",
       floatingLabelText: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME",
-      hintText: "PT_FORM3_GUARDIAN_PLACEHOLDER",
-      pattern: /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
+      hintText: "PT_COMMON_ENTER_FATHER_OR_HUSBAND_NAME",
+      pattern:  /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
       required: true,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
-      errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     },
     ownerEmail: {
       id: "ownerEmail",
       jsonPath: "Properties[0].propertyDetails[0].owners[0].emailId",
       type: "textfield",
-      floatingLabelText: "PT_FORM3_EMAIL_ID",
-      hintText: "PT_FORM3_EMAIL_ID_PLACEHOLDER",
+      floatingLabelText: "PT_OWNERSHIP_INFO_EMAIL_ID",
+      hintText: "PT_MUTATION_APPLICANT_EMAIL_PLACEHOLDER",
       errorMessage: "PT_EMAIL_ID_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       pattern: /^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/,
@@ -54,14 +54,16 @@ const formConfig = {
       id: "ownerAddress",
       jsonPath: "Properties[0].propertyDetails[0].owners[0].permanentAddress",
       type: "textfield",
-      floatingLabelText: "PT_FORM3_CORRESPONDENCE_ADDRESS",
-      hintText: "PT_FORM3_CORRESPONDENCE_ADDRESS_PLACEHOLDER",
+      floatingLabelText: "PT_OWNERSHIP_INFO_CORR_ADDR",
+      hintText: "PT_COMMON_AUTHORISED_ADDRESS_PLACEHOLDER",
+      errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,256}$/,
+      pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,256}$/,
       errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
     },
     ownerRelationship: {
       id: "ownerRelationship",
+      required: true,
       jsonPath: "Properties[0].propertyDetails[0].owners[0].relationship",
       type: "AutocompleteDropdown",
       localePrefix: "PT_RELATION",
@@ -72,7 +74,8 @@ const formConfig = {
         xs: 12,
         sm: 6
       },
-      dropDownData: [{ label: "Father", value: "FATHER" }, { label: "Husband", value: "HUSBAND" }],
+      dropDownData: [{ label: "Parent", value: "PARENT" }, { label: "Spouse", value: "SPOUSE" },  { label: "Guardian", value: 'GUARDIAN' }
+     ],
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       formName: "ownerInfo"
     },
@@ -82,8 +85,8 @@ const formConfig = {
       localePrefix: { moduleName: "PropertyTax", masterName: "OwnerType" },
       jsonPath: "Properties[0].propertyDetails[0].owners[0].ownerType",
       type: "AutocompleteDropdown",
-      floatingLabelText: "PT_FORM3_SPECIAL_CATEGORY",
-      hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
+      floatingLabelText: "PT_OWNERSHIP_INFO_USER_CATEGORY",
+      hintText: "PT_COMMON_SPECIAL_APPLICANT_CATEGORY_PLACEHOLDER",
       dropDownData: [],
       gridDefination: {
         xs: 12,
@@ -172,8 +175,8 @@ const formConfig = {
       type: "textfield",
       floatingLabelText: "PT_FORM3_DOCUMENT_ID_NO",
       hintText: "PT_FORM3_DOCUMENT_ID_NO_PLACEHOLDER",
-      toolTip: true,
-      toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
+    //  toolTip: true,
+     // toolTipMessage: "PT_DOCUMENT_ID_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       hideField: true,
     },
@@ -186,8 +189,8 @@ const formConfig = {
       floatingLabelText: "PT_FORM3_DOCUMENT_ID_TYPE",
       fullWidth: true,
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
-      toolTip: true,
-      toolTipMessage: "PT_DOCUMENT_ID_TYPE_TOOLTIP_MESSAGE",
+    //  toolTip: true,
+     // toolTipMessage: "PT_DOCUMENT_ID_TYPE_TOOLTIP_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       dropDownData: [],
       hideField: true,
@@ -202,8 +205,8 @@ const formConfig = {
           dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", /^[0-9]{12}$/i));
           dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter valid 12 digits aadhar no"));
         } else {
-          dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", ""));
-          dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", ""));
+          dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", /^[a-zA-Z0-9_.-]{1,20}$/i));
+          dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter upto 20 character ID number.Only Special characters allowed are _ . -"));
         }
       },
     },
@@ -216,7 +219,7 @@ const formConfig = {
       type: "checkbox",
       jsonPath: "Properties[0].propertyDetails[0].owners[0].isCorrespondenceAddress",
       errorMessage: "",
-      floatingLabelText: "PT_FORM3_ADDRESS_CHECKBOX",
+      floatingLabelText: "PT_COMMON_SAME_AS_PROPERTY_ADDRESS",
       value: "",
       updateDependentFields: ({ formKey, field: sourceField, dispatch, state }) => {
         const { value: iscorrAddrSameProp } = sourceField;
@@ -269,9 +272,9 @@ const formConfig = {
     try {
       const formKey = get(action, "form.name", "");
       const state = store.getState();
-      if (get(state, `form.${formKey}.fields.ownerRelationship.value`, "NONE") === "NONE") {
-        dispatch(handleFieldChange(formKey, "ownerRelationship", "FATHER"));
-      }
+      // if (get(state, `form.${formKey}.fields.ownerRelationship.value`, "NONE") === "NONE") {
+      //   dispatch(handleFieldChange(formKey, "ownerRelationship", "FATHER"));
+      // }
 
       if (get(state, `form.${formKey}.fields.ownerCategory.value`, "NONE") === "NONE") {
         dispatch(setFieldProperty(formKey, "ownerCategoryId", "hideField", true));

@@ -98,7 +98,22 @@ const checkIfFormIsValid = async (state, dispatch) => {
       true,
       {
         labelName: "Please fill the required fields.",
-        labelKey: "ERR_SELECT_MANDATORY_FIELDS"
+      labelKey: "Please fill all mandatory fields / Invalid field values !"
+      },
+      "info"
+    ));
+    return;
+  }
+  let dateofreport=get(state.screenConfiguration.preparedFinalObject,"bnd.death.newRegistration.dateofreportepoch")
+  let dateofdeath=get(state.screenConfiguration.preparedFinalObject,"bnd.death.newRegistration.dateofdeathepoch")
+  if(dateofreport<dateofdeath)
+  {
+    isFormValid = false;
+    dispatch(toggleSnackbar(
+      true,
+      {
+        labelName: "",
+        labelKey:  "Date of Registration should not be before Date of Death"
       },
       "info"
     ));

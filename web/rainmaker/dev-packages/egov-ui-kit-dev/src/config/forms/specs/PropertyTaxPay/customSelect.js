@@ -11,10 +11,11 @@ const formConfig = {
       id: "floorName",
       type: "singleValueList",
       localePrefix: { moduleName: "PropertyTax", masterName: "Floor" },
-      floatingLabelText: "PT_FORM2_SELECT_FLOOR",
-      hintText: "PT_FORM2_SELECT_FLOOR",
+      floatingLabelText: "PT_FLOOR_NO",
+      hintText: "PT_FLOOR_NO",
       numcols: 12,
       errorMessage: "",
+      errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
       required: true,
       className: "pt-floor-name",
       beforeFieldChange: ({ action, dispatch, state }) => {

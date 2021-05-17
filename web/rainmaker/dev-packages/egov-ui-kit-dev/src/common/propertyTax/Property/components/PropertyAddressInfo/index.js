@@ -31,6 +31,11 @@ export const getAddressItems = (properties, OldProperty) => {
         oldValue: OldProperty && OldProperty.address && OldProperty.address.city
       },
       {
+        key: getTranslatedLabel("PT_COMMON_PROPERTY_LOCATION", localizationLabelsData),
+        value: (getTranslatedLabel((`PT_COMMON_PROPERTY_LOCATION_${address.location}`), localizationLabelsData)) || "NA",
+        oldValue: OldProperty && OldProperty.address && (getTranslatedLabel((`PT_COMMON_PROPERTY_LOCATION_${address.location}`), localizationLabelsData)) || "NA"
+      },
+      {
         key: getTranslatedLabel("PT_PROPERTY_ADDRESS_HOUSE_NO", localizationLabelsData),
         value: address.doorNo || "NA",
         oldValue: OldProperty && OldProperty.address && OldProperty.address.doorNo

@@ -17,6 +17,7 @@ import {
   stepper,
   getMdmsData
 } from "../bpastakeholder/apply";
+import {fetchMDMSData} from "./citizenSearchResource/citizenFunctions";
 import { getLocale, getTenantId, setModule } from "egov-ui-kit/utils/localStorageUtils";
 import { addressDestruct, setMobileNoField, setNameOfUser } from "../utils";
 import { getModuleName } from "egov-ui-kit/utils/commons";
@@ -119,8 +120,9 @@ const screenConfig = {
         setNameOfUser(action, state, dispatch);
       }
     }
+    fetchMDMSData(action, state, dispatch);
     return action;
-  },
+0  },
   components: {
     div: {
       uiFramework: "custom-atoms",

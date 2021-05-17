@@ -1422,7 +1422,7 @@ class FormWizard extends Component {
   };
   getButtonLabels(index) {
     const { purpose } = this.state;
-    let buttonLabel = "PT_COMMONS_NEXT";
+    let buttonLabel = "PT_COMMON_BUTTON_NEXT";
     if (index == 4) {
       buttonLabel = formWizardConstants[purpose].buttonLabel;
     } else if (index == 5) {
