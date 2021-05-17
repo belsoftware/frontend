@@ -13,7 +13,25 @@ const LinkButton = Loadable({
   loading: () => <Loading />
 });
 
+const AutoSuggest = Loadable({
+  loader: () => import("./AutoSuggest"),
+  loading: () => <Loading />
+});
+
+const Checkbox = Loadable({
+  loader: () => import("./Checkbox"),
+  loading: () => <Loading />
+});
+
+const UploadFile = Loadable({
+  loader: () => import("./UploadFile"),
+  loading: () => <Loading />
+});
+
 export {
   TestAtoms,
-  LinkButton
+  LinkButton,
+  AutoSuggest,
+  Checkbox,
+  UploadFile
 };

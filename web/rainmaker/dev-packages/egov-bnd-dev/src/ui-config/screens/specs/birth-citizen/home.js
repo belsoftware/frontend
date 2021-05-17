@@ -28,17 +28,17 @@ const cardItems = [
     icon: <GetCertIcon />,
     route: "../birth-common/getCertificate"
   },
-  // {
-  //   label: {
-  //     labelKey: "BND_BIRTH_MY_REQUESTS",
-  //     labelName: "My Applications"
-  //   },
-  //   icon: <BirthIcon />,
-  //   route: "myApplications"
-  // },
   {
     label: {
-      labelKey: "BIRTH_HOW_IT_WORKS",
+      labelKey: "BND_MY_REQUESTS",
+      labelName: "My Applications"
+    },
+    icon: <BirthIcon />,
+    route: "../birth-citizen/myApplications"
+  },
+  {
+    label: {
+      labelKey: "BND_HOW_IT_WORKS",
       labelName: "How It Works"
     },
     icon: <HelpIcon />,

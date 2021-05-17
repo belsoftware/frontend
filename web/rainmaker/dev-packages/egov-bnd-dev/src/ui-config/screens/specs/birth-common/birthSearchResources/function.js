@@ -24,9 +24,19 @@ export const searchApiCall = async (state, dispatch) => {
     queryParams.push({ key: "tenantId",value: tenantId});
 
   let dateOfBirth = get(state.screenConfiguration.preparedFinalObject,"bnd.birth.dob");
+  let fromdate = get(state.screenConfiguration.preparedFinalObject,"bnd.birth.fromdate");
+  let todate = get(state.screenConfiguration.preparedFinalObject,"bnd.birth.todate");
   if(dateOfBirth)
   {
     queryParams.push({ key: "dateOfBirth",value: convertEpochToDate(convertDateToEpoch(dateOfBirth)).replaceAll("/","-")});
+  }
+  if(fromdate)
+  {
+    queryParams.push({ key: "fromDate",value: convertEpochToDate(convertDateToEpoch(fromdate)).replaceAll("/","-")});
+  }
+  if(todate)
+  {
+    queryParams.push({ key: "toDate",value: convertEpochToDate(convertDateToEpoch(todate)).replaceAll("/","-")});
   }
   let gender = get(state.screenConfiguration.preparedFinalObject,"bnd.birth.gender");
   if(gender)
@@ -86,6 +96,24 @@ export const searchApiCall = async (state, dispatch) => {
     );
     return;
   }
+  if (fromdate && todate ) {
+    let fromdateofsearch=get(state.screenConfiguration.preparedFinalObject,"bnd.birth.fromdate")
+    let todateepochofsearch=get(state.screenConfiguration.preparedFinalObject,"bnd.birth.todate")
+    if(fromdateofsearch>todateepochofsearch)
+    {
+    dispatch(
+      toggleSnackbar(
+        true,
+        {
+          labelName: "",
+          labelKey: "From Date should not be before To Date "
+        },
+        "warning"
+      )
+    );
+    return;
+      }
+  }
 
   // if(!registrationNo && !hospitalId && !mothersName && !fathersName)
   // {
@@ -103,20 +131,20 @@ export const searchApiCall = async (state, dispatch) => {
   // }
 
   const responseFromAPI = await searchForBirth(dispatch, queryParams)
-  const births = (responseFromAPI && responseFromAPI.birthCerts) || [{"id":"1","dateofbirth":1614241552,"firstname":"san","gender":"1","registrationno":"2021-1","counter":0,"birthFatherInfo":{"firstname":"abc"},"birthMotherInfo":{"firstname":"abc1"},"tenantid":"pb.agra"},{"id":"2","dateofbirth":1614241552,"firstname":"san1","gender":"1","registrationno":"2021-2","counter":0,"birthFatherInfo":{"firstname":"abcd"},"birthMotherInfo":{"firstname":"abcd1"},"tenantid":"pb.agra"}];
+  const births = (responseFromAPI && responseFromAPI.birthCerts) || []; //|| [{"id":"1","dateofbirth":1614241552,"firstname":"san","gender":"1","registrationno":"2021-1","counter":0,"birthFatherInfo":{"firstname":"abc"},"birthMotherInfo":{"firstname":"abc1"},"tenantid":"pb.agra"},{"id":"2","dateofbirth":1614241552,"firstname":"san1","gender":"1","registrationno":"2021-2","counter":0,"birthFatherInfo":{"firstname":"abcd"},"birthMotherInfo":{"firstname":"abcd1"},"tenantid":"pb.agra"}];
 
   const birthTableData = births.map(item => {
     return {
       id: get(item, "id"),
       registrationNo: get(item, "registrationno"),
-      nameOfChild: get(item, "firstname")?get(item, "firstname"):""+ get(item, "middlename")?(" "+get(item, "middlename")):""+" "+get(item, "lastname")?get(item, "lastname"):"",
+      nameOfChild: get(item, "fullName"),
       dateOfbirth: get(item, "dateofbirth"),
       gender:  getGenderValue(get(item, "gender")),
-      mothersName: get(item, "birthMotherInfo.firstname")?get(item, "birthMotherInfo.firstname"):""+get(item, "birthMotherInfo.middlename")?(" "+get(item, "birthMotherInfo.middlename")):""+get(item, "birthMotherInfo.lastname")?(" "+get(item, "birthMotherInfo.lastname")):"",
-      fathersName: get(item, "birthFatherInfo.firstname")?get(item, "birthFatherInfo.firstname"):""+get(item, "birthFatherInfo.middlename")?(" "+get(item, "birthFatherInfo.middlename")):""+" "+get(item, "birthFatherInfo.lastname")?get(item, "birthFatherInfo.lastname"):"",
+      mothersName: get(item, "birthMotherInfo.fullName"),
+      fathersName: get(item, "birthFatherInfo.fullName"),
       action: getActionItem(get(item, "counter")),
       tenantId: get(item, "tenantid"),
-      payRequired: get(item, "payRequired")
+      payRequired: get(item, "payRequired"),
     };
   });
   dispatch(
@@ -138,6 +166,7 @@ export const searchApiCall = async (state, dispatch) => {
       ['BND_COMMON_TABLE_ACTION']: item.action || "-",
       ["BUSINESS_SERVICE"]: "BIRTH_CERT",
       ["TENANT_ID"]: item.tenantId,
+      ["BND_VIEW_CERTIFICATE"]: "BND_VIEW_CERTIFICATE"
       //["PAYREQUIRED"]: item.payRequired,
       // ["BILL_ID"]: item.billId,
       // ["BILL_SEARCH_URL"]: searchScreenObject.url,
