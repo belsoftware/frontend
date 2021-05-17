@@ -60,6 +60,16 @@ export const getHeaderLabel = () => {
   return process.env.REACT_APP_NAME === "Citizen" ? "WS_APPLY_NEW_CONNECTION_HEADER" : "WS_APPLICATION_NEW_CONNECTION_HEADER"
 }
 
+const headerrow = getCommonContainer({
+  header: getCommonTitle(
+    {
+      labelName: "Required Documents",
+      labelKey: "WS_DOCUMENT_DETAILS_HEADER"
+    },
+  )
+});
+
+
 export const header = getCommonContainer({
   headerDiv: getCommonContainer({
     header: getCommonHeader({
@@ -108,17 +118,9 @@ const summaryScreenEMP = getCommonCard({
 
 
 let summaryScreen = process.env.REACT_APP_NAME === "Citizen" ? summaryScreenCitizen : summaryScreenEMP;
+
+
 export const documentDetails = getCommonCard({
-  // header: getCommonTitle(
-  //   { labelName: "Required Documents", labelKey: "WS_DOCUMENT_DETAILS_HEADER" },
-  //   { style: { marginBottom: 18 } }
-  // ),
-  // subText: getCommonParagraph({
-  //   labelName:
-  //     "Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload",
-  //   labelKey: "WS_DOCUMENT_DETAILS_SUBTEXT"
-  // }),
-  // break: getBreak(),
   div: {
     uiFramework: "custom-atoms",
     componentPath: "Div",
@@ -127,17 +129,15 @@ export const documentDetails = getCommonCard({
       headerDiv: {
         uiFramework: "custom-atoms",
         componentPath: "Container",
-        children: {
-        
-            header: getCommonTitle(
-            { labelName: "Required Documents", labelKey: "WS_DOCUMENT_DETAILS_HEADER" },
-            { style: { marginBottom: 18 } },
-            { gridDefination: {
+         children: {
+          header1: {
+            gridDefination: {
               xs: 8,
               sm: 8
             },
-            }
-            ),
+            ...headerrow
+          }
+          ,
        
           helpSection: {
             uiFramework: "custom-atoms",
@@ -147,8 +147,9 @@ export const documentDetails = getCommonCard({
               style: { justifyContent: "flex-end" }, 
             },
             gridDefination: {
-              xs:10,
-              sm: 10,
+            
+              xs: 4,
+              sm: 4,
               align: "right"
             },
             children : {
@@ -186,10 +187,7 @@ export const documentDetails = getCommonCard({
             }
           }
         }
-       },
-       
-      
-      
+       },      
        paragraph: getCommonParagraph({
         labelName:
           "Only one file can be uploaded for one document. If multiple files need to be uploaded then please combine all files in a pdf and then upload",
@@ -215,6 +213,7 @@ export const documentDetails = getCommonCard({
     type: "array"
   }
 });
+
 
 
 export const downloadSelfDeclerationForm = async (state, dispatch) => {  
