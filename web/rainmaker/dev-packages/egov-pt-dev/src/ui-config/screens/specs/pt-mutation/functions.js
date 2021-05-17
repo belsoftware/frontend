@@ -43,6 +43,14 @@ const removeValidation = (state, dispatch, index) => {
   dispatch(
     handleField(
       "propertySearch",
+      "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.abasId",
+      "props.error",
+      false
+    )
+  );
+  dispatch(
+    handleField(
+      "propertySearch",
       "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.propertyTaxApplicationNo",
       "props.error",
       false
@@ -157,7 +165,7 @@ const searchApiCall = async (state, dispatch, index) => {
 
   let formValid = false;
   if (index == 0) {
-    if (searchScreenObject.ids != '' || searchScreenObject.mobileNumber != '' || searchScreenObject.oldpropertyids != '') {
+    if (searchScreenObject.ids != '' || searchScreenObject.mobileNumber != '' || searchScreenObject.oldpropertyids != '' || searchScreenObject.abasPropertyids != '') {
       formValid = true;
     }
   } else {
@@ -218,6 +226,13 @@ const searchApiCall = async (state, dispatch, index) => {
     dispatch,
     "propertySearch"
   ) || searchScreenObject.oldpropertyids == '';
+ 
+  const isabasIdValid= validateFields(
+    "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.abasId",
+    state,
+    dispatch,
+    "propertySearch"
+  ) || searchScreenObject.abasPropertyids == '';
   const ispropertyTaxApplicationNoRowValid = validateFields(
     "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.propertyTaxApplicationNo",
     state,
@@ -253,7 +268,7 @@ const searchApiCall = async (state, dispatch, index) => {
     );
     return;
   }
-  if (index == 0 && !(isSearchBoxFirstRowValid && isownerCityRowValid && ispropertyTaxUniqueIdRowValid && isexistingPropertyIdRowValid && isownerMobNoRowValid)) {
+  if (index == 0 && !(isSearchBoxFirstRowValid && isownerCityRowValid && ispropertyTaxUniqueIdRowValid && isexistingPropertyIdRowValid && isownerMobNoRowValid && isabasIdValid)) {
     dispatch(
       toggleSnackbar(
         true,
@@ -337,6 +352,8 @@ const searchApiCall = async (state, dispatch, index) => {
           item.owners[0].fatherOrHusbandName || "-",
         ["PT_COMMON_COL_EXISTING_PROP_ID"]:
           item.oldPropertyId || "-",
+          ["PT_ABAS_ID"]:
+          item.abasPropertyids || "-",
         ["PT_COMMON_COL_ADDRESS"]:
           getAddress(item) || "-",
         ["TENANT_ID"]: item.tenantId,
