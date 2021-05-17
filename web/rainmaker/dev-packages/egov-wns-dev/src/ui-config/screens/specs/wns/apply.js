@@ -471,6 +471,11 @@ export const getData = async (action, state, dispatch) => {
       if (isModifyMode() && !isModifyModeAction()) {
         // this delete for initiate modify connection 
         delete combinedArray[0].id; combinedArray[0].documents = [];
+        
+        if (waterConnections.length > 0)
+           waterConnections[0].plumberInfo =[];
+        if (sewerageConnections.length > 0) 
+           sewerageConnections[0].plumberInfo =[];
       }
       if (isModifyMode() && isModifyModeAction()) {
         // ModifyEdit should not call create.
@@ -1363,10 +1368,6 @@ const screenConfig = {
     } else {
       modifyLink = "/wns/apply"
     }
-
-
-
-
 
     // set(action, "screenConfig.components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.wsConnectionTaxHeads.children", taxHeads);
     //set(action, "screenConfig.components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.wsConnectionTaxHeads.children.taxheads", taxHeads);

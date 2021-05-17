@@ -140,13 +140,14 @@ export const plumberDetails={
     {
       jsonPath: "WaterConnection[0].additionalDetails.detailsProvidedBy",
       callBack: handleNA
-    }, {
-      labelKey: "WS_OLD_LABEL_NAME"
     },
-    {
-      jsonPath: "WaterConnectionOld[0].additionalDetails.detailsProvidedBy",
-      callBack: handleNA
-    }
+    //  {
+    //   labelKey: "WS_OLD_LABEL_NAME"
+    // },
+    // {
+    //   jsonPath: "WaterConnectionOld[0].additionalDetails.detailsProvidedBy",
+    //   callBack: handleNA
+    // }
   ),
   reviewPlumberLicenseNo : getLabelWithValueForModifiedLabel(
     {
@@ -156,13 +157,14 @@ export const plumberDetails={
     {
       jsonPath: "WaterConnection[0].plumberInfo[0].licenseNo",
       callBack: handleNA
-    }, {
-      labelKey: "WS_OLD_LABEL_NAME"
     },
-    {
-      jsonPath: "WaterConnectionOld[0].plumberInfo[0].licenseNo",
-      callBack: handleNA
-    }
+    //  {
+    //   labelKey: "WS_OLD_LABEL_NAME"
+    // },
+    // {
+    //   jsonPath: "WaterConnectionOld[0].plumberInfo[0].licenseNo",
+    //   callBack: handleNA
+    // }
   ),
   reviewPlumberName : getLabelWithValueForModifiedLabel(
     {
@@ -170,11 +172,14 @@ export const plumberDetails={
       labelKey: "WS_ADDN_DETAILS_PLUMBER_NAME_LABEL"
     },
     { jsonPath: "WaterConnection[0].plumberInfo[0].name",
-      callBack: handleNA }, {
-        labelKey: "WS_OLD_LABEL_NAME"
-      },
-      { jsonPath: "WaterConnectionOld[0].plumberInfo[0].name",
-      callBack: handleNA }
+      callBack: handleNA 
+    }, 
+    //   {
+    //     labelKey: "WS_OLD_LABEL_NAME"
+    //   },
+    //   { jsonPath: "WaterConnectionOld[0].plumberInfo[0].name",
+    //   callBack: handleNA 
+    // }
   ),
   reviewPlumberMobileNo : getLabelWithValueForModifiedLabel(
     {
@@ -182,11 +187,13 @@ export const plumberDetails={
       labelKey: "WS_ADDN_DETAILS_PLUMBER_MOB_NO_LABEL"
     },
     { jsonPath: "WaterConnection[0].plumberInfo[0].mobileNumber",
-      callBack: handleNA }, {
-        labelKey: "WS_OLD_LABEL_NAME"
-      },
-      { jsonPath: "WaterConnectionOld[0].plumberInfo[0].mobileNumber",
-      callBack: handleNA }
+      callBack: handleNA 
+    },
+      //  {
+      //   labelKey: "WS_OLD_LABEL_NAME"
+      // },
+      // { jsonPath: "WaterConnectionOld[0].plumberInfo[0].mobileNumber",
+      // callBack: handleNA }
   )
 
 
