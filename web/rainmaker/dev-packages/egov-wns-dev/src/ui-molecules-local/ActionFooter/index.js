@@ -28,7 +28,7 @@ class Footer extends React.Component {
       applicationNo,
       applicationNos,
       businessService,
-      bill,
+      bill
     } = this.props;
     const editButton = {
       label: "Edit",
@@ -60,22 +60,25 @@ class Footer extends React.Component {
         ];
 
         let isApplicationApproved = await isWorkflowExists(queryObj);
-        if (!isApplicationApproved) {
-          toggleSnackbar(
-            true,
-            {
-              labelName: "WorkFlow already Initiated",
-              labelKey: "WS_WORKFLOW_ALREADY_INITIATED",
-            },
-            "error"
+
+         
+          if (!isApplicationApproved ) {
+            toggleSnackbar(
+              true,
+              {
+                labelName: "WorkFlow already Initiated",
+                labelKey: "WS_WORKFLOW_ALREADY_INITIATED",
+              },
+              "error"
+            );
+            return false;
+          }
+          store.dispatch(
+            setRoute(
+              `/wns/apply?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=MODIFY`
+            )
           );
-          return false;
-        }
-        store.dispatch(
-          setRoute(
-            `/wns/apply?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=MODIFY`
-          )
-        );
+ 
       },
     };
     const BillAmendment = {
@@ -199,6 +202,8 @@ const mapStateToProps = (state) => {
     connectionObj && connectionObj.length > 0
       ? connectionObj[0].applicationNo
       : "";
+ 
+
   const businessService = connectDetailsData.BillingService.BusinessService.map(
     (item) => {
       return item.businessService;

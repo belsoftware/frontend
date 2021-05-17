@@ -10,6 +10,7 @@ import {
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import set from "lodash/set";
+import get from "lodash/get";
 import {
   getDescriptionFromMDMS,
   getSearchResults,
@@ -123,8 +124,8 @@ const showHideConnectionHolder = (dispatch, connectionHolders) => {
 
 export const sortpayloadDataObj =(connectionObj)=>{ 
  
-  connectionObj.sort(function(x, y){
-  return  y.auditDetails.createdTime-x.auditDetails.createdTime;
+  return connectionObj.sort(function(x, y){
+    return  y.auditDetails.createdTime-x.auditDetails.createdTime;
   });
 }
 
@@ -268,8 +269,10 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
       getApplicationNumber(dispatch, payloadData.SewerageConnections);
       showHideServiceDetails(dispatch, sewerageConnection);
     }
-  } else if (serviceReq === serviceConst.WATER) {   
+  } else if (serviceReq === serviceConst.WATER) {  
+    
     let payloadData = await getSearchResults(queryObject, true);  
+   
     if (
       payloadData !== null &&
       payloadData !== undefined &&
@@ -278,19 +281,20 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
      //payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
       payloadData.WaterConnection = payloadData.WaterConnection.sort(function(x, y){
             return  y.auditDetails.createdTime-x.auditDetails.createdTime;
-       });     
-      let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
-      
-      if(waterConnection.waterSource.includes(".")){      
-           //Set water source and sub source    
-        waterConnection.waterSourceSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource;
+       });    
+
+       let waterConnection = getActiveConnectionObj(payloadData.WaterConnection); 
+          
+      if(waterConnection.waterSubSource == undefined ){  //"undefined" case for OTHERS use case       
+        waterConnection.waterSubSource = "NA"
+      }
+      if(waterConnection.waterSource.includes('.')){ // waterConnection have ACTIVE and OTHER-STATE connection obj
         let waterSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[0];
         let waterSubSource = waterConnection.waterSource.includes("null") ? "NA" : waterConnection.waterSource.split(".")[1];
         waterConnection.waterSource = waterSource;
-        waterConnection.waterSubSource = waterSubSource;   
-      }
+        waterConnection.waterSubSource = waterSubSource;       
       
-   
+      }
 
       waterConnection.service = serviceReq;
       let propTenantId = waterConnection.property.tenantId.split(".")[0];

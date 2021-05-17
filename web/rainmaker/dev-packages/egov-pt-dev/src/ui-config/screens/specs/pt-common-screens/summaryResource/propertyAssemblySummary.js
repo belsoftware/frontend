@@ -200,6 +200,26 @@ export const propertyAssemblySummary = getCommonGrayCard({
           return finalValue ? finalValue : "NA";
         }
       }
+    ),
+    arv: getLabelWithValue(
+      {
+        labelName: "ARV",
+        labelKey: "PT_COMMON_ARV"
+      },
+      {
+        jsonPath: "Property.units[0].arv",
+        //callBack: checkValueForNA
+        callBack: value => {
+          let state = store.getState();
+          let finalValue;
+            let propertyType = get( state.screenConfiguration.preparedFinalObject, "Property.propertyType" );
+            //let usageType = get( state.screenConfiguration.preparedFinalObject, "Property.usageCategory" );
+            if ( propertyType !== "VACANT") {
+                finalValue = value;
+            }
+          return finalValue ? finalValue : "NA";
+        }
+      }
     )
   })
 });

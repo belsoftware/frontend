@@ -92,6 +92,62 @@ export const reviewWaterSource = getLabelWithValueForModifiedLabel(
     callBack: handleNA
   }
 );
+
+export const  reviewUsageType =getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Usage Type",
+    labelKey: "WS_COMMON_USAGE_TYPE"
+  },
+  {
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "WSUSGTYPE"
+    },
+    jsonPath: "applyScreen.usageCategory",
+    callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },  
+    {
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "WSUSGTYPE"
+    },
+    jsonPath: "applyScreenOld.usageCategory",
+    callBack: handleNA
+  },
+);
+export const  reviewSubUsageType = getLabelWithValueForModifiedLabel(
+  {
+    labelName: "Sub Usage Type",
+    labelKey: "WS_SUB_USAGE_TYPE"
+  },
+  {
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "WSSUBUSGTYPE"
+    },
+    jsonPath: "applyScreen.subUsageCategory",
+    callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  {
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "WSSUBUSGTYPE"
+    },
+    jsonPath: "applyScreenOld.subUsageCategory",
+    callBack: handleNA
+  },
+  
+);
+
+
+
+
 export const reviewWaterSubSource = getLabelWithValueForModifiedLabel(
   {
     labelName: "Water Sub Source",
@@ -484,11 +540,13 @@ const connectionDetails = getCommonContainer({
   reviewPipeSize,
   reviewAuthorizedConnection,
   reviewMotorInfo,
-  reviewSourceInfo,
+  // reviewSourceInfo,
   // reviewBillingType,
   reviewWaterClosets,
   reviewNumberOfToilets,
-  reviewDrainageSize
+  reviewDrainageSize,
+  reviewUsageType,
+  reviewSubUsageType
 });
 
 const connectionChargeDetails = getCommonContainer({

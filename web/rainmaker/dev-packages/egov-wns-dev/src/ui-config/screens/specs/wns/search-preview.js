@@ -90,6 +90,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
   // "div", {}));
   dispatch(unMountScreen("apply"));
   dispatch(unMountScreen("search"));
+  dispatch(unMountScreen("meter-reading"));
   dispatch(prepareFinalObject("WaterConnection",[]));
   dispatch(prepareFinalObject("SewerageConnection",[]));
   dispatch(prepareFinalObject("WaterConnectionOld",[]));
@@ -105,6 +106,8 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
 
   let Response = await getWorkFlowData(queryObj);
   let processInstanceAppStatus = Response.ProcessInstances[0].state.applicationStatus;
+  let workflowName = Response.ProcessInstances[0].businessService ;
+  
   //Search details for given application Number
   if (applicationNumber) {
 
@@ -240,31 +243,31 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
     }
 
     if (isModifyMode()) {
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.estimate.visible",
-        false
-      );
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven.visible",
-        false
-      );
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewEight.visible",
-        false
-      );
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewNine.visible",
-        false
-      );
-      set(
-        action.screenConfig,
-        "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewTen.visible",
-        false
-      );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.estimate.visible",
+      //   false
+      // );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven.visible",
+      //   false
+      // );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewEight.visible",
+      //   false
+      // );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewNine.visible",
+      //   false
+      // );
+      // set(
+      //   action.screenConfig,
+      //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewTen.visible",
+      //   false
+      // );
     } else {
       set(
         action.screenConfig,
@@ -287,19 +290,21 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
         )
       );
     }
-    const printCont = downloadPrintContainer(
-      action,
-      state,
-      dispatch,
-      processInstanceAppStatus,
-      applicationNumber,
-      tenantId,service
-    );
-    set(
-      action,
-      "screenConfig.components.div.children.headerDiv.children.helpSection.children",
-      printCont
-    );
+    if(workflowName!==null && !workflowName.includes("Legacy")){
+      const printCont = downloadPrintContainer(
+        action,
+        state,
+        dispatch,
+        processInstanceAppStatus,
+        applicationNumber,
+        tenantId,service,workflowName
+      );
+      set(
+        action,
+        "screenConfig.components.div.children.headerDiv.children.helpSection.children",
+        printCont
+      );
+    }
 
     let data = get(state, "screenConfiguration.preparedFinalObject");
 

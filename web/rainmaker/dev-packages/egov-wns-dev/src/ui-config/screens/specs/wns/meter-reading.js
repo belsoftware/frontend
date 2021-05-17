@@ -8,9 +8,11 @@ import { meterReadingEditable } from "./meterReading/meterReadingEditable";
 import { getMdmsDataForMeterStatus } from "../../../../ui-utils/commons"
 import { getSearchResults, getMdmsDataForAutopopulated, isWorkflowExists } from "../../../../ui-utils/commons"
 import get from "lodash/get";
+import set from "lodash/set";
 import { convertEpochToDate } from "../utils";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { sortpayloadDataObj } from './connection-details'
+
 const addMeterReading = async (state, dispatch) => {
     dispatch(toggleSpinner());
     const tenantId = getQueryArg(window.location.href, "tenantId");
@@ -27,7 +29,7 @@ const addMeterReading = async (state, dispatch) => {
             { key: "businessIds", value: applicationNos },
             { key: "tenantId", value: tenantId }
         ];        
-        
+         
         let isApplicationApproved = await isWorkflowExists(queryObj);
         if(!isApplicationApproved){
             dispatch(toggleSpinner());
@@ -48,6 +50,7 @@ const addMeterReading = async (state, dispatch) => {
             await setAutopopulatedvalues(state, dispatch)
             showHideCard(true, dispatch); 
         }
+         
 
     }  
     dispatch(toggleSpinner());
@@ -135,8 +138,12 @@ const setAutopopulatedvalues = async (state, dispatch) => {
 
 }
 
+
+
+
 const queryValueAN = getQueryArg(window.location.href, "connectionNos");
-// console.log('123', queryValueAN)
+
+
 const showHideCard = (booleanHideOrShow, dispatch) => {
     dispatch(
         handleField(
@@ -147,7 +154,8 @@ const showHideCard = (booleanHideOrShow, dispatch) => {
         )
     );
 }
-const header = getCommonContainer({
+
+ const header = getCommonContainer({
     header: getCommonHeader({
         labelKey: "WS_CONSUMPTION_DETAILS_HEADER"
     }),
@@ -156,7 +164,8 @@ const header = getCommonContainer({
         moduleName: "egov-wns",
         componentPath: "ConsumerNoContainer",
         props: {
-            number: queryValueAN
+            //number: getQueryArg(window.location.href, "connectionNos")
+            number :queryValueAN
         }
     },
     classes: {
@@ -165,11 +174,14 @@ const header = getCommonContainer({
 
 });
 
+
 const screenConfig = {
     uiFramework: "material-ui",
     name: "meter-reading",
     beforeInitScreen: (action, state, dispatch) => {
         getMeterReadingData(dispatch);
+        
+        set(action, "screenConfig.components.div.children.header.children.applicationNumber.props.number", getQueryArg(window.location.href, "connectionNos"));
         return action;
     },
     components: {
@@ -182,6 +194,7 @@ const screenConfig = {
             },
             children: {
                 header: header,
+             
                 newApplicationButton: {
                     componentPath: "Button",
                     gridDefination: {

@@ -74,6 +74,7 @@ class Footer extends React.Component {
     } else {
       handleFieldChange(`${dataPath}[0].comment`, "");
       handleFieldChange(`${dataPath}[0].assignee`, []);
+      handleFieldChange(`${dataPath}[0].wfDocuments`, []);
       const tlAppStatus = get(
         state,
         `screenConfiguration.preparedFinalObject.Licenses[0].status`,null

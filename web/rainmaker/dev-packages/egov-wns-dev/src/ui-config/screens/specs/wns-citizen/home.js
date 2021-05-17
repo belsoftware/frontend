@@ -16,13 +16,15 @@ const header = getCommonHeader({
 
 const cardItems = [
  //Hide pay bill    
-// {
-//     label: {
-//         labelKey: "WS_COMMON_PAY_WS_BILL_HEADER",
-//     },
-//     icon: < PayWnsBillIcon />,
-//     route: "search"
-// },
+
+{
+    label: {
+        labelKey: "WS_COMMON_PAY_WS_BILL_HEADER",
+    },
+    icon: < PayWnsBillIcon />,
+    route: "search"
+},
+
 {
     label: {
         labelKey: "WS_MYCONNECTIONS_HEADER",
@@ -90,6 +92,14 @@ const waterAndSewerageSearchAndResult = {
                         route: "my-applications"
                     }
                 }, 
+                listCard2: {
+                    uiFramework: "custom-molecules-local",
+                    moduleName: "egov-wns",
+                    componentPath: "PastPayments",
+                    props: {
+                        route: "my-connections"
+                    }
+                },
                 listCard3: {
                     uiFramework: "custom-molecules-local",
                     moduleName: "egov-wns",
