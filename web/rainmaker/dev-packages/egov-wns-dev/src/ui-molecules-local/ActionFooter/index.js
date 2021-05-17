@@ -28,8 +28,7 @@ class Footer extends React.Component {
       applicationNo,
       applicationNos,
       businessService,
-      bill,
-      isLegacyData
+      bill
     } = this.props;
     const editButton = {
       label: "Edit",
@@ -61,14 +60,8 @@ class Footer extends React.Component {
         ];
 
         let isApplicationApproved = await isWorkflowExists(queryObj);
-        console.log("isLegacyData:::'"+ (isLegacyData)+"'");
-        if(isLegacyData){
-          store.dispatch(
-            setRoute(
-              `/wns/apply?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=MODIFY`
-            )
-          );
-        }else{
+
+         
           if (!isApplicationApproved ) {
             toggleSnackbar(
               true,
@@ -85,7 +78,7 @@ class Footer extends React.Component {
               `/wns/apply?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=MODIFY`
             )
           );
-        }
+ 
       },
     };
     const BillAmendment = {
@@ -209,20 +202,14 @@ const mapStateToProps = (state) => {
     connectionObj && connectionObj.length > 0
       ? connectionObj[0].applicationNo
       : "";
-  let isLegacyData =false; 
-   
-  if(connectionObj && connectionObj.length >0 ){
-    let isOldNoExist = (connectionObj[0].oldConnectionNo!=null && connectionObj[0].oldConnectionNo.trim()!=="NA")? true : false;
-    let isNewApplication = (connectionObj[0].applicationType!=null && connectionObj[0].applicationType.startsWith("NEW"))? true : false;
-    isLegacyData =isOldNoExist && isNewApplication;
-  }
+ 
 
   const businessService = connectDetailsData.BillingService.BusinessService.map(
     (item) => {
       return item.businessService;
     }
   );
-  return { state, applicationNo, applicationNos, businessService, bill, isLegacyData };
+  return { state, applicationNo, applicationNos, businessService, bill };
 };
 
 const mapDispatchToProps = (dispatch) => {

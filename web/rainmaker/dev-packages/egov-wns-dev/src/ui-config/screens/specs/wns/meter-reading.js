@@ -29,47 +29,28 @@ const addMeterReading = async (state, dispatch) => {
             { key: "businessIds", value: applicationNos },
             { key: "tenantId", value: tenantId }
         ];        
-        //Check for legacy data 
-        let isLegacyData =false;
-        if(payloadData.WaterConnection.length==1){
-            let oldConnectionNo= get(payloadData,"WaterConnection[0].oldConnectionNo","NA");
-            let applicationType= get(payloadData,"WaterConnection[0].applicationType","");
-            
-            if(oldConnectionNo !=="NA" && applicationType==="NEW_WATER_CONNECTION"){
-                isLegacyData=true;
-            }
-            console.log("oldConnectionNoapplicationType  ",oldConnectionNo,applicationType);
-            
-        }
-        console.log("IsLegacyData",isLegacyData);
-        if(isLegacyData){
-
+         
+        let isApplicationApproved = await isWorkflowExists(queryObj);
+        if(!isApplicationApproved){
+            dispatch(toggleSpinner());
+            dispatch(
+                toggleSnackbar(
+                    true,
+                    {
+                        labelName: "WorkFlow already Initiated",
+                        labelKey: "WS_WORKFLOW_ALREADY_INITIATED"
+                    },
+                    "error"
+                )
+            );
+            return;
+        } else {
             await getMdmsDataForAutopopulated(dispatch)
             await getMdmsDataForMeterStatus(dispatch)
             await setAutopopulatedvalues(state, dispatch)
             showHideCard(true, dispatch); 
-        }else{
-            let isApplicationApproved = await isWorkflowExists(queryObj);
-            if(!isApplicationApproved){
-                dispatch(toggleSpinner());
-                dispatch(
-                    toggleSnackbar(
-                        true,
-                        {
-                            labelName: "WorkFlow already Initiated",
-                            labelKey: "WS_WORKFLOW_ALREADY_INITIATED"
-                        },
-                        "error"
-                    )
-                );
-                return;
-            } else {
-                await getMdmsDataForAutopopulated(dispatch)
-                await getMdmsDataForMeterStatus(dispatch)
-                await setAutopopulatedvalues(state, dispatch)
-                showHideCard(true, dispatch); 
-            }
         }
+         
 
     }  
     dispatch(toggleSpinner());

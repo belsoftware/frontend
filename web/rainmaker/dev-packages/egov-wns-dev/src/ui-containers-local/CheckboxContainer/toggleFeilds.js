@@ -40,12 +40,12 @@ export const toggleWater = (onFieldChange, value) => {
     "visible",
     value
   );
-  onFieldChange(
-    "apply",
-    `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo`,
-    "visible",
-    value
-  );
+  // onFieldChange(
+  //   "apply",
+  //   `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo`,
+  //   "visible",
+  //   value
+  // );
   onFieldChange(
     "apply",
     `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.dynamicMdmsWaterSource`,
@@ -149,12 +149,12 @@ export const toggleWater = (onFieldChange, value) => {
     "visible",
     value
   );
-  onFieldChange(
-    "apply",
-    "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewSourceInfo",
-    "visible",
-    value
-  );
+  // onFieldChange(
+  //   "apply",
+  //   "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewSourceInfo",
+  //   "visible",
+  //   value
+  // );
   onFieldChange(
     "apply",
     "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewMotorInfo",
@@ -285,7 +285,8 @@ export const toggleSewerage = (onFieldChange, value) => {
 
 export const togglePlumberFeilds = (onFieldChange, value) => {
   let isMode = isModifyMode();
-  let mStep = (isMode) ? 'formwizardSecondStep' : 'formwizardThirdStep';
+ // let mStep = (isMode) ? 'formwizardSecondStep' : 'formwizardThirdStep';
+ let mStep = 'formwizardThirdStep';
   onFieldChange(
     "apply",
     `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children.plumberLicenceNo`,
@@ -491,11 +492,11 @@ export const toggleWaterFeilds = (action, value) => {
     `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.authorizedConnection.visible`,
     value
   );
-  set(
-    action.screenConfig,
-    `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo.visible`,
-    value
-  );
+  // set(
+  //   action.screenConfig,
+  //   `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.sourceInfo.visible`,
+  //   value
+  // );
   set(
     action.screenConfig,
     `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.motorInfo.visible`,
@@ -569,6 +570,11 @@ export const toggleWaterFeilds = (action, value) => {
     );
     set(
       action.screenConfig,
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.usageType.visible`,
+      value
+    );
+    set(
+      action.screenConfig,
       `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.pipeSize.visible`,
       value
     );
@@ -628,11 +634,11 @@ export const toggleWaterFeilds = (action, value) => {
     "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewAuthorizedConnection.visible",
     value
   );
-  set(
-    action.screenConfig,
-    "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewSourceInfo.visible",
-    value
-  );
+  // set(
+  //   action.screenConfig,
+  //   "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewSourceInfo.visible",
+  //   value
+  // );
   set(
     action.screenConfig,
     "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSix.children.reviewMotorInfo.visible",

@@ -742,8 +742,16 @@ export const downloadPrintContainer = (
       break;
     case "PENDING_FOR_CONNECTION_ACTIVATION":
     case "CONNECTION_ACTIVATED":
+      if(isModifyMode())
+      {
+        downloadMenu = [wsEstimateDownloadObject, applicationDownloadObject];
+        printMenu = [wsEstimatePrintObject, applicationPrintObject];
+      }
+      else
+      {
       downloadMenu = [sanctionDownloadObject, wsEstimateDownloadObject, applicationDownloadObject];
       printMenu = [sanctionPrintObject, wsEstimatePrintObject, applicationPrintObject];
+      }
       break;
     case "REJECTED":
       downloadMenu = [applicationDownloadObject];

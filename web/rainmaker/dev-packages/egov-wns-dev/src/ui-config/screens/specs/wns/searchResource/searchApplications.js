@@ -103,13 +103,23 @@ export const searchApplications = getCommonCard({
             )
           )
           
-        } else if (action.value === "MODIFY WATER CONNECTION" || action.value ==="MODIFY SEWERAGE CONNECTION") {
+        } else if (action.value === "MODIFY WATER CONNECTION"  ) {
           dispatch(
             prepareFinalObject(
               "appTypewithAppStatus",
               get(
                 state.screenConfiguration.preparedFinalObject,
-                "applyScreenMdmsData.searchScreen.applicationStatusModify"
+                "applyScreenMdmsData.searchScreen.applicationStatusModifyWS"
+              )
+            )
+          )
+        }else if (  action.value ==="MODIFY SEWERAGE CONNECTION") {
+          dispatch(
+            prepareFinalObject(
+              "appTypewithAppStatus",
+              get(
+                state.screenConfiguration.preparedFinalObject,
+                "applyScreenMdmsData.searchScreen.applicationStatusModifySW"
               )
             )
           )

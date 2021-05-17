@@ -70,12 +70,12 @@ export const updateWaterSource = async ( state, dispatch ) => {
 const waterSourceTypeChange = (reqObj) => {
   try {
       let { dispatch, value, state } = reqObj;
-      console.log("value---",value);
+      
       dispatch(prepareFinalObject("WaterConnection[0].waterSource", value));
       dispatch(prepareFinalObject("WaterConnection[0].waterSubSource", ''));
       let mStep = (isModifyMode()) ? 'formwizardSecondStep' : 'formwizardThirdStep'; 
       console.log("mstep---",mStep);
-      if(value!="OTHERS")
+      if(value!=="OTHERS")
       {
          dispatch(
            handleField(
@@ -90,7 +90,6 @@ const waterSourceTypeChange = (reqObj) => {
       }
       else
       {
-        console.log("its in others---")
         // dispatch(
         //   handleField(
         //     "apply",
@@ -116,6 +115,25 @@ const waterSubSourceChange = (reqObj) => {
       let { dispatch, value } = reqObj;
       let rowValue = value.split(".");
       dispatch(prepareFinalObject("WaterConnection[0].waterSubSource", rowValue[1]));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+const waterUsageTypeChange = (reqObj) => {
+  try {
+      let { dispatch, value, state } = reqObj;
+      console.log("value---",value);
+      dispatch(prepareFinalObject("WaterConnection[0].waterUsageType", value));
+      dispatch(prepareFinalObject("WaterConnection[0].waterUsageSubType", ''));
+      let mStep = (isModifyMode()) ? 'formwizardSecondStep' : 'formwizardThirdStep'; 
+      console.log("mstep---",mStep);
+    
+      let formObj = {
+        waterUsageType: value, waterUsageSubType: ''
+      }
+      triggerUpdateByKey(state, `selectedValues[0]`, formObj , dispatch);
+    
   } catch (e) {
     console.log(e);
   }
@@ -228,6 +246,7 @@ export const additionDetails = getCommonCard({
           sm: 6
         },
         required: false,
+        visible : false,
         pattern: getPattern("Name"),
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "applyScreen.sourceInfo"
@@ -256,32 +275,26 @@ export const additionDetails = getCommonCard({
         gridDefination: { xs: 12, sm: 6 },
         jsonPath: "applyScreen.drainageSize"
       }),
+
+    
       
       usageType: getSelectField({
               label: {
                 labelName: "Usage Type",
-                labelKey: "PT_COMMON_USAGE_TYPE"
+                labelKey: "WS_COMMON_USAGE_TYPE"
               },
-              placeholder: {
-                labelName: "Select Usage Type",
-                labelKey: "PT_COMMON_USAGE_TYPE_PLACEHOLDER"
-              },
+             
               //required: true,
               jsonPath: "applyScreen.usageCategory",
-              sourceJsonPath: "applyScreenMdmsData.PropertyTax.UsageType",     
+              sourceJsonPath: "applyScreenMdmsData.ws-services-masters.waterUsage",     
              
               gridDefination: { xs: 12, sm: 6 },
               localePrefix: {
                 moduleName: "WS",
-                masterName: "PROPUSGTYPE"
+                masterName: "WSUSGTYPE"
               },
               beforeFieldChange: async (action, state, dispatch) => {
-                let propType = get(
-                  state.screenConfiguration.preparedFinalObject,
-                  "Property.propertyType"
-                );
-                
-                rendersubUsageType(action.value, propType, dispatch, state)
+                   rendersubUsageType(action.value,  dispatch, state)
               }
          }),
         subUsageType:{
@@ -295,17 +308,17 @@ export const additionDetails = getCommonCard({
                 },
               label: {
                   labelName: "Sub Usage Type",
-                  labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+                  labelKey: "WS_SUB_USAGE_TYPE"
               },
-        
               placeholder: {
-                  labelName: "Select Sub Usage Type",
-                  labelKey: "PT_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
-              },
-           
+                labelName: "Select Sub usage",
+                labelKey: "WS_COMMON_SUB_USAGE_TYPE_PLACEHOLDER"
+            },
+        
+                        
               localePrefix: {
                   moduleName: "WS",
-             			 masterName: "PROPSUBUSGTYPE"
+             			 masterName: "WSSUBUSGTYPE"
               },
               jsonPath: "applyScreen.subUsageCategory",
               sourceJsonPath:"propsubusagetypeForSelectedusageCategory",
@@ -503,29 +516,25 @@ export const additionDetails = getCommonCard({
  
 });
 
-export const rendersubUsageType = (usageType, propType, dispatch, state) => {
+export const rendersubUsageType = (usageType, dispatch, state) => {
  
+  
     let subTypeValues = get(
       state.screenConfiguration.preparedFinalObject,
-      "applyScreenMdmsData.PropertyTax.subUsageType"
+      "applyScreenMdmsData.ws-services-masters.waterSubUsage"
     );
  
-
     const additionalDetailsJson = "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.subUsageType"; 
   
-    let subUsage;    
-  
-          if (usageType === "NONRESIDENTIAL.COMMERCIAL" || usageType === "NONRESIDENTIAL.INDUSTRIAL" || usageType === "NONRESIDENTIAL.INSTITUTIONAL"
-          || usageType === "NONRESIDENTIAL.OTHERS") {
+    let subUsage;     
+            
+          if (usageType == "COMMERCIAL" || usageType == "RESIDENTIAL") {        
               dispatch(handleField("apply", additionalDetailsJson, "visible", true));
               dispatch(handleField("apply", additionalDetailsJson, "props.visible", true));
-              if (usageType === "MIXED") {
-                  subUsage = subTypeValues;
-              } else {
-                  subUsage = subTypeValues.filter(cur => {
-                      return (cur.code.startsWith(usageType))
-                  })
-              }
+              subUsage = subTypeValues.filter(cur => {
+                return (cur.code.startsWith(usageType))
+            })
+          
           } else {
               set(state.screenConfiguration.preparedFinalObject,"applyScreen.subUsageCategory", ""); 
               set(state.screenConfiguration.preparedFinalObject,"applyScreen.subUsageCategory", ""); 

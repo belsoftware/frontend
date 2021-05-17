@@ -82,7 +82,7 @@ const moveToReview = (state, dispatch) => {
             dispatch(
               toggleSnackbar(
                 true,
-                { labelName: "Please uplaod mandatory documents!", labelKey: "" },
+                { labelName: "Please upload mandatory documents!", labelKey: "" },
                 "warning"
               )
             );
@@ -98,7 +98,7 @@ const moveToReview = (state, dispatch) => {
           dispatch(
             toggleSnackbar(
               true,
-              { labelName: "Please uplaod mandatory documents!", labelKey: "" },
+              { labelName: "Please upload mandatory documents!", labelKey: "" },
               "warning"
             )
           );
@@ -204,6 +204,7 @@ const callBackForNext = async (state, dispatch) => {
       
     else {
     
+      
       const water = get(
         state.screenConfiguration.preparedFinalObject,
         "applyScreen.water"
@@ -410,15 +411,39 @@ const callBackForNext = async (state, dispatch) => {
 
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 1) {
-    if (isModifyMode()) {
-      
+
+    console.log("in active step 1 for plumber info");
+
+     if (isModifyMode()) {
+      // setting of plumber dtls
+     // console.log("setting of plumber dtls");
+      var plumberInfo = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].plumberInfo", null); 
+   // console.log("plumber info--"+JSON.stringify(plumberInfo));
+    if(plumberInfo && plumberInfo.length>0)
+    {
+      if(plumberInfo[0].licenseNo || plumberInfo[0].name || plumberInfo[0].mobileNumber)
+      {
+      //console.log("additionalDetails--"+get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null));
+      if(get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null) === "NA" || get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null) === "") 
+      {
+       dispatch(prepareFinalObject("WaterConnection[0].additionalDetails.detailsProvidedBy", "ULB"));
+      // console.log("plumber dtl--"+get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null));
+      }
+      }
+      else if(get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.detailsProvidedBy", null) === "ULB")
+      dispatch(prepareFinalObject("WaterConnection[0].additionalDetails.detailsProvidedBy", "NA"));
+    }
       // isFormValid = true;
       // hasFieldToaster = false;
-
+      let modificationContainerValid = true;
+      let applicationStatus = get(state.screenConfiguration.preparedFinalObject, "applyScreen.applicationStatus");
+      if(applicationStatus == "PENDING_FOR_CONNECTION_ACTIVATION"){
+        console.info("DC-appln in FI and modify mode")
+        modificationContainerValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
       
+      }
       let addConnDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children", state, dispatch);
-      let modificationContainerValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
-      
+     
       isFormValid = (addConnDetailValid &&modificationContainerValid)? true:false;
       hasFieldToaster = true;
 
@@ -441,6 +466,24 @@ const callBackForNext = async (state, dispatch) => {
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 2 && process.env.REACT_APP_NAME !== "Citizen") {
 
+   
+   
+    var plumberInfo = get(state.screenConfiguration.preparedFinalObject, "applyScreen.plumberInfo", null); 
+    //console.log("plumber info--"+JSON.stringify(plumberInfo));
+    if(plumberInfo && plumberInfo.length>0)
+    {
+      if(plumberInfo[0].licenseNo || plumberInfo[0].name || plumberInfo[0].mobileNumber)
+      {
+      //console.log("additionalDetails--"+get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null));
+      if(get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null) === null || get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null) === "NA") 
+      {
+       dispatch(prepareFinalObject("applyScreen.additionalDetails.detailsProvidedBy", "ULB"));
+       //console.log("plumber dtl--"+get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null));
+      }
+      }
+      else if(get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null) === "ULB")
+      dispatch(prepareFinalObject("applyScreen.additionalDetails.detailsProvidedBy", "NA"));
+    }
     
     let plumberValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children", state, dispatch);
     //let activateDetailValid =validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children", state, dispatch);
@@ -555,7 +598,9 @@ const callBackForNext = async (state, dispatch) => {
                
           if (moveToReview(state, dispatch)) {
             await pushTheDocsUploadedToRedux(state, dispatch);
-
+            if (getQueryArg(window.location.href, "action") === "edit" && (!isModifyMode() || (isModifyMode() && isModifyModeAction()))) {
+              setReviewPageRoute(state, dispatch);
+            } 
              isFormValid = true; 
              hasFieldToaster = false;
                 // if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {

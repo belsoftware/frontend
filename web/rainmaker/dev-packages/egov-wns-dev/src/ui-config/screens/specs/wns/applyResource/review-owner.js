@@ -140,13 +140,14 @@ export const plumberDetails={
     {
       jsonPath: "WaterConnection[0].additionalDetails.detailsProvidedBy",
       callBack: handleNA
-    }, {
-      labelKey: "WS_OLD_LABEL_NAME"
     },
-    {
-      jsonPath: "WaterConnectionOld[0].additionalDetails.detailsProvidedBy",
-      callBack: handleNA
-    }
+    //  {
+    //   labelKey: "WS_OLD_LABEL_NAME"
+    // },
+    // {
+    //   jsonPath: "WaterConnectionOld[0].additionalDetails.detailsProvidedBy",
+    //   callBack: handleNA
+    // }
   ),
   reviewPlumberLicenseNo : getLabelWithValueForModifiedLabel(
     {
@@ -156,13 +157,14 @@ export const plumberDetails={
     {
       jsonPath: "WaterConnection[0].plumberInfo[0].licenseNo",
       callBack: handleNA
-    }, {
-      labelKey: "WS_OLD_LABEL_NAME"
     },
-    {
-      jsonPath: "WaterConnectionOld[0].plumberInfo[0].licenseNo",
-      callBack: handleNA
-    }
+    //  {
+    //   labelKey: "WS_OLD_LABEL_NAME"
+    // },
+    // {
+    //   jsonPath: "WaterConnectionOld[0].plumberInfo[0].licenseNo",
+    //   callBack: handleNA
+    // }
   ),
   reviewPlumberName : getLabelWithValueForModifiedLabel(
     {
@@ -170,11 +172,14 @@ export const plumberDetails={
       labelKey: "WS_ADDN_DETAILS_PLUMBER_NAME_LABEL"
     },
     { jsonPath: "WaterConnection[0].plumberInfo[0].name",
-      callBack: handleNA }, {
-        labelKey: "WS_OLD_LABEL_NAME"
-      },
-      { jsonPath: "WaterConnectionOld[0].plumberInfo[0].name",
-      callBack: handleNA }
+      callBack: handleNA 
+    }, 
+    //   {
+    //     labelKey: "WS_OLD_LABEL_NAME"
+    //   },
+    //   { jsonPath: "WaterConnectionOld[0].plumberInfo[0].name",
+    //   callBack: handleNA 
+    // }
   ),
   reviewPlumberMobileNo : getLabelWithValueForModifiedLabel(
     {
@@ -182,11 +187,13 @@ export const plumberDetails={
       labelKey: "WS_ADDN_DETAILS_PLUMBER_MOB_NO_LABEL"
     },
     { jsonPath: "WaterConnection[0].plumberInfo[0].mobileNumber",
-      callBack: handleNA }, {
-        labelKey: "WS_OLD_LABEL_NAME"
-      },
-      { jsonPath: "WaterConnectionOld[0].plumberInfo[0].mobileNumber",
-      callBack: handleNA }
+      callBack: handleNA 
+    },
+      //  {
+      //   labelKey: "WS_OLD_LABEL_NAME"
+      // },
+      // { jsonPath: "WaterConnectionOld[0].plumberInfo[0].mobileNumber",
+      // callBack: handleNA }
   )
 
 
@@ -433,22 +440,22 @@ export const connectionWater={
       callBack: handleNA
     }
   ),
-  reviewSourceInfo : getLabelWithValueForModifiedLabel(
-    {
-      labelName: "Water Source Info",
-      labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO"
-    },
-    {
-      jsonPath: "WaterConnection[0].sourceInfo",
-      callBack: handleNA
-    }, {
-      labelKey: "WS_OLD_LABEL_NAME"
-    },
-    {
-      jsonPath: "WaterConnectionOld[0].sourceInfo",
-      callBack: handleNA
-    }
-  ),
+  // reviewSourceInfo : getLabelWithValueForModifiedLabel(
+  //   {
+  //     labelName: "Water Source Info",
+  //     labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO"
+  //   },
+  //   {
+  //     jsonPath: "WaterConnection[0].sourceInfo",
+  //     callBack: handleNA
+  //   }, {
+  //     labelKey: "WS_OLD_LABEL_NAME"
+  //   },
+  //   {
+  //     jsonPath: "WaterConnectionOld[0].sourceInfo",
+  //     callBack: handleNA
+  //   }
+  // ),
    reviewPipeSize : getLabelWithValueForModifiedLabel(
     {
       labelName: "Pipe Size (in inches)",
@@ -500,12 +507,12 @@ export const connectionWater={
 reviewUsageType : getLabelWithValueForModifiedLabel(
   {
     labelName: "Usage Type",
-    labelKey: "PT_COMMON_USAGE_TYPE"
+    labelKey: "WS_COMMON_USAGE_TYPE"
   },
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPUSGTYPE"
+      masterName: "WSUSGTYPE"
     },
     jsonPath: "WaterConnection[0].usageCategory",
     callBack: handleNA
@@ -516,7 +523,7 @@ reviewUsageType : getLabelWithValueForModifiedLabel(
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPUSGTYPE"
+      masterName: "WSUSGTYPE"
     },
     jsonPath: "WaterConnectionOld[0].usageCategory",
     callBack: handleNA
@@ -526,12 +533,12 @@ reviewUsageType : getLabelWithValueForModifiedLabel(
 reviewSubUsageType: getLabelWithValueForModifiedLabel(
   {
     labelName: "Sub Usage Type",
-    labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+    labelKey: "WS_SUB_USAGE_TYPE"
   },
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
+      masterName: "WSSUBUSGTYPE"
     },
     jsonPath: "WaterConnection[0].subUsageCategory",
     callBack: handleNA
@@ -542,7 +549,7 @@ reviewSubUsageType: getLabelWithValueForModifiedLabel(
   {
     localePrefix: {
       moduleName: "WS",
-      masterName: "PROPSUBUSGTYPE"
+      masterName: "WSSUBUSGTYPE"
     },
     jsonPath: "WaterConnectionOld[0].subUsageCategory",
     callBack: handleNA

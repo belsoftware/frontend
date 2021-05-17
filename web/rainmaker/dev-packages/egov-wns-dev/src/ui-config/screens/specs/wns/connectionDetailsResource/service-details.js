@@ -38,16 +38,16 @@ export const renderService1 = () => {
        // rainwaterHarvestingFacility: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC" }, { jsonPath: "WaterConnection[0].property.additionalDetails.isRainwaterHarvesting" }),
         waterSource: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE" }, { jsonPath: "WaterConnection[0].waterSource" }),
         waterSubSource: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SUB_SOURCE" }, { jsonPath: "WaterConnection[0].waterSubSource" }),
-        sourceInfo: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO" }, { jsonPath: "WaterConnection[0].sourceInfo" }),
+        //sourceInfo: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO" }, { jsonPath: "WaterConnection[0].sourceInfo" }),
         usageCategory :getLabelWithValue (
           {
             labelName: "Usage Type",
-            labelKey: "PT_COMMON_USAGE_TYPE"
+            labelKey: "WS_COMMON_USAGE_TYPE"
           },
           {
             localePrefix: {
               moduleName: "WS",
-              masterName: "PROPUSGTYPE"
+              masterName: "WSUSGTYPE"
             },
             jsonPath: "WaterConnection[0].usageCategory",
             callBack: handleNA
@@ -56,12 +56,12 @@ export const renderService1 = () => {
         subUsageCategory: getLabelWithValue (
           {
             labelName: "Sub Usage Type",
-            labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+            labelKey: "WS_SUB_USAGE_TYPE"
           },
           {
             localePrefix: {
               moduleName: "WS",
-              masterName: "PROPSUBUSGTYPE"
+              masterName: "WSSUBUSGTYPE"
             },
             jsonPath: "WaterConnection[0].subUsageCategory",
             callBack: handleNA
@@ -100,16 +100,16 @@ export const renderService1 = () => {
       //  rainwaterHarvestingFacility: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_CONN_RAIN_WATER_HARVESTING_FAC" }, { jsonPath: "WaterConnection[0].property.additionalDetails.isRainwaterHarvesting" }),
         waterSource: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE" }, { jsonPath: "WaterConnection[0].waterSource" }),
         waterSubSource: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SUB_SOURCE" }, { jsonPath: "WaterConnection[0].waterSubSource" }),
-        sourceInfo: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO" }, { jsonPath: "WaterConnection[0].sourceInfo" }),
+        //sourceInfo: getLabelWithValue({ labelKey: "WS_SERV_DETAIL_WATER_SOURCE_INFO" }, { jsonPath: "WaterConnection[0].sourceInfo" }),
         usageCategory :getLabelWithValue (
           {
             labelName: "Usage Type",
-            labelKey: "PT_COMMON_USAGE_TYPE"
+            labelKey: "WS_COMMON_USAGE_TYPE"
           },
           {
             localePrefix: {
-              moduleName: "COMMON",
-              masterName: "PROPUSGTYPE"
+              moduleName: "WS",
+              masterName: "WSUSGTYPE"
             },
             jsonPath: "WaterConnection[0].usageCategory",
             callBack: handleNA
@@ -118,12 +118,12 @@ export const renderService1 = () => {
         subUsageCategory: getLabelWithValue (
           {
             labelName: "Sub Usage Type",
-            labelKey: "PT_COMMON_SUB_USAGE_TYPE"
+            labelKey: "WS_SUB_USAGE_TYPE"
           },
           {
             localePrefix: {
-              moduleName: "COMMON",
-              masterName: "PROPSUBUSGTYPE"
+              moduleName: "WS",
+              masterName: "WSSUBUSGTYPE"
             },
             jsonPath: "WaterConnection[0].subUsageCategory",
             callBack: handleNA
