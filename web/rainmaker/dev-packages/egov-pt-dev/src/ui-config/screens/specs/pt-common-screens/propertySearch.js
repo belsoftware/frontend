@@ -1,27 +1,26 @@
-import {
-  getCommonHeader,
-  getLabel,
-  getBreak
-} from "egov-ui-framework/ui-config/screens/specs/utils";
-import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { searchPropertyTable} from "./searchResource/searchResults";
-import { httpRequest } from "../../../../ui-utils";
-import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import commonConfig from "config/common.js";
+import {
+  getBreak, getCommonHeader,
+  getLabel
+} from "egov-ui-framework/ui-config/screens/specs/utils";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
+import store from "ui-redux/store";
+import { httpRequest } from "../../../../ui-utils";
+import "./index.css";
 // import { showHideAdhocPopup } from "../utils";
-import { resetFields } from "./mutation-methods";
-import "./index.css"
-import {searchPropertyDetails} from "./mutation-methods"
+import { resetFields, searchPropertyDetails } from "./mutation-methods";
+import { getQueryRedirectUrl, searchPropertyTable } from "./searchResource/searchResults";
+import get from "lodash/get";
+
 const hasButton = getQueryArg(window.location.href, "hasButton");
 let enableButton = true;
 enableButton = hasButton && hasButton === "false" ? false : true;
 const tenant = getTenantId();
 
-const url = getQueryArg(
-  window.location.href,
-  "redirectUrl"
-);
+
 
 const getMDMSData = async (dispatch) => {
   const mdmsBody = {
@@ -33,7 +32,13 @@ const getMDMSData = async (dispatch) => {
           masterDetails: [
             {
               name: "tenants"
-            },{name: "citymodule"}
+            }, { name: "citymodule" }
+          ]
+        },
+        {
+          moduleName: "PropertyTax",
+          masterDetails: [
+            { name: "PTWorkflow" }
           ]
         }
       ]
@@ -48,7 +53,9 @@ const getMDMSData = async (dispatch) => {
       mdmsBody
     );
     dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
-    if(process.env.REACT_APP_NAME != "Citizen"){
+    payload.MdmsRes.tenant.tenants = payload.MdmsRes.tenant.citymodule[1].tenants;
+    dispatch(prepareFinalObject("applyScreenMdmsData.tenant", payload.MdmsRes.tenant));
+    if (process.env.REACT_APP_NAME != "Citizen") {
       dispatch(
         prepareFinalObject(
           "searchScreen.tenantId",
@@ -56,6 +63,16 @@ const getMDMSData = async (dispatch) => {
         )
       );
     }
+
+    let ptWorkflowDetails = get(payload, "MdmsRes.PropertyTax.PTWorkflow", []);
+    ptWorkflowDetails.forEach(data => {
+      if(data.enable) {
+        dispatch(prepareFinalObject("applyScreenMdmsData.isCheckFromWNS", false));
+        if((data.businessService).includes("WNS")){
+          dispatch(prepareFinalObject("applyScreenMdmsData.isCheckFromWNS", true));
+        }
+      }
+    })
   } catch (e) {
     console.log(e);
   }
@@ -135,9 +152,18 @@ const screenConfig = {
               onClickDefination: {
                 action: "condition",
                 callBack: () => {
-                  let link="/pt-common-screens/register-property";
-                  let moduleName = process.env.REACT_APP_NAME === "Citizen" ? '/citizen' : '/employee';
-                  window.location.href = `${moduleName}${link}?redirectUrl=${url}`
+                  let url = getQueryRedirectUrl();
+                  let applicationNo = getQueryArg(window.location.href, "applicationNumber");
+                  const connectionNo = getQueryArg(window.location.href, "connectionNumber");
+                  const actionType = getQueryArg(window.location.href, "action");
+                  const modeaction = getQueryArg(window.location.href, "modeaction");
+                  const mode = getQueryArg(window.location.href, "mode");
+                  url = applicationNo ? url + `&applicationNumber=${applicationNo}` : url;
+                  url = connectionNo ? url + `&connectionNumber=${connectionNo}` : url;
+                  url = actionType ? url + `&action=${actionType}` : url;
+                  url = modeaction ? url + `&modeaction=${modeaction}` : url;
+                  url = mode ? url + `&mode=${mode}` : url;
+                  store.dispatch(setRoute(`/pt-common-screens/register-property?redirectUrl=${url}`));
                 }
               },
             }

@@ -7,18 +7,9 @@ const TestMolecules = Loadable({
   loader: () => import("./TestMolecules"),
   loading: () => <Loading />
 });
-const RadioButtonsGroup = Loadable({
-  loader: () => import("./RadioGroup"),
-  loading: () => <Loading />
-});
 
 const Tooltip = Loadable({
   loader: () => import("./Tooltip"),
-  loading: () => <Loading />
-});
-
-const CustomTab = Loadable({
-  loader: () => import("./CustomTab"),
   loading: () => <Loading />
 });
 
@@ -31,11 +22,6 @@ const DocumentList = Loadable({
   loader: () => import("./DocumentList"),
   loading: () => <Loading />
 });
-
-// const AutoSelector = Loadable({
-//   loader: () => import("./AutoSelector"),
-//   loading: () => <Loading />
-// });
 
 const MapLocator = Loadable({
   loader: () => import("./MapLocator"),
@@ -98,10 +84,6 @@ const MeterReadingEditable = Loadable({
   loader: () => import("./MeterReadingEditable"),
   loading: () => <Loading />
 })
-const ActionDialog = Loadable({
-  loader: () => import("./ActionDialog"),
-  loading: () => <Loading />
-})
 
 const FeesEstimateOverviewCard = Loadable({
   loader: () => import("./FeeEstimateOverviewCard"),
@@ -113,18 +95,20 @@ const OwnerHeader = Loadable({
   loading: () => <Loading />
 });
 
+const ActionFooter = Loadable({
+  loader: () => import("./ActionFooter"),
+  loading: () => <Loading />
+});
+
 export {
   TestMolecules,
-  RadioButtonsGroup,
   Tooltip,
-  CustomTab,
   UploadSingleFile,
   DocumentList,
   MapLocator,
   FeesEstimateCard,
   HowItWorks,
   PastPayments,
-  ActionDialog,
   DividerWithLabel,
   MyConnections,
   PastPaymentsDetails,
@@ -135,7 +119,6 @@ export {
   Applications,
   WnsHowItWorks,
   FeesEstimateOverviewCard,
-  OwnerHeader
-
-  // PropertyTaxDetails
+  OwnerHeader,
+  ActionFooter
 };

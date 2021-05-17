@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-//import "./index.css";
+// import "./index.css";
 import get from "lodash/get";
 import { withStyles } from "@material-ui/core/styles";
 import { getLocaleLabels, getQueryArg } from "egov-ui-framework/ui-utils/commons";
@@ -14,19 +14,33 @@ const styles = {
     lineHeight: '1.375em',
   },
   linkDetails : {
-    // color: 'rgba(0, 0, 0, 0.87)',
+    color: 'rgb(245, 117, 66)',
     fontSize: '16px',
     fontWeight: 400,
     fontFamily: 'Roboto',
     lineHeight: '19px',
     letterSpacing: '0.67px',
-    textDecoration : 'none'
-  }
+    textDecoration : 'none',
+    '&:hover':{
+      color: 'rgb(245, 117, 66)',
+    },
+    '&:active':{
+      color: 'rgb(245, 117, 66)',
+    },
+    '&:visited':{
+      color: 'rgb(245, 117, 66)',
+    },
+    '&:link':{
+      color: 'rgb(245, 117, 66)',
+    }
+
+  },
 };
 
 class downloadFile extends React.Component {
   render() {
-    const { label = {}, linkDetail= {}, value, classes, localizationLabels  } = this.props;
+    const { label = {}, linkDetail= {}, classes, localizationLabels  } = this.props;
+    let { value } = this.props;
     let translatedLabel = getLocaleLabels(
       label.labelName,
       label.labelKey,
@@ -37,11 +51,15 @@ class downloadFile extends React.Component {
       linkDetail.labelKey,
       localizationLabels
     );
-
+    let downloadLink;
+    if(value && !value.includes("https") && window.location.href.includes("https")) {
+      downloadLink = value.replace(/http/g, "https")
+    }
+    value = downloadLink ? downloadLink : value;
     return (
       <div>
         <div className={classes.root}>{translatedLabel}</div>
-        <a className={classes.linkDetails} href={value} target="_blank">
+        <a className={classes.linkDetails} href={value} target="_blank"  rel="noopener noreferrer">
           {translatedLabelLink}
         </a>
       </div>

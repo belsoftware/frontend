@@ -1,7 +1,7 @@
 import { convertDateToEpoch } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, toggleSnackbar, toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { httpRequest } from "egov-ui-framework/ui-utils/api";
-import { getTransformedLocale } from "egov-ui-framework/ui-utils/commons";
+import { getTransformedLocale, getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import html2canvas from "html2canvas";
 import jp from "jsonpath";
@@ -637,3 +637,20 @@ export const getSearchBillResult = async (queryObject, dispatch) => {
     console.log(error, "fetxh");
   }
 };
+
+export const getDomainLink = () =>{
+    let link = "";
+    if(process.env.NODE_ENV !== "development"){
+       link += "/"+process.env.REACT_APP_NAME.toLowerCase()
+    }
+    return link
+};
+
+
+export const downloadMutationCertificate =(queryObj,fileName)=>{
+  searchAndDownloadPdf(`/egov-pdf/download/PT/ptmutationcertificate`,queryObj,fileName)
+}
+
+export const printMutationCertificate =(queryObj)=>{
+  searchAndPrintPdf(`/egov-pdf/download/PT/ptmutationcertificate`,queryObj)
+}

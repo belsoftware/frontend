@@ -3,22 +3,20 @@ import { connect } from "react-redux";
 import { AutoSuggest } from "../../ui-atoms-local";
 import { findItemInArrayOfObject } from "../../ui-utils/commons";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import {
-  transformById,
-  getLocaleLabels,
-  appendModulePrefix
-} from "egov-ui-framework/ui-utils/commons";
+import { appendModulePrefix } from "egov-ui-framework/ui-utils/commons";
+import { getLocaleLabels } from "../../ui-utils/commons";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
-import { getLocalization } from "egov-ui-kit/utils/localStorageUtils";
-
-// const localizationLabels = JSON.parse(getLocalization("localization_en_IN"));
-// const transfomedKeys = transformById(localizationLabels, "code");
+import { sortDropdownLabels, sortDropdownNames } from "egov-ui-framework/ui-utils/commons";
 class AutoSuggestor extends Component {
+ 
   onSelect = value => {
-    const { onChange } = this.props;
-    //Storing multiSelect values not handled yet
-    onChange({ target: { value: value.value } });
+    const { onChange,isMulti } = this.props;
+    if(isMulti){
+      onChange({ target: { value: value } });
+    }else{
+      onChange({ target: { value: value ? value.value: null } });
+    }    
   };
 
   render() {
@@ -62,9 +60,10 @@ class AutoSuggestor extends Component {
 const getLocalisedSuggestions = (suggestions, localePrefix, transfomedKeys) => {
   return (
     suggestions &&
+    Array.isArray(suggestions) &&
     suggestions.length > 0 &&
     suggestions.map((option, key) => {
-      option.name = getLocaleLabels(
+      option.name = Number(option.code) &&  Number(option.code) != "NAN" ? option.code : getLocaleLabels(
         option.code,
         localePrefix && !isEmpty(localePrefix)
           ? appendModulePrefix(option.code, localePrefix)
@@ -72,7 +71,7 @@ const getLocalisedSuggestions = (suggestions, localePrefix, transfomedKeys) => {
         transfomedKeys
       );
       return option;
-    })
+    }).sort(sortDropdownNames)
   );
 };
 
@@ -111,7 +110,6 @@ const mapStateToProps = (state, ownprops) => {
   if (selectedItem && selectedItem.name) {
     value = { label: selectedItem.name, value: selectedItem.code };
   }
-  // console.log(value, suggestions);
   return { value, jsonPath, suggestions, localizationLabels };
 };
 

@@ -1,7 +1,9 @@
 import { getCommonCard, getCommonContainer, getCommonHeader } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, unMountScreen } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg, setBusinessServiceDataToLocalStorage } from "egov-ui-framework/ui-utils/commons";
-import { generatePdfFromDiv } from "egov-ui-kit/utils/PTCommon";
+import { loadUlbLogo } from "egov-ui-kit/utils/pdfUtils/generatePDF";
+import { generatePTMAcknowledgement } from "egov-ui-kit/utils/pdfUtils/generatePTMAcknowledgement";
+import { getCommonTenant } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
 import get from "lodash/get";
 import set from "lodash/set";
 import { httpRequest } from "../../../../ui-utils";
@@ -15,7 +17,7 @@ import { transferorInstitutionSummary, transferorSummary } from "./searchPreview
 import { documentsSummary } from "./summaryResource/documentsSummary";
 import { propertySummary } from "./summaryResource/propertySummary";
 import { registrationSummary } from './summaryResource/registrationSummary';
-import { getCommonTenant } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
+import "./index.css";
 
 const titlebar = getCommonContainer({
   header: getCommonHeader({
@@ -62,28 +64,34 @@ const setDownloadMenu = (state, dispatch, tenantId, applicationNumber) => {
   let receiptDownloadObject = {
     label: { labelName: "Receipt", labelKey: "MT_RECEIPT" },
     link: () => {
-      downloadReceitForm(get(state, "screenConfiguration.preparedFinalObject.Payments"), "consolidatedreceipt", tenantId, applicationNumber);
+      downloadReceitForm( tenantId, applicationNumber,"download");
     },
     leftIcon: "receipt"
   };
   let receiptPrintObject = {
     label: { labelName: "Receipt", labelKey: "MT_RECEIPT" },
     link: () => {
-      downloadReceitForm(get(state, "screenConfiguration.preparedFinalObject.Payments"), "consolidatedreceipt", tenantId, applicationNumber, 'print');
+      downloadReceitForm( tenantId, applicationNumber, 'print');
     },
     leftIcon: "receipt"
   };
   let applicationDownloadObject = {
     label: { labelName: "Application", labelKey: "MT_APPLICATION" },
     link: () => {
-      generatePdfFromDiv("download", applicationNumber, "#material-ui-cardContent")
+      generatePTMAcknowledgement(get(
+        state,
+        "screenConfiguration.preparedFinalObject", {}), `mutation-acknowledgement-${applicationNumber}.pdf`);
+      // generatePdfFromDiv("download", applicationNumber, "#material-ui-cardContent")
     },
     leftIcon: "assignment"
   };
   let applicationPrintObject = {
     label: { labelName: "Application", labelKey: "MT_APPLICATION" },
     link: () => {
-      generatePdfFromDiv("print", applicationNumber, "#material-ui-cardContent")
+      generatePTMAcknowledgement(get(
+        state,
+        "screenConfiguration.preparedFinalObject", {}), 'print');
+      // generatePdfFromDiv("print", applicationNumber, "#material-ui-cardContent")
     },
     leftIcon: "assignment"
   };
@@ -285,11 +293,13 @@ const setSearchResponse = async (
   if (auditResponse && Array.isArray(get(auditResponse, "Properties", [])) && get(auditResponse, "Properties", []).length > 0) {
     const propertiesAudit = get(auditResponse, "Properties", []);
 
+    const propertyIndex=property.status ==  'ACTIVE' ? 1:0;
+    const previousActiveProperty = propertiesAudit.filter(property => property.status == 'ACTIVE').sort((x, y) => y.auditDetails.lastModifiedTime - x.auditDetails.lastModifiedTime)[propertyIndex];
 
-    const previousActiveProperty = propertiesAudit.filter(property => property.status == 'ACTIVE').sort((x, y) => y.auditDetails.lastModifiedTime - x.auditDetails.lastModifiedTime)[0];
-    previousActiveProperty
 
     property.ownershipCategoryInit = previousActiveProperty.ownershipCategory;
+    property.ownersInit = previousActiveProperty.owners.filter(owner => owner.status == "ACTIVE");
+
     if (property.ownershipCategoryInit.startsWith("INSTITUTION")) {
       property.institutionInit = previousActiveProperty.institution;
 
@@ -341,6 +351,10 @@ export const setData = async (state, dispatch, applicationNumber, tenantId) => {
     {
       key: "consumerCodes",
       value: applicationNumber
+    },
+    {
+      key: "businessService",
+      value: 'PT.MUTATION'
     }
   ];
   const responsePayments = await getpayments(queryObj)
@@ -380,28 +394,20 @@ const screenConfig = {
   uiFramework: "material-ui",
   name: "search-preview",
   beforeInitScreen: (action, state, dispatch) => {
+    // dispatch(unMountScreen("propertySearch"));
+    // dispatch(unMountScreen("apply"));
     const applicationNumber = getQueryArg(
       window.location.href,
       "applicationNumber"
     );
     const tenantId = getQueryArg(window.location.href, "tenantId");
-
-    searchBill(dispatch, applicationNumber, tenantId);
-    let businessServicesData = JSON.parse(localStorage.getItem('businessServiceData'));
-    let loadBusinessServiceData = true;
-    if (businessServicesData && businessServicesData.length > 0) {
-      businessServicesData.map(businessService => {
-        if (businessService.businessService == "PT.MUTATION") {
-          loadBusinessServiceData = false;
-        }
-      })
-    }
+    dispatch(prepareFinalObject("Property", {}));
     setSearchResponse(state, dispatch, applicationNumber, tenantId);
+    loadUlbLogo(tenantId);
     const queryObject = [
       { key: "tenantId", value: tenantId },
-      // { key: "businessServices", value: "PT.MUTATION" }
     ];
-    loadBusinessServiceData && setBusinessServiceDataToLocalStorage(queryObject, dispatch);
+   setBusinessServiceDataToLocalStorage(queryObject, dispatch);
     // Hide edit buttons
     setData(state, dispatch, applicationNumber, tenantId);
     set(

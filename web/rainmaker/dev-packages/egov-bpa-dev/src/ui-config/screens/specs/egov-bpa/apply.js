@@ -5,7 +5,7 @@ import {
   getSelectField,
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { getCurrentFinancialYear } from "../utils";
+import { getScrutinyDetails } from "../utils";
 import { footer, showApplyLicencePicker } from "./applyResource/footer";
 import { basicDetails } from "./applyResource/basicDetails";
 import { bpaLocationDetails } from "./applyResource/propertyLocationDetails";
@@ -45,6 +45,7 @@ import jp from "jsonpath";
 import { bpaSummaryDetails } from "../egov-bpa/summaryDetails";
 import { changeStep } from "./applyResource/footer";
 import { fetchLocalizationLabel } from "egov-ui-kit/redux/app/actions";
+import { nocDetailsApply } from "./noc";
 
 export const stepsData = [
   { labelName: "Basic Details", labelKey: "BPA_STEPPER_BASIC_DETAILS_HEADER" },
@@ -122,7 +123,8 @@ export const formwizardFourthStep = {
     id: "apply_form4"
   },
   children: {
-    documentDetails
+    documentDetails,
+    nocDetailsApply
   },
   visible: false
 };
@@ -199,6 +201,14 @@ const getMdmsData = async (action, state, dispatch) => {
           masterDetails: [
             { name: "TradeType", filter: `[?(@.type == "BPA")]` }
           ]
+        },
+        {
+          moduleName: "NOC",
+          masterDetails: [
+            {
+              name: "DocumentTypeMapping"
+            },
+          ]
         }
       ]
     }
@@ -248,14 +258,14 @@ const setSearchResponse = async (
     },
     { key: "applicationNo", value: applicationNumber }
   ]);
+  
+  const edcrNumber = get(response, "BPA[0].edcrNumber");
+  const ownershipCategory = get(response, "BPA[0].landInfo.ownershipCategory");
+  const appDate = get(response, "BPA[0].auditDetails.createdTime");
+  const latitude = get(response, "BPA[0].address.geoLocation.latitude");
+  const longitude = get(response, "BPA[0].address.geoLocation.longitude");
 
-  const edcrNumber = get(response, "Bpa[0].edcrNumber");
-  const ownershipCategory = get(response, "Bpa[0].landInfo.ownershipCategory");
-  const appDate = get(response, "Bpa[0].auditDetails.createdTime");
-  const latitude = get(response, "Bpa[0].address.geoLocation.latitude");
-  const longitude = get(response, "Bpa[0].address.geoLocation.longitude");
-
-  dispatch(prepareFinalObject("BPA", response.Bpa[0]));
+  dispatch(prepareFinalObject("BPA", response.BPA[0]));
   let edcrRes = await edcrHttpRequest(
     "post",
     "/edcr/rest/dcr/scrutinydetails?edcrNumber=" + edcrNumber + "&tenantId=" + tenantId,
@@ -362,7 +372,8 @@ export const prepareDocumentDetailsUploadRedux = async (state, dispatch) => {
                 fileStoreId : upDoc.fileStoreId,
                 fileUrl : url,
                 wfState: upDoc.wfState ,
-                isClickable:false                               
+                isClickable:false,
+                additionalDetails: upDoc.additionalDetails                                
               }
             );
           }else{
@@ -376,7 +387,8 @@ export const prepareDocumentDetailsUploadRedux = async (state, dispatch) => {
                 fileStoreId : upDoc.fileStoreId,
                 fileUrl : url,
                 wfState: upDoc.wfState,
-                isClickable:false                                
+                isClickable:false,
+                additionalDetails: upDoc.additionalDetails                                 
               }
             ];
           }
@@ -535,10 +547,73 @@ const setTaskStatus = async(state,applicationNumber,tenantId,dispatch,componentJ
      
     }
 }
+
+export const getMohallaDetails = async (state, dispatch, tenantId) => {
+  try {
+    let payload = await httpRequest(
+      "post",
+      "/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=REVENUE&boundaryType=Locality",
+      "_search",
+      [{ key: "tenantId", value: tenantId }],
+      {}
+    );
+    const mohallaData =
+      payload &&
+      payload.TenantBoundary[0] &&
+      payload.TenantBoundary[0].boundary &&
+      payload.TenantBoundary[0].boundary.reduce((result, item) => {
+        result.push({
+          ...item,
+          name: `${tenantId
+            .toUpperCase()
+            .replace(
+              /[.]/g,
+              "_"
+            )}_REVENUE_${item.code
+              .toUpperCase()
+              .replace(/[._:-\s\/]/g, "_")}`
+        });
+        return result;
+      }, []);
+    dispatch(
+      prepareFinalObject(
+        "mohalla.tenant.localities",
+        mohallaData
+      )
+    );
+    dispatch(
+      handleField(
+        "apply",
+        "components.div.children.formwizardFirstStep.children.bpaLocationDetails.children.cardContent.children.tradeDetailsConatiner.children.tradeLocMohalla",
+        "props.suggestions",
+        mohallaData
+        // payload.TenantBoundary && payload.TenantBoundary[0].boundary
+      )
+    );
+    const mohallaLocalePrefix = {
+      moduleName: tenantId,
+      masterName: "REVENUE"
+    };
+    dispatch(
+      handleField(
+        "apply",
+        "components.div.children.formwizardFirstStep.children.bpaLocationDetails.children.cardContent.children.tradeDetailsConatiner.children.tradeLocMohalla",
+        "props.localePrefix",
+        mohallaLocalePrefix
+      )
+    );
+  } catch (e) {
+    console.log(e);
+  }
+}
 const screenConfig = {
   uiFramework: "material-ui",
   name: "apply",
   beforeInitScreen: (action, state, dispatch,componentJsonpath) => {
+   
+    dispatch(prepareFinalObject("BPA", {}));
+    dispatch(prepareFinalObject("documentsContract", []));
+    dispatch(prepareFinalObject("documentDetailsUploadRedux", {}));
     const applicationNumber = getQueryArg(
       window.location.href,
       "applicationNumber"
@@ -559,6 +634,12 @@ const screenConfig = {
     if (applicationNumber && isEdit) {
       setSearchResponse(state, dispatch, applicationNumber, tenantId, action);
     } else {
+      const edcrNumber = getQueryArg(window.location.href, "edcrNumber");
+      if(edcrNumber) {
+        dispatch(prepareFinalObject("BPA.edcrNumber", edcrNumber));
+        getScrutinyDetails(state, dispatch);
+        getMohallaDetails(state, dispatch, tenantId);
+      }
       setProposedBuildingData(state, dispatch);
       getTodaysDate(action, state, dispatch);
       const queryObject = [
@@ -586,7 +667,6 @@ const screenConfig = {
     });
     dispatch(fetchLocalizationLabel(getLocale(), tenantId, tenantId));
     setTaskStatus(state,applicationNumber,tenantId,dispatch,componentJsonpath);
-
     // Code to goto a specific step through URL
     if (step && step.match(/^\d+$/)) {
       let intStep = parseInt(step);

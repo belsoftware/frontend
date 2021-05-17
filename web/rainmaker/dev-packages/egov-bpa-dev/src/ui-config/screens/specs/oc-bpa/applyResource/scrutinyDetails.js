@@ -14,6 +14,7 @@ import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject
 import get from "lodash/get";
 import "./index.css";
 import { getOcEdcrDetails } from "../../utils";
+import { getLocaleLabels, getTransformedLocale } from "egov-ui-framework/ui-utils/commons";
 
 export const basicDetails = getCommonCard({
   header: getCommonTitle(
@@ -204,7 +205,7 @@ export const basicDetails = getCommonCard({
         labelName: "Enter Remarks Here",
         labelKey: "BPA_BASIC_DETAILS_REMARKS_PLACEHOLDER"
       },
-      jsonPath: "BPA.remarks",
+      jsonPath: "BPA.additionalDetails.remarks",
       props: {
         multiline: true,
         rows: "4"
@@ -243,8 +244,8 @@ export const basicDetails = getCommonCard({
 export const buildingPlanScrutinyDetails = getCommonCard({
   header: getCommonTitle(
     {
-      labelName: "OC Building Plan Scrutiny Application Details",
-      labelKey: "BPA_OC_APPLICATION_SCRUNITY_DETAILS_TITLE"
+      labelName: "Occupancy certificate scrutiny details",
+      labelKey: "BPA_OC_CER_SCRUNITY_DETAILS_TITLE"
     },
     {
       style: {
@@ -335,8 +336,8 @@ export const proposedBuildingDetails = getCommonCard({
         },
       children: {
         proposedLabel: getLabel({
-          labelName: "Proposed Building Details",
-          labelKey: "BPA_APPLICATION_PROPOSED_BUILDING_LABEL"
+          labelName: "Actual Building details",
+          labelKey: "BPA_ACTUAL_BUILDING_DETAILS_LABEL"
         })
       },
       gridDefination: {
@@ -345,51 +346,19 @@ export const proposedBuildingDetails = getCommonCard({
         md: 6
       },
     },
-    occupancyType: {
-      ...getSelectField({
-        label: {
-          labelName: "Occupancy Type",
-          labelKey: "BPA_OCCUPANCY_TYPE"
-        },
-        placeholder: {
-          labelName: "Select Occupancy Type",
-          labelKey: "BPA_OCCUPANCY_TYPE_PLACEHOLDER"
-        },
+    occupancyTypeLabel: getLabelWithValue(
+      {
+        labelName: "Occupancy Type",
+        labelKey: "BPA_OCCUPANCY_TYPE"
+      },
+      {
         localePrefix: {
           moduleName: "BPA",
           masterName: "OCCUPANCYTYPE"
         },
-        jsonPath: "ocScrutinyDetails.planDetail.occupancies[0].typeHelper.type.code",
-        sourceJsonPath: "applyScreenMdmsData.BPA.occupancyData",
-        required: true,
-        gridDefination: {
-          xs: 12,
-          sm: 12,
-          md: 6
-        },
-        props: {
-          disabled: true,
-          className: "tl-trade-type"
-        }
-      }),
-      beforeFieldChange: (action, state, dispatch) => {
-        let path = action.componentJsonpath.replace(
-          /.occupancyType/,
-          //".proposedContainer.children.component.props.scheama.children.cardContent.children.children.subOccupancyType"
-          ".subOccupancyType"
-        );
-        let occupancyType = get(
-          state,
-          "screenConfiguration.preparedFinalObject.applyScreenMdmsData.BPA.SubOccupancyType",
-          []
-        );
-        let subOccupancyType = occupancyType.filter(item => {
-          return item.active && (item.occupancyType).toUpperCase() === (action.value).toUpperCase();
-        });
-        dispatch(handleField("apply", path, "props.data", subOccupancyType));
-        dispatch(prepareFinalObject("BPA.additionalDetails.isCharitableTrustBuilding", false));
+        jsonPath: "scrutinyDetails.planDetail.occupancies[0].typeHelper.type.code",
       }
-    },
+    ),
   }),
   proposedContainer: {
     uiFramework: "custom-atoms",
@@ -405,7 +374,7 @@ export const proposedBuildingDetails = getCommonCard({
         props: {
           hasAddItem: false,
           scheama: getCommonContainer({
-            applicantContainer: getCommonContainer({
+            buildingDetailsContainer: getCommonContainer({
 
               header: getLabel(
                 "Block",
@@ -418,46 +387,30 @@ export const proposedBuildingDetails = getCommonCard({
                   }
                 }
               ),
-              subOccupancyType: {
-                visible: false,
-                uiFramework: "custom-containers-local",
-                moduleName: "egov-bpa",
-                componentPath: "AutosuggestContainer",
-                required: true,
-                props: {
-                  style: {
-                    width: "100%",
-                    cursor: "pointer"
-                  },
-                  label: {
-                    labelName: "Sub Occupancy Type",
-                    labelKey: "BPA_SUB_OCCUP_TYPE_LABEL"
-                  },
-                  placeholder: {
-                    labelName: "Select Sub Occupancy Type",
-                    labelKey: "BPA_SUB_OCCUP_TYPE_PLACEHOLDER"
-                  },
-                  localePrefix: {
-                    moduleName: "BPA",
-                    masterName: "SUBOCCUPANCYTYPE"
-                  },
-                  jsonPath: "edcr.blockDetail[0].occupancyType",
-                  sourceJsonPath: "edcr.blockDetail[0].suboccupancyData",
-                  labelsFromLocalisation: true,
-                  suggestions: [],
-                  fullwidth: true,
-                  required: true,
-                  isMulti: true,
-                  inputLabelProps: {
-                    shrink: true
-                  }
+              subOccupancyTypeLabel: getLabelWithValue(
+                {
+                  labelName: "Sub Occupancy Type",
+                  labelKey: "BPA_SUB_OCCUP_TYPE_LABEL"
                 },
-                gridDefination: {
-                  xs: 12,
-                  sm: 12,
-                  md: 6
+                {
+                  jsonPath: `edcr.blockDetail[0]`,
+                  callBack: value => {
+                      let returnVAlue;
+                      if (value && value.occupancyType && value.occupancyType.length) {
+                          returnVAlue = "";
+                          let occupancy = value.occupancyType;
+                          for (let tp = 0; tp < occupancy.length; tp++) {
+                              if (tp === (occupancy.length - 1)) {
+                                  returnVAlue += getLocaleLabels(getTransformedLocale(`BPA_SUBOCCUPANCYTYPE_${occupancy[tp].value}`), getTransformedLocale(`BPA_SUBOCCUPANCYTYPE_${occupancy[tp].value}`)) //occupancy[tp].label;
+                              } else {
+                                  returnVAlue += getLocaleLabels(getTransformedLocale(`BPA_SUBOCCUPANCYTYPE_${occupancy[tp].value}`), getTransformedLocale(`BPA_SUBOCCUPANCYTYPE_${occupancy[tp].value}`)) + "," //occupancy[tp].label + ",";
+                              }
+                          }
+                      }
+                      return returnVAlue || "NA";
+                  },
                 }
-              },
+              ),
               proposedBuildingDetailsContainer: {
                 uiFramework: "custom-molecules-local",
                 moduleName: "egov-bpa",
@@ -488,6 +441,7 @@ export const proposedBuildingDetails = getCommonCard({
                     print: false,
                     download: false,
                     viewColumns: false,
+                    rowHover: false
                   }
                 }
               },
@@ -495,7 +449,7 @@ export const proposedBuildingDetails = getCommonCard({
           }),
           items: [],
           isReviewPage: true,
-          prefixSourceJsonPath: "children.applicantContainer.children",
+          prefixSourceJsonPath: "children.buildingDetailsContainer.children",
           sourceJsonPath: "edcr.blockDetail",
         },
         type: "array"
@@ -509,8 +463,8 @@ export const proposedBuildingDetails = getCommonCard({
 export const abstractProposedBuildingDetails = getCommonCard({
   header: getCommonTitle(
     {
-      labelName: "Proposed Building Abstract",
-      labelKey: "BPA_PROPOSED_BUILDING_ABSTRACT_HEADER"
+      labelName: "Actual building abstract",
+      labelKey: "BPA_ACTUAL_BUILDING_ABSTRACT_HEADER"
     },
     {
       style: {
@@ -531,7 +485,7 @@ export const abstractProposedBuildingDetails = getCommonCard({
               labelName: "Total Buildup Area (sq.mtrs)",
               labelKey: "BPA_APPLICATION_TOTAL_BUILDUP_AREA"
             },
-            jsonPath: "ocScrutinyDetails.planDetail.blocks[0].building.totalArea[0].builtUpArea",
+            jsonPath: "ocScrutinyDetails.planDetail.virtualBuilding.totalBuitUpArea",
             props: {
               disabled: 'true',
               className: "tl-trade-type"
@@ -549,7 +503,7 @@ export const abstractProposedBuildingDetails = getCommonCard({
               labelName: "Total Floor Area",
               labelKey: "BPA_APPLICATION_NO_OF_FLOORS"
             },
-            jsonPath: "ocScrutinyDetails.planDetail.blocks[0].building.totalArea[0].floorArea",
+            jsonPath: "ocScrutinyDetails.planDetail.blocks[0].building.totalFloors",
             props: {
               disabled: 'true',
               className: "tl-trade-type"
@@ -567,7 +521,7 @@ export const abstractProposedBuildingDetails = getCommonCard({
               labelName: "Total Carpet Area",
               labelKey: "BPA_APPLICATION_HIGH_FROM_GROUND"
             },
-            jsonPath: "ocScrutinyDetails.planDetail.blocks[0].building.totalArea[0].carpetArea",
+            jsonPath: "ocScrutinyDetails.planDetail.blocks[0].building.buildingHeight",
             props: {
               disabled: 'true',
               className: "tl-trade-type"

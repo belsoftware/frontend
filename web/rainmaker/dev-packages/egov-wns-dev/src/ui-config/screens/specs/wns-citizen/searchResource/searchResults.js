@@ -2,7 +2,10 @@ import React from "react";
 import { sortByEpoch, getEpochForDate } from "../../utils";
 import { Link } from "react-router-dom"
 import LabelContainer from "egov-ui-framework/ui-containers/LabelContainer";
-import "./index.css"
+import { getDomainLink } from "../../../../../ui-utils/commons";
+import "./index.css";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import store from "ui-redux/store";
 
 export const searchResults = {
   uiFramework: "custom-molecules",
@@ -23,7 +26,19 @@ export const searchResults = {
           )
         }
       },
-      { name: "Consumer No",  labelKey: "WS_COMMON_TABLE_COL_CONSUMER_NO_LABEL" },
+      // { name: "Consumer No",  labelKey: "WS_COMMON_TABLE_COL_CONSUMER_NO_LABEL" },
+      {
+        name: "Consumer No",
+        labelKey: "WS_COMMON_TABLE_COL_CONSUMER_NO_LABEL", 
+        options: {
+          filter: false,
+          customBodyRender: (value, index) => (
+            <div className="linkStyle" onClick={() => getConnectionDetails(index)}>
+              <a>{value}</a>
+            </div>
+          )
+        }
+      },
       { name : "Owner Name",  labelKey: "WS_COMMON_TABLE_COL_OWN_NAME_LABEL" },
       { name : "Status", labelKey: "WS_COMMON_TABLE_COL_STATUS_LABEL" },
       { name: "Due", labelKey: "WS_COMMON_TABLE_COL_DUE_LABEL" },
@@ -35,13 +50,8 @@ export const searchResults = {
 	options: {
           filter: false,
           customBodyRender: (value, data) => {
-            if (data.rowData[4] > 0 && data.rowData[4] !== 0) {
+            if (data.rowData[4] !== undefined && typeof data.rowData[4] === 'number') {
               return (
-                // <Link
-                //   to={`/wns/viewBill?connectionNumber=${data.rowData[1]}&tenantId=${data.rowData[8]}&service=${data.rowData[0]}`}
-                //   style={{ color: '#fe7a51', textTransform: 'uppercase' }}>
-                //   Pay now
-                // </Link>
                 <div className="linkStyle" onClick={() => getViewBillDetails(data)} style={{ color: '#fe7a51', textTransform: 'uppercase' }}>
                   <LabelContainer
                     labelKey="CS_COMMON_PAY"
@@ -52,13 +62,7 @@ export const searchResults = {
                   />
                 </div>
               )
-            } else if (data.rowData[5] === 0) {
-              return (
-                <div style={{ color: '#008000', textTransform: 'uppercase', fontWeight: 400 }}>
-                  Paid
-                </div>
-              )
-            }
+            } 
             else {
               return ("NA")
             }
@@ -110,7 +114,14 @@ export const searchResults = {
   }
 };
 
+const getConnectionDetails = data => {
+  const environment = process.env.NODE_ENV === "production" ? "citizen" : "";
+  const origin =  process.env.NODE_ENV === "production" ? window.location.origin + "/" : window.location.origin;
+  window.location.assign(`${origin}${environment}/wns/connection-details?connectionNumber=${data.rowData[1]}&tenantId=${data.rowData[8]}&service=${data.rowData[0]}&connectionType=${data.rowData[9]}&due=${data.rowData[4]}`);
+}
 
-const getViewBillDetails = data => {
-  window.location.href = `/citizen/wns/viewBill?connectionNumber=${data.rowData[1]}&tenantId=${data.rowData[8]}&service=${data.rowData[0]}&connectionType=${data.rowData[9]}`
+const getViewBillDetails = data => {  
+  store.dispatch(
+    setRoute(`/wns/viewBill?connectionNumber=${data.rowData[1]}&tenantId=${data.rowData[8]}&service=${data.rowData[0]}&connectionType=${data.rowData[9]}`)
+  )
 }

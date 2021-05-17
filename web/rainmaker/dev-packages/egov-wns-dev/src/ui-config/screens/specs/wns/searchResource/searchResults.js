@@ -2,6 +2,8 @@ import React from "react";
 import { sortByEpoch, getEpochForDate } from "../../utils";
 import './index.css'
 import LabelContainer from "egov-ui-framework/ui-containers/LabelContainer";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import store from "ui-redux/store";
 
 
 export const searchResults = {
@@ -46,7 +48,7 @@ export const searchResults = {
         options: {
           filter: false,
           customBodyRender: (value, data) => {
-            if (data.rowData[4] > 0 && data.rowData[4] !== 0) {
+            if (data.rowData[4] !== undefined && typeof parseFloat(data.rowData[4]) === 'number' && parseFloat(data.rowData[4]) > 0) {
               return (
                 <div className="linkStyle" onClick={() => getViewBillDetails(data)} style={{ color: '#fe7a51', textTransform: 'uppercase' }}>
                   <LabelContainer
@@ -56,12 +58,6 @@ export const searchResults = {
                       fontSize: 14,
                     }}
                   />
-                </div>
-              )
-            } else if (data.rowData[4] === 0) {
-              return (
-                <div style={{ textTransform: 'uppercase' }}>
-                  Paid
                 </div>
               )
             }
@@ -114,9 +110,13 @@ export const searchResults = {
 };
 
 const getConnectionDetails = data => {
-  window.location.href = `connection-details?connectionNumber=${data.rowData[1]}&tenantId=${data.rowData[8]}&service=${data.rowData[0]}&connectionType=${data.rowData[9]}`
+  store.dispatch(
+    setRoute(`connection-details?connectionNumber=${data.rowData[1]}&tenantId=${data.rowData[8]}&service=${data.rowData[0]}&connectionType=${data.rowData[9]}&due=${data.rowData[4]}`)
+  )
 }
 
 const getViewBillDetails = data => {
-  window.location.href = `viewBill?connectionNumber=${data.rowData[1]}&tenantId=${data.rowData[8]}&service=${data.rowData[0]}&connectionType=${data.rowData[9]}`
+  store.dispatch(
+    setRoute( `viewBill?connectionNumber=${data.rowData[1]}&tenantId=${data.rowData[8]}&service=${data.rowData[0]}&connectionType=${data.rowData[9]}`)
+  )
 }

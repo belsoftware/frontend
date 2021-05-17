@@ -9,7 +9,8 @@ import {
   getDateField,
   getLabel,
   getCommonHeader,
-  getCommonGrayCard
+  getCommonGrayCard,
+  getCommonSubHeader
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 //   import { searchApiCall } from "./functions";
 import commonConfig from "config/common.js";
@@ -21,7 +22,9 @@ import { getHeaderSideText } from "../../utils";
 import get from 'lodash/get';
 import { httpRequest } from '../../../../../ui-utils/index';
 import set from 'lodash/set';
-
+import { getTodaysDateInYMD, getQueryArg, getObjectKeys, getObjectValues } from 'egov-ui-framework/ui-utils/commons';
+import { isModifyMode } from "../../../../../ui-utils/commons";
+let isMode = isModifyMode();
 
 const getPlumberRadioButton = {
   uiFramework: "custom-containers-local",
@@ -39,7 +42,93 @@ const getPlumberRadioButton = {
   },
   type: "array"
 };
+export const triggerUpdateByKey = (state, keyIndex, value, dispatch) => {
+  if(dispatch == "set"){
+    set(state, `screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[${keyIndex}]`, value);
+  } else {
+    dispatch(prepareFinalObject( `DynamicMdms.ws-services-masters.waterSource.${keyIndex}`, value ));
+  }
+}
+export const updateWaterSource = async ( state, dispatch ) => {  
+  const waterSource = get( state, "screenConfiguration.preparedFinalObject.WaterConnection[0].waterSource", null);
+  const waterSubSource = get( state, "screenConfiguration.preparedFinalObject.WaterConnection[0].waterSubSource", null);
+  let modValue = waterSource + "." + waterSubSource;
+  let i = 0;
+  let formObj = {
+    waterSourceType: waterSource, waterSubSource: modValue
+  }
+  triggerUpdateByKey(state, i, formObj, 'set');
 
+  triggerUpdateByKey(state, `waterSubSourceTransformed.allDropdown[${i}]`, getObjectValues(get( state, `screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.waterSourceTransformed.${waterSource}`, [])) , dispatch);
+
+  triggerUpdateByKey(state, `selectedValues[${i}]`, formObj , dispatch);
+} 
+const waterSourceTypeChange = (reqObj) => {
+  try {
+      let { dispatch, value, state } = reqObj;
+      dispatch(prepareFinalObject("WaterConnection[0].waterSource", value));
+      dispatch(prepareFinalObject("WaterConnection[0].waterSubSource", ''));
+      let formObj = {
+        waterSourceType: value, waterSubSource: ''
+      }
+      triggerUpdateByKey(state, `selectedValues[0]`, formObj , dispatch);
+  } catch (e) {
+    console.log(e);
+  }
+}
+const waterSubSourceChange = (reqObj) => {
+  try {
+      let { dispatch, value } = reqObj;
+      let rowValue = value.split(".");
+      dispatch(prepareFinalObject("WaterConnection[0].waterSubSource", rowValue[1]));
+  } catch (e) {
+    console.log(e);
+  }
+}
+export const commonRoadCuttingChargeInformation = () => {
+  return getCommonGrayCard({
+    roadDetails: getCommonContainer({
+      roadType: {
+        uiFramework: "custom-containers-local",
+        moduleName: "egov-wns",
+        componentPath: "AutosuggestContainer",
+        jsonPath: "applyScreen.roadCuttingInfo[0].roadType",
+        props: {
+          className: "hr-generic-selectfield autocomplete-dropdown",
+          label: { labelKey: "WS_ADDN_DETAIL_ROAD_TYPE", labelName: "Road Type" },
+          placeholder: { labelKey: "WS_ADDN_DETAILS_ROAD_TYPE_PLACEHOLDER", labelName: "Select Road Type" },
+          required: false,
+          isClearable: true,
+          labelsFromLocalisation: true,
+          jsonPath: "applyScreen.roadCuttingInfo[0].roadType",
+          sourceJsonPath: "applyScreenMdmsData.sw-services-calculation.RoadType",
+        },
+        required: false,
+        gridDefination: {
+          xs: 12,
+          sm: 12,
+          md: 6
+        },
+      },
+      enterArea: getTextField({
+        label: {
+          labelKey: "WS_ADDN_DETAILS_AREA_LABEL"
+        },
+        placeholder: {
+          labelKey: "WS_ADDN_DETAILS_AREA_PLACEHOLDER"
+        },
+        gridDefination: {
+          xs: 12,
+          sm: 6
+        },
+        required: false,
+        pattern: getPattern("Amount"),
+        errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+        jsonPath: "applyScreen.roadCuttingInfo[0].roadCuttingArea"
+      })
+    })
+  })
+}
 export const additionDetails = getCommonCard({
   header: getCommonHeader({
     labelKey: "WS_COMMON_ADDN_DETAILS_HEADER"
@@ -51,15 +140,22 @@ export const additionDetails = getCommonCard({
 
     connectionDetails: getCommonContainer({
       connectionType: {
-        ...getSelectField({
-          label: { labelKey: "WS_SERV_DETAIL_CONN_TYPE" },
-          placeholder: { labelKey: "WS_ADDN_DETAILS_CONN_TYPE_PLACEHOLDER" },
+        uiFramework: "custom-containers-local",
+        moduleName: "egov-wns",
+        componentPath: "AutosuggestContainer",
+        jsonPath: "applyScreen.connectionType",
+        props: {
+          className: "hr-generic-selectfield autocomplete-dropdown",
+          label: { labelKey: "WS_SERV_DETAIL_CONN_TYPE", labelName: "Connection type" },
+          placeholder: { labelKey: "WS_ADDN_DETAILS_CONN_TYPE_PLACEHOLDER", labelName: "Select Connetion Type" },
           required: false,
+          isClearable: true,
+          labelsFromLocalisation: true,
+          jsonPath: "applyScreen.connectionType",
           sourceJsonPath: "applyScreenMdmsData.ws-services-masters.connectionType",
-          gridDefination: { xs: 12, sm: 6 },
-          errorMessage: "ERR_INVALID_BILLING_PERIOD",
-          jsonPath: "applyScreen.connectionType"
-        }),
+        },
+        required: false,
+        gridDefination: { xs: 12, sm: 6 },
         afterFieldChange: async (action, state, dispatch) => {
           let connType = await get(state, "screenConfiguration.preparedFinalObject.applyScreen.connectionType");
           console.log('connType');
@@ -81,71 +177,56 @@ export const additionDetails = getCommonCard({
         pattern: /^[0-9]*$/i,
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
       }),
-
-      waterSourceType: {
-        ...getSelectField({
-          label: { labelKey: "WS_SERV_DETAIL_WATER_SOURCE" },
-          placeholder: { labelKey: "WS_ADDN_DETAILS_WARER_SOURCE_PLACEHOLDER" },
-          required: false,
-          sourceJsonPath: "applyScreenMdmsData.ws-services-masters.waterSource",
-          gridDefination: { xs: 12, sm: 6 },
-          errorMessage: "ERR_INVALID_BILLING_PERIOD",
-          jsonPath: "applyScreen.waterSource"
-        }),
-        beforeFieldChange: async (action, state, dispatch) => {
-          if (action.value === "GROUND") {
-            dispatch(
-              prepareFinalObject(
-                "waterSubSourceForSelectedWaterSource",
-                get(
-                  state.screenConfiguration.preparedFinalObject,
-                  "applyScreenMdmsData.ws-services-masters.GROUND"
-                )
-              )
-            )
-          } else if (action.value === "SURFACE") {
-            dispatch(
-              prepareFinalObject(
-                "waterSubSourceForSelectedWaterSource",
-                get(
-                  state.screenConfiguration.preparedFinalObject,
-                  "applyScreenMdmsData.ws-services-masters.SURFACE"
-                )
-              )
-            )
-          } else if (action.value === "BULKSUPPLY") {
-            dispatch(
-              prepareFinalObject(
-                "waterSubSourceForSelectedWaterSource",
-                get(
-                  state.screenConfiguration.preparedFinalObject,
-                  "applyScreenMdmsData.ws-services-masters.BULKSUPPLY"
-                )
-              )
-            )
-          }
+      dynamicMdmsWaterSource : {
+        uiFramework: "custom-containers",
+        componentPath: "DynamicMdmsContainer",
+        props: {
+          dropdownFields: [
+            {
+              key : 'waterSourceType',
+              fieldType : "autosuggest",
+              className:"applicant-details-error autocomplete-dropdown",
+              callBack: waterSourceTypeChange,
+              isRequired: false,
+              requiredValue: false
+            },
+            {
+              key : 'waterSubSource',
+              fieldType : "autosuggest",
+              className:"applicant-details-error autocomplete-dropdown",
+              callBack: waterSubSourceChange,
+              isRequired: false,
+              requiredValue: false
+            }
+          ],
+          moduleName: "ws-services-masters",
+          masterName: "waterSource",
+          rootBlockSub : 'waterSource',
+          callBackEdit: updateWaterSource
         }
       },
-
-      waterSubSource: getSelectField({
-        label: { labelKey: "WS_SERV_DETAIL_WATER_SUB_SOURCE" },
-        placeholder: { labelKey: "WS_ADDN_DETAILS_WARER_SUB_SOURCE_PLACEHOLDER" },
-        required: false,
-        sourceJsonPath: "waterSubSourceForSelectedWaterSource",
-        gridDefination: { xs: 12, sm: 6 },
-        errorMessage: "ERR_INVALID_BILLING_PERIOD",
-        jsonPath: "applyScreen.waterSubSource"
-      }),
-
-      pipeSize: getSelectField({
-        label: { labelKey: "WS_SERV_DETAIL_PIPE_SIZE" },
-        placeholder: { labelKey: "WS_SERV_DETAIL_PIPE_SIZE_PLACEHOLDER" },
-        gridDefination: { xs: 12, sm: 6 },
-        sourceJsonPath: "applyScreenMdmsData.ws-services-calculation.pipeSize",
+      pipeSize: {
+        uiFramework: "custom-containers-local",
+        moduleName: "egov-wns",
+        componentPath: "AutosuggestContainer",
         jsonPath: "applyScreen.pipeSize",
-        pattern: /^[0-9]*$/i,
-        errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG"
-      }),
+        props: {
+          className: "hr-generic-selectfield autocomplete-dropdown",
+          label: { labelKey: "WS_SERV_DETAIL_PIPE_SIZE", labelName: "Pipe Size" },
+          placeholder: { labelKey: "WS_SERV_DETAIL_PIPE_SIZE_PLACEHOLDER", labelName: "Select Pipe Size" },
+          required: false,
+          isClearable: true,
+          labelsFromLocalisation: true,
+          jsonPath: "applyScreen.pipeSize",
+          sourceJsonPath: "applyScreenMdmsData.ws-services-calculation.pipeSize",
+        },
+        required: false,
+        gridDefination: {
+          xs: 12,
+          sm: 12,
+          md: 6
+        },
+      },
 
       noOfWaterClosets: getTextField({
         label: { labelKey: "WS_ADDN_DETAILS_NO_OF_WATER_CLOSETS" },
@@ -219,44 +300,47 @@ export const additionDetails = getCommonCard({
       }),
     })
   }),
-  roadCuttingChargeContainer: getCommonGrayCard({
-    subHeader: getCommonTitle({
-      labelKey: "WS_ROAD_CUTTING_CHARGE_DETAILS"
-    }),
-    roadDetails: getCommonContainer({
-      roadType: getSelectField({
-        label: {
-          labelKey: "WS_ADDN_DETAIL_ROAD_TYPE"
+  roadCuttingChargeContainer: getCommonCard({
+    header: getCommonSubHeader(
+      {
+        labelName: "Road Cutting Charge",
+        labelKey: "WS_ROAD_CUTTING_CHARGE_DETAILS"
+      },
+      {
+        style: {
+          marginBottom: 18
+        }
+      }
+    ),
+    applicantTypeContainer: getCommonContainer({
+      roadCuttingChargeInfoCard : {
+        uiFramework: "custom-atoms",
+        componentPath: "Div",
+        props: {
+          style: {
+            // display: "none"
+            // width: 
+          }
         },
-        placeholder: {
-          labelKey: "WS_ADDN_DETAILS_ROAD_TYPE_PLACEHOLDER"
-        },
-        required: false,
-        sourceJsonPath: "applyScreenMdmsData.sw-services-calculation.RoadType",
-        gridDefination: {
-          xs: 12,
-          sm: 6
-        },
-        required: false,
-        errorMessage: "ERR_INVALID_BILLING_PERIOD",
-        jsonPath: "applyScreen.roadType"
-      }),
-      enterArea: getTextField({
-        label: {
-          labelKey: "WS_ADDN_DETAILS_AREA_LABEL"
-        },
-        placeholder: {
-          labelKey: "WS_ADDN_DETAILS_AREA_PLACEHOLDER"
-        },
-        gridDefination: {
-          xs: 12,
-          sm: 6
-        },
-        required: false,
-        pattern: getPattern("Amount"),
-        errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
-        jsonPath: "applyScreen.roadCuttingArea"
-      })
+        children: {
+          multipleApplicantInfo: {
+            uiFramework: "custom-containers",
+            componentPath: "MultiItem",
+            props: {
+              scheama: commonRoadCuttingChargeInformation(),
+              items: [],
+              addItemLabel: {
+                labelName: "Add Road Type",
+                labelKey: "WS_ADD_ROAD_TYPE_LABEL"
+              },
+              isReviewPage: false,
+              sourceJsonPath: "applyScreen.roadCuttingInfo",
+              prefixSourceJsonPath: "children.cardContent.children.roadDetails.children"
+            },
+            type: "array"
+          }
+        }
+      },
     }),
   }),
   activationDetailsContainer: getCommonGrayCard({
@@ -327,14 +411,39 @@ export const additionDetails = getCommonCard({
         jsonPath: "applyScreen.additionalDetails.initialMeterReading"
       })
     })
+  }),
+  modificationsEffectiveFrom : getCommonGrayCard({
+    subHeader: getCommonTitle({
+      labelKey: "WS_MODIFICATIONS_EFFECTIVE_FROM"
+    }),
+    modificationEffectiveDate: getCommonContainer({
+      connectionExecutionDate: getDateField({
+        label: { labelName: "Modifications Effective Date", labelKey: "MODIFICATIONS_EFFECTIVE_DATE" },
+        gridDefination: {
+          xs: 12,
+          sm: 6
+        },
+        required: true,
+        pattern: getPattern("Date"),
+        errorMessage: "ERR_INVALID_DATE",
+        jsonPath: "applyScreen.dateEffectiveFrom",
+        props: {
+          inputProps: {
+            min: getTodaysDateInYMD()
+          }
+        }
+      }),
+      
+    })
   })
 });
 
 const showHideFeilds = (dispatch, value) => {
+  let mStep = (isModifyMode()) ? 'formwizardSecondStep' : 'formwizardThirdStep'; 
   dispatch(
     handleField(
       "apply",
-      "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.initialMeterReading",
+      `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.initialMeterReading`,
       "visible",
       value
     )
@@ -342,7 +451,7 @@ const showHideFeilds = (dispatch, value) => {
   dispatch(
     handleField(
       "apply",
-      "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.meterInstallationDate",
+      `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.meterInstallationDate`,
       "visible",
       value
     )
@@ -350,7 +459,31 @@ const showHideFeilds = (dispatch, value) => {
   dispatch(
     handleField(
       "apply",
-      "components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.meterID",
+      `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.meterID`,
+      "visible",
+      value
+    )
+  );
+  dispatch(
+    handleField(
+      "apply",
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.initialMeterReading`,
+      "visible",
+      value
+    )
+  );
+  dispatch(
+    handleField(
+      "apply",
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.meterInstallationDate`,
+      "visible",
+      value
+    )
+  );
+  dispatch(
+    handleField(
+      "apply",
+      `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.activationDetailsContainer.children.cardContent.children.activeDetails.children.meterID`,
       "visible",
       value
     )

@@ -1,32 +1,22 @@
-import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-import { validate } from "egov-ui-framework/ui-redux/screen-configuration/utils";
-import { getUserInfo, getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-import get from "lodash/get";
+import { download, downloadReceiptFromFilestoreID } from "egov-common/ui-utils/commons";
 import {
-  getQueryArg,
-  getTransformedLocalStorgaeLabels,
-  getLocaleLabels,
-  getTransformedLocale,
-  getFileUrlFromAPI,
-  getFileUrl
+  getCommonCaption, getCommonCard, getLabelWithValue, getPattern
+} from "egov-ui-framework/ui-config/screens/specs/utils";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { validate } from "egov-ui-framework/ui-redux/screen-configuration/utils";
+import {
+  getFileUrl, getFileUrlFromAPI, getLocaleLabels, getQueryArg, getTransformedLocale, getTransformedLocalStorgaeLabels
 } from "egov-ui-framework/ui-utils/commons";
+import { getPaymentSearchAPI, getUserSearchedResponse } from "egov-ui-kit/utils/commons";
+import { getTenantId, getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+import jp from "jsonpath";
+import get from "lodash/get";
+import isUndefined from "lodash/isUndefined";
+import set from "lodash/set";
 import store from "ui-redux/store";
-import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { httpRequest } from "../../../../ui-utils/api";
 import { getSearchResults } from "../../../../ui-utils/commons";
-import { downloadReceiptFromFilestoreID } from "egov-common/ui-utils/commons"
-import isUndefined from "lodash/isUndefined";
-import {
-  getCommonCard,
-  getCommonValue,
-  getCommonCaption,
-  getPattern,
-  getLabelWithValue
-} from "egov-ui-framework/ui-config/screens/specs/utils";
-import { sampleGetBill } from "../../../../ui-utils/sampleResponses";
-import jp from "jsonpath";
 
 export const getCommonApplyFooter = children => {
   return {
@@ -77,7 +67,7 @@ export const validateFields = (
     objectJsonPath,
     {}
   );
-  if(fields.isFieldValid===false){
+  if (fields.isFieldValid === false) {
     return false;
   }
   let isFormValid = true;
@@ -512,13 +502,15 @@ export const getMdmsData = async queryObject => {
 // Get user data from uuid API call
 export const getUserDataFromUuid = async bodyObject => {
   try {
-    const response = await httpRequest(
-      "post",
-      "/user/_search",
-      "",
-      [],
-      bodyObject
-    );
+    // const response = await httpRequest(
+    //   "post",
+    //   "/user/_search",
+    //   "",
+    //   [],
+    //   bodyObject
+    // );
+
+    const response = getUserSearchedResponse();
     return response;
   } catch (error) {
     console.log(error);
@@ -739,13 +731,13 @@ export const getTextToLocalMapping = label => {
         "PT_COMMON_TABLE_COL_PT_ID",
         localisationLabels
       );
-      case "Unique Property Id":
+    case "Unique Property Id":
       return getLocaleLabels(
         "Unique Property Id",
         "PT_COMMON_TABLE_COL_UNIQ_PT_ID",
         localisationLabels
       );
-      case "Action":
+    case "Action":
       return getLocaleLabels(
         "Action",
         "PT_COMMON_TABLE_COL_ACTION_LABEL",
@@ -868,7 +860,7 @@ export const getTextToLocalMapping = label => {
         "INWORKFLOW",
         localisationLabels
       );
-      case "Property ID":
+    case "Property ID":
       return getLocaleLabels(
         "Property ID",
         "PT_MUTATION_PID",
@@ -900,10 +892,18 @@ export const fetchBill = async queryObject => {
   }
 };
 export const getpayments = async queryObject => {
+
+  let businessService = '';
+  queryObject && Array.isArray(queryObject) && queryObject.map(query => {
+    if (query.key == "businessService") {
+      businessService = query.value;
+    }
+  })
+
   try {
     const response = await httpRequest(
       "post",
-      "/collection-services/payments/_search",
+      getPaymentSearchAPI(businessService),
       "",
       queryObject
     );
@@ -913,7 +913,7 @@ export const getpayments = async queryObject => {
   }
 };
 
-export const downloadCertificateForm = async(oldProperties, pdfcode, tenantId,applicationNumber, mode = 'download') => {
+export const downloadCertificateForm = async (oldProperties, pdfcode, tenantId, applicationNumber, mode = 'download') => {
   const queryStr = [
     { key: "key", value: pdfcode },
     { key: "tenantId", value: tenantId }
@@ -931,43 +931,34 @@ export const downloadCertificateForm = async(oldProperties, pdfcode, tenantId,ap
     },
     { key: "acknowledgementIds", value: applicationNumber }
   ]);
-  const Properties= get(response, "Properties", oldProperties);
-  const document=get(Properties[0],"documents").filter(item=>item.documentType=="PTMUTATION");
-  const oldFileStoreId=document&& get(document[0],"fileStoreId")
-  if(oldFileStoreId){
+  const Properties = get(response, "Properties", oldProperties);
+  const document = get(Properties[0], "documents").filter(item => item.documentType == "PTMUTATION");
+  const oldFileStoreId = document && get(document[0], "fileStoreId")
+  if (oldFileStoreId) {
     downloadReceiptFromFilestoreID(oldFileStoreId, mode, tenantId)
   }
-  else{
-  
-  try {
-    httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Properties }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
-      .then(res => {
-        res.filestoreIds[0]
-        if (res && res.filestoreIds && res.filestoreIds.length > 0) {
-          res.filestoreIds.map(fileStoreId => {
-            downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId)
-          })
-        } else {
-          console.log("Error In Acknowledgement form Download");
-        }
-      });
-  } catch (exception) {
-    alert('Some Error Occured while downloading Acknowledgement form!');
+  else {
+
+    try {
+      httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Properties }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
+        .then(res => {
+          res.filestoreIds[0]
+          if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+            res.filestoreIds.map(fileStoreId => {
+              downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId)
+            })
+          } else {
+            console.log("Error In Acknowledgement form Download");
+          }
+        });
+    } catch (exception) {
+      alert('Some Error Occured while downloading Acknowledgement form!');
+    }
   }
 }
-}
 
-export const downloadReceitForm = async(Payments, pdfcode, tenantId,applicationNumber, mode = 'download') => {
-  const queryStr = [
-    { key: "key", value: pdfcode },
-    { key: "tenantId", value: tenantId }
-  ]
-  const DOWNLOADRECEIPT = {
-    GET: {
-      URL: "/pdf-service/v1/_create",
-      ACTION: "_get",
-    },
-  };
+export const downloadReceitForm = async (tenantId, applicationNumber, mode = 'download') => {
+
   let queryObj = [
     {
       key: "tenantId",
@@ -976,40 +967,24 @@ export const downloadReceitForm = async(Payments, pdfcode, tenantId,applicationN
     {
       key: "consumerCodes",
       value: applicationNumber
-    }
+    },
+    {
+      key: "businessService",
+      value: 'PT.MUTATION'
+    },
+
   ];
 
-  const responsePayments = await getpayments(queryObj)
-  const oldFileStoreId=get(responsePayments.Payments[0],"fileStoreId")
-  if(oldFileStoreId){
-    downloadReceiptFromFilestoreID(oldFileStoreId, mode, tenantId)
-  }
-  else{
-  try {
-    httpRequest("post", DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Payments }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
-      .then(res => {
-        res.filestoreIds[0]
-        if (res && res.filestoreIds && res.filestoreIds.length > 0) {
-          res.filestoreIds.map(fileStoreId => {
-            downloadReceiptFromFilestoreID(fileStoreId, mode, tenantId)
-          })
-        } else {
-          console.log("Error In Acknowledgement form Download");
-        }
-      });
-  } catch (exception) {
-    alert('Some Error Occured while downloading Acknowledgement form!');
-  }
+  download(queryObj, mode, "consolidatedreceipt",'PAYMENT')
 }
-}
-export const getLabelIfNotNull=(label,value,props)=>{
-  const labelObj=getLabelWithValue(label,value,props);
-   return labelObj ;
+export const getLabelIfNotNull = (label, value, props) => {
+  const labelObj = getLabelWithValue(label, value, props);
+  return labelObj;
 }
 
 
 
-export const showHideMutationDetailsCard = (action, state, dispatch)=>{
+export const showHideMutationDetailsCard = (action, state, dispatch) => {
   const isMutationDetailsCard = get(state, "screenConfiguration.preparedFinalObject.PropertyConfiguration[0].Mutation.MutationDetails");
   dispatch(
     handleField(
@@ -1074,3 +1049,78 @@ export const prepareDocumentsView = async (state, dispatch) => {
   });
   dispatch(prepareFinalObject("documentsUploadRedux", documentsPreview));
 };
+
+export const setCardVisibility = (state, action, dispatch) => {
+  let owners = get(state, "screenConfiguration.preparedFinalObject.Property.owners");
+  if (owners && owners.length > 0) {
+    owners.map(owner => {
+      if (owner.ownerType != 'NONE' && owner.status == "ACTIVE") {
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.transferorDetails.children.cardContent.children.cardOne.props.scheama.children.cardContent.children.ownerContainer.children.ownerSpecialDocumentID.props.style.display",
+          'block'
+        );
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardFirstStep.children.transferorDetails.children.cardContent.children.cardOne.props.scheama.children.cardContent.children.ownerContainer.children.ownerSpecialDocumentType.props.style.display",
+          'block'
+        );
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.transferorSummary.children.cardContent.children.cardOne.props.scheama.children.cardContent.children.ownerContainer.children.ownerSpecialDocumentID.props.style.display",
+          'block'
+        );
+        set(
+          action.screenConfig,
+          "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.transferorSummary.children.cardContent.children.cardOne.props.scheama.children.cardContent.children.ownerContainer.children.ownerSpecialDocumentType.props.style.display",
+          'block'
+        );
+      }
+    })
+  }
+  if (
+    get(
+      state,
+      "screenConfiguration.preparedFinalObject.FireNOCs[0].fireNOCDetails.applicantDetails.ownerShipType",
+      ""
+    ).includes("MULTIPLEOWNERS")
+  ) {
+    set(
+      action.screenConfig,
+      "components.div.children.formwizardThirdStep.children.applicantDetails.children.cardContent.children.applicantTypeContainer.children.singleApplicantContainer.props.style",
+      { display: "none" }
+    );
+    set(
+      action.screenConfig,
+      "components.div.children.formwizardThirdStep.children.applicantDetails.children.cardContent.children.applicantTypeContainer.children.multipleApplicantContainer.props.style",
+      {}
+    );
+  } else if (
+    get(
+      state,
+      "screenConfiguration.preparedFinalObject.Property.ownershipCategory",
+      ""
+    ).includes("INSTITUTIONAL")
+  ) {
+    set(
+      action.screenConfig,
+      "components.div.children.formwizardFirstStep.children.transferorDetails.props.style",
+      { display: "none" }
+    );
+    set(
+      action.screenConfig,
+      "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.transferorSummary.props.style",
+      { display: "none" }
+    );
+  } else {
+    set(
+      action.screenConfig,
+      "components.div.children.formwizardFirstStep.children.transferorInstitutionDetails.props.style",
+      { display: "none" }
+    );
+    set(
+      action.screenConfig, "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.transferorInstitutionSummary.props.style",
+      { display: "none" }
+    );
+  }
+}

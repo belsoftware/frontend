@@ -106,9 +106,20 @@ const generateDocument = item => {
     )
     : {};
 
+  let subParagraph1 = getCommonParagraph(
+    {
+      labelKey: getTransformedLocale('ONE_OF_THESE_DOC_NEEDED')
+    },
+    {
+      style: styles.description
+    }
+  )
+
   return getCommonGrayCard({
     subHeader: subHeader,
     break: getBreak(),
+    subParagraph1: subParagraph1,
+    break1: getBreak(),
     docs: getCommonContainer({ ...docs }),
     subParagraph: subParagraph
   });
@@ -123,6 +134,9 @@ export const getRequiredDocuments = documents => {
       header: {
         uiFramework: "custom-atoms",
         componentPath: "Container",
+        props: {
+          className: "fixedHeader"
+        },
         children: {
           header
         }
@@ -139,6 +153,9 @@ export const getRequiredDocuments = documents => {
       },
       footer: {
         uiFramework: "custom-atoms",
+        props: {
+          className: "footerSticky",
+        },
         componentPath: "Container",
         children: {
           footer

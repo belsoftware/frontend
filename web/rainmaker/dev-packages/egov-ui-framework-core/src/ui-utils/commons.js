@@ -1,23 +1,16 @@
-import isEmpty from "lodash/isEmpty";
-import { httpRequest, uploadFile } from "./api.js";
-import cloneDeep from "lodash/cloneDeep";
-import {
-  localStorageSet,
-  localStorageGet,
-  getLocalization,
-  getLocale,
-  getTenantId,
-  getUserInfo
-} from "egov-ui-kit/utils/localStorageUtils";
-import { toggleSnackbar, toggleSpinner, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import orderBy from "lodash/orderBy";
-import get from "lodash/get";
-import set from "lodash/set";
 import commonConfig from "config/common.js";
-import { validate } from "egov-ui-framework/ui-redux/screen-configuration/utils";
-import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { getRequiredDocuments } from "egov-ui-framework/ui-containers/RequiredDocuments/reqDocs";
-import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import { handleScreenConfigurationFieldChange as handleField, hideSpinner, prepareFinalObject, showSpinner, toggleSnackbar, toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { validate } from "egov-ui-framework/ui-redux/screen-configuration/utils";
+import { getUserSearchedResponse } from "egov-ui-kit/utils/commons";
+import { getLocale, getLocalization, getTenantId, getUserInfo, localStorageGet, localStorageSet } from "egov-ui-kit/utils/localStorageUtils";
+import cloneDeep from "lodash/cloneDeep";
+import get from "lodash/get";
+import isEmpty from "lodash/isEmpty";
+import orderBy from "lodash/orderBy";
+import set from "lodash/set";
+import { httpRequest, uploadFile } from "./api.js";
 
 export const addComponentJsonpath = (components, jsonPath = "components") => {
   for (var componentKey in components) {
@@ -263,8 +256,8 @@ export const setDocuments = async (
   dispatch,
   businessService
 ) => {
-  const uploadedDocData = get(payload, sourceJsonPath);
-
+  let uploadedDocData = get(payload, sourceJsonPath, []);
+  // uploadedDocData = uploadedDocData && uploadedDocData.filter(document => document && Object.keys(document).length > 0 && document.active);
   const fileStoreIds =
     uploadedDocData &&
     uploadedDocData
@@ -591,14 +584,15 @@ export const validateFields = (
 };
 
 export const downloadPDFFileUsingBase64 = (receiptPDF, filename) => {
-  if (typeof mSewaApp === "undefined") {
-    // we are running in browser
-    receiptPDF.download(filename);
-  } else {
+
+  if (window && window.mSewaApp && window.mSewaApp.isMsewaApp && window.mSewaApp.isMsewaApp() && window.mSewaApp.downloadBase64File) {
     // we are running under webview
     receiptPDF.getBase64(data => {
-      mSewaApp.downloadBase64File(data, filename);
+      window.mSewaApp.downloadBase64File(data, filename);
     });
+  } else {
+    // we are running in browser
+    receiptPDF.download(filename);
   }
 };
 
@@ -608,13 +602,15 @@ if (window) {
 // Get user data from uuid API call
 export const getUserDataFromUuid = async bodyObject => {
   try {
-    const response = await httpRequest(
-      "post",
-      "/user/_search",
-      "",
-      [],
-      bodyObject
-    );
+    // const response = await httpRequest(
+    //   "post",
+    //   "/user/_search",
+    //   "",
+    //   [],
+    //   bodyObject
+    // );
+
+    const response = getUserSearchedResponse();
     return response;
   } catch (error) {
     console.log(error);
@@ -632,6 +628,15 @@ export const getTodaysDateInYMD = () => {
   let month = date.getMonth() + 1;
   let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
   date = `${date.getFullYear()}-${month}-${day}`;
+  return date;
+};
+
+export const getMaxDate = (yr) => {
+  let date = new Date();
+  let year = date.getFullYear() - yr;
+  let month = date.getMonth() + 1;
+  let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+  date = `${year}-${month}-${day}`;
   return date;
 };
 
@@ -692,9 +697,9 @@ export const getStatusKey = (status) => {
   }
 }
 
-export const getRequiredDocData = async (action, dispatch, moduleDetails) => {
+export const getRequiredDocData = async (action, dispatch, moduleDetails, closePopUp) => {
   let tenantId =
-    process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity : getTenantId();
+    process.env.REACT_APP_NAME === "Citizen" ? JSON.parse(getUserInfo()).permanentCity || commonConfig.tenantId : getTenantId();
   let mdmsBody = {
     MdmsCriteria: {
       tenantId: moduleDetails[0].moduleName === "ws-services-masters" ? commonConfig.tenantId : tenantId,
@@ -720,24 +725,26 @@ export const getRequiredDocData = async (action, dispatch, moduleDetails) => {
     if (moduleName === "PropertyTax") {
       payload.MdmsRes.tenant.tenants = payload.MdmsRes.tenant.citymodule[1].tenants;
     }
-    const reqDocuments = getRequiredDocuments(documents, moduleName, footerCallBackForRequiredDataModal(moduleName));
+    const reqDocuments = getRequiredDocuments(documents, moduleName, footerCallBackForRequiredDataModal(moduleName, closePopUp));
     set(
       action,
       "screenConfig.components.adhocDialog.children.popup",
       reqDocuments
     );
     dispatch(prepareFinalObject("searchScreenMdmsData", payload.MdmsRes));
-    return payload;
+    return { payload, reqDocuments };
   } catch (e) {
     console.log(e);
   }
 };
 
-const footerCallBackForRequiredDataModal = (moduleName) => {
+const footerCallBackForRequiredDataModal = (moduleName, closePopUp) => {
+  const tenant = getTenantId();
   switch (moduleName) {
     case "FireNoc":
       return (state, dispatch) => {
         dispatch(prepareFinalObject("FireNOCs", []));
+        dispatch(prepareFinalObject("DynamicMdms", {}));
         dispatch(prepareFinalObject("documentsUploadRedux", {}));
         const applyUrl =
           process.env.REACT_APP_SELF_RUNNING === "true" ? `/egov-ui-framework/fire-noc/apply` : `/fire-noc/apply`;
@@ -758,6 +765,19 @@ const footerCallBackForRequiredDataModal = (moduleName) => {
         const applyUrl = process.env.REACT_APP_NAME === "Citizen" ? `/wns/apply` : `/wns/apply`
         dispatch(setRoute(applyUrl));
       };
+    case 'TradeLicense':
+      if (closePopUp) {
+        return (state, dispatch) => {
+          dispatch(prepareFinalObject("Licenses", []));
+          dispatch(prepareFinalObject("LicensesTemp", []));
+          dispatch(prepareFinalObject("DynamicMdms", {}));
+          const applyUrl = `/tradelicence/apply?tenantId=${tenant}`;
+          dispatch(
+            handleField("search", "components.adhocDialog", "props.open", false)
+          );
+          dispatch(setRoute(applyUrl));
+        };
+      }
   }
 }
 export const showHideAdhocPopup = (state, dispatch, screenKey) => {
@@ -770,3 +790,113 @@ export const showHideAdhocPopup = (state, dispatch, screenKey) => {
     handleField(screenKey, "components.adhocDialog", "props.open", !toggle)
   );
 };
+export const getObjectValues = objData => {
+  return (
+    objData &&
+    Object.values(objData).map(item => {
+      return item;
+    })
+  );
+};
+export const getObjectKeys = objData => {
+  return (
+    objData &&
+    Object.keys(objData).map(item => {
+      return { code: item, active: true };
+    })
+  );
+};
+export const getMdmsJson = async (state, dispatch, reqObj) => {
+  let { setPath, setTransformPath, dispatchPath, moduleName, name, filter } = reqObj;
+  let mdmsBody = {
+    MdmsCriteria: {
+      tenantId: commonConfig.tenantId,
+      moduleDetails: [
+        {
+          moduleName,
+          masterDetails: [
+            { name, filter }
+          ]
+        }
+      ]
+    }
+  };
+  try {
+    let payload = null;
+    payload = await httpRequest(
+      "post",
+      "/egov-mdms-service/v1/_search",
+      "_search",
+      [],
+      mdmsBody
+    );
+    let result = get(payload, `MdmsRes.${moduleName}.${name}`, []);
+    // let filterResult = type ? result.filter(item => item.type == type) : result;
+    set(
+      payload,
+      setPath,
+      result
+    );
+    payload = getTransformData(payload, setPath, setTransformPath);
+    dispatch(prepareFinalObject(dispatchPath, get(payload, dispatchPath, [])));
+    //dispatch(prepareFinalObject(dispatchPath, payload.DynamicMdms));
+    dispatch(prepareFinalObject(`DynamicMdms.apiTriggered`, false));
+  } catch (e) {
+    console.log(e);
+    dispatch(prepareFinalObject(`DynamicMdms.apiTriggered`, false));
+  }
+};
+export const getTransformData = (object, getPath, transerPath) => {
+  let data = get(object, getPath);
+  let transformedData = {};
+  var formTreeBase = (transformedData, row) => {
+    const splitList = row.code.split(".");
+    splitList.map(function (value, i) {
+      transformedData = (i == splitList.length - 1) ? transformedData[value] = row : transformedData[value] || (transformedData[value] = {});
+    });
+  }
+  data.map(a => {
+    formTreeBase(transformedData, a);
+  });
+  set(object, transerPath, transformedData);
+  return object;
+};
+
+
+
+
+export const enableField = (screenKey, jsonPath = 'components', dispatch) => {
+  dispatch(handleField(screenKey, jsonPath, "props.disabled", false));
+}
+export const disableField = (screenKey, jsonPath = 'components', dispatch) => {
+  dispatch(handleField(screenKey, jsonPath, "props.disabled", true));
+}
+export const enableFieldAndHideSpinner = (screenKey, jsonPath = 'components', dispatch) => {
+  dispatch(hideSpinner());
+  enableField(screenKey, jsonPath, dispatch);
+}
+export const disableFieldAndShowSpinner = (screenKey, jsonPath = 'components', dispatch) => {
+  dispatch(showSpinner());
+  disableField(screenKey, jsonPath, dispatch);
+}
+
+
+export const sortDropdownNames = (e1, e2) => {
+  if (e1 && e1.name && typeof e1.name == 'string') {
+    return e1 && e1.name && e1.name.localeCompare && e1.name.localeCompare(e2 && e2.name && e2.name || '');
+  } else if (e1 && e1.name && typeof e1.name == 'number') {
+    return e1.name - e2.name;
+  } else {
+    return 1;
+  }
+}
+
+export const sortDropdownLabels = (e1, e2) => {
+  if (e1 && e1.label && typeof e1.label == 'string') {
+    return e1 && e1.label && e1.label.localeCompare && e1.label.localeCompare(e2 && e2.label && e2.label || '');
+  } else if (e1 && e1.label && typeof e1.label == 'number') {
+    return e1.label - e2.label;
+  } else {
+    return 1;
+  }
+}

@@ -11,6 +11,8 @@ import style from './styles';
 import Arrow_Downward from '../../images/arrows/Arrow_Downward.svg'
 import Arrow_Upward from '../../images/arrows/Arrow_Upward.svg'
 import moment from 'moment';
+import { removeSignFromInsightData } from '../../utils/commons';
+import { isMobile } from 'react-device-detect';
 
 class CollectionChartRow extends React.Component {
 	constructor(props) {
@@ -75,6 +77,7 @@ class CollectionChartRow extends React.Component {
 				}else if(data.insight_data.value.includes("last month")){
 					value = data.insight_data.value.replace("last month" , "LM");
 				}
+				value=removeSignFromInsightData(value);
 			}
 			
 			return (
@@ -91,16 +94,16 @@ class CollectionChartRow extends React.Component {
 							</React.Fragment>
 						}
 					</span> */}
-					<div style={{ textAlign: "right" }}>
+					<div style={{ textAlign: "right",whiteSpace: "nowrap" }}>
 						<div>
 							<span><NFormatter value={data.value} nType={data.valueSymbol} /></span>
 							{/* <NFormatter value={data.value} nType={data.valueSymbol} /> */}
 						</div>
 						{data.insight_data &&
-						<div>
+						<div style={{ marginTop:"-8px",whiteSpace:"nowrap"                     ,  position: isMobile?'absolute':"unset",right: '10px'}}>
 							<React.Fragment>
 								<span style={{ marginLeft: "2vh",fontSize:'initial',paddingRight: "8px" }}>
-									<img src={insightIcon} style={{ height: "15px", color: insightColor }} />
+									<img src={insightIcon} style={{ height: "12px", color: insightColor }} />
 								</span>
 								<span style={{ color: insightColor, fontSize: '14px'  }}>{value}</span>
 							</React.Fragment>

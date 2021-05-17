@@ -6,7 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
-
+import "./index.css";
+import { sortDropdownLabels, sortDropdownNames } from "egov-ui-framework/ui-utils/commons";
 const getSuggestions = suggestions => {
   return (
     suggestions &&
@@ -14,7 +15,7 @@ const getSuggestions = suggestions => {
     suggestions.map(suggestion => ({
       value: suggestion.code,
       label: suggestion.name
-    }))
+    })).sort(sortDropdownLabels)
   );
 };
 
@@ -47,12 +48,11 @@ const styles = theme => ({
     color: "rgba(162, 162, 162, 0.77)"
   },
   ac_paper: {
-    width: "80%",
-    maxHeight: "200px",
-    overflowY: "scroll",
-    marginTop: theme.spacing.unit,
     position: "absolute",
-    zIndex: 2000
+    zIndex: 1105,
+    left: 0,
+    right: 0,
+    marginTop: theme.spacing.unit
   },
   ac_divider: {
     height: theme.spacing.unit * 2
@@ -79,6 +79,7 @@ function Control(props) {
   return (
     <TextField
       fullWidth
+      disabled={props.isDisabled}
       InputProps={{
         inputComponent,
         inputProps: {
@@ -143,10 +144,11 @@ function ValueContainer(props) {
 }
 
 function Menu(props) {
+  const { className } = props.selectProps.menuProps;
   return (
     <Paper
       square
-      className={props.selectProps.classes.ac_paper}
+      className={className ? className : props.selectProps.classes.ac_paper}
       {...props.innerProps}
       style={{}}
     >
@@ -194,6 +196,7 @@ class IntegrationReactSelect extends React.Component {
       fullwidth = true,
       required = true,
       value,
+      className,
       inputLabelProps = {
         shrink: true
       },
@@ -219,9 +222,12 @@ class IntegrationReactSelect extends React.Component {
             required: required,
             fullWidth: fullwidth
           }}
+          menuProps={{
+            className: className
+          }}
           options={getSuggestions(suggestions) || []}
           components={components}
-          value={value ? value : this.state.single}
+          value={value}
           placeholder={placeholder}
           {...rest}
           onChange={this.handleChange("single")}

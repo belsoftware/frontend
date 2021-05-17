@@ -73,6 +73,9 @@ const transformer = (formKey, form = {}, state = {}) => {
       user = { ...user, name: fields.name.value, mobileNumber: fields.phonenumber.value, emailId: fields.email.value };
       const photos = form.files && form.files["photo"];
       let photo = (photos && photos.length && photos[0]) || null;
+      if(photo&&photo.fileStoreId){
+        user.identificationMark=photo.fileStoreId;
+      }
       photo = photo ? photo.fileStoreId || photo.imageUri : null;
       user = { ...user, photo };
       return { user };
@@ -126,7 +129,9 @@ const transformer = (formKey, form = {}, state = {}) => {
       const { auth } = state;
       const username = get(auth, "userInfo.userName");
       const type = process.env.REACT_APP_NAME === "Citizen" ? "CITIZEN" : "EMPLOYEE";
-      const tenantId = getTenantId();
+     
+      const userInfo = JSON.parse(getUserInfo());
+       const tenantId = userInfo.tenantId;
       formData.tenantId = tenantId;
       formData.username = username;
       formData.type = type;

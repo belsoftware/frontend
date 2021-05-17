@@ -6,12 +6,11 @@ import {
   getDateField,
   getLabel,
   getPattern,
-  getSelectField,
+
   getTextField
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { searchApiCall } from "./functions";
-import get from "lodash/get";
 
 export const resetFields = (state, dispatch) => {
   dispatch(
@@ -42,27 +41,6 @@ export const resetFields = (state, dispatch) => {
     handleField(
       "search",
       "components.div.children.BPAApplication.children.cardContent.children.appBPAHomeSearchResultsContainer.children.ownerMobNo",
-      "props.value",
-      ""
-    )
-  );
-  let getApplicationTypeData = get(
-    state.screenConfiguration.preparedFinalObject, 
-    "applyScreenMdmsData.BPA.ApplicationType[0].code"
-    );
-
-  dispatch(
-    handleField(
-      "search",
-      "components.div.children.BPAApplication.children.cardContent.children.appBPAHomeSearchResultsContainer.children.applicationType",
-      "props.value",
-      getApplicationTypeData
-    )
-  );
-  dispatch(
-    handleField(
-      "search",
-      "components.div.children.BPAApplication.children.cardContent.children.appBPAHomeSearchResultsContainer.children.serviceType",
       "props.value",
       ""
     )
@@ -148,68 +126,7 @@ export const BPAApplication = getCommonCard({
       pattern: getPattern("Date"),
       errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
       required: false
-    }),
-    applicationType: {
-      ...getSelectField({
-        label: {
-          labelName: "Application Type",
-          labelKey: "BPA_BASIC_DETAILS_APPLICATION_TYPE_LABEL"
-        },
-        placeholder: {
-          labelName: "Select Application Type",
-          labelKey: "BPA_BASIC_DETAILS_APPLICATION_TYPE_PLACEHOLDER"
-        },
-        localePrefix: {
-          moduleName: "WF",
-          masterName: "BPA"
-        },
-        jsonPath: "searchScreen.applicationType",
-        sourceJsonPath: "applyScreenMdmsData.BPA.ApplicationType",
-        gridDefination: {
-          xs: 12,
-          sm: 4
-        },
-      }),
-      beforeFieldChange: (action, state, dispatch) => {
-        let path = action.componentJsonpath.replace(
-          /.applicationType$/,
-          ".serviceType"
-        );
-        let serviceType = get(
-          state,
-          "screenConfiguration.preparedFinalObject.applyScreenMdmsData.BPA.ServiceType",
-          []
-        );
-        let filterServiceType, filterServiceTypeArray = [];
-        serviceType.forEach(type => {
-          type.applicationType.forEach(item => {
-            if(item === action.value) return filterServiceTypeArray.push({code: type.code})
-          });
-          if(filterServiceTypeArray && filterServiceTypeArray.length) return false
-        });
-        dispatch(handleField("search", path, "props.data", filterServiceTypeArray));
-      }
-    },
-    serviceType: getSelectField({
-      label: {
-        labelName: "Service type",
-        labelKey: "BPA_BASIC_DETAILS_SERVICE_TYPE_LABEL"
-      },
-      placeholder: {
-        labelName: "Select service type",
-        labelKey: "BPA_BASIC_DETAILS_SERVICE_TYPE_PLACEHOLDER"
-      },
-      localePrefix: {
-        moduleName: "WF",
-        masterName: "BPA"
-      },
-      jsonPath: "searchScreen.serviceType",
-      // sourceJsonPath: "applyScreenMdmsData.BPA.ServiceType",
-      gridDefination: {
-        xs: 12,
-        sm: 4
-      },
-    }),
+    })
   }),
   button: getCommonContainer({
     buttonContainer: getCommonContainer({

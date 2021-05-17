@@ -51,7 +51,8 @@ const themeStyles = theme => ({
     fontSize: "20px",
     fontWeight: 400,
     letterSpacing: "0.83px",
-    lineHeight: "24px"
+    lineHeight: "24px",
+    marginTop: "12px"
   },
   documentSuccess: {
     borderRadius: "100%",
@@ -88,7 +89,7 @@ const themeStyles = theme => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
-    paddingTop: "5px"
+    // paddingTop: "5px"
   }
 });
 
@@ -302,6 +303,7 @@ class CheckList extends Component {
     const { classes } = this.props;
     const { checkListUploaRedux } = this.state;
     let jsonPath = (checkListUploaRedux[key] && checkListUploaRedux[key].dropDownValues) ? checkListUploaRedux[key].dropDownValues.value : "";
+    let jsonPathForRemarks = (checkListUploaRedux[key] && checkListUploaRedux[key].remarks) ? checkListUploaRedux[key].remarks : "";
     return (
       <Grid container={true}>
         <Grid item={true} xs={2} sm={1} className={classes.iconDiv}>
@@ -356,7 +358,8 @@ class CheckList extends Component {
         <TextFieldContainer
               select={false}
               label={{ labelKey: "Remarks" }}
-              placeholder={{ labelKey: "Enter Remarks" }}
+              placeholder={{ labelKey: "BPA_ENTER_REMARKS" }}
+              value={jsonPathForRemarks}
               onChange={event => this.handleFieldChange(key, event)}              
             />
           

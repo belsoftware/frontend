@@ -1,7 +1,7 @@
 import Grid from "@material-ui/core/Grid";
 import Icon from "@material-ui/core/Icon";
 import { withStyles } from "@material-ui/core/styles";
-import { LabelContainer, TextFieldContainer } from "egov-ui-framework/ui-containers";
+import { LabelContainer, TextFieldContainer, AutosuggestContainer } from "egov-ui-framework/ui-containers";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getFileUrlFromAPI, getTransformedLocale, handleFileUpload } from "egov-ui-framework/ui-utils/commons";
 import Label from "egov-ui-kit/utils/translationNode";
@@ -130,7 +130,8 @@ const requiredIcon = (
 
 class DocumentList extends Component {
   state = {
-    uploadedDocIndex: 0
+    uploadedDocIndex: 0,
+    docUploaded: false
   };
   initDocumentData() {
     const {
@@ -194,23 +195,49 @@ class DocumentList extends Component {
                 docsUploaded[index]['dropdown']['value'] = card.dropdown.value;
               }
             }
+            if (card.dropdown && card.dropdown.value) {
+              docsUploaded[index]=docsUploaded[index]?docsUploaded[index]:{};
+              docsUploaded[index]['dropdown'] = docsUploaded[index]['dropdown']?docsUploaded[index]['dropdown']:{};
+              docsUploaded[index]['dropdown']['value'] = card.dropdown.value;
+              docsUploaded[index]['documentType'] = docType.code;
+              docsUploaded[index]['documentCode'] = card.name;
+              docsUploaded[index]['isDocumentRequired'] = card.required;
+              docsUploaded[index]['isDocumentTypeRequired'] = card.dropdown
+              ? card.dropdown.required
+              : false
+            }
             index++;
           }
         });
     });
     if (documentsUploadRedux && Object.keys(documentsUploadRedux) && Object.keys(documentsUploadRedux).length) {
-      Object.keys(docsUploaded).map((key, index) => {
-        Object.keys(docsUploaded[key]).map((item, index) => {
-          if (docsUploaded[key] && documentsUploadRedux[key]) {
-            documentsUploadRedux[key][item] = docsUploaded[key][item];
-          }
-        });
-      });
-      prepareFinalObject("documentsUploadRedux", documentsUploadRedux);
+      if(!this.state.docUploaded){
+        prepareFinalObject("documentsUploadRedux", this.getDocumentsUploaded(documentsUploadRedux, docsUploaded));
+        this.setState({docUploaded:true});
+      }
+      
     } else {
       prepareFinalObject("documentsUploadRedux", docsUploaded);
     }
   }
+
+  getDocumentsUploaded = (documentsUploadRedux, docsUploaded) => {
+    let docObj = {};
+    docObj = {...documentsUploadRedux, ...docsUploaded};
+    if(Object.keys(docsUploaded).length > 0){
+      Object.keys(docObj).map(key=>{
+        Object.keys(documentsUploadRedux).map(docKey=>{
+          if (docObj[key] && docObj[key].documentCode && documentsUploadRedux[docKey] && documentsUploadRedux[docKey].dropdown && documentsUploadRedux[docKey].dropdown.value && documentsUploadRedux[docKey].dropdown.value.indexOf(docObj[key].documentCode) > -1) {
+            docObj[key].documents = documentsUploadRedux[docKey].documents;
+            docObj[key].dropdown = documentsUploadRedux[docKey].dropdown;
+          }
+        })
+      })
+      return docObj;
+    }
+    return docObj;
+  }
+
   componentDidMount = () => {
     this.initDocumentData()
   };
@@ -298,7 +325,7 @@ class DocumentList extends Component {
         </Grid>
         <Grid item={true} xs={12} sm={6} md={4}>
           {card.dropdown && (
-            <TextFieldContainer
+            <AutosuggestContainer
               select={true}
               label={{ labelKey: getTransformedLocale(card.dropdown.label) }}
               placeholder={{ labelKey: card.dropdown.label }}
@@ -306,9 +333,11 @@ class DocumentList extends Component {
               disabled={card.dropdown.disabled && documentsUploadRedux[key] && documentsUploadRedux[key].documents ? true : false}
               optionValue="code"
               optionLabel="label"
-              required={true}
+              required={card.required}
               onChange={event => this.handleChange(key, event)}
               jsonPath={jsonPath}
+              className= "autocomplete-dropdown"
+              labelsFromLocalisation= {true}
             />
           )}
         </Grid>

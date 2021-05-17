@@ -23,10 +23,14 @@ const remoteConfigPath = (path, screenKey) => {
       config = require(`egov-bpa/ui-config/screens/specs/${path}/${screenKey}`).default;
       break;
     case "fire-noc":
-      config = require(`egov-noc/ui-config/screens/specs/${path}/${screenKey}`).default;
+      config = require(`egov-firenoc/ui-config/screens/specs/${path}/${screenKey}`).default;
       break;
+    case "receipts":
     case "abg":
       config = require(`egov-abg/ui-config/screens/specs/${path}/${screenKey}`).default;
+      break;
+    case "bill-amend":
+      config = require(`egov-billamend/ui-config/screens/specs/${path}/${screenKey}`).default;
       break;
     case "egov-common":
       config = require(`egov-common/ui-config/screens/specs/${path}/${screenKey}`).default;
@@ -34,6 +38,9 @@ const remoteConfigPath = (path, screenKey) => {
     case "wns":
     case "wns-citizen":
       config = require(`egov-wns/ui-config/screens/specs/${path}/${screenKey}`).default;
+      break;
+    case "noc":
+      config = require(`egov-noc/ui-config/screens/specs/${path}/${screenKey}`).default;
       break;
     default:
       config = require(`ui-config/screens/specs/${path}/${screenKey}`).default;

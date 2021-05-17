@@ -58,6 +58,10 @@ class MultiItem extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps, this.props)) {
       this.initMultiItem(nextProps);
+    }else if(!isEqual(get(nextProps,`preparedFinalObject.${nextProps.sourceJsonPath}`,[]), get(this.props,`preparedFinalObject.${this.props.sourceJsonPath}`,[]))) {
+      this.initMultiItem(nextProps);
+    }else if(get(nextProps,`preparedFinalObject.${nextProps.sourceJsonPath}`,[]) && get(this.props,`items`,[]) && get(nextProps,`preparedFinalObject.${nextProps.sourceJsonPath}`,[]).length!==get(this.props,`items`,[]).length) {
+      this.initMultiItem(nextProps);
     }
   }
 
@@ -94,7 +98,9 @@ class MultiItem extends React.Component {
     if (sourceJsonPath) {
       let multiItemContent = get(scheama, prefixSourceJsonPath, {});
       for (var variable in multiItemContent) {
-        if (
+        if(multiItemContent.hasOwnProperty(variable) && multiItemContent[variable].componentPath == "DynamicMdmsContainer" ){
+          multiItemContent[variable].index = itemsLength;
+        } else if (
           multiItemContent.hasOwnProperty(variable) &&
           multiItemContent[variable].props &&
           multiItemContent[variable].props.jsonPath
@@ -261,7 +267,7 @@ class MultiItem extends React.Component {
         {hasAddItem !== false && (
           <Container style={{ marginTop: "8px" }}>
             <Item xs={12} align="right">
-              <Button onClick={e => addItem()} color="primary">
+              <Button onClick={e => addItem()} color="primary" className="sss">
                 <Icon iconName="add" />
                 <LabelConatiner labelName={labelName} labelKey={labelKey} />
               </Button>

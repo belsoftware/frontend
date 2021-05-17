@@ -1,10 +1,10 @@
 import { getCommonHeader, getCommonCard, getCommonGrayCard, getCommonContainer, getCommonSubHeader, convertEpochToDate, getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
 // import get from "lodash/get";
-import { getSearchResults, getSearchResultsForSewerage, fetchBill, getDescriptionFromMDMS, getConsumptionDetails, billingPeriodMDMS } from "../../../../ui-utils/commons";
+import { getSearchResults, getSearchResultsForSewerage, fetchBill, getDescriptionFromMDMS, getConsumptionDetails, billingPeriodMDMS, serviceConst } from "../../../../ui-utils/commons";
 import set from "lodash/set";
 import get from "lodash/get";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
-import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { prepareFinalObject, handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { 
   createEstimateData,
   getFeesEstimateCard,
@@ -15,7 +15,7 @@ import { getOwner } from "./viewBillResource/ownerDetails";
 import { getService } from "./viewBillResource/serviceDetails";
 import { viewBillFooter } from "./viewBillResource/viewBillFooter";
 import { adhocPopupViewBill } from "./applyResource/adhocPopupViewBill";
-import { getTenantId, getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
 let consumerCode = getQueryArg(window.location.href, "connectionNumber");
 const tenantId = getQueryArg(window.location.href, "tenantId")
@@ -27,14 +27,14 @@ const processBills = async (state, data, viewBillTooltip, dispatch) => {
     bills.billAccountDetails.forEach(async element => {
       let cessKey = element.taxHeadCode
       let body;
-      if (service === "WATER") {
-        body = { "MdmsCriteria": { "tenantId": tenantId, "moduleDetails": [{ "moduleName": "ws-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
+      if (service === serviceConst.WATER) {
+        body = { "MdmsCriteria": { "tenantId": getTenantId(), "moduleDetails": [{ "moduleName": "ws-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
       } else {
-        body = { "MdmsCriteria": { "tenantId": tenantId, "moduleDetails": [{ "moduleName": "sw-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
+        body = { "MdmsCriteria": { "tenantId": getTenantId(), "moduleDetails": [{ "moduleName": "sw-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
       }
       let res = await getDescriptionFromMDMS(body, dispatch)
       if (res !== null && res !== undefined && res.MdmsRes !== undefined && res.MdmsRes !== null) {
-        if (service === "WATER") { des = res.MdmsRes["ws-services-calculation"]; }
+        if (service === serviceConst.WATER) { des = res.MdmsRes["ws-services-calculation"]; }
         else { des = res.MdmsRes["sw-services-calculation"]; }
         if (des !== null && des !== undefined && des[cessKey] !== undefined && des[cessKey][0] !== undefined && des[cessKey][0] !== null) {
           groupBillDetails.push({ key: cessKey, value: des[cessKey][0].description, amount: element.amount, order: element.order })
@@ -48,16 +48,45 @@ const processBills = async (state, data, viewBillTooltip, dispatch) => {
         }
         if (viewBillTooltip.length >= data.Bill[0].billDetails.length) {          
           let bPeriodMDMS = get(state.screenConfiguration.preparedFinalObject, "billingPeriodMDMS", {});
-          let expiryDemandDate = billingPeriodMDMS(bills.toPeriod,bPeriodMDMS,service);
+          // let expiryDemandDate = billingPeriodMDMS(bills.toPeriod,bPeriodMDMS,service);
+          let expiryDemandDate = bills.expiryDate;
           let dataArray = [{
             total: data.Bill[0].totalAmount,
             expiryDate: expiryDemandDate
           }]
           let sortedBills = viewBillTooltip.sort((a, b) => b.toPeriod - a.toPeriod);
-          let currentDemand = sortedBills[0];
-          sortedBills.shift();
+          let forward = 0;
+          let currentDemand=sortedBills[0];
+          if (data.Bill[0].totalAmount < 0) {
+            sortedBills.forEach(e => {
+              e.bill.forEach(cur => {
+                if (cur.key === "WS_ADVANCE_CARRYFORWARD"||cur.key === "SW_ADVANCE_CARRYFORWARD") {
+                  forward = forward + cur.amount
+                }
+              });
+            }); 
+            let keyExist = false;
+            currentDemand.bill.forEach(cur => {
+              if (cur.key === "WS_ADVANCE_CARRYFORWARD"|| cur.key === "SW_ADVANCE_CARRYFORWARD") {
+                cur.amount = forward;
+                keyExist = true;
+              }
+            });
+            if (!keyExist) {
+              currentDemand.bill.push({
+                amount: forward,
+                key: "ADVANCE_CARRYFORWARD",
+                order: 2,
+                value: "Please put some description in mdms for this key"
+              })
+            }
+          }
           let totalArrears = 0;
-          sortedBills.forEach(e => { e.bill.forEach(o => { totalArrears = totalArrears + o.amount }); })
+          if (data.Bill[0].totalAmount > 0) {
+            sortedBills.shift();
+            sortedBills.forEach(e => { e.bill.forEach(o => { totalArrears = totalArrears + o.amount }); })
+          }
+
           let finalArray = [{
             arrears: totalArrears,
             arrearsDescription: "Total outstanding payment of previous billing cycles.",
@@ -92,14 +121,15 @@ const searchResults = async (action, state, dispatch, consumerCode) => {
   let queryObjForSearch = [{ key: "tenantId", value: tenantId }, { key: "connectionNumber", value: consumerCode }]
   let queryObjectForConsumptionDetails = [{ key: "tenantId", value: tenantId }, { key: "connectionNos", value: consumerCode }]
   let viewBillTooltip = [], data;
-  if (service === "WATER") {
+  let serviceUrl = getQueryArg(window.location.href, "service");
+  if (serviceUrl === serviceConst.WATER) {
     let meterReadingsData = await getConsumptionDetails(queryObjectForConsumptionDetails, dispatch);
-    let payload = await getSearchResults(queryObjForSearch);
+    let payload = await getSearchResults(queryObjForSearch,true);
     let queryObjectForFetchBill = [{ key: "tenantId", value: tenantId }, { key: "consumerCode", value: consumerCode }, { key: "businessService", value: "WS" }];
     data = await fetchBill(queryObjectForFetchBill, dispatch);
     if (payload !== null && payload !== undefined && data !== null && data !== undefined) {
       if (payload.WaterConnection.length > 0 && data.Bill.length > 0) {
-        payload.WaterConnection[0].service = service
+        payload.WaterConnection[0].service = serviceUrl
         await processBills(state,data, viewBillTooltip, dispatch);
         if (meterReadingsData !== null && meterReadingsData !== undefined && meterReadingsData.meterReadings.length > 0) {
           payload.WaterConnection[0].consumption = meterReadingsData.meterReadings[0].currentReading - meterReadingsData.meterReadings[0].lastReading
@@ -128,20 +158,35 @@ const searchResults = async (action, state, dispatch, consumerCode) => {
         if (payload.WaterConnection[0].additionalDetails.adhocRebateReason === 'NA' || payload.WaterConnection[0].additionalDetails.adhocRebateReason === null || payload.WaterConnection[0].additionalDetails.adhocRebateReason === undefined) {
           payload.WaterConnection[0].additionalDetails.adhocRebateReason = "";
         }
-
+        dispatch(
+          handleField(
+            "viewBill",
+            "components.div.children.viewBill.children.cardContent.children.serviceDetails.children.cardContent.children.sewerDetails",
+            "visible",
+            false
+          )
+        );
+        dispatch(
+          handleField(
+            "viewBill",
+            "components.div.children.viewBill.children.cardContent.children.serviceDetails.children.cardContent.children.waterDetails",
+            "visible",
+            true
+          )
+        );
         dispatch(prepareFinalObject("WaterConnection[0]", payload.WaterConnection[0]));
         dispatch(prepareFinalObject("billData", data.Bill[0]));
         dispatch(prepareFinalObject("consumptionDetails[0]", meterReadingsData.meterReadings[0]))
       }
     }
-  } else if (service === "SEWERAGE") {
+  } else if (serviceUrl === serviceConst.SEWERAGE) {
     let queryObjectForFetchBill = [{ key: "tenantId", value: tenantId }, { key: "consumerCode", value: consumerCode }, { key: "businessService", value: "SW" }];
-    let payload = await getSearchResultsForSewerage(queryObjForSearch, dispatch);
+    let payload = await getSearchResultsForSewerage(queryObjForSearch, dispatch,true);
     data = await fetchBill(queryObjectForFetchBill, dispatch)
     let viewBillTooltip = []
     if (payload !== null && payload !== undefined && data !== null && data !== undefined) {
       if (payload.SewerageConnections.length > 0 && data.Bill.length > 0) {
-        payload.SewerageConnections[0].service = service;
+        payload.SewerageConnections[0].service = serviceUrl;
         await processBills(state,data, viewBillTooltip, dispatch);
         /*if (payload.SewerageConnections[0].property.usageCategory !== null && payload.SewerageConnections[0].property.usageCategory !== undefined) {
           const propertyUsageType = "[?(@.code  == " + JSON.stringify(payload.SewerageConnections[0].property.usageCategory) + ")]"
@@ -161,6 +206,22 @@ const searchResults = async (action, state, dispatch, consumerCode) => {
         if (payload.SewerageConnections[0].additionalDetails.adhocRebateReason === 'NA' || payload.SewerageConnections[0].additionalDetails.adhocRebateReason === null || payload.SewerageConnections[0].additionalDetails.adhocRebateReason === undefined) {
           payload.SewerageConnections[0].additionalDetails.adhocRebateReason = "";
         }
+        dispatch(
+          handleField(
+            "viewBill",
+            "components.div.children.viewBill.children.cardContent.children.serviceDetails.children.cardContent.children.sewerDetails",
+            "visible",
+            true
+          )
+        );
+        dispatch(
+          handleField(
+            "viewBill",
+            "components.div.children.viewBill.children.cardContent.children.serviceDetails.children.cardContent.children.waterDetails",
+            "visible",
+            false
+          )
+        );
         dispatch(prepareFinalObject("WaterConnection[0]", payload.SewerageConnections[0]));
         dispatch(prepareFinalObject("billData", data.Bill[0]));
       }
@@ -192,9 +253,9 @@ const beforeInitFn = async (action, state, dispatch, consumerCode) => {
 };
 
 const billHeader = () => {
-  if (service === "WATER") {
+  if (service === serviceConst.WATER) {
     return getCommonHeader({ labelKey: "WS_COMMON_WATER_BILL_HEADER" })
-  } else if (service === "SEWERAGE") {
+  } else if (service === serviceConst.SEWERAGE) {
     return getCommonHeader({ labelKey: "WS_COMMON_SEWERAGE_BILL_HEADER" })
   }
 }

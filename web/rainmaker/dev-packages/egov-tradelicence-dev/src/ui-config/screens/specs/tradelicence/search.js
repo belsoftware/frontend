@@ -1,31 +1,22 @@
 import {
-  getCommonHeader,
-  getLabel,
-  getBreak
+  getBreak, getCommonHeader,
+  getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { tradeLicenseApplication } from "./searchResource/tradeLicenseApplication";
-import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import { prepareFinalObject, unMountScreen } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { getQueryArg, getRequiredDocData, showHideAdhocPopup } from "egov-ui-framework/ui-utils/commons";
+import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
+import get from "lodash/get";
+import { httpRequest } from "../../../../ui-utils";
+import "./index.css";
 import { pendingApprovals } from "./searchResource/pendingApprovals";
-import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 // import { progressStatus } from "./searchResource/progressStatus";
 import { searchResults } from "./searchResource/searchResults";
-import { localStorageGet,getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-import { httpRequest } from "../../../../ui-utils";
-import find from "lodash/find";
-import get from "lodash/get";
+import { tradeLicenseApplication } from "./searchResource/tradeLicenseApplication";
 
 const hasButton = getQueryArg(window.location.href, "hasButton");
 let enableButton = true;
 enableButton = hasButton && hasButton === "false" ? false : true;
-const tenant= getTenantId();
-const pageResetAndChange = (state, dispatch) => {
-  dispatch(prepareFinalObject("Licenses", [{ licenseType: "PERMANENT" }]));
-  dispatch(prepareFinalObject("LicensesTemp", []));
-  dispatch(setRoute(`/tradelicence/apply?tenantId=${tenant}`));
-};
-
-
+const tenant = getTenantId();
 const getMdmsData = async (dispatch) => {
   let mdmsBody = {
     MdmsCriteria: {
@@ -50,20 +41,20 @@ const getMdmsData = async (dispatch) => {
       mdmsBody
     );
     let types = [];
-    if(payload && payload.MdmsRes){
-      types =  get(payload.MdmsRes, "TradeLicense.ApplicationType").map((item,index) => {
+    if (payload && payload.MdmsRes) {
+      types = get(payload.MdmsRes, "TradeLicense.ApplicationType").map((item, index) => {
         return {
-          code : item.code.split(".")[1]
+          code: item.code.split(".")[1]
         }
       });
-    }    
-     dispatch(
+    }
+    dispatch(
       prepareFinalObject(
         "applyScreenMdmsData.searchScreen.applicationType",
         types
       )
     );
-  }catch (e) {
+  } catch (e) {
     console.log(e);
   }
 }
@@ -76,7 +67,17 @@ const tradeLicenseSearchAndResult = {
   uiFramework: "material-ui",
   name: "search",
   beforeInitScreen: (action, state, dispatch) => {
+    dispatch(prepareFinalObject("searchScreen", {}))
+    dispatch(unMountScreen("apply"));
+    dispatch(unMountScreen("search-preview"));
     getMdmsData(dispatch);
+    const moduleDetails = [
+      {
+        moduleName: 'TradeLicense',
+        masterDetails: [{ name: 'Documents' }]
+      }
+    ];
+    getRequiredDocData(action, dispatch, moduleDetails, true);
     return action;
   },
   components: {
@@ -118,7 +119,6 @@ const tradeLicenseSearchAndResult = {
                   height: "48px"
                 }
               },
-
               children: {
                 plusIconInsideButton: {
                   uiFramework: "custom-atoms",
@@ -130,7 +130,6 @@ const tradeLicenseSearchAndResult = {
                     }
                   }
                 },
-
                 buttonLabel: getLabel({
                   labelName: "NEW APPLICATION",
                   labelKey: "TL_HOME_SEARCH_RESULTS_NEW_APP_BUTTON"
@@ -139,13 +138,15 @@ const tradeLicenseSearchAndResult = {
               onClickDefination: {
                 action: "condition",
                 callBack: (state, dispatch) => {
-                  pageResetAndChange(state, dispatch);
+
+                  showHideAdhocPopup(state, dispatch, 'search');
+                  dispatch(prepareFinalObject("Licenses", [{ licenseType: "PERMANENT" }]));
+                  dispatch(prepareFinalObject("LicensesTemp", []));
                 }
               },
               roleDefination: {
                 rolePath: "user-info.roles",
-                path : "tradelicence/apply"
-
+                path: "tradelicence/search?action=showRequiredDocuments"
               }
             }
           }
@@ -154,6 +155,19 @@ const tradeLicenseSearchAndResult = {
         tradeLicenseApplication,
         breakAfterSearch: getBreak(),
         searchResults
+      }
+    },
+    adhocDialog: {
+      uiFramework: 'custom-containers',
+      componentPath: 'DialogContainer',
+      props: {
+        open: getQueryArg(window.location.href, "action") === 'showRequiredDocuments' ? true : false,
+        maxWidth: false,
+        screenKey: 'search',
+        reRouteURL: '/tradelicence/search'
+      },
+      children: {
+        popup: {}
       }
     }
   }

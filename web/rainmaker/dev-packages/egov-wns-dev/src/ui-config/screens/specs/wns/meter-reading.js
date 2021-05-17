@@ -6,16 +6,48 @@ import { prepareFinalObject, toggleSpinner } from "egov-ui-framework/ui-redux/sc
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { meterReadingEditable } from "./meterReading/meterReadingEditable";
 import { getMdmsDataForMeterStatus } from "../../../../ui-utils/commons"
-import { getMdmsDataForAutopopulated } from "../../../../ui-utils/commons"
+import { getSearchResults, getMdmsDataForAutopopulated, isWorkflowExists } from "../../../../ui-utils/commons"
 import get from "lodash/get";
+import set from "lodash/set";
 import { convertEpochToDate } from "../utils";
-
+import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { sortpayloadDataObj } from './connection-details'
 const addMeterReading = async (state, dispatch) => {
     dispatch(toggleSpinner());
-    await getMdmsDataForAutopopulated(dispatch)
-    await getMdmsDataForMeterStatus(dispatch)
-    await setAutopopulatedvalues(state, dispatch)
-    showHideCard(true, dispatch);
+    const tenantId = getQueryArg(window.location.href, "tenantId");
+    const connectionNos = getQueryArg(window.location.href, "connectionNos");
+    let queryObject = [{ key: "tenantId", value: tenantId }, { key: "connectionNumber", value: connectionNos }];
+    let payloadData = await getSearchResults(queryObject);
+    if (payloadData !== null && payloadData !== undefined && payloadData.WaterConnection.length > 0) {
+        payloadData.WaterConnection = sortpayloadDataObj(payloadData.WaterConnection);
+        let applicationNos = getApplicationNo(payloadData.WaterConnection);
+        const queryObj = [
+            { key: "businessIds", value: applicationNos },
+            { key: "tenantId", value: tenantId }
+        ];        
+        
+        let isApplicationApproved = await isWorkflowExists(queryObj);
+        if(!isApplicationApproved){
+            dispatch(toggleSpinner());
+            dispatch(
+                toggleSnackbar(
+                    true,
+                    {
+                        labelName: "WorkFlow already Initiated",
+                        labelKey: "WS_WORKFLOW_ALREADY_INITIATED"
+                    },
+                    "error"
+                )
+            );
+            return;
+        } else {
+            await getMdmsDataForAutopopulated(dispatch)
+            await getMdmsDataForMeterStatus(dispatch)
+            await setAutopopulatedvalues(state, dispatch)
+            showHideCard(true, dispatch); 
+        }
+
+    }  
     dispatch(toggleSpinner());
 };
 
@@ -25,48 +57,27 @@ const setAutopopulatedvalues = async (state, dispatch) => {
     let date = new Date();
     let status = get(state, "screenConfiguration.preparedFinalObject.meterMdmsData.['ws-services-calculation'].MeterStatus[0].code");
     let checkBillingPeriod = await get(state, "screenConfiguration.preparedFinalObject.consumptionDetails");
-    if (checkBillingPeriod === undefined || checkBillingPeriod === []) {
-        let presYear = date.getFullYear();
-        if (billingFrequency === "quarterly") {
-            presYear = date.getFullYear();
-            let prevYear = date.getFullYear() - 1;
-            consumptionDetails['billingPeriod'] = 'Q1-' + prevYear + '-' + presYear.toString().substring(2);
-        }
-        if (billingFrequency === "monthly") {
-            date.setMonth(new Date().getMonth())
-            const month = date.toLocaleString('default', { month: 'short' });
-            let prevBillingPeriod = month + ' - ' + presYear
-            consumptionDetails['billingPeriod'] = prevBillingPeriod
-        }
-        consumptionDetails['lastReading'] = 0;
-        consumptionDetails['consumption'] = 0;
-        consumptionDetails['lastReadingDate'] = convertEpochToDate(new Date().setMonth(new Date().getMonth() - 1));
-    } else {
-        let prevBillingPeriod = get(state, `screenConfiguration.preparedFinalObject.consumptionDetails[0].billingPeriod`);
-        let tempprevBillingPeriod = prevBillingPeriod.trim().split("-")[1].trim()
-        let dateStr = tempprevBillingPeriod.split('/');
-        let newDF = new Date(dateStr[1] + '-' + dateStr[0] + '-' +dateStr[2]);
-        newDF = newDF.setDate(newDF.getDate() + 1);
-        newDF = new Date(newDF)
-        if (billingFrequency === "quarterly") {
-            let quarter = Math.floor((newDF.getMonth() / 3));
-            let firstDate = new Date(newDF.getFullYear(), quarter * 3, 1);
-            let endDate = new Date(firstDate.getFullYear(), firstDate.getMonth() + 3, 0);
-            firstDate = firstDate.getDate() + '/' + (firstDate.getMonth()+1) + '/' + firstDate.getFullYear()
-            endDate = endDate.getDate() + '/' + (endDate.getMonth()+1) + '/' + endDate.getFullYear()
-            consumptionDetails['billingPeriod'] = firstDate + " - " + endDate            
-        }
-        if (billingFrequency === "monthly") {
-            // Added for billing Period           
-            let lastDate = new Date(newDF.getFullYear(), newDF.getMonth() + 1, 0)
-            let firstDate = newDF.getDate() + '/' + (newDF.getMonth()+1) + '/' + newDF.getFullYear()
-            lastDate = lastDate.getDate() + '/' + (lastDate.getMonth()+1) + '/' + lastDate.getFullYear()
-            console.log(firstDate + ' - ' + lastDate);
-            consumptionDetails['billingPeriod'] = firstDate + ' - ' + lastDate            
-        }
-        consumptionDetails['lastReading'] = get(state, `screenConfiguration.preparedFinalObject.consumptionDetails[0].currentReading`);
+    try {
+        let lastReadingDate = convertEpochToDate(checkBillingPeriod[0].currentReadingDate);
+        let lastDF = new Date();
+        let endDate = ("0" + lastDF.getDate()).slice(-2) + '/' + ("0" + (lastDF.getMonth() + 1)).slice(-2) + '/' + lastDF.getFullYear()
+        consumptionDetails['billingPeriod'] = lastReadingDate + " - " + endDate
+        consumptionDetails['lastReading'] = checkBillingPeriod[0].currentReading
         consumptionDetails['consumption'] = ''
-        consumptionDetails['lastReadingDate'] = convertEpochToDate(get(state, `screenConfiguration.preparedFinalObject.consumptionDetails[0].currentReadingDate`))
+        consumptionDetails['lastReadingDate'] = lastReadingDate
+    }catch (e) { 
+        console.log(e);         
+        dispatch(
+            toggleSnackbar(
+                true,
+                {
+                    labelName: "Failed to parse meter reading data.",
+                    labelKey: "ERR_FAILED_TO_PARSE_METER_READING_DATA"
+                },
+                "warning"
+            )
+        );
+        return;
     }
 
     dispatch(
@@ -122,7 +133,7 @@ const setAutopopulatedvalues = async (state, dispatch) => {
 
 }
 
-const queryValueAN = getQueryArg(window.location.href, "connectionNos");
+
 // console.log('123', queryValueAN)
 const showHideCard = (booleanHideOrShow, dispatch) => {
     dispatch(
@@ -143,7 +154,7 @@ const header = getCommonContainer({
         moduleName: "egov-wns",
         componentPath: "ConsumerNoContainer",
         props: {
-            number: queryValueAN
+            number: getQueryArg(window.location.href, "connectionNos")
         }
     },
     classes: {
@@ -157,6 +168,9 @@ const screenConfig = {
     name: "meter-reading",
     beforeInitScreen: (action, state, dispatch) => {
         getMeterReadingData(dispatch);
+        set(
+            action,
+            "screenConfig.components.div.children.header.children.applicationNumber.props.number", getQueryArg(window.location.href, "connectionNos"))
         return action;
     },
     components: {
@@ -231,5 +245,18 @@ const demo = getCommonCard({
         labelKey: "HR_HOME_SEARCH_RESULTS_HEADING"
     }),
 });
+
+const getApplicationNo = (connectionsObj) => {
+    let appNos = "";
+    if(connectionsObj.length > 1){
+      for(var i=0; i< connectionsObj.length; i++){
+        appNos += connectionsObj[i].applicationNo +",";
+      }
+      appNos = appNos.slice(0,-1);
+    }else{
+      appNos = connectionsObj[0].applicationNo;
+    }
+    return appNos;
+}
 
 export default screenConfig;

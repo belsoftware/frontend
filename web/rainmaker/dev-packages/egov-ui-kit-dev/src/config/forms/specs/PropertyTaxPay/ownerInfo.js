@@ -3,6 +3,8 @@ import { setDependentFields } from "./utils/enableDependentFields";
 import get from "lodash/get";
 import set from "lodash/set";
 import { setFieldProperty, handleFieldChange } from "egov-ui-kit/redux/form/actions";
+import { getPattern
+} from "egov-ui-framework/ui-config/screens/specs/utils";
 
 const formConfig = {
   name: "ownerInfo",
@@ -15,7 +17,7 @@ const formConfig = {
       hintText: "PT_FORM3_OWNER_NAME_PLACEHOLDER",
       required: true,
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,._:;“”‘’]{1,64}$/i,
+      pattern:getPattern("Name") ,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
     },
     ownerMobile: {
@@ -25,7 +27,7 @@ const formConfig = {
       floatingLabelText: "PT_FORM3_MOBILE_NO",
       hintText: "PT_FORM3_MOBILE_NO_PLACEHOLDER",
       required: true,
-      pattern: /^([0]|((\+\d{1,2}[-]{0,1})))?\(?[5-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i,
+      pattern: getPattern("MobileNo") ,
       errorMessage: "PT_MOBILE_NUMBER_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
     },
@@ -35,7 +37,7 @@ const formConfig = {
       type: "textfield",
       floatingLabelText: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME",
       hintText: "PT_FORM3_GUARDIAN_PLACEHOLDER",
-      pattern: /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,._:;“”‘’]{1,64}$/i,
+      pattern:getPattern("Name") ,
       required: true,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
@@ -48,7 +50,7 @@ const formConfig = {
       hintText: "PT_FORM3_EMAIL_ID_PLACEHOLDER",
       errorMessage: "PT_EMAIL_ID_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/,
+      pattern: getPattern("Email"),
     },
     ownerAddress: {
       id: "ownerAddress",
@@ -57,30 +59,43 @@ const formConfig = {
       floatingLabelText: "PT_FORM3_CORRESPONDENCE_ADDRESS",
       hintText: "PT_FORM3_CORRESPONDENCE_ADDRESS_PLACEHOLDER",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,256}$/,
+      pattern: getPattern("Address"),
       errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
     },
     ownerRelationship: {
       id: "ownerRelationship",
+      required: true,
       jsonPath: "Properties[0].propertyDetails[0].owners[0].relationship",
-      type: "singleValueList",
+      type: "AutocompleteDropdown",
       localePrefix: "PT_RELATION",
+      labelsFromLocalisation: false,
       floatingLabelText: "PT_FORM3_RELATIONSHIP",
       hintText: "",
+      gridDefination: {
+        xs: 12,
+        sm: 6
+      },
       dropDownData: [{ label: "Father", value: "FATHER" }, { label: "Husband", value: "HUSBAND" }],
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      formName: "ownerInfo"
     },
     ownerCategory: {
       id: "ownerCategory",
       required: true,
       localePrefix: { moduleName: "PropertyTax", masterName: "OwnerType" },
       jsonPath: "Properties[0].propertyDetails[0].owners[0].ownerType",
-      type: "singleValueList",
+      type: "AutocompleteDropdown",
+      defaultSort:false,
       floatingLabelText: "PT_FORM3_SPECIAL_CATEGORY",
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
       dropDownData: [],
+      gridDefination: {
+        xs: 12,
+        sm: 6
+      },
       fullWidth: true,
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
+      formName: "ownerInfo",
       updateDependentFields: ({ formKey, field: sourceField, dispatch, state }) => {
         const { value } = sourceField;
         const dependentFields = ["ownerCategoryId", "ownerCategoryIdType"];
@@ -171,7 +186,7 @@ const formConfig = {
       jsonPath: "Properties[0].propertyDetails[0].owners[0].document.documentType",
       required: true,
       localePrefix: { moduleName: "PropertyTax", masterName: "OwnerTypeDocument" },
-      type: "singleValueList",
+      type: "AutocompleteDropdown",
       floatingLabelText: "PT_FORM3_DOCUMENT_ID_TYPE",
       fullWidth: true,
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
@@ -180,6 +195,11 @@ const formConfig = {
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       dropDownData: [],
       hideField: true,
+      gridDefination: {
+        xs: 12,
+        sm: 6
+      },
+      formName: "ownerInfo",
       updateDependentFields: ({ formKey, field: sourceField, dispatch, state }) => {
         const { value } = sourceField;
         if (value === "Aadhar") {

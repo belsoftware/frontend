@@ -1,5 +1,6 @@
 import { handleScreenConfigurationFieldChange as handleField } from "../../../../ui-redux/screen-configuration/actions";
 import { getTranslatedLabel } from "../../../../ui-utils/commons";
+import get from "lodash/get";
 
 const appCardHeaderStyle = (colorOne = "#ec407a", colorTwo = "#d81b60") => {
   return {
@@ -91,11 +92,30 @@ export const getCommonValue = (value, props = {}) => {
   return getCommonHeader(value, { variant: "body2", ...props });
 };
 
+
+export const getCommonLabelWithValue = (paragraph, value, props = {}) => {
+  return getCommonLabelValue(paragraph, value, { variant: "caption", ...props });
+}
+
+export const getCommonLabelValue = (header, value, props) => {
+  return {
+    componentPath: "Typography",
+    props: {
+      variant: "headline",
+      ...props
+    },
+    children: {
+      // [header]: getLabel(header)
+      key: getLabelForModify(header, value),
+    }
+  };
+};
+
 export const getCommonCard = (children, cardProps = {}, cardContentProps = {}) => {
   return {
     componentPath: "Card",
     props: {
-      ...cardProps
+      ...cardProps  
     },
     children: {
       cardContent: {
@@ -182,6 +202,18 @@ export const getLabel = (label, labelKey, props = {}) => {
   };
 };
 
+export const getLabelForModify = (label, jsonPath, props = {}) => {
+  return {
+    uiFramework: "custom-containers",
+    componentPath: "ModifyLabelConatiner",
+    props: {
+      ...label,
+      ...jsonPath,
+      ...props
+    }
+  };
+};
+
 export const getSelectField = selectScheama => {
   return getTextField({
     ...selectScheama,
@@ -244,6 +276,9 @@ export const getTextField = textScheama => {
     maxValue,
     infoIcon,
     title = {},
+    multiline=false,
+    rows="1",
+    disabled=false,
     errorMessage = "",
     requiredMessage = "",
     ...rest
@@ -268,6 +303,9 @@ export const getTextField = textScheama => {
       jsonPath,
       iconObj,
       title,
+      disabled,
+      multiline,
+      rows,
       infoIcon,
       errorMessage,
       ...props
@@ -431,14 +469,42 @@ export const getLabelWithValue = (label, value, props = {}) => {
   };
 };
 
+export const getLabelWithValueForModifiedLabel = (label, value, label2, value2,  props = {}) => {
+  return {
+    uiFramework: "custom-atoms",
+    componentPath: "Div",
+    gridDefination: {
+      xs: 6,
+      sm: 3
+    },
+    props: {
+      style: {
+        marginBottom: "16px",
+        wordBreak: "break-word"
+      },
+      ...props
+    },
+    children: {
+      label1: getCommonCaption(label),
+      value1: getCommonValue(value),
+      label2: getCommonLabelWithValue(label2, value2)
+    }
+  };
+};
+
 export const convertEpochToDate = dateEpoch => {
-  const dateFromApi = new Date(dateEpoch);
-  let month = dateFromApi.getMonth() + 1;
-  let day = dateFromApi.getDate();
-  let year = dateFromApi.getFullYear();
-  month = (month > 9 ? "" : "0") + month;
-  day = (day > 9 ? "" : "0") + day;
-  return `${day}/${month}/${year}`;
+  // Returning null in else case because new Date(null) returns initial date from calender
+  if(dateEpoch){
+    const dateFromApi = new Date(dateEpoch);
+    let month = dateFromApi.getMonth() + 1;
+    let day = dateFromApi.getDate();
+    let year = dateFromApi.getFullYear();
+    month = (month > 9 ? "" : "0") + month;
+    day = (day > 9 ? "" : "0") + day;
+    return `${day}/${month}/${year}`;
+  } else {
+    return null;
+  }
 };
 
 export const convertDateToEpoch = (dateString, dayStartOrEnd = "dayend") => {
@@ -484,33 +550,39 @@ export const getTab = (label, props = {}) => {
 export const getPattern = type => {
   switch (type) {
     case "Name":
-      return /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,._:;“”‘’]{1,50}$/i;
+      return /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i;
     case "MobileNo":
       return /^[6789][0-9]{9}$/i;
     case "Amount":
-      return /^[0-9]{0,9}$/i;
+      return /^[0-9]{0,8}$/i;
+    case "NonZeroAmount":
+      return /^[1-9][0-9]{0,7}$/i;  
+    case "DecimalNumber":
+      return /^\d{0,8}(\.\d{1,2})?$/i;
+      //return /(([0-9]+)((\.\d{1,2})?))$/i;
     case "Email":
       return /^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/i;
     case "Address":
-      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,500}$/i;
+      return /^[^\$\"<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,500}$/i;
     case "PAN":
       return /^[A-Za-z]{5}\d{4}[A-Za-z]{1}$/i;
     case "TradeName":
-      return /^[^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,.:;“”‘’]{1,100}$/i;
+      return /^[-@.\/#&+\w\s]*$/
+      //return /^[^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,.:;“”‘’]{1,100}$/i;
     case "Date":
       return /^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/i;
     case "UOMValue":
-      return /^(0)*[1-9][0-9]{0,3}$/i;
+      return /^(0)*[1-9][0-9]{0,5}$/i;
     case "OperationalArea":
       return /^(0)*[1-9][0-9]{0,6}$/i;
     case "NoOfEmp":
-      return /^(0)*[1-9][0-9]{0,2}$/i;
+      return /^(0)*[1-9][0-9]{0,6}$/i;
     case "GSTNo":
       return /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d[Z]{1}[A-Z\d]{1}$/i;
     case "DoorHouseNo":
-      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,50}$/i;
+      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,50}$/i;
     case "BuildingStreet":
-      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,100}$/i;
+      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,64}$/i;
     case "Pincode":
       return /^[1-9][0-9]{5}$/i;
     case "Landline":
@@ -518,20 +590,41 @@ export const getPattern = type => {
     case "PropertyID":
       return /^[a-zA-z0-9\s\\/\-]$/i;
     case "ElectricityConnNo":
-      return /^[0-9]{15}$/i;
+      return /^.{1,15}$/i;
     case "DocumentNo":
       return /^[0-9]{1,15}$/i; 
     case "eventName":
-      return /^[^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,.:;“”‘’]{1,65}$/i;
+      return /^[^\$\"<>?\\\\~`!@#$%^()+={}\[\]*,.:;“”]{1,65}$/i;
     case "eventDescription":
       return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,500}$/i;
+    case "cancelChallan":
+      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,100}$/i;
     case "FireNOCNo":
       return /^[a-zA-Z0-9-]*$/i;
     case "consumerNo":
       return /^[a-zA-Z0-9/-]*$/i;
+    case "AadharNo":
+      //return /^\d{4}\s\d{4}\s\d{4}$/;
+      return /^([0-9]){12}$/;
+    case "ChequeNo":
+        return /^(?!0{6})[0-9]{6}$/;
+    case "Comments":
+        return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,50}$/i;
+    case "OldLicenceNo":
+        return /^[a-zA-Z0-9-/]{0,64}$/;
+
   }
 };
 
 export const checkValueForNA = value => {
   return value && value !== "null" ? value : "NA";
+};
+
+export const downloadHelpFile = async (state) => {  
+  console.info("download the help file");
+  const helpurl = get(state.screenConfiguration.preparedFinalObject,
+    "helpFileUrl",
+    ""
+  );   
+  window.open(helpurl,"_blank");
 };

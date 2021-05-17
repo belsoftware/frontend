@@ -3,6 +3,7 @@ import {
   getEpochForDate,
   getTextToLocalMapping
 } from "../../utils";
+import { routeTo } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formActionUtils";
 
 export const searchResults = {
   uiFramework: "custom-molecules",
@@ -13,7 +14,13 @@ export const searchResults = {
     columns: [
       {
         labelName: "Application No",
-        labelKey: "TL_COMMON_TABLE_COL_APP_NO"
+        labelKey: "TL_COMMON_TABLE_COL_APP_NO",
+        options: {
+          filter: false,
+          customBodyRender: (value, tableMeta) => (
+              <a href="javascript:void(0)" onClick={() => onRowClick(tableMeta.rowData)}>{value}</a>
+          )
+        }
       },
       {
         labelName: "License No",
@@ -90,10 +97,7 @@ export const searchResults = {
       responsive: "scroll",
       selectableRows: false,
       hover: true,
-      rowsPerPageOptions: [10, 15, 20],
-      onRowClick: (row, index) => {
-        onRowClick(row);
-      }
+      rowsPerPageOptions: [10, 15, 20]
     },
     customSortColumn: {
       column: "Application Date",
@@ -116,14 +120,14 @@ export const searchResults = {
 const onRowClick = rowData => {
   switch (rowData[5]) {
     case "INITIATED":
-      window.location.href = `apply?applicationNumber=${rowData[0]}&tenantId=${
+      routeTo(`apply?applicationNumber=${rowData[0]}&tenantId=${
         rowData[6]
-      }`;
+      }`);
       break;
     default:
-      window.location.href = `search-preview?applicationNumber=${
+      routeTo(`search-preview?applicationNumber=${
         rowData[0]
-      }&tenantId=${rowData[6]}`;
+      }&tenantId=${rowData[6]}`);
       break;
   }
 };

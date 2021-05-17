@@ -1,9 +1,11 @@
 import commonConfig from "config/common.js";
 import { getBreak, getCommonHeader, getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
-import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { prepareFinalObject ,unMountScreen} from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg, getRequiredDocData,showHideAdhocPopup } from "egov-ui-framework/ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import "./index.css";
+import get from "lodash/get";
+import set from "lodash/set";
 import { resetFields } from "./mutation-methods";
 import propertySearchTabs from "./property-search-tabs";
 import { searchApplicationTable, searchPropertyTable } from "./searchResource/searchResults";
@@ -37,11 +39,21 @@ const getMDMSData = async (action, dispatch) => {
       if (process.env.REACT_APP_NAME != "Citizen") {
         dispatch(
           prepareFinalObject(
-            "searchScreen.tenantId",
+            "ptSearchScreen.tenantId",
             tenant
           )
         );
+        set(action.screenConfig,
+            "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.ulbCity.props.isDisabled",
+            true
+        );
+        set(action.screenConfig,
+            "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.ulbCity.isDisabled",
+            true
+        );
       }
+      const tenants=get(payload,'payload.MdmsRes.tenant.tenants',[]).sort((t1,t2)=>t1.code.localeCompare(t2.code))
+      dispatch(prepareFinalObject("searchScreenMdmsData.tenant.tenants", tenants));
     })
     // const payload = await httpRequest(
     //   "post",
@@ -79,7 +91,7 @@ const getMDMSData = async (action, dispatch) => {
   //   if (process.env.REACT_APP_NAME != "Citizen") {
   //     dispatch(
   //       prepareFinalObject(
-  //         "searchScreen.tenantId",
+  //         "ptSearchScreen.tenantId",
   //         tenant
   //       )
   //     );
@@ -100,7 +112,7 @@ const screenConfig = {
 
   beforeInitScreen: (action, state, dispatch) => {
     resetFields(state, dispatch);
-    
+    dispatch(unMountScreen("search-preview"));
     getMDMSData(action, dispatch);
     return action;
   },
@@ -185,8 +197,7 @@ const screenConfig = {
       }
     },
     adhocDialog: {
-      uiFramework: "custom-containers-local",
-      moduleName: "egov-pt",
+      uiFramework: "custom-containers",
       componentPath: "DialogContainer",
       props: {
         open: false,

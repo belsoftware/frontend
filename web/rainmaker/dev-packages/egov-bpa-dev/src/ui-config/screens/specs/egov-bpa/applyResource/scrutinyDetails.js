@@ -263,6 +263,7 @@ export const proposedBuildingDetails = getCommonCard({
                     print: false,
                     download: false,
                     viewColumns: false,
+                    rowHover: false
                   }
                 }
               },
@@ -335,7 +336,7 @@ export const abstractProposedBuildingDetails = getCommonCard({
               labelName: "Total Buildup Area (sq.mtrs)",
               labelKey: "BPA_APPLICATION_TOTAL_BUILDUP_AREA"
             },
-            jsonPath: "scrutinyDetails.planDetail.blocks[0].building.totalArea[0].builtUpArea",
+            jsonPath: "scrutinyDetails.planDetail.virtualBuilding.totalBuitUpArea",
             props: {
               disabled: 'true',
               className: "tl-trade-type"
@@ -372,7 +373,7 @@ export const abstractProposedBuildingDetails = getCommonCard({
               labelName: "Total Floor Area",
               labelKey: "BPA_APPLICATION_NO_OF_FLOORS"
             },
-            jsonPath: "scrutinyDetails.planDetail.blocks[0].building.totalArea[0].floorArea",
+            jsonPath: "scrutinyDetails.planDetail.blocks[0].building.totalFloors",
             props: {
               disabled: 'true',
               className: "tl-trade-type"
@@ -408,7 +409,7 @@ export const abstractProposedBuildingDetails = getCommonCard({
               labelName: "Total Carpet Area",
               labelKey: "BPA_APPLICATION_HIGH_FROM_GROUND"
             },
-            jsonPath: "scrutinyDetails.planDetail.blocks[0].building.totalArea[0].carpetArea",
+            jsonPath: "scrutinyDetails.planDetail.blocks[0].building.buildingHeight",
             props: {
               disabled: 'true',
               className: "tl-trade-type"

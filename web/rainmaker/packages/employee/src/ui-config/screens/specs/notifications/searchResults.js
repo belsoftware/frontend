@@ -2,8 +2,6 @@ import React from "react";
 import { LabelContainer } from "egov-ui-framework/ui-containers";
 import { handleScreenConfigurationFieldChange as handleField, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
-  getLocaleLabels,
-  getTransformedLocalStorgaeLabels,
   epochToYmd,
   getUserDataFromUuid,
   transformById,
@@ -12,10 +10,6 @@ import {
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import { getEventsByType, sortByEpoch, getEpochForDate } from "../utils";
 import get from "lodash/get";
-
-// function sleep(ms) {
-//   return new Promise((resolve) => setTimeout(resolve, ms));
-// }
 
 export const searchApiCall = async (state, dispatch) => {
   const queryObject = [
@@ -28,8 +22,6 @@ export const searchApiCall = async (state, dispatch) => {
   ];
   const events = await getEventsByType(queryObject);
 
-  const localisationLabels = getTransformedLocalStorgaeLabels();
-  //var currentDate = new Date().getTime();
   const uuidArray = [];
   events &&
     events.forEach((element) => {
@@ -47,16 +39,14 @@ export const searchApiCall = async (state, dispatch) => {
       events.map((item) => {
         //const status = item.eventDetails && item.eventDetails.toDate > currentDate ? item.status : "INACTIVE";
         return {
-          ["EVENTS_MESSAGE_LABEL"]: item.name,
-          ["EVENTS_POSTING_DATE_LABEL"]: epochToYmd(item.auditDetails.lastModifiedTime),
-          ["EVENTS_START_DATE_LABEL"]: item.eventDetails
-            ? epochToYmd(item.eventDetails.fromDate)
-            : "-",
-          ["EVENTS_END_DATE_LABEL"]: item.eventDetails ? epochToYmd(item.eventDetails.toDate) : "-",
-          ["EVENTS_POSTEDBY_LABEL"]: get(userResponse, item.auditDetails.lastModifiedBy).name,
-          ["EVENTS_STATUS_LABEL"]: item.status,
-          ["ID"]: item.id,
-          ["TENANT_ID"]: item.tenantId,
+          ["EVENTS_MESSAGE_LABEL"]: item&&item.name,
+          ["EVENTS_POSTING_DATE_LABEL"]: item&&item.auditDetails&&epochToYmd(item.auditDetails.lastModifiedTime),
+          ["EVENTS_START_DATE_LABEL"]: item&&item.eventDetails ? epochToYmd(item.eventDetails.fromDate) : "-",
+          ["EVENTS_END_DATE_LABEL"]: item&&item.eventDetails ? epochToYmd(item.eventDetails.toDate) : "-",
+          ["EVENTS_POSTEDBY_LABEL"]: get(userResponse, item&&item.auditDetails.lastModifiedBy,{}).name,
+          ["EVENTS_STATUS_LABEL"]: item&&item.status,
+          ["ID"]: item&&item.id,
+          ["TENANT_ID"]: item&&item.tenantId,
         };
       });
     dispatch(handleField("search", "components.div.children.searchResults", "props.data", data));
@@ -72,7 +62,6 @@ const onRowClick = (rowData) => {
 };
 
 export const searchResults = () => {
-  const localisationLabels = getTransformedLocalStorgaeLabels();
   return {
     uiFramework: "custom-molecules",
     componentPath: "Table",

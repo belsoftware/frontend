@@ -3,7 +3,12 @@ import { getCommonHeader } from "egov-ui-framework/ui-config/screens/specs/utils
 import { fetchData } from "./functions";
 import FormIcon from "../../../../ui-atoms-local/Icons/FormIcon";
 import EDCRIcon from "../../../../ui-atoms-local/Icons/EDCRIcon";
+import { ifUserRoleMatches } from "../utils";
 import "../utils/index.css";
+import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+import { getStakeHolderRoles } from "../../../../ui-utils/commons";
+import set from "lodash/set";
+import get from "lodash/get";
 
 const header = getCommonHeader(
   {
@@ -16,6 +21,21 @@ const header = getCommonHeader(
     }
   }
 );
+
+const hideBPACard = () => {
+  return ifUserRoleMatches([
+    "BPA_ARCHITECT",
+    "BPA_ENGINEER",
+    "BPA_BUILDER",
+    "BPA_STRUCTURALENGINEER",
+    "BPA_SUPERVISOR",
+    "BPA_TOWNPLANNER"
+  ]);
+};
+
+const displayView = () => {
+  return hideBPACard() ? "my-applications" : "my-applications-stakeholder";
+}
 
 const cardItems = [
   {
@@ -40,7 +60,7 @@ const cardItems = [
       labelName: "My Applications"
     },
     icon: <FormIcon />,
-    route: "my-applications"
+    route: displayView()
   }
 ];
 
@@ -48,13 +68,28 @@ const tradeLicenseSearchAndResult = {
   uiFramework: "material-ui",
   name: "home",
   beforeInitScreen: (action, state, dispatch) => {
-    fetchData(action, state, dispatch);
+    const userInfo = JSON.parse(getUserInfo());
+    const roles = get(userInfo, "roles");
+    const stakeholerRoles = getStakeHolderRoles();
+    let isStakeholder = false;
+    if (roles && roles.length > 0) {
+      roles.forEach(role => {
+        if (stakeholerRoles.includes(role.code)) {
+          isStakeholder = true;
+        }
+      })
+    }
+    if (isStakeholder) {
+      set( action, "screenConfig.components.div.visible", true );
+      fetchData(action, state, dispatch);
+    } 
     return action;
   },
   components: {
     div: {
       uiFramework: "custom-atoms",
       componentPath: "Div",
+      visible: false,
       // props: {
       //   className: "common-div-css"
       // },

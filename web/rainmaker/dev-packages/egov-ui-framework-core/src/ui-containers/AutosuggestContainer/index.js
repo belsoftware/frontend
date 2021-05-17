@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { AutoSuggest } from "../../ui-atoms";
-import { findItemInArrayOfObject } from "../../ui-utils/commons";
+import { findItemInArrayOfObject, sortDropdownNames } from "egov-ui-framework/ui-utils/commons";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   transformById,
@@ -18,7 +18,7 @@ class AutoSuggestor extends Component {
   onSelect = value => {
     const { onChange } = this.props;
     //Storing multiSelect values not handled yet
-    onChange({ target: { value: value.value } });
+    onChange({ target: { value: value ? value.value : null } });
   };
 
   render() {
@@ -30,6 +30,10 @@ class AutoSuggestor extends Component {
       suggestions,
       className,
       localizationLabels,
+      required,
+      errorText,
+      disabled,
+      defaultSort=true,
       ...rest
     } = this.props;
     let translatedLabel = getLocaleLabels(
@@ -52,6 +56,12 @@ class AutoSuggestor extends Component {
           className={className}
           label={translatedLabel}
           placeholder={translatedPlaceholder}
+          helperText={required && errorText}
+          error={errorText == "Required" && required}
+          isClearable={true}
+          defaultSort={defaultSort}
+          required={required}
+          disabled={disabled}
           {...rest}
         />
       </div>
@@ -59,11 +69,9 @@ class AutoSuggestor extends Component {
   }
 }
 
-const getLocalisedSuggestions = (suggestions, localePrefix, transfomedKeys) => {
-  return (
-    suggestions &&
-    suggestions.length > 0 &&
-    suggestions.map((option, key) => {
+const getLocalisedSuggestions = (suggestions, localePrefix, transfomedKeys,defaultSort) => {
+    
+   let result= suggestions && suggestions.length > 0 && Array.isArray(suggestions) &&    suggestions.map((option, key) => {
       option.name = getLocaleLabels(
         option.code,
         localePrefix && !isEmpty(localePrefix)
@@ -72,9 +80,26 @@ const getLocalisedSuggestions = (suggestions, localePrefix, transfomedKeys) => {
         transfomedKeys
       );
       return option;
-    })
-  );
+    }) || [];
+   
+    return defaultSort?result&& Array.isArray(result)&&result.sort(sortDropdownNames): result;
+
+    
+    
+  
 };
+
+const getErrorText = (obj, id) => {
+  const keys = Object.keys(obj);
+  let errorText = "";
+  for(let i = 0; i < keys.length; i++){
+    if(obj[keys[i]].id == id) {
+      errorText = obj[keys[i]].errorText;
+      break;
+    }
+  }
+  return errorText;
+}
 
 const mapStateToProps = (state, ownprops) => {
   const { localizationLabels } = state.app;
@@ -84,21 +109,32 @@ const mapStateToProps = (state, ownprops) => {
     sourceJsonPath,
     labelsFromLocalisation,
     data,
-    localePrefix
+    localePrefix,
+    canFetchValueFromJsonpath=true,
+    helperText,
+    id,
+    formName,
+    defaultSort=true
   } = ownprops;
+  let errorText = helperText ? helperText : (formName && state.form[formName] && state.form[formName].fields ? getErrorText(state.form[formName].fields, id) : "");
   let suggestions =
     data && data.length > 0
       ? data
       : get(state.screenConfiguration.preparedFinalObject, sourceJsonPath, []);
-  value = value
-    ? value
-    : get(state.screenConfiguration.preparedFinalObject, jsonPath);
+   if(canFetchValueFromJsonpath){
+    value = value
+      ? value
+      : (get(state.screenConfiguration.preparedFinalObject, jsonPath) ? get(state.screenConfiguration.preparedFinalObject, jsonPath) : get(state.common.prepareFormData, jsonPath));
+  
+   }   
+
   //To fetch corresponding labels from localisation for the suggestions, if needed.
   if (labelsFromLocalisation) {
     suggestions = getLocalisedSuggestions(
       JSON.parse(JSON.stringify(suggestions)),
       localePrefix,
-      localizationLabels
+      localizationLabels,
+      defaultSort
     );
   }
   //To find correct option object as per the value (for showing the selected value).
@@ -112,7 +148,7 @@ const mapStateToProps = (state, ownprops) => {
     value = { label: selectedItem.name, value: selectedItem.code };
   }
   // console.log(value, suggestions);
-  return { value, jsonPath, suggestions, localizationLabels };
+  return { value, jsonPath, suggestions, localizationLabels, errorText };
 };
 
 const mapDispatchToProps = dispatch => {

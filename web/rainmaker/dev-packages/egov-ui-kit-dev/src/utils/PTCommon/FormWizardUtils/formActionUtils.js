@@ -1,10 +1,10 @@
 
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { createPropertyPayload } from "egov-ui-kit/config/forms/specs/PropertyTaxPay/propertyCreateUtils";
-import { setRoute } from "egov-ui-kit/redux/app/actions";
+import { setRoute, toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { hideSpinner } from "egov-ui-kit/redux/common/actions";
 import { httpRequest } from "egov-ui-kit/utils/api";
-import { getBusinessServiceNextAction } from "egov-ui-kit/utils/PTCommon/FormWizardUtils";
+import { getQueryValue } from "egov-ui-kit/utils/PTCommon";
 import { get } from "lodash";
 import store from "ui-redux/store";
 import { getPurpose, PROPERTY_FORM_PURPOSE } from "./formUtils";
@@ -85,14 +85,39 @@ const getAssessmentDetails = async () => {
         console.log(e.message);
     }
 }
-export const createProperty = async (Properties, action, props) => {
-    const { documentsUploadRedux, newProperties, propertiesEdited } = props;
-    const propertyPayload = createPropertyPayload(Properties, documentsUploadRedux, newProperties);
+export const createProperty = async (Properties, action, props, isModify, preparedFinalObject) => {
+    const { documentsUploadRedux, newProperties, propertiesEdited, propertyAdditionalDetails, location } = props;
+    const { search } = location;
+    const isEditInWorkflow = getQueryValue(search, "mode") == 'WORKFLOWEDIT';
+    let isDocumentValid = true;
+    Object.keys(documentsUploadRedux).map((key) => {
+        if (documentsUploadRedux[key].documents && documentsUploadRedux[key].documents.length > 0 && !(documentsUploadRedux[key].dropdown && documentsUploadRedux[key].dropdown.value)) {
+            isDocumentValid = false;
+        }
+    });
+    if (!isDocumentValid) {
+        store.dispatch(toggleSnackbarAndSetText(true, { labelName: "Please select document type for uploaded document", labelKey: "ERR_DOCUMENT_TYPE_MISSING" }, "error"));
+        return;
+    }
+    const propertyPayload = createPropertyPayload(Properties, documentsUploadRedux);
+
+    if (getQueryValue(search, "purpose") == 'update') {
+        propertyPayload.owners = get(newProperties[0], 'owners', get(propertyPayload, 'owners', []))
+        propertyPayload.institution = get(newProperties[0], 'institution', get(propertyPayload, 'institution', []))
+    }
     const propertyMethodAction = action;
+    const currentAction = isEditInWorkflow ? 'CORRECTIONPENDING' : null;
+
     if (action === "_update") {
+        let key = isEditInWorkflow ? get(preparedFinalObject, 'OldProperty.creationReason') : "UPDATE";
+        key = key&&key.toUpperCase();
+        const PTApplication = get(preparedFinalObject, 'ptApplication', {})
+        const wfApplication = PTApplication && PTApplication[key] || {}
+        let wfAction = isEditInWorkflow ? wfApplication.editAction : wfApplication.action
+        let wfBusinessService = wfApplication.businessService
         const workflow = {
-            "businessService": "PT.CREATE",
-            "action": getBusinessServiceNextAction('PT.CREATE', null) || "OPEN",
+            "businessService": wfBusinessService || "PT.CREATE",
+            "action": wfAction || "OPEN",
             "moduleName": "PT"
         }
         if (propertyPayload.workflow) {
@@ -102,7 +127,16 @@ export const createProperty = async (Properties, action, props) => {
         }
     }
     try {
-        propertyPayload.creationReason = action == '_create' ? 'CREATE' : 'UPDATE';
+        if (!isEditInWorkflow) {
+            // propertyPayload.creationReason = action == '_create' ? 'CREATE' :  'UPDATE';
+            if (action == '_create') {
+                propertyPayload.creationReason = get(propertyPayload, "creationReason", 'CREATE');
+            } else {
+                propertyPayload.creationReason = 'UPDATE'
+            }
+        }
+
+        propertyPayload.additionalDetails ? { ...propertyPayload.additionalDetails, ...propertyAdditionalDetails } : { ...propertyAdditionalDetails };
         const propertyResponse = await httpRequest(
             `property-services/property/${propertyMethodAction}`,
             `${propertyMethodAction}`,
@@ -138,18 +172,34 @@ export const createProperty = async (Properties, action, props) => {
     }
 }
 
-const routeToAcknowledgement = (purpose, status, propertyId, tenantId, secondNumber, FY) => {
+const getRedirectToURL = () => {
+    const link = window.location.href;
+    let splittedLink = link.split('redirectTo=');
+    if (splittedLink.length == 2) {
+        return splittedLink[1]
+    } else {
+        return false;
+    }
+}
 
+const routeToAcknowledgement = (purpose, status, propertyId, tenantId, secondNumber, FY) => {
+    store.dispatch(hideSpinner());
     let routeLink = `/property-tax/pt-acknowledgment?purpose=${purpose}&status=${status}`;
     routeLink = propertyId ? `${routeLink}&propertyId=${propertyId}` : `${routeLink}`;
     routeLink = tenantId ? `${routeLink}&tenantId=${tenantId}` : `${routeLink}`;
     routeLink = secondNumber ? `${routeLink}&secondNumber=${secondNumber}` : `${routeLink}`;
     routeLink = FY ? `${routeLink}&FY=${FY}` : `${routeLink}`;
+    let redirectURL = getRedirectToURL();
+    if (redirectURL && status == 'success') {
+        routeLink = `/${redirectURL}`;
+    }
     routeTo(routeLink);
 }
 
 
 
 export const routeTo = (routeLink) => {
-    store.dispatch(setRoute(routeLink));
+    if (routeLink) {
+        store.dispatch(setRoute(routeLink));
+    }
 }

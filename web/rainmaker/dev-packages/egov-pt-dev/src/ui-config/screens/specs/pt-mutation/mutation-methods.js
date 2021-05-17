@@ -11,6 +11,7 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { propertySearch, applicationSearch } from "./functions";
+// import "./index.css";
 
 
 export const resetFields = (state, dispatch) => {
@@ -25,9 +26,42 @@ export const resetFields = (state, dispatch) => {
     );
 
     dispatch(prepareFinalObject(
-      "searchScreen.tenantId",
+      "ptSearchScreen.tenantId",
       ''
     ))
+    dispatch(
+      handleField(
+        "propertySearch",
+        "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.ulbCity",
+        "props.isDisabled",
+        false
+      )
+    );
+    dispatch(
+      handleField(
+        "propertySearch",
+        "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.ulbCity",
+        "isDisabled",
+        false
+      )
+    );
+  }else{
+    dispatch(
+      handleField(
+        "propertySearch",
+        "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.ulbCity",
+        "props.isDisabled",
+        true
+      )
+    );
+    dispatch(
+      handleField(
+        "propertySearch",
+        "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.ulbCity",
+        "isDisabled",
+        true
+      )
+    );
   }
 
   dispatch(
@@ -79,19 +113,19 @@ export const resetFields = (state, dispatch) => {
     )
   );
   dispatch(prepareFinalObject(
-    "searchScreen.acknowledgementIds",
+    "ptSearchScreen.acknowledgementIds",
     ''
   ))
   dispatch(prepareFinalObject(
-    "searchScreen.ids",
+    "ptSearchScreen.ids",
     ''
   ))
   dispatch(prepareFinalObject(
-    "searchScreen.mobileNumber",
+    "ptSearchScreen.mobileNumber",
     ''
   ))
   dispatch(prepareFinalObject(
-    "searchScreen.oldpropertyids",
+    "ptSearchScreen.oldpropertyids",
     ''
   ))
 
@@ -109,32 +143,43 @@ export const searchPropertyDetails = getCommonCard({
     labelKey: "PT_HOME_SEARCH_RESULTS_DESC"
   }),
   ulbCityContainer: getCommonContainer({
-    ulbCity: getSelectField({
-      label: {
-        labelName: "ULB",
-        labelKey: "PT_ULB_CITY"
-      },
-      placeholder: {
-        labelName: "Select ULB",
-        labelKey: "PT_ULB_CITY_PLACEHOLDER"
-      },
-
-      localePrefix: {
-        moduleName: "TENANT",
-        masterName: "TENANTS"
-      },
-      jsonPath: "searchScreen.tenantId",
-      sourceJsonPath: "searchScreenMdmsData.tenant.tenants",
-      required: true,
+    ulbCity: {
+      uiFramework: "custom-containers-local",
+      moduleName: "egov-pt",
+      componentPath: "AutosuggestContainer",
       props: {
+        className: "autocomplete-dropdown",
+        suggestions: [],
+        label: {
+          labelName: "ULB",
+          labelKey: "PT_ULB_CITY"
+        },
+        placeholder: {
+          labelName: "Select ULB",
+          labelKey: "PT_ULB_CITY_PLACEHOLDER"
+        },
+        localePrefix: {
+          moduleName: "TENANT",
+          masterName: "TENANTS"
+        },
+        jsonPath: "ptSearchScreen.tenantId",
+        sourceJsonPath: "searchScreenMdmsData.tenant.tenants",
+        labelsFromLocalisation: true,
         required: true,
+        isClearable: true,
         disabled: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+        inputLabelProps: {
+          shrink: true
+        }
       },
+      required: true,
+      jsonPath: "ptSearchScreen.tenantId",
+      sourceJsonPath: "searchScreenMdmsData.tenant.tenants",
       gridDefination: {
         xs: 12,
         sm: 4
       }
-    }),
+    },
     ownerMobNo: getTextField({
       label: {
         labelName: "Owner Mobile No.",
@@ -156,7 +201,7 @@ export const searchPropertyDetails = getCommonCard({
       },
       required: false,
       pattern: getPattern("MobileNo"),
-      jsonPath: "searchScreen.mobileNumber",
+      jsonPath: "ptSearchScreen.mobileNumber",
       errorMessage: "ERR_INVALID_MOBILE_NUMBER"
     }),
     propertyTaxUniqueId: getTextField({
@@ -176,7 +221,7 @@ export const searchPropertyDetails = getCommonCard({
       required: false,
       pattern: /^[a-zA-Z0-9-]*$/i,
       errorMessage: "ERR_INVALID_PROPERTY_ID",
-      jsonPath: "searchScreen.ids"
+      jsonPath: "ptSearchScreen.ids"
     }),
     existingPropertyId: getTextField({
       label: {
@@ -195,7 +240,7 @@ export const searchPropertyDetails = getCommonCard({
       required: false,
       pattern: /^[a-zA-Z0-9-]*$/i,
       errorMessage: "ERR_INVALID_PROPERTY_ID",
-      jsonPath: "searchScreen.oldpropertyids"
+      jsonPath: "ptSearchScreen.oldpropertyids"
     })
   }),
   button: getCommonContainer({
@@ -291,7 +336,7 @@ export const searchApplicationDetails = getCommonCard({
       required: false,
       pattern: /^[a-zA-Z0-9-]*$/i,
       errorMessage: "ERR_INVALID_APPLICATION_NO",
-      jsonPath: "searchScreen.acknowledgementIds"
+      jsonPath: "ptSearchScreen.acknowledgementIds"
     }),
     ownerMobNoProp: getTextField({
       label: {
@@ -314,7 +359,7 @@ export const searchApplicationDetails = getCommonCard({
       },
       required: false,
       pattern: getPattern("MobileNo"),
-      jsonPath: "searchScreen.mobileNumber",
+      jsonPath: "ptSearchScreen.mobileNumber",
       errorMessage: "ERR_INVALID_MOBILE_NUMBER"
     }),
     applicationPropertyTaxUniqueId: getTextField({
@@ -334,7 +379,7 @@ export const searchApplicationDetails = getCommonCard({
       required: false,
       pattern: /^[a-zA-Z0-9-]*$/i,
       errorMessage: "ERR_INVALID_PROPERTY_ID",
-      jsonPath: "searchScreen.ids"
+      jsonPath: "ptSearchScreen.ids"
     }),
   }),
   button: getCommonContainer({

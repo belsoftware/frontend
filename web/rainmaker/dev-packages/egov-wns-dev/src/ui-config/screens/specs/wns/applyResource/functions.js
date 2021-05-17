@@ -1,8 +1,8 @@
 import get from "lodash/get";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { getPropertyResults, getTenantIdCommon } from "../../../../../ui-utils/commons";
-import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+import { getPropertyResults, isActiveProperty, showHideFieldsFirstStep } from "../../../../../ui-utils/commons";
+import { getUserInfo, getTenantIdCommon } from "egov-ui-kit/utils/localStorageUtils";
 
 export const propertySearchApiCall = async (state, dispatch) => {
   showHideFields(dispatch, false);
@@ -13,6 +13,14 @@ export const propertySearchApiCall = async (state, dispatch) => {
     handleField(
       "apply",
       "components.div.children.formwizardFirstStep.children.ownerDetails.children.cardContent.children.ownerDetail.children.cardContent.children.headerDiv",
+      "props.items",
+      []
+    )
+  );
+  dispatch(
+    handleField(
+      "apply",
+      "components.div.children.formwizardFirstStep.children.connectionHolderDetails.children.cardContent.children.holderDetails.children.headerDiv",
       "props.items",
       []
     )
@@ -51,10 +59,12 @@ export const propertySearchApiCall = async (state, dispatch) => {
       }
       let response = await getPropertyResults(queryObject, dispatch);
       if (response && response.Properties.length > 0) {
-        if(response.Properties[0].status === 'INACTIVE'){
-          dispatch(toggleSnackbar(true, { labelKey: "ERR_WS_PROP_STATUS_INACTIVE", labelName: "Property Status is INACTIVE" }, "warning"));
-        }else{
-          let propertyData = response.Properties[0];
+        let propertyData = response.Properties[0];
+        if(!isActiveProperty(propertyData)){
+          dispatch(toggleSnackbar(true, { labelKey: `ERR_WS_PROP_STATUS_${propertyData.status}`, labelName: `Property Status is ${propertyData.status}` }, "warning"));     
+          showHideFieldsFirstStep(dispatch,propertyData.propertyId,false); 
+          dispatch(prepareFinalObject("applyScreen.property", propertyData))         
+        }else{          
           let contractedCorAddress = "";
 
           if(propertyData.address.doorNo !== null && propertyData.address.doorNo !== ""){
@@ -74,6 +84,13 @@ export const propertySearchApiCall = async (state, dispatch) => {
               }
             }    
           }
+          if(propertyData && propertyData.owners && propertyData.owners.length > 0) {
+            propertyData.owners = propertyData.owners.filter(owner => owner.status == "ACTIVE");
+          }
+          if(propertyData.units == "NA" && propertyData.additionalDetails && propertyData.additionalDetails.subUsageCategory) {
+            propertyData.units = [];
+            propertyData.units.push({usageCategory: propertyData.additionalDetails.subUsageCategory})
+          }
           dispatch(prepareFinalObject("applyScreen.property", propertyData))
           showHideFields(dispatch, true);
         }
@@ -109,6 +126,14 @@ const showHideFields = (dispatch, value) => {
     handleField(
       "apply",
       "components.div.children.formwizardFirstStep.children.ownerDetails",
+      "visible",
+      value
+    )
+  );
+  dispatch(
+    handleField(
+      "apply",
+      "components.div.children.formwizardFirstStep.children.connectionHolderDetails",
       "visible",
       value
     )

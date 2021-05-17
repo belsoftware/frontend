@@ -79,24 +79,20 @@ class ShowField extends Component {
 
   getExportOptions = () => {
     let _this = this;
-    let flag = false;
 
     for (let key in _this.state.ck) {
       if (_this.state.ck[key]) {
-        flag = true;
         break;
       }
     }
 
-    const { reportResult, searchForm, tabLabel, metaData } = _this.props;
-    const { reportName } = _this.state;
+    const { tabLabel, metaData } = _this.props;
     const reportDetails = metaData.hasOwnProperty("reportDetails") ? metaData.reportDetails : {};
     const additionalConfig = reportDetails.hasOwnProperty("additionalConfig") && reportDetails.additionalConfig ? reportDetails.additionalConfig: {};
     const reportHeader = reportDetails.hasOwnProperty("reportHeader") ? reportDetails.reportHeader : [];
-    const columns = ":visible";
     const pageSize = (additionalConfig.print && additionalConfig.print.pdfPageSize)? additionalConfig.print.pdfPageSize: "LEGAL"
-    const exportOptions = flag ? { rows: ".selected", columns } : { columns };
     let reportTitle = this.getReportTitle();
+    let xlsTitle = this.getXlsReportTitle();
     let orientation = reportHeader.length > 6 ? "landscape" : "portrait";
 
     const buttons = [
@@ -123,7 +119,7 @@ class ShowField extends Component {
         extend: "excel",
         text: "XLS",
         filename: _this.state.reportName,
-        title: reportTitle,
+        title: xlsTitle,
         messageTop: tabLabel,
         footer: true,
         className: "report-excel-button",
@@ -134,7 +130,7 @@ class ShowField extends Component {
   };
 
   componentDidUpdate() {
-    let { reportResult, tabLabel, metaData } = this.props;
+    let { tabLabel, metaData } = this.props;
     let { reportDetails = {} } = metaData;
     let tableConfig;
     if (get(reportDetails, "additionalConfig.tableConfig")) {
@@ -185,11 +181,9 @@ class ShowField extends Component {
       searchForm,
       setReportResult,
       setFlag,
-      toggleSnackbarAndSetText,
       searchParams,
       setRoute,
       match,
-      metaData,
       pushReportHistory,
     } = this.props;
     let object = reportResult.reportHeader[i2];
@@ -221,7 +215,7 @@ class ShowField extends Component {
 
       var tenantId = getTenantId() ? getTenantId() : commonConfig.tenantId;
 
-      let response = commonApiPost(
+      commonApiPost(
         "/report/" + "pgr" + "/_get",
         {},
         {
@@ -388,7 +382,7 @@ class ShowField extends Component {
 
   printSelectedDetails() {
     let rows = { ...this.state.rows };
-    let { reportResult, searchForm, setReportResult, setFlag, toggleSnackbarAndSetText, searchParams, setRoute, match, metaData } = this.props;
+    let { reportResult, searchParams, setRoute, match } = this.props;
     let header = this.props.reportResult.reportHeader;
     let defaultValue = "";
     for (let key in header) {
@@ -428,7 +422,6 @@ class ShowField extends Component {
       let resulturl = getResultUrl(match.params.moduleName);
 
       var tenantId = getTenantId() ? getTenantId() : commonConfig.tenantId;
-      let response =
         resulturl &&
         commonApiPost(
           resulturl,
@@ -509,11 +502,9 @@ class ShowField extends Component {
                   </td>
                 )}
                 {dataItem.map((item, itemIndex) => {
-                  var columnObj = {};
                   //array for particular row
                   var respHeader = reportHeaderObj[itemIndex];
                   if (respHeader.showColumn) {
-                    columnObj = {};
                     return (
                       <td
                         key={itemIndex}
@@ -625,8 +616,7 @@ class ShowField extends Component {
   };
 
   subHeader = (moduleName) => {
-    let { metaData, searchParams } = this.props;
-    let paramsLength = searchParams.length;
+    let { metaData } = this.props;
     if (_.isEmpty(metaData)) {
       return;
     }
@@ -653,15 +643,34 @@ class ShowField extends Component {
     return reportTitle;
   };
 
-  render() {
-    let { drillDown, checkIfDate } = this;
-    let { isTableShow, metaData, reportResult, tabLabel } = this.props;
-    let self = this;
-    let { reportName } = this.state;
-    
-    const viewTabel = () => {
-      let { searchForm } = this.props;
+  getXlsReportTitle = (rptName) => {
+    let reportName = rptName || this.state.reportName;
+    let reportTitleArr = reportName && reportName.split(/(?=[A-Z])/);
+    let reportTitle = "";
+    let reportHeaderName = "";
+    if (reportTitleArr) {
+      reportTitle = reportTitleArr.map((char) => {
+        if (char.length == 1) {
+          reportTitle = char + "";
+          reportHeaderName += char;
+        } else if(typeof char === "object") {
+          reportTitle = char.text + "";
+        } else {
+          reportTitle = " " + char;
+          reportHeaderName = reportHeaderName + " " + char
+        }
+        return reportTitle;
+      });
+    }
+    // return reportTitle;
+    return [reportHeaderName];
+  };
+  
 
+  render() {
+    let { isTableShow, metaData, reportResult } = this.props;
+    let self = this;
+    const viewTabel = () => {
       return (
         <div>
           <table

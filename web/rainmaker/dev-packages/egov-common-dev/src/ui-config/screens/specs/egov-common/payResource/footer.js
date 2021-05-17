@@ -1,13 +1,25 @@
 import { getLabel } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
+import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg, isPublicSearch } from "egov-ui-framework/ui-utils/commons";
+import { getPaymentSearchAPI } from "egov-ui-kit/utils/commons";
 import cloneDeep from "lodash/cloneDeep";
 import get from "lodash/get";
 import set from "lodash/set";
 import { httpRequest } from "../../../../../ui-utils/api";
 import { convertDateToEpoch, ifUserRoleExists, validateFields } from "../../utils";
+import { paybuttonJsonpath } from "./constants";
 import "./index.css";
+
+const checkAmount = (totalAmount, customAmount, businessService) => {
+  if (totalAmount !== 0 && customAmount === 0) {
+    return true;
+  } else if (totalAmount === 0 && customAmount === 0 && (businessService === "WS" || businessService === "SW")) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export const callPGService = async (state, dispatch) => {
   const isAdvancePaymentAllowed = get(state, "screenConfiguration.preparedFinalObject.businessServiceInfo.isAdvanceAllowed");
@@ -17,11 +29,11 @@ export const callPGService = async (state, dispatch) => {
     state,
     "screenConfiguration.preparedFinalObject.ReceiptTemp[0].Bill[0].businessService"
   );
-  
+
   const url = isPublicSearch() ? "withoutAuth/egov-common/paymentRedirectPage" : "egov-common/paymentRedirectPage";
   const redirectUrl = process.env.NODE_ENV === "production" ? `citizen/${url}` : url;
   // const businessService = getQueryArg(window.location.href, "businessService"); businessService
-  let callbackUrl = `${window.origin}/${redirectUrl}` ;
+  let callbackUrl = `${window.origin}/${redirectUrl}`;
   const { screenConfiguration = {} } = state;
   const { preparedFinalObject = {} } = screenConfiguration;
   const { ReceiptTemp = {} } = preparedFinalObject;
@@ -38,10 +50,50 @@ export const callPGService = async (state, dispatch) => {
     alert("Advance Payment is not allowed");
     return;
   }
+  let isFormValid = validateFields(
+    "components.div.children.formwizardFirstStep.children.paymentDetails.children.cardContent.children.capturePayerDetails.children.cardContent.children.payerDetailsCardContainer.children",
+    state,
+    dispatch,
+    "pay"
+  );
+  if (!isFormValid) {
+    dispatch(
+      toggleSnackbar(
+        true,
+        {
+          labelName: "Transaction numbers don't match !",
+          labelKey: "ERR_FILL_ALL_FIELDS"
+        },
+        "error"
+      )
+    );
+    return;
+  }
+  if (checkAmount(taxAmount, Number(state.screenConfiguration.preparedFinalObject.AmountPaid), businessService)) {
+    dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: "Please enter an amount greater than zero!", labelKey: "ERR_ENTER_AMOUNT_MORE_THAN_ZERO" },
+        "error"
+      )
+    );
+    return;
+  }
+
+  if (checkAmount(taxAmount, Number(state.screenConfiguration.preparedFinalObject.AmountPaid), businessService)) {
+    dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: "Please enter an amount greater than zero!", labelKey: "ERR_ENTER_AMOUNT_MORE_THAN_ZERO" },
+        "error"
+      )
+    );
+    return;
+  }
 
   const user = {
-    name: get(billPayload, "Bill[0].payerName"),
-    mobileNumber: get(billPayload, "Bill[0].mobileNumber"),
+    name: get(billPayload, "Bill[0].paidBy", get(billPayload, "Bill[0].payerName")),
+    mobileNumber: get(billPayload, "Bill[0].payerMobileNumber", get(billPayload, "Bill[0].mobileNumber")),
     tenantId
   };
   let taxAndPayments = [];
@@ -51,7 +103,11 @@ export const callPGService = async (state, dispatch) => {
     billId: get(billPayload, "Bill[0].id"),
     amountPaid: amtToPay
   });
+  const buttonJsonpath = paybuttonJsonpath + `${process.env.REACT_APP_NAME === "Citizen" ? "makePayment" : "generateReceipt"}`;
   try {
+
+    dispatch(handleField("pay", buttonJsonpath, "props.disabled", true));
+
     const requestBody = {
       Transaction: {
         tenantId,
@@ -63,7 +119,8 @@ export const callPGService = async (state, dispatch) => {
         gateway: "AXIS",
         taxAndPayments,
         user,
-        callbackUrl
+        callbackUrl,
+        additionalDetails: { isWhatsapp: localStorage.getItem('pay-channel') == 'whatsapp' ? true : false }
       }
     };
     const goToPaymentGateway = await httpRequest(
@@ -82,7 +139,7 @@ export const callPGService = async (state, dispatch) => {
 
       let searchResponse = await httpRequest(
         "post",
-        "collection-services/payments/_search" + srcQuery,
+        getPaymentSearchAPI(businessService) + srcQuery,
         "_search",
         [],
         {}
@@ -106,7 +163,7 @@ export const callPGService = async (state, dispatch) => {
       window.location = redirectionUrl;
     }
   } catch (e) {
-
+    dispatch(handleField("pay", buttonJsonpath, "props.disabled", false));
     dispatch(
       toggleSnackbar(
         true,
@@ -128,7 +185,11 @@ const moveToSuccess = (dispatch, receiptNumber) => {
   const status = "success";
   const appendUrl =
     process.env.REACT_APP_SELF_RUNNING === "true" ? "/egov-ui-framework" : "";
-  const url = `${appendUrl}/egov-common/acknowledgement?status=${status}&consumerCode=${consumerCode}&tenantId=${tenantId}&receiptNumber=${receiptNumber}&businessService=${businessService}`;
+  let moduleName = "egov-common";
+  if (businessService && businessService.indexOf("BPA") > -1) {
+    moduleName = "egov-bpa"
+  }
+  const url = `${appendUrl}/${moduleName}/acknowledgement?status=${status}&consumerCode=${consumerCode}&tenantId=${tenantId}&receiptNumber=${receiptNumber}&businessService=${businessService}&purpose=${"pay"}`;
   const ackSuccessUrl = isPublicSearch() ? `/withoutAuth${url}` : url;
   dispatch(
     setRoute(ackSuccessUrl)
@@ -152,30 +213,50 @@ const moveToFailure = dispatch => {
 
 const getSelectedTabIndex = paymentType => {
   switch (paymentType) {
-    case "Cash":
+    case "CASH":
       return {
         selectedPaymentMode: "cash",
         selectedTabIndex: 0,
         fieldsToValidate: ["payeeDetails"]
       };
-    case "Cheque":
+    case "CHEQUE":
       return {
         selectedPaymentMode: "cheque",
         selectedTabIndex: 1,
         fieldsToValidate: ["payeeDetails", "chequeDetails"]
       };
+
+    case "CARD":
+      return {
+        selectedPaymentMode: "card",
+        selectedTabIndex: 2,
+        fieldsToValidate: ["payeeDetails", "cardDetails"]
+      };
+    case "OFFLINE_NEFT":
+      return {
+        selectedPaymentMode: "offline_neft",
+        selectedTabIndex: 3,
+        fieldsToValidate: ["payeeDetails", "onlineDetails"]
+      };
+    case "OFFLINE_RTGS":
+      return {
+        selectedPaymentMode: "offline_rtgs",
+        selectedTabIndex: 4,
+        fieldsToValidate: ["payeeDetails", "onlineDetails"]
+      };
+    case "POSTAL_ORDER":
+      return {
+        selectedPaymentMode: "postal_order",
+        selectedTabIndex: 5,
+        fieldsToValidate: ["payeeDetails", "poDetails"]
+      };
     case "DD":
       return {
         selectedPaymentMode: "demandDraft",
-        selectedTabIndex: 2,
+        selectedTabIndex: 6,
         fieldsToValidate: ["payeeDetails", "demandDraftDetails"]
       };
-    case "Card":
-      return {
-        selectedPaymentMode: "card",
-        selectedTabIndex: 3,
-        fieldsToValidate: ["payeeDetails", "cardDetails"]
-      };
+
     default:
       return {
         selectedPaymentMode: "cash",
@@ -185,6 +266,13 @@ const getSelectedTabIndex = paymentType => {
   }
 };
 
+const validateString = (str = "") => {
+  str = str && str != null && str.trim() || "";
+  if (str.length > 0) {
+    return true;
+  }
+  return false;
+}
 const convertDateFieldToEpoch = (finalObj, jsonPath) => {
   const dateConvertedToEpoch = convertDateToEpoch(
     get(finalObj, jsonPath),
@@ -313,7 +401,7 @@ const callBackForPay = async (state, dispatch) => {
     );
   }
 
-  if (selectedPaymentType === "Card") {
+  if (selectedPaymentType === "CARD") {
     //Extra check - remove once clearing forms onTabChange is fixed
     if (
       get(finalReceiptData, "instrument.transactionNumber") !==
@@ -332,6 +420,39 @@ const callBackForPay = async (state, dispatch) => {
       return;
     }
   }
+  if (selectedPaymentType === "CHEQUE" || selectedPaymentType === "OFFLINE_NEFT" || selectedPaymentType === "OFFLINE_RTGS") {
+    //Extra check - to verify ifsc and bank details are populated 
+
+
+    let ifscCode = get(finalReceiptData, "instrument.ifscCode", "");
+    let branchName = get(finalReceiptData, "instrument.branchName", "");
+    let bankName = get(finalReceiptData, "instrument.bank.name", "");
+    if (
+      !validateString(ifscCode) || !validateString(branchName) || !validateString(bankName) || ifscCode !== get(
+        state.screenConfiguration.preparedFinalObject,
+        "validIfscCode", ""
+      )
+    ) {
+      dispatch(
+        prepareFinalObject("ReceiptTemp[0].instrument.bank.name", "")
+      );
+      dispatch(
+        prepareFinalObject("ReceiptTemp[0].instrument.branchName", "")
+      );
+      dispatch(
+        toggleSnackbar(
+          true,
+          {
+            labelName: "Enter a Valid IFSC code !",
+            labelKey: "ERR_ENTER_VALID_IFSC"
+          },
+          "error"
+        )
+      );
+      return;
+    }
+  }
+
 
   //------------- Form End ----------------//
 
@@ -353,7 +474,7 @@ const callBackForPay = async (state, dispatch) => {
   ReceiptBodyNew.Payment["paidBy"] = finalReceiptData.Bill[0].payer;
   ReceiptBodyNew.Payment["mobileNumber"] =
     finalReceiptData.Bill[0].payerMobileNumber;
-  ReceiptBodyNew.Payment["payerName"] = finalReceiptData.Bill[0].payerName;
+  ReceiptBodyNew.Payment["payerName"] = finalReceiptData.Bill[0].paidBy ? finalReceiptData.Bill[0].paidBy : (finalReceiptData.Bill[0].payerName || finalReceiptData.Bill[0].payer);
   if (finalReceiptData.instrument.transactionNumber) {
     ReceiptBodyNew.Payment["transactionNumber"] =
       finalReceiptData.instrument.transactionNumber;
@@ -366,7 +487,10 @@ const callBackForPay = async (state, dispatch) => {
     ReceiptBodyNew.Payment["instrumentDate"] =
       finalReceiptData.instrument.instrumentDate;
   }
-
+  if (finalReceiptData.instrument.ifscCode) {
+    ReceiptBodyNew.Payment["ifscCode"] =
+      finalReceiptData.instrument.ifscCode;
+  }
   let amtPaid =
     state.screenConfiguration.preparedFinalObject.AmountType ===
       "partial_amount"
@@ -377,6 +501,17 @@ const callBackForPay = async (state, dispatch) => {
 
   if (amtPaid > totalAmount && !isAdvancePaymentAllowed) {
     alert("Advance Payment is not allowed");
+    return;
+  }
+
+  if (checkAmount(totalAmount, Number(state.screenConfiguration.preparedFinalObject.AmountPaid), finalReceiptData.Bill[0].businessService)) {
+    dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: "Please enter an amount greater than zero!", labelKey: "ERR_ENTER_AMOUNT_MORE_THAN_ZERO" },
+        "error"
+      )
+    );
     return;
   }
 
@@ -394,6 +529,8 @@ const callBackForPay = async (state, dispatch) => {
 
   //---------------- Create Receipt ------------------//
   if (isFormValid) {
+    const buttonJsonpath = paybuttonJsonpath + `${process.env.REACT_APP_NAME === "Citizen" ? "makePayment" : "generateReceipt"}`;
+    dispatch(handleField("pay", buttonJsonpath, "props.disabled", true));
     try {
       let response = await httpRequest(
         "post",
@@ -421,6 +558,8 @@ const callBackForPay = async (state, dispatch) => {
         receiptNumber
       );
     } catch (e) {
+
+      dispatch(handleField("pay", buttonJsonpath, "props.disabled", false));
       dispatch(
         toggleSnackbar(
           true,
@@ -438,7 +577,7 @@ const callBackForPay = async (state, dispatch) => {
           labelName: "Please fill all the mandatory fields",
           labelKey: "ERR_FILL_ALL_FIELDS"
         },
-        "warning"
+        "error"
       )
     );
   }

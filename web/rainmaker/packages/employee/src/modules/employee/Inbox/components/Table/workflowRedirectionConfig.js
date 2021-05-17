@@ -47,12 +47,26 @@ export const getWFConfig = (module, businessService) => {
           INITIATED: "/property-tax/application-preview",
           DEFAULT: "/property-tax/application-preview",
         };
-      } else {
+      }else if (businessService === "PT.UPDATE") {
+        return {
+          INITIATED: "/property-tax/application-preview",
+          DEFAULT: "/property-tax/application-preview",
+        };
+      }else if (businessService === "PT.LEGACY") {
+        return {
+          INITIATED: "/property-tax/application-preview",
+          DEFAULT: "/property-tax/application-preview",
+        };
+      }  else {
         return {
           INITIATED: "/pt-mutation/search-preview",
           DEFAULT: "/pt-mutation/search-preview",
         };
       }
-
+      case "NOC-SERVICES":
+      return {
+        INITIATED: "/noc/search-preview",
+        DEFAULT: "/noc/search-preview",
+      };
   }
 };

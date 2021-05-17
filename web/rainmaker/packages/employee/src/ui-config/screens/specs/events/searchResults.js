@@ -2,8 +2,6 @@ import React from "react";
 import { LabelContainer } from "egov-ui-framework/ui-containers";
 import { handleScreenConfigurationFieldChange as handleField, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
-  getLocaleLabels,
-  getTransformedLocalStorgaeLabels,
   epochToYmd,
   getUserDataFromUuid,
   transformById,
@@ -14,7 +12,6 @@ import { getEventsByType, sortByEpoch, getEpochForDate } from "../utils";
 import get from "lodash/get";
 
 export const searchApiCall = async (state, dispatch) => {
-  const localisationLabels = getTransformedLocalStorgaeLabels();
   const queryObject = [
     {
       key: "tenantId",
@@ -41,21 +38,21 @@ export const searchApiCall = async (state, dispatch) => {
       events.map((item) => {
         //const status = item.eventDetails.toDate > currentDate ? item.status : "INACTIVE";
         return {
-          ["EVENTS_EVENT_NAME_LABEL"]: item.name,
-          ["EVENTS_EVENT_CATEGORY_LABEL"]: item.eventCategory
+          ["EVENTS_EVENT_NAME_LABEL"]: item&&item.name,
+          ["EVENTS_EVENT_CATEGORY_LABEL"]: item&&item.eventCategory
             ? (<LabelContainer
             labelKey={`MSEVA_EVENTCATEGORIES_${item.eventCategory}`}
             labelName={item.eventCategory}
           />)
             : "-",
-          ["EVENTS_START_DATE_LABEL"]: item.eventDetails
+          ["EVENTS_START_DATE_LABEL"]: item&&item.eventDetails
             ? epochToYmd(item.eventDetails.fromDate)
             : "-",
-          ["EVENTS_END_DATE_LABEL"]: item.eventDetails ? epochToYmd(item.eventDetails.toDate) : "-",
-          ["EVENTS_POSTEDBY_LABEL"]: get(userResponse, item.auditDetails.lastModifiedBy).name,
-          ["EVENTS_STATUS_LABEL"]: item.status,
-          ["ID"]: item.id,
-          ["TENANT_ID"]: item.tenantId,
+          ["EVENTS_END_DATE_LABEL"]: item&&item.eventDetails ? epochToYmd(item.eventDetails.toDate) : "-",
+          ["EVENTS_POSTEDBY_LABEL"]: get(userResponse, item&&item.auditDetails.lastModifiedBy,{}).name,
+          ["EVENTS_STATUS_LABEL"]: item&&item.status,
+          ["ID"]: item&&item.id,
+          ["TENANT_ID"]: item&&item.tenantId,
         };
       });
     dispatch(handleField("search", "components.div.children.searchResults", "props.data", data));
@@ -71,7 +68,6 @@ const onRowClick = (rowData) => {
 };
 
 export const searchResults = () => {
-  const localisationLabels = getTransformedLocalStorgaeLabels();
   return {
     uiFramework: "custom-molecules",
     componentPath: "Table",

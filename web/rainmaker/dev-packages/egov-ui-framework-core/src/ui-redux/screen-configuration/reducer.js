@@ -1,9 +1,9 @@
 import * as screenActionTypes from "./actionTypes";
-import { updateObjectWithComponentJsonPath, prepareFinalObject } from "./utils";
+import { prepareFinalObject, updateObjectWithComponentJsonPath } from "./utils";
 
 const intialState = {
   screenConfig: {},
-  preparedFinalObject: {cityUpdateDialog : true},
+  preparedFinalObject: { cityUpdateDialog: true },
   spinner: false,
   toastObject: {
     message: "",
@@ -24,13 +24,30 @@ const screenConfiguration = (state = intialState, action) => {
           }
         }
       };
+    case screenActionTypes.UNMOUNT_SCREEN:
+      state.screenConfig[action.screenKey]?delete state.screenConfig[action.screenKey]:{};
+      return {
+        ...state,
+        screenConfig: {
+          ...state.screenConfig,
+        }
+      };
     case screenActionTypes.HANDLE_SCREEN_CONFIGURATION_FIELD_CHANGE:
+      let inputType = document.getElementsByTagName("input");
+      for (let input in inputType) {
+        if (inputType[input].type === "number") {
+          inputType[input].addEventListener("mousewheel", function() {
+            this.blur();
+          });
+        }
+      }
       const updatedScreenConfig = updateObjectWithComponentJsonPath(
         state.screenConfig[action.screenKey],
         action.componentJsonpath,
         action.property,
         action.value
       );
+      
       return {
         ...state,
         screenConfig: {
@@ -64,6 +81,16 @@ const screenConfiguration = (state = intialState, action) => {
       return {
         ...state,
         spinner: !state.spinner
+      };
+    case screenActionTypes.SHOW_LOADER:
+      return {
+        ...state,
+        spinner: true
+      };
+    case screenActionTypes.HIDE_LOADER:
+      return {
+        ...state,
+        spinner: false
       };
     default:
       return state;

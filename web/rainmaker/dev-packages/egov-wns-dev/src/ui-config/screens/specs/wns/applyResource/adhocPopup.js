@@ -9,6 +9,7 @@ import {
 import { showHideAdhocPopup } from "../../utils";
 import get from "lodash/get";
 import { httpRequest } from "../../../../../ui-utils/api";
+import { serviceConst } from "../../../../../ui-utils/commons";
 import cloneDeep from "lodash/cloneDeep";
 import { createEstimateData } from "../../utils";
 import {
@@ -37,6 +38,7 @@ const getEstimateDataAfterAdhoc = async (state, dispatch) => {
   }
 
   dispatch(prepareFinalObject("WaterConnection[0]", WSRequestBody[0]));
+  dispatch(prepareFinalObject("WaterConnectionTemp[0]", cloneDeep(WSRequestBody[0])));
   set(WSRequestBody[0], "action", "ADHOC");
 
   let querObj = [{
@@ -45,7 +47,7 @@ const getEstimateDataAfterAdhoc = async (state, dispatch) => {
   }]
 
   let serviceUrl;
-  if (WSRequestBody[0].service === "WATER") {
+  if (WSRequestBody[0].service === serviceConst.WATER) {
     serviceUrl = "ws-calculator/waterCalculator/_estimate";
     querObj[0].waterConnection = WSRequestBody[0];
   } else {
@@ -71,7 +73,7 @@ const getEstimateDataAfterAdhoc = async (state, dispatch) => {
     "dataCalculation",
     dispatch,
     window.location.href,
-    showHideAdhocPopup(state, dispatch, "search-preview"),
+    showHideAdhocPopup(state, dispatch, "search-preview", false),
   );
 
 };
@@ -189,7 +191,12 @@ export const adhocPopup = getCommonContainer({
             onClickDefination: {
               action: "condition",
               callBack: (state, dispatch) => {
-                showHideAdhocPopup(state, dispatch, "search-preview");
+                const WaterConnectionTemp = cloneDeep( get(state.screenConfiguration.preparedFinalObject, "WaterConnectionTemp[0].additionalDetails"));
+                let isAdhocOrRebateValue = true;
+                const adhocAmount = get(WaterConnectionTemp, "adhocPenalty", null);
+                const rebateAmount = get(WaterConnectionTemp, "adhocRebate", null);
+                if(adhocAmount || rebateAmount) { isAdhocOrRebateValue = false }
+                showHideAdhocPopup(state, dispatch, "search-preview", isAdhocOrRebateValue, WaterConnectionTemp);
               }
             }
           }
@@ -390,7 +397,12 @@ export const adhocPopup = getCommonContainer({
         onClickDefination: {
           action: "condition",
           callBack: (state, dispatch) => {
-            showHideAdhocPopup(state, dispatch, "search-preview");
+            const WaterConnectionTemp = cloneDeep( get(state.screenConfiguration.preparedFinalObject, "WaterConnectionTemp[0].additionalDetails"));
+            let isAdhocOrRebateValue = true;
+            const adhocAmount = get(WaterConnectionTemp, "adhocPenalty", null);
+            const rebateAmount = get(WaterConnectionTemp, "adhocRebate", null);
+            if(adhocAmount || rebateAmount) { isAdhocOrRebateValue = false }
+            showHideAdhocPopup(state, dispatch, "search-preview", isAdhocOrRebateValue, WaterConnectionTemp);
           }
         }
       },

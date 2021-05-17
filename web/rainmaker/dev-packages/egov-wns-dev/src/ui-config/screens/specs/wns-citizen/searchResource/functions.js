@@ -1,6 +1,6 @@
 import get from "lodash/get";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { getSearchResults, fetchBill, getSearchResultsForSewerage } from "../../../../../ui-utils/commons";
+import { getSearchResults, fetchBill, getSearchResultsForSewerage, serviceConst } from "../../../../../ui-utils/commons";
 import { convertEpochToDate, getTextToLocalMapping } from "../../utils/index";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { validateFields } from "../../utils";
@@ -78,20 +78,20 @@ export const searchApiCall = async (state, dispatch) => {
       let searchWaterConnectionResults, searcSewerageConnectionResults;
       try { searchWaterConnectionResults = await getSearchResult } catch (error) { finalArray = []; console.log(error) }
       try { searcSewerageConnectionResults = await getSearchResultForSewerage } catch (error) { finalArray = []; console.log(error) }
-      const waterConnections = searchWaterConnectionResults ? searchWaterConnectionResults.WaterConnection.map(e => { e.service = 'WATER'; return e }) : []
-      const sewerageConnections = searcSewerageConnectionResults ? searcSewerageConnectionResults.SewerageConnections.map(e => { e.service = 'SEWERAGE'; return e }) : [];
+      const waterConnections = searchWaterConnectionResults ? searchWaterConnectionResults.WaterConnection.map(e => { e.service = serviceConst.WATER; return e }) : []
+      const sewerageConnections = searcSewerageConnectionResults ? searcSewerageConnectionResults.SewerageConnections.map(e => { e.service = serviceConst.SEWERAGE; return e }) : [];
       let combinedSearchResults = searchWaterConnectionResults || searcSewerageConnectionResults ? sewerageConnections.concat(waterConnections) : []
       for (let i = 0; i < combinedSearchResults.length; i++) {
         let element = combinedSearchResults[i];
         if(element.property && element.property !== "NA" && element.connectionNo !== null && element.connectionNo!=='NA') {
 	  let queryObjectForWaterFetchBill;
-          if (element.service === "WATER") {
+          if (element.service === serviceConst.WATER) {
             queryObjectForWaterFetchBill = [{ key: "tenantId", value: tenantId }, { key: "consumerCode", value: element.connectionNo }, { key: "businessService", value: "WS" }];
           } else {
             queryObjectForWaterFetchBill = [{ key: "tenantId", value: tenantId }, { key: "consumerCode", value: element.connectionNo }, { key: "businessService", value: "SW" }];
           }
 
-          if (element.service === "WATER" && payloadbillingPeriod.MdmsRes['ws-services-masters'] && payloadbillingPeriod.MdmsRes['ws-services-masters'].billingPeriod !== undefined && payloadbillingPeriod.MdmsRes['ws-services-masters'].billingPeriod  !== null) {
+          if (element.service === serviceConst.WATER && payloadbillingPeriod.MdmsRes['ws-services-masters'] && payloadbillingPeriod.MdmsRes['ws-services-masters'].billingPeriod !== undefined && payloadbillingPeriod.MdmsRes['ws-services-masters'].billingPeriod  !== null) {
             payloadbillingPeriod.MdmsRes['ws-services-masters'].billingPeriod.forEach(obj => {
               if(obj.connectionType === 'Metered') {
                 waterMeteredDemandExipryDate = obj.demandExpiryDate;
@@ -100,7 +100,7 @@ export const searchApiCall = async (state, dispatch) => {
               }
             }); 
           }
-          if (element.service === "SEWERAGE" && payloadbillingPeriod.MdmsRes['sw-services-calculation'] && payloadbillingPeriod.MdmsRes['sw-services-calculation'].billingPeriod !== undefined && payloadbillingPeriod.MdmsRes['sw-services-calculation'].billingPeriod  !== null) {
+          if (element.service === serviceConst.SEWERAGE && payloadbillingPeriod.MdmsRes['sw-services-calculation'] && payloadbillingPeriod.MdmsRes['sw-services-calculation'].billingPeriod !== undefined && payloadbillingPeriod.MdmsRes['sw-services-calculation'].billingPeriod  !== null) {
             payloadbillingPeriod.MdmsRes['sw-services-calculation'].billingPeriod.forEach(obj => {
               if (obj.connectionType === 'Non Metered') {
                 sewerageNonMeteredDemandExpiryDate = obj.demandExpiryDate;
@@ -109,13 +109,13 @@ export const searchApiCall = async (state, dispatch) => {
           }
 
           let billResults = await fetchBill(queryObjectForWaterFetchBill, dispatch)
-          billResults ? billResults.Bill.map(bill => {
+          billResults && billResults.Bill &&Array.isArray(billResults.Bill)&&billResults.Bill.length>0 ? billResults.Bill.map(bill => {
             let updatedDueDate = 0;
-            if(element.service === "WATER") {
+            if(element.service === serviceConst.WATER) {
               updatedDueDate = (element.connectionType === 'Metered' ?
               (bill.billDetails[0].toPeriod+waterMeteredDemandExipryDate) :
               (bill.billDetails[0].toPeriod+waterNonMeteredDemandExipryDate));
-            } else if (element.service === "SEWERAGE") {
+            } else if (element.service === serviceConst.SEWERAGE) {
               updatedDueDate = bill.billDetails[0].toPeriod + sewerageNonMeteredDemandExpiryDate;
             }
             let obj = {
@@ -126,7 +126,7 @@ export const searchApiCall = async (state, dispatch) => {
               name: (element.property && element.property !== "NA" && element.property.owners)?element.property.owners[0].name:'',
               status: element.status,
               address: (element.property && element.property !== "NA" && element.property.address)?element.property.address.street:'',
-              tenantId: tenantId,
+              tenantId: element.tenantId,
               connectionType: element.connectionType
             }
             finalArray.push(obj)
@@ -138,7 +138,7 @@ export const searchApiCall = async (state, dispatch) => {
             name: (element.property && element.property !== "NA" && element.property.owners)?element.property.owners[0].name:'',
             status: element.status,
             address: (element.property && element.property !== "NA" && element.property.address)?element.property.address.street:'',
-            tenantId: tenantId,
+            tenantId: element.tenantId,
             connectionType: element.connectionType
           })
         }
@@ -167,7 +167,7 @@ const showResults = (connections, dispatch, tenantId) => {
     ["WS_COMMON_TABLE_COL_DUE_LABEL"]: item.due,
     ["WS_COMMON_TABLE_COL_ADDRESS"]: item.address,
     ["WS_COMMON_TABLE_COL_DUE_DATE_LABEL"]: (item.dueDate !== undefined && item.dueDate !== "NA") ? convertEpochToDate(item.dueDate) : item.dueDate,
-    ["WS_COMMON_TABLE_COL_TENANTID_LABEL"]: tenantId,
+    ["WS_COMMON_TABLE_COL_TENANTID_LABEL"]: item.tenantId,
     ["WS_COMMON_TABLE_COL_CONNECTIONTYPE_LABEL"]: item.connectionType
   }))
 

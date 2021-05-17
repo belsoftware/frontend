@@ -53,12 +53,21 @@ export const getBusinessServiceNextAction = (businessServiceName, currentAction)
 
   if (states && states.length > 0) {
     states = states.filter((item, index) => {
-      if (item.state == null && item.actions && item.actions.length > 0) {
+      if (item.state == currentAction && item.actions && item.actions.length > 0) {
         return item.actions;
       }
     });
     const actions = states && states.length > 0 && states[0].actions;
-    return actions && actions.length > 0 && actions[0].action;
+    let returnAction=''
+    actions && actions.length > 0 && actions.map(action=>{
+      if(action.action=="REOPEN"){
+        returnAction=action.action;
+      }
+    })
+    if(returnAction=="REOPEN"){
+      return returnAction;
+    }
+    return actions && actions.length > 0 && actions[0] && actions[0].action;
   }
 }
 

@@ -1,22 +1,24 @@
-import React from "react";
 import { LabelContainer } from "egov-ui-framework/ui-containers";
-import {
-  sortByEpoch,
-  getEpochForDate,
-  getTextToLocalMapping
-} from "../../utils";
-import { getLocaleLabels, getStatusKey} from "egov-ui-framework/ui-utils/commons";
+import { getLocaleLabels, getStatusKey } from "egov-ui-framework/ui-utils/commons";
+import { routeTo } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formActionUtils";
+import React from "react";
+import { getEpochForDate, sortByEpoch } from "../../utils";
 
 export const searchResults = {
   uiFramework: "custom-molecules",
-  // moduleName: "egov-tradelicence",
   componentPath: "Table",
   visible: false,
   props: {
     columns: [
       {
         labelName: "Application No",
-        labelKey: "TL_COMMON_TABLE_COL_APP_NO"
+        labelKey: "TL_COMMON_TABLE_COL_APP_NO",
+        options: {
+          filter: false,
+          customBodyRender: (value, tableMeta) => (
+            <a href="javascript:void(0)" onClick={() => onRowClick(tableMeta.rowData)}>{value}</a>
+          )
+        }
       },
       {
         labelName: "License No",
@@ -45,7 +47,7 @@ export const searchResults = {
           filter: false,
           customBodyRender: value => (
             <span>
-              {getLocaleLabels(value,value)}
+              {getLocaleLabels(value, value)}
             </span>
           )
         }
@@ -86,17 +88,14 @@ export const searchResults = {
       labelName: "Search Results for Trade License Applications",
       labelKey: "TL_HOME_SEARCH_RESULTS_TABLE_HEADING"
     },
-    rows : "",
+    rows: "",
     options: {
       filter: false,
       download: false,
       responsive: "stacked",
       selectableRows: false,
       hover: true,
-      rowsPerPageOptions: [10, 15, 20],
-      onRowClick: (row, index) => {
-        onRowClick(row);
-      }
+      rowsPerPageOptions: [10, 15, 20]
     },
     customSortColumn: {
       column: "Application Date",
@@ -119,14 +118,20 @@ export const searchResults = {
 const onRowClick = rowData => {
   switch (rowData[7]) {
     case "INITIATED":
-      window.location.href = `apply?applicationNumber=${rowData[0]}&tenantId=${
-        rowData[8]
-      }`;
+      if(rowData[6]=="TL_TYPE_RENEWAL"){
+        routeTo(`apply?applicationNumber=${rowData[0]}&licenseNumber=${rowData[1]}&action=EDITRENEWAL&tenantId=${
+          rowData[8]
+          }`);
+      }else{
+        routeTo(`apply?applicationNumber=${rowData[0]}&tenantId=${
+          rowData[8]
+          }`);
+      }
       break;
     default:
-      window.location.href = `search-preview?applicationNumber=${
+      routeTo(`search-preview?applicationNumber=${
         rowData[0]
-      }&tenantId=${rowData[8]}`;
+        }&tenantId=${rowData[8]}`);
       break;
   }
 };

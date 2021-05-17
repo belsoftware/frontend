@@ -5,6 +5,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import toolbarStyles from './UiTableHeaderStyle'
+import { convertLabelValue } from '../../../utils/commons';
 
 class UiTableHead extends Component {
   createSortHandler = property => event => {
@@ -13,7 +14,7 @@ class UiTableHead extends Component {
 
   render() {
     // const { classes, onSelectAllClick, Globfilter, order, orderBy, numSelected, rowCount, columnData, needHash, needCheckBox } = this.props;
-    const { classes, Globfilter, order, orderBy, columnData, needHash } = this.props;
+    const { classes, Globfilter, order, orderBy, columnData, needHash,strings={} } = this.props;
     return (
       <TableHead className={classes.root}>
         <TableRow>
@@ -40,11 +41,12 @@ class UiTableHead extends Component {
           } 
 
           {columnData.map((column, idx) => {
+
             return (
               <TableCell
                 key={column.id}
                 // stickyHeader={column.stickyHeader}
-                align={(column.numeric === 'amount' || column.numeric === 'number' || column.numeric === 'percentage') ? 'left' : 'left'}
+                align={(column.numeric === true) ? 'left' : 'left'}
                 padding={column.disablePadding ? 'none' : 'default'}
                 sortDirection={orderBy === column.id ? order : false}
                 style={{ width: this.props.width ? this.props.width : 'auto' }}
@@ -57,10 +59,10 @@ class UiTableHead extends Component {
                     onClick={this.createSortHandler(column.id)}
                   >
 
-                    {column.label + (column.colType === 'amount' ? ' (In ' + Globfilter['Denomination'] + ')' : ' ')}
+                    {convertLabelValue(column.label,strings)+ (column.colType === 'amount' ? ' (In ' + Globfilter['Denomination'] + ')' : ' ')}
                   </TableSortLabel>
                     :
-                    <span>{column.label}</span>
+                    <span>{convertLabelValue(column.label,strings) }</span>
                 }
               </TableCell>
             );

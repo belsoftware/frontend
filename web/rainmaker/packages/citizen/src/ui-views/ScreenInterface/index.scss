@@ -129,6 +129,7 @@ div[class^="MuiTooltip-tooltip"] {
     /* left: 35px; */
     width: 100%;
     overflow: inherit !important;
+    left: 0 !important;
   }
   .apply-wizard-footer { button {
      /* min-width: 360px !important; */
@@ -204,3 +205,9 @@ div[class^="MuiTooltip-tooltip"] {
       margin: 32px 0 0 0;
   }
 }
+
+a:focus, a:active {
+  outline-style: solid;
+  outline-width: 3px;
+  outline-offset: 4px;
+  text-decoration: none; }

@@ -104,12 +104,13 @@ class ActionDialog extends React.Component {
     } = dialogData;
     const { getButtonLabelName } = this;
     let fullscreen = false;
+    const showAssignee = process.env.REACT_APP_NAME === "Citizen" ? false : true;
     if (window.innerWidth <= 768) {
       fullscreen = true;
     }
     if (dataPath === "FireNOCs") {
-      dataPath = `${dataPath}[0].fireNOCDetails`
-    } else if (dataPath === "Assessment"||dataPath === "Property" || dataPath === "BPA") {
+      dataPath = `${dataPath}[0].fireNOCDetails.additionalDetail`
+    } else if (dataPath === "Assessment"||dataPath === "Property" || dataPath === "BPA" || dataPath === "Noc") {
       dataPath = `${dataPath}.workflow`;
     } else {
       dataPath = `${dataPath}[0]`;
@@ -125,6 +126,8 @@ class ActionDialog extends React.Component {
     let wfDocumentsPath;
     if(dataPath === "BPA.workflow") {
       wfDocumentsPath = `${dataPath}.varificationDocuments`
+    } else if (dataPath === "Noc.workflow") {
+      wfDocumentsPath = `${dataPath}.documents`
     } else {
       wfDocumentsPath = `${dataPath}.wfDocuments`
     }
@@ -173,7 +176,7 @@ class ActionDialog extends React.Component {
                   >
                     <CloseIcon />
                   </Grid>
-                  {showEmployeeList && (
+                  {showEmployeeList && showAssignee && (
                     <Grid
                       item
                       sm="12"

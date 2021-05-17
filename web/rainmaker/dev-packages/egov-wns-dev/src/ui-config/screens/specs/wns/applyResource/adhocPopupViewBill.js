@@ -9,6 +9,7 @@ import {
 import { showHideAdhocPopup } from "../../utils";
 import get from "lodash/get";
 import { httpRequest } from "../../../../../ui-utils/api";
+import { serviceConst } from "../../../../../ui-utils/commons";
 import cloneDeep from "lodash/cloneDeep";
 import { createEstimateData } from "../../utils";
 import {
@@ -40,8 +41,9 @@ const getEstimateDataAfterAdhoc = async (state, dispatch) => {
       "viewBillToolipData[0].description.demandId"
     );
 
+  const consumerCode = getQueryArg(window.location.href, "connectionNumber") || WSRequestBody[0].connectionNo;
   let serviceUrl,httpmethod;
-  if (WSRequestBody[0].service === "WATER") {
+  if (WSRequestBody[0].service === serviceConst.WATER) {
     serviceUrl = "ws-calculator/waterCalculator/_applyAdhocTax";
     httpmethod = "post";
   } else {
@@ -57,7 +59,8 @@ try{
     {
       "demandId":demandId,
       "adhocrebate" : (WSRequestBody[0].additionalDetails.adhocRebate)?WSRequestBody[0].additionalDetails.adhocRebate:0,
-      "adhocpenalty" : (WSRequestBody[0].additionalDetails.adhocPenalty)?WSRequestBody[0].additionalDetails.adhocPenalty:0
+      "adhocpenalty" : (WSRequestBody[0].additionalDetails.adhocPenalty)?WSRequestBody[0].additionalDetails.adhocPenalty:0,
+      "consumerCode": consumerCode
     }
   );
 
@@ -104,14 +107,15 @@ const updateAdhoc = (state, dispatch) => {
   if (adhocAmount || rebateAmount) {
     const totalAmount = get(
       state.screenConfiguration.preparedFinalObject,
-      "dataCalculation.totalAmount"
+      "billData.totalAmount"
     );
-    if (rebateAmount && rebateAmount > totalAmount) {
+    
+    if (parseFloat(rebateAmount) && parseFloat(rebateAmount) >= parseFloat(totalAmount)) {
       dispatch(
         toggleSnackbar(
           true,
           {
-            labelKey: "ERR_WS_REBATE_GREATER_THAN_AMOUNT"
+            labelKey: "ERR_WS_REBATE_GREATER_THAN_FEE_AMOUNT"
           },
           "warning"
         )

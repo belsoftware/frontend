@@ -7,14 +7,18 @@ import {
 
 import {
   prepareDocumentsUploadData,
-  getAppSearchResults
+  getAppSearchResults,
+  createUpdateOCBpaApplication,
+  prepareNOCUploadData,
+  getNocSearchResults
 } from "../../../../ui-utils/commons";
 
 import {
   getQueryArg,
   setBusinessServiceDataToLocalStorage,
   getFileUrlFromAPI,
-  getTransformedLocale
+  getTransformedLocale,
+  orderWfProcessInstances
 } from "egov-ui-framework/ui-utils/commons";
 import {
   prepareFinalObject,
@@ -42,8 +46,10 @@ import {
   applicantNameAppliedByMaping
 } from "../utils";
 import { changeStep } from "./applyResource/footer";
-import { edcrHttpRequest } from "../../../../ui-utils/api";
+import { edcrHttpRequest, httpRequest } from "../../../../ui-utils/api";
 import { comparisondialog } from "./comparisondialog";
+import { nocDetailsApply } from "../egov-bpa/noc";
+import { prepareNocFinalCards } from "../utils";
 
 export const stepsData = [
   { labelName: "Scrutiny Details", labelKey: "BPA_STEPPER_SCRUTINY_DETAILS_HEADER" },
@@ -93,7 +99,8 @@ export const formwizardSecondStep = {
     id: "apply_form2"
   },
   children: {
-    documentAndNocDetails
+    documentAndNocDetails,
+    nocDetailsApply
   },
   visible: false
 };
@@ -105,7 +112,8 @@ export const formwizardThirdStep = {
     id: "apply_form3"
   },
   children: {
-    summaryDetails
+    summaryDetails,
+    nocDetailsApply
   },
   visible: false
 };
@@ -151,6 +159,14 @@ const getMdmsData = async (action, state, dispatch) => {
               name: "DeviationParams"
             }
           ]
+        },
+        {
+          moduleName: "NOC",
+          masterDetails: [
+            {
+              name: "DocumentTypeMapping"
+            },
+          ]
         }
       ]
     }
@@ -166,7 +182,7 @@ const getMdmsData = async (action, state, dispatch) => {
 
 };
 
-const procedToNextStep = (state, dispatch) => {
+const procedToNextStep = async (state, dispatch) => {
   let toggle = get(
     state.screenConfiguration.screenConfig["apply"],
     "components.cityPickerDialog.props.open",
@@ -175,7 +191,29 @@ const procedToNextStep = (state, dispatch) => {
   dispatch(
     handleField("apply", "components.cityPickerDialog", "props.open", !toggle)
   );
-  changeStep(state, dispatch, "", 1);
+  var isFormValid = await createUpdateOCBpaApplication(state, dispatch, "INITIATE");
+  if(isFormValid) {
+    prepareDocumentsUploadData(state, dispatch);
+    changeStep(state, dispatch, "", 1);
+  }
+  let applicationNumber = get(
+    state.screenConfiguration.preparedFinalObject,
+    "BPA.applicationNo"
+  );
+  let tenantId = get(
+    state.screenConfiguration.preparedFinalObject,
+    "BPA.tenantId"
+  );
+  const payload = await getNocSearchResults([
+    {
+      key: "tenantId",
+      value: tenantId
+    },
+    { key: "sourceRefId", value: applicationNumber }
+  ], state);
+  dispatch(prepareFinalObject("Noc", payload.Noc)); 
+  await prepareNOCUploadData(state, dispatch);
+  prepareNocFinalCards(state, dispatch);
 }
 
 const setSearchResponse = async (
@@ -192,18 +230,18 @@ const setSearchResponse = async (
     { key: "applicationNo", value: applicationNumber }
   ]);
   
-  dispatch(prepareFinalObject("BPA", response.Bpa[0]));
+  dispatch(prepareFinalObject("BPA", response.BPA[0]));
   let edcrRes = await edcrHttpRequest(
     "post",
-    "/edcr/rest/dcr/scrutinydetails?edcrNumber=" + get(response, "Bpa[0].edcrNumber") + "&tenantId=" + tenantId,
+    "/edcr/rest/dcr/scrutinydetails?edcrNumber=" + get(response, "BPA[0].edcrNumber") + "&tenantId=" + tenantId,
     "search", []
     );
 
   dispatch(prepareFinalObject(`ocScrutinyDetails`, edcrRes.edcrDetail[0] ));
-  dispatch(prepareFinalObject("BPAs.appdate", get(response, "Bpa[0].auditDetails.createdTime")));
+  dispatch(prepareFinalObject("BPAs.appdate", get(response, "BPA[0].auditDetails.createdTime")));
   await setProposedBuildingData(state, dispatch, "ocApply", "ocApply");
   await edcrDetailsToBpaDetails(state, dispatch);
-  await applicantNameAppliedByMaping(state, dispatch, get(response, "Bpa[0]"), get(edcrRes, "edcrDetail[0]"));
+  await applicantNameAppliedByMaping(state, dispatch, get(response, "BPA[0]"), get(edcrRes, "edcrDetail[0]"));
   await prepareDocumentsUploadData(state, dispatch);
   await prepareDocumentDetailsUploadRedux(state, dispatch);
 };
@@ -264,7 +302,8 @@ export const prepareDocumentDetailsUploadRedux = async (state, dispatch) => {
                 fileStoreId : upDoc.fileStoreId,
                 fileUrl : url,
                 wfState: upDoc.wfState ,
-                isClickable:false                               
+                isClickable:false,
+                additionalDetails: upDoc.additionalDetails                                
               }
             );
           }else{
@@ -278,7 +317,8 @@ export const prepareDocumentDetailsUploadRedux = async (state, dispatch) => {
                 fileStoreId : upDoc.fileStoreId,
                 fileUrl : url,
                 wfState: upDoc.wfState,
-                isClickable:false                                
+                isClickable:false,
+                additionalDetails: upDoc.additionalDetails                                 
               }
             ];
           }
@@ -301,13 +341,44 @@ export const prepareDocumentDetailsUploadRedux = async (state, dispatch) => {
   }
 }
 
+const setTaskStatus = async(state,applicationNumber,tenantId,dispatch,componentJsonpath)=>{
+  const queryObject = [
+    { key: "businessIds", value: applicationNumber },
+    { key: "history", value: true },
+    { key: "tenantId", value: tenantId }
+  ];
+  let processInstances =[];
+    const payload = await httpRequest(
+      "post",
+      "egov-workflow-v2/egov-wf/process/_search",
+      "",
+      queryObject
+    );
+    if (payload && payload.ProcessInstances.length > 0) {
+      processInstances= orderWfProcessInstances(
+        payload.ProcessInstances
+      );      
+      dispatch(prepareFinalObject("BPAs.taskStatusProcessInstances",processInstances));
+      
+      let sendToArchitect = (processInstances && processInstances.length>1 && processInstances[processInstances.length-1].action)||"";
+      
+      if(sendToArchitect =="SEND_TO_ARCHITECT"){
+        dispatch(handleField("apply", 'components.div.children.taskStatus', "visible", true));
+      }
+     
+    }
+}
+
 const screenConfig = {
   uiFramework: "material-ui",
   name: "apply",
-  beforeInitScreen: (action, state, dispatch) => {
+  beforeInitScreen: (action, state, dispatch, componentJsonpath) => {
+    dispatch(prepareFinalObject("BPA", {}));
+    dispatch(prepareFinalObject("documentsContract", []));
+    dispatch(prepareFinalObject("documentDetailsUploadRedux", {}));
     const tenantId = getQueryArg(window.location.href, "tenantId");
     const step = getQueryArg(window.location.href, "step");
-    set(state, "screenConfiguration.moduleName", "OCBPA");
+    set(state, "screenConfiguration.moduleName", "BPA");
     const applicationNumber = getQueryArg(
       window.location.href,
       "applicationNumber"
@@ -331,6 +402,7 @@ const screenConfig = {
       { key: "businessServices", value: "BPA_OC" }
     ];
     setBusinessServiceDataToLocalStorage(queryObject, dispatch);
+    setTaskStatus(state,applicationNumber,tenantId,dispatch,componentJsonpath);
 
     // Code to goto a specific step through URL
     if (step && step.match(/^\d+$/)) {
@@ -382,6 +454,18 @@ const screenConfig = {
           }
         },
         stepper,
+        taskStatus: {
+          moduleName: "egov-workflow",
+          uiFramework: "custom-containers-local",
+          componentPath: "WorkFlowContainer",          
+          visible: false,
+          componentJsonpath:'components.div.children.taskStatus',
+          props: {
+            dataPath: "BPA",
+            moduleName: "BPA",
+            updateUrl: "/bpa-services/v1/bpa/_update"
+          }
+          },
         formwizardFirstStep,
         formwizardSecondStep,
         formwizardThirdStep,

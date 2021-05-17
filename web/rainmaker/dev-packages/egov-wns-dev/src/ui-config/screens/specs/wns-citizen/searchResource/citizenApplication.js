@@ -61,25 +61,34 @@ export const citizenApplication = getCommonCard({
         labelKey: "WS_HOME_SEARCH_CONN_RESULTS_DESC"
     }),
     cityPropertyAndMobNumContainer: getCommonContainer({
-        city: getSelectField({
-            label: {
-                labelKey: "WS_PROP_DETAIL_CITY"
-            },
-            placeholder: {
-                labelKey: "WS_PROP_DETAIL_CITY_PLACEHOLDER"
-            },
-            labelPrefix: {
+        city: {
+            uiFramework: "custom-containers-local",
+            moduleName: "egov-wns",
+            componentPath: "AutosuggestContainer",
+            jsonPath: "searchScreen.tenantId",
+            props: {
+              className: "hr-generic-selectfield autocomplete-dropdown",
+              label: {
+                labelKey: "WS_PROP_DETAIL_CITY",
+                labelName: "City"
+              },
+              placeholder: {
+                labelKey: "WS_PROP_DETAIL_CITY_PLACEHOLDER",
+                labelName: "Select City"
+              },
+              localePrefix: {
                 moduleName: "TENANT",
                 masterName: "TENANTS"
+              },
+              required: true,
+              isClearable: true,
+              labelsFromLocalisation: true,
+              jsonPath: "searchScreen.tenantId",
+              sourceJsonPath: "applyScreenMdmsData.tenant.tenants",
             },
-            sourceJsonPath: "applyScreenMdmsData.tenant.tenants",
-            jsonPath: "searchScreen.tenantId",//db sake
             required: true,
-            gridDefination: {
-                xs: 12,
-                sm: 4
-            },
-        }),
+            gridDefination: { xs: 12, sm: 4 },
+          },
         propertyid: getTextField({
             label: {
                 labelKey: "WS_PROPERTY_ID_LABEL"
@@ -147,23 +156,7 @@ export const citizenApplication = getCommonCard({
             pattern: /^[a-zA-Z0-9-]*$/i,
             errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
             jsonPath: "searchScreen.oldConnectionNumber"
-        }),
-        //   applicationNo: getTextField({
-        //     label: {
-        //       labelKey: "WS_MYCONNECTIONS_APPLICATION_NO"
-        //     },
-        //     placeholder: {
-        //       labelKey: "WS_SEARCH_CONNECTIONS_APPLICATION_NO_PLACEHOLDER"
-        //     },
-        //     gridDefination: {
-        //       xs: 12,
-        //       sm: 4
-        //     },
-        //     required: false,
-        //     pattern: /^[a-zA-Z0-9-]*$/i,
-        //     errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
-        //     jsonPath: "searchScreen.fireNOCNumber"
-        //   }),
+        }),        
     }),
     button: getCommonContainer({
         buttonContainer: getCommonContainer({
@@ -172,7 +165,6 @@ export const citizenApplication = getCommonCard({
                 gridDefination: {
                     xs: 12,
                     sm: 6
-                    // align: "center"
                 },
                 props: {
                     variant: "outlined",
@@ -200,7 +192,6 @@ export const citizenApplication = getCommonCard({
                 gridDefination: {
                     xs: 12,
                     sm: 6,
-                    // align: "center"
                 },
                 props: {
                     variant: "contained",
