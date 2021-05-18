@@ -402,6 +402,7 @@ class Property extends Component {
         <div id="tax-wizard-buttons" className="wizard-footer col-sm-12" style={{ textAlign: "right" }}>
         {!isCitizen && Assessments && Assessments.length > 0 &&
         <Button
+        className="tax-button"
               onClick={() => this.onAmendBtnClick()}
               label={<Label buttonLabel={true} label="PT_BILL_AMENDMENT_BUTTON" fontSize="16px" />}
               primary={true}
@@ -411,6 +412,7 @@ class Property extends Component {
         {!isMigratedProperty && 
 
          <Button
+         className="tax-button"
               onClick={() => this.onAssessPayClick()}
               label={<Label buttonLabel={true} label="PT_ASSESS_PROPERTY" fontSize="16px" />}
               primary={true}
@@ -421,6 +423,7 @@ class Property extends Component {
                       
          {!isCitizen && Payments.length<=0 &&
            <Button
+           className="tax-button"
               label={
                 <Label buttonLabel={true}
                   label={formWizardConstants[PROPERTY_FORM_PURPOSE.UPDATE].parentButton} 
