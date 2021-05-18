@@ -286,12 +286,12 @@ export const searchApplicationTable = {
 
 
 const onPropertyTabClick = (tableMeta) => {
-  switch (tableMeta.rowData[5]) {
+  switch (tableMeta.rowData[6]) {
     case "INITIATED":
-      window.location.href = `apply?applicationNumber=${tableMeta.rowData[0]}&tenantId=${tableMeta.rowData[6]}`;
+      window.location.href = `apply?applicationNumber=${tableMeta.rowData[0]}&tenantId=${tableMeta.rowData[7]}`;
       break;
     default:
-      navigate(propertyInformationScreenLink(tableMeta.rowData[0], tableMeta.rowData[6]));
+      navigate(propertyInformationScreenLink(tableMeta.rowData[0], tableMeta.rowData[7]));
       break;
   }
 };
