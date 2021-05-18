@@ -771,7 +771,13 @@ export const getTextToLocalMapping = label => {
         "PT_COMMON_COL_EXISTING_PROP_ID",
         localisationLabels
       );
-
+      case "ABAS Id":
+        return getLocaleLabels(
+          "ABAS Id",
+          "PT_ABAS_ID",
+          localisationLabels
+        );
+  
     case "Address":
       return getLocaleLabels(
         "Address",

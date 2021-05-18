@@ -35,8 +35,8 @@ export const textToLocalMapping = {
     "PT_COMMON_COL_EXISTING_PROP_ID",
     getTransformedLocalStorgaeLabels()
   ),
-  "Abas Id": getLocaleLabels(
-    "Abas Id",
+  "ABAS Id": getLocaleLabels(
+    "ABAS Id",
     "PT_ABAS_ID",
     getTransformedLocalStorgaeLabels()
   ),
@@ -136,7 +136,7 @@ export const searchPropertyTable = {
       {labelName: "Owner Name", labelKey: "PT_COMMON_TABLE_COL_OWNER_NAME"},
       {labelName: "Guardian Name", labelKey: "PT_GUARDIAN_NAME"},
       {labelName: "Existing Property Id", labelKey: "PT_COMMON_COL_EXISTING_PROP_ID"},
-      {labelName: "Abas Id", labelKey: "PT_ABAS_ID"},
+      {labelName: "ABAS Id", labelKey: "PT_ABAS_ID"},
       {labelName: "Address", labelKey: "PT_COMMON_COL_ADDRESS"},
       {
         labelName: "Status",
