@@ -69,6 +69,7 @@ export const getAllOwnerDetails = (property, isSingleOwner = false) => {
 export const getpropertyAddressDetails = (propertyRes) => {
   const { Properties } = propertyRes;
   const oldPIDPath = get(propertyAddress, "fields.oldPID.jsonPath", "");
+  const abasPIDPath = get(propertyAddress, "fields.abasPID.jsonPath", "");
   const mohallaPath = get(propertyAddress, "fields.mohalla.jsonPath", "");
   let propertyAddressForm = {
     propertyAddress: addData(cloneDeep(propertyAddress), get(Properties[0], "address", {})),
@@ -76,6 +77,7 @@ export const getpropertyAddressDetails = (propertyRes) => {
   set(propertyAddressForm, "propertyAddress.fields.oldPID.value", get(propertyRes, oldPIDPath, ""));
   set(propertyAddressForm, "propertyAddress.fields.mohalla.value", get(propertyRes, mohallaPath, ""));
   set(propertyAddressForm, "propertyAddress.fields.city.value", get(Properties[0], "tenantId", ""));
+  set(propertyAddressForm, "propertyAddress.fields.abasPID.value", get(propertyRes, abasPIDPath, ""));
 
   return propertyAddressForm;
 };
