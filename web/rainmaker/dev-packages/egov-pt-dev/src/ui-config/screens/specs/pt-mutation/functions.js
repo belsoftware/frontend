@@ -353,7 +353,7 @@ const searchApiCall = async (state, dispatch, index) => {
         ["PT_COMMON_COL_EXISTING_PROP_ID"]:
           item.oldPropertyId || "-",
           ["PT_ABAS_ID"]:
-          item.abasPropertyids || "-",
+          item.abasPropertyId || "-",
         ["PT_COMMON_COL_ADDRESS"]:
           getAddress(item) || "-",
         ["TENANT_ID"]: item.tenantId,
