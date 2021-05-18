@@ -128,6 +128,10 @@ export const resetFields = (state, dispatch) => {
     "ptSearchScreen.oldpropertyids",
     ''
   ))
+  dispatch(prepareFinalObject(
+    "ptSearchScreen.abasPropertyids",
+    ''
+  ))
 
 };
 
@@ -241,6 +245,23 @@ export const searchPropertyDetails = getCommonCard({
       pattern: /^[a-zA-Z0-9-]*$/i,
       errorMessage: "ERR_INVALID_PROPERTY_ID",
       jsonPath: "ptSearchScreen.oldpropertyids"
+    }),
+    abasId: getTextField({
+      label: {
+        labelName: "ABAS Id",
+        labelKey: "PT_ABAS_ID"
+      },
+      placeholder: {
+        labelName: "Enter Abas ID",
+        labelKey: "PT_ABAS_ID_PLACEHOLDER"
+      },
+      gridDefination: {
+        xs: 12,
+        sm: 4,
+
+      },
+      required: false,
+      jsonPath: "ptSearchScreen.abasPropertyids"
     })
   }),
   button: getCommonContainer({
