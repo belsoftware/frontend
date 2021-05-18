@@ -6,7 +6,7 @@ import { Icon } from "egov-ui-kit/components";
 import { addBreadCrumbs, toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { initLocalizationLabels } from "egov-ui-kit/redux/app/utils";
 import { fetchGeneralMDMSData } from "egov-ui-kit/redux/common/actions";
-import { fetchAssessments, fetchProperties, fetchReceipt, fetchTotalBillAmount, getSingleAssesmentandStatus } from "egov-ui-kit/redux/properties/actions";
+import { fetchAssessments, fetchProperties, fetchReceipt, fetchTotalBillAmount, getSingleAssesmentandStatus,fetchAmendment } from "egov-ui-kit/redux/properties/actions";
 import { generalMDMSDataRequestObj, getCommaSeperatedAddress, getGeneralMDMSDataDropdownName, getTranslatedLabel } from "egov-ui-kit/utils/commons";
 import { getLocale, localStorageGet } from "egov-ui-kit/utils/localStorageUtils";
 import { loadUlbLogo } from "egov-ui-kit/utils/pdfUtils/generatePDF";
@@ -75,6 +75,7 @@ class Property extends Component {
       fetchProperties,
       fetchReceipt,
       fetchAssessments,
+      fetchAmendment,
     } = this.props;
     const requestBody = generalMDMSDataRequestObj(commonConfig.tenantId);
     fetchGeneralMDMSData(requestBody, "PropertyTax", getGeneralMDMSDataDropdownName());
@@ -98,6 +99,12 @@ class Property extends Component {
       { key: "consumerCodes", value: decodeURIComponent(this.props.match.params.propertyId) },
       { key: "tenantId", value: this.props.match.params.tenantId },
       { key: "businessService", value: 'PT' }
+    ]);
+
+    fetchAmendment([
+      { key: "consumerCode", value: decodeURIComponent(this.props.match.params.propertyId) },
+      { key: "tenantId", value: this.props.match.params.tenantId },
+      { key: "businessService", value:"PT"}
     ]);
 
     loadUlbLogo(this.props.match.params.tenantId);
@@ -345,7 +352,8 @@ class Property extends Component {
       documentsUploaded,
       loading,
       Payments = [],
-      Assessments = []
+      Assessments = [],
+      Amendment = []
     } = this.props;
     const { closeYearRangeDialogue,closeDocsDialogue,onAmendBtnClickFromDialog } = this;
     const { dialogueOpen, urlToAppend, showAssessmentHistory,amendDialogOpen } = this.state;
@@ -433,8 +441,8 @@ class Property extends Component {
              style={{ lineHeight: "auto", minWidth: "inherit" }}
              />   
             }
-              {isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
-              || !payLen ) &&
+               {isMigratedProperty && !isCitizen && Amendment.length<=0 && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
+              || !payLen ) && 
                 
               <Button
               onClick={() => this.editDemand()}
@@ -442,7 +450,7 @@ class Property extends Component {
               primary={true}
               style={{ lineHeight: "auto", minWidth: "inherit" , marginLeft:"10px"}}
             />
-          }
+          } 
         </div>
         {amendDialogOpen && <AmendmentDialogue open={amendDialogOpen} history={history} urlToAppend={urlToAppend} closeDialogue={closeDocsDialogue} onAmendBtnClick={onAmendBtnClickFromDialog} />}
 
@@ -721,7 +729,7 @@ const mapStateToProps = (state, ownProps) => {
   const { urls, localizationLabels } = app;
   const { cities } = common;
   const { generalMDMSDataById } = state.common || {};
-  let { propertiesById, singleAssessmentByStatus = [], loading, receiptsByYr, totalBillAmountDue = 0, Assessments = [],Payments = [] } = state.properties || {};
+  let { propertiesById, singleAssessmentByStatus = [], loading, receiptsByYr, totalBillAmountDue = 0, Assessments = [],Payments = [],Amendment =[] } = state.properties || {};
   const tenantId = ownProps.match.params.tenantId;
   const propertyId = decodeURIComponent(ownProps.match.params.propertyId);
   const selPropertyDetails = propertiesById[propertyId] || {};
@@ -775,7 +783,8 @@ const mapStateToProps = (state, ownProps) => {
     Assessments,
     loading,
     UlbLogoForPdf,
-    Payments
+    Payments,
+    Amendment
   };
 };
 
@@ -790,6 +799,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchReceipt: (fetchReceiptQueryObject) => dispatch(fetchReceipt(fetchReceiptQueryObject)),
     toggleSnackbarAndSetText: (open, message, error) => dispatch(toggleSnackbarAndSetText(open, message, error)),
     fetchAssessments: (fetchAssessmentsQueryObject) => dispatch(fetchAssessments(fetchAssessmentsQueryObject)),
+    fetchAmendment: (fetchAmendmentQueryObject) => dispatch(fetchAmendment(fetchAmendmentQueryObject)),
   };
 };
 

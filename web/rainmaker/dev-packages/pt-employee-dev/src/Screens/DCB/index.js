@@ -618,16 +618,6 @@ class FormWizardDataEntry extends Component {
               yearKey =i;
             }
 
-
-            let amount = 0
-
-                    let existingdemanddetails = demand.demandDetails;
-                    existingdemanddetails.forEach((detail)=>{
-                      if(detail.taxHeadMasterCode == demandData.taxHeadMasterCode){
-                        amount = amount + detail.taxAmount
-                      }
-                    });
-                   
             prepareFinalObject(
               `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_TAXHEAD`, 
                demandData.taxHeadMasterCode
@@ -637,7 +627,7 @@ class FormWizardDataEntry extends Component {
 
                prepareFinalObject(
                  `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_DEMAND`,
-                 `${Math.trunc(amount)}`
+                 `${Math.trunc(demandData.taxAmount)}`
                ),
                prepareFinalObject(
                  `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_COLLECTED`,

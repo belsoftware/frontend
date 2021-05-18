@@ -117,10 +117,10 @@ const downloadprintMenu = (state, dispatch, status) => {
       downloadMenu = [applicationDownloadObject];
       printMenu = [applicationPrintObject];
       break;
-    case 'approve':
-      downloadMenu = [certificateDownloadObject];
-      printMenu = [certificatePrintObject];
-      break;
+    // case 'approve':
+    //   downloadMenu = [certificateDownloadObject];
+    //   printMenu = [certificatePrintObject];
+    //   break;
     default:
       downloadMenu = [applicationDownloadObject];
       printMenu = [applicationPrintObject];

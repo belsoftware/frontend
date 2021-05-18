@@ -5,7 +5,8 @@ import { Icon } from "components";
 import PaymentStatus from "egov-ui-kit/common/propertyTax/PaymentStatus";
 import {
   fetchProperties,
-  fetchReceipts
+  fetchReceipts,
+  fetchAmendment
 } from "egov-ui-kit/redux/properties/actions";
 import { clearForms } from "egov-ui-kit/redux/form/actions";
 import { updatePrepareFormDataFromDraft } from "egov-ui-kit/redux/common/actions";
@@ -86,7 +87,8 @@ class PaymentSuccess extends Component {
       fetchProperties,
       fetchReceipts,
       match,
-      fetchGeneralMDMSData
+      fetchGeneralMDMSData,
+      fetchAmendment
     } = this.props;
     const { tenantId } = match.params;
     const requestBody = {
@@ -156,6 +158,11 @@ class PaymentSuccess extends Component {
         key: "consumerCode",
         value: `${match.params.propertyId}`
       }
+    ]);
+    fetchAmendment([
+      { key: "consumerCode", value: match.params.propertyId },
+      { key: "tenantId", value: match.params.tenantId },
+      { key: "businessService", value:"PT"}
     ]);
     this.convertImgToDataURLviaCanvas(
       this.createImageUrl(match.params.tenantId),
@@ -305,6 +312,7 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchProperties: queryObject => dispatch(fetchProperties(queryObject)),
     fetchReceipts: queryObject => dispatch(fetchReceipts(queryObject)),
+    fetchAmendment: (fetchAmendmentQueryObject) => dispatch(fetchAmendment(fetchAmendmentQueryObject)),
     fetchGeneralMDMSData: (requestBody, moduleName, masterName, key) =>
       dispatch(fetchGeneralMDMSData(requestBody, moduleName, masterName, key)),
     updatePrepareFormDataFromDraft: prepareFormData =>

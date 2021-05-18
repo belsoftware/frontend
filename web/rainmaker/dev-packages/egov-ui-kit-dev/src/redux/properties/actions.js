@@ -3,7 +3,7 @@ import { getCreatePropertyResponse, setPTDocuments } from "egov-ui-kit/config/fo
 import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 import { httpRequest } from "egov-ui-kit/utils/api";
 import { transformById } from "egov-ui-kit/utils/commons";
-import { BOUNDARY, DOWNLOADRECEIPT, DRAFT, FETCHASSESSMENTS, FETCHBILL, FETCHRECEIPT, PGService, PROPERTY, RECEIPT } from "egov-ui-kit/utils/endPoints";
+import { BOUNDARY, DOWNLOADRECEIPT, DRAFT, FETCHASSESSMENTS, FETCHBILL, FETCHRECEIPT, PGService, PROPERTY, RECEIPT,FETCHAMENDMENT } from "egov-ui-kit/utils/endPoints";
 import { getLatestPropertyDetails } from "egov-ui-kit/utils/PTCommon";
 import { getCommonTenant } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
 import cloneDeep from "lodash/cloneDeep";
@@ -235,6 +235,27 @@ const mohallaFetchComplete = (payload) => {
     payload,
   };
 };
+
+const fetchAmendmentPending = () => {
+  return {
+    type: actionTypes.PROPERTY_FETCH_AMENDMENT_PENDING,
+  };
+};
+
+const fetchAmendmentComplete = (payload) => {
+  return {
+    type: actionTypes.PROPERTY_FETCH_AMENDMENT_COMPLETE,
+    payload,
+  };
+};
+
+const fetchAmendmentError = (error) => {
+  return {
+    type: actionTypes.PROPERTY_FETCH_AMENDMENT_ERROR,
+    error,
+  };
+};
+
 
 const fetchMohalla = (queryObj) => {
   return async (dispatch) => {
@@ -653,6 +674,19 @@ export const fetchAssessments = (fetchAssessmentsQueryObject) => {
         dispatch(fetchAssessmentsComplete(payloadProperty));
       } catch (error) {
         dispatch(fetchAssessmentsError(error.message));
+      }
+    }
+  }
+}
+export const fetchAmendment = (fetchAmendmentQueryObject) => {
+  return async (dispatch) => {
+    if (fetchAmendmentQueryObject) {
+      dispatch(fetchAmendmentPending());
+      try {
+        const payloadProperty = await httpRequest(FETCHAMENDMENT.GET.URL, FETCHAMENDMENT.GET.ACTION, fetchAmendmentQueryObject);
+        dispatch(fetchAmendmentComplete(payloadProperty));
+      } catch (error) {
+        dispatch(fetchAmendmentError(error.message));
       }
     }
   }
