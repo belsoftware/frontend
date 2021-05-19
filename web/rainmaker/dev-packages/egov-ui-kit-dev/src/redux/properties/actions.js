@@ -642,11 +642,11 @@ export const fetchTotalBillAmount = (fetchBillQueryObject) => {
         const payloadProperty = await httpRequest(FETCHBILL.GET.URL, FETCHBILL.GET.ACTION, fetchBillQueryObject);
         dispatch(fetchBillComplete(payloadProperty));
       } catch (error) {
-        dispatch(toggleSnackbarAndSetText(
-          true,
-          { labelName: error.message, labelKey: error.message },
-          "error"
-        ))
+        // dispatch(toggleSnackbarAndSetText(
+        //   true,
+        //   { labelName: error.message, labelKey: error.message },
+        //   "error"
+        // ))
         dispatch(fetchBillError(error.message));
       }
     }

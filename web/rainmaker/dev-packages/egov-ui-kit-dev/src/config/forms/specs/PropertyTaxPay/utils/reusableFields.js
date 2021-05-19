@@ -592,7 +592,7 @@ export const street = {
     errorMessage: "PT_PROPERTY_DETAILS_STREET_ERRORMSG",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
     maxLength: 64,
-    pattern:/^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,64}$/i,
+   // pattern:/^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,64}$/i,
   },
 };
 

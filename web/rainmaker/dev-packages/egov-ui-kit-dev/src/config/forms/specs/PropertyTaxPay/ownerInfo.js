@@ -15,8 +15,9 @@ const formConfig = {
       hintText: "PT_SEARCH_OWNER_NAME_PLACEHOLDER",
       required: true,
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
-      pattern:  /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
+      // pattern:  /^{1,500}$/i,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
+      maxLength: 500,
     },
     ownerMobile: {
       id: "ownerMobile",
@@ -25,7 +26,7 @@ const formConfig = {
       floatingLabelText: "PT_OWNER_MOBILE_NO",
       hintText: "PT_COMMON_APPLICANT_MOBILE_NO_PLACEHOLDER",
       required: true,
-      pattern: /^([0]|((\+\d{1,2}[-]{0,1})))?\(?[6-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i,
+      pattern: /^([0]|((\+\d{1,2}[-]{0,1})))?\(?[3-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i,
       errorMessage: "PT_MOBILE_NUMBER_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     },
@@ -35,7 +36,8 @@ const formConfig = {
       type: "textfield",
       floatingLabelText: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME",
       hintText: "PT_COMMON_ENTER_FATHER_OR_HUSBAND_NAME",
-      pattern:  /^[^{0-9}^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,_:;“”‘’]{1,64}$/i,
+    //  pattern:  /^{1,64}$/i,
+    maxLength: 500,
       required: true,
       errorMessage: "PT_NAME_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
@@ -217,10 +219,10 @@ const formConfig = {
     isSameAsPropertyAddress: {
       id: "rcpt",
       type: "checkbox",
-      jsonPath: "Properties[0].propertyDetails[0].owners[0].isCorrespondenceAddress",
+      jsonPath: "Properties[0].propertyDetails[0].owners[0].sameAsPeropertyAddress",
       errorMessage: "",
       floatingLabelText: "PT_COMMON_SAME_AS_PROPERTY_ADDRESS",
-      value: "",
+    //  value: "",
       updateDependentFields: ({ formKey, field: sourceField, dispatch, state }) => {
         const { value: iscorrAddrSameProp } = sourceField;
         const { city = "", colony = "", houseNumber = "", mohalla = "", pincode = "", street = "" } = get(state, "form.propertyAddress.fields", {});
@@ -242,8 +244,12 @@ const formConfig = {
             .replace(/(,\s){2,}/g, ", ")
             .replace(":","");
           dispatch(setFieldProperty(formKey, "ownerAddress", "value", correspondingAddress));
+          dispatch(setFieldProperty(formKey, "ownerAddress", "disabled", true));
+
           dispatch(handleFieldChange(formKey, "ownerAddress", correspondingAddress));
         } else {
+          dispatch(setFieldProperty(formKey, "ownerAddress", "disabled", false));
+
           dispatch(setFieldProperty(formKey, "ownerAddress", "value", ""));
         }
       },

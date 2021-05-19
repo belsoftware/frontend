@@ -60,10 +60,10 @@ const formConfig = {
     isSameAsPropertyAddress: {
       id: "rcpt",
       type: "checkbox",
-      jsonPath: "Properties[0].propertyDetails[0].owners[0].isCorrespondenceAddress",
+      jsonPath: "Properties[0].propertyDetails[0].owners[0].sameAsPeropertyAddress",
       errorMessage: "",
       floatingLabelText: "PT_COMMON_SAME_AS_PROPERTY_ADDRESS",
-      value: "",
+      //value: "",
       updateDependentFields: ({ formKey, field: sourceField, dispatch, state }) => {
         const { value: iscorrAddrSameProp } = sourceField;
         const { city = "", colony = "", houseNumber = "", mohalla = "", pincode = "", street = "" } = get(state, "form.propertyAddress.fields", {});
@@ -85,8 +85,12 @@ const formConfig = {
             .replace(/(,\s){2,}/g, ", ")
             .replace(":","");
           dispatch(setFieldProperty(formKey, "address", "value", correspondingAddress));
+          dispatch(setFieldProperty(formKey, "address", "disabled", true));
+
           dispatch(handleFieldChange(formKey, "address", correspondingAddress));
         } else {
+          dispatch(setFieldProperty(formKey, "address", "disabled", false));
+
           dispatch(setFieldProperty(formKey, "address", "value", ""));
         }
       },
