@@ -9,7 +9,7 @@ import { LabelContainer } from "egov-ui-framework/ui-containers";
 import { getTransformedLocale } from "egov-ui-framework/ui-utils/commons";
 import CheckBoxContainer from "../CheckBoxContainer";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-
+import "./index.css"
 const styles = (theme) => ({
   textField: {
     textAlign: "right",
@@ -207,11 +207,11 @@ class AdjustmentAmountContainer extends Component {
     let disableValue = (amountType == "reducedAmount") ? true : false;
     return (
       <React.Fragment>
-        <Grid container={true}>
-          <Grid item={true} xs={3} sm={3} md={3} style={lableStyle}>
+        <Grid container={true} className="bill-tax-head">
+          <Grid item={true} xs={3} sm={3} md={3} style={lableStyle} className="billTaxHeads" >
             <LabelContainer labelKey={getTransformedLocale(`BILL_${card.taxHeadCode}`)} />
           </Grid>
-          <Grid item={true} xs={2} sm={2} md={2}>
+          <Grid item={true} xs={2} sm={2} md={2} className="billTaxHeads">
             <TextField
               variant="outlined"
               name={getTransformedLocale(card.taxHeadCode)}
@@ -228,7 +228,7 @@ class AdjustmentAmountContainer extends Component {
               }}
             />
           </Grid>
-          <Grid item={true} xs={2} sm={2} md={2}>
+          <Grid item={true} xs={2} sm={2} md={2}className="billTaxHeads">
             <TextField
               variant="outlined"
               name={getTransformedLocale(card.taxHeadCode)}
@@ -246,7 +246,7 @@ class AdjustmentAmountContainer extends Component {
               }}
             />
           </Grid>
-          <Grid item={true} xs={2} sm={2} md={2}>
+          <Grid item={true} xs={2} sm={2} md={2}className="billTaxHeads">
             <TextField
               variant="outlined"
               value={card.additionalAmountValue ? card.additionalAmountValue : 0}
@@ -264,7 +264,7 @@ class AdjustmentAmountContainer extends Component {
               }}
             />
           </Grid>
-          <Grid item={true} xs={2} sm={2} md={2}>
+          <Grid item={true} xs={2} sm={2} md={2}className="billTaxHeads">
             <TextField
               variant="outlined"
               value={card.additionalAmountValue ? card.additionalAmountValue + card.demand: card.reducedAmountValue?card.demand -card.reducedAmountValue:0}
@@ -290,17 +290,17 @@ class AdjustmentAmountContainer extends Component {
     let checked=true;
     return (
       <div>
-        <Grid container={true}>
-          <Grid item={true} xs={3} sm={3} md={3} style={taxHeadsLabel}>
+        <Grid container={true} className="bill-tax-head">
+          <Grid item={true} xs={4} sm={3} md={3} style={taxHeadsLabel} className="billTaxHeads">
             <LabelContainer labelKey={getTransformedLocale("TAX_HEADS")} />
           </Grid>
-          <Grid item={true} xs={3} sm={3} md={3} style={currentDemandLabel}>
+          <Grid item={true} xs={3} sm={2} md={3} style={currentDemandLabel} className="billTaxHeads">
             <LabelContainer
               labelName="Current Demand"
               labelKey={getTransformedLocale("CURRENT_DEMAND")}
             />
           </Grid>
-          <Grid item={true} xs={2} sm={2} md={2}>
+          <Grid item={true} xs={2} sm={2} md={2} className="billTaxHeads">
             <CheckBoxContainer
               labelName="Reduced Amount (Rs)"
               labelKey="BILL_REDUCED_AMOUNT_RS"
@@ -309,7 +309,7 @@ class AdjustmentAmountContainer extends Component {
               changeMethod={this.handleCheckBoxChange}
             />
           </Grid>
-          <Grid item={true} xs={2} sm={2} md={2}>
+          <Grid item={true} xs={2} sm={2} md={2} className="billTaxHeads">
             <CheckBoxContainer
               labelName="Additional Amount (Rs)"
               labelKey="BILL_ADDITIONAL_AMOUNT_RS"
@@ -318,7 +318,7 @@ class AdjustmentAmountContainer extends Component {
               changeMethod={this.handleCheckBoxChange}
             />
           </Grid>
-          <Grid item={true} xs={2} sm={2} md={2} style={currentDemandLabel}>
+          <Grid item={true} xs={2} sm={2} md={2} style={currentDemandLabel} className="billTaxHeads">
             <LabelContainer
               labelName="Total Adjustment Tax Amount"
               labelKey={getTransformedLocale("TOTAL_REVISED_TAX_AMT")}
