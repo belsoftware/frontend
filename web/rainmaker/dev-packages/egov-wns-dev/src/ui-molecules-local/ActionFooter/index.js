@@ -27,7 +27,7 @@ class Footer extends React.Component {
       tenantId,
       toggleSnackbar,
      // applicationNo,
-     // applicationNos,
+      applicationNos,
       businessService,
       bill,
       state
@@ -39,8 +39,8 @@ class Footer extends React.Component {
         const connectionObj = get(state.screenConfiguration.preparedFinalObject,"WaterConnection[0]");  
         let connectionNumber = connectionObj.connectionNo
         let applicationNo = connectionObj.applicationNo
-        let applicationNos = connectionObj.applicationNo
-              
+        //let applicationNos = connectionObj.applicationNo
+        
         let due = 0;
         if(bill){             
           due = bill.Bill[0].totalAmount
