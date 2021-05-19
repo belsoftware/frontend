@@ -3,7 +3,7 @@ import commonConfig from "config/common.js";
 import Screen from "egov-ui-kit/common/common/Screen";
 import { getCompletedTransformedItems } from "egov-ui-kit/common/propertyTax/TransformedAssessments";
 import { Icon } from "egov-ui-kit/components";
-import { addBreadCrumbs, toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
+import { addBreadCrumbs, toggleSnackbarAndSetText,fetchLocalizationLabel } from "egov-ui-kit/redux/app/actions";
 import { initLocalizationLabels } from "egov-ui-kit/redux/app/utils";
 import { fetchGeneralMDMSData } from "egov-ui-kit/redux/common/actions";
 import { fetchAssessments, fetchProperties, fetchReceipt, fetchTotalBillAmount, getSingleAssesmentandStatus,fetchAmendment } from "egov-ui-kit/redux/properties/actions";
@@ -76,7 +76,10 @@ class Property extends Component {
       fetchReceipt,
       fetchAssessments,
       fetchAmendment,
+      fetchLocalizationLabel
     } = this.props;
+    const locale = getLocale() || "en_IN";
+    fetchLocalizationLabel(locale, this.props.match.params.tenantId, this.props.match.params.tenantId);
     const requestBody = generalMDMSDataRequestObj(commonConfig.tenantId);
     fetchGeneralMDMSData(requestBody, "PropertyTax", getGeneralMDMSDataDropdownName());
 
@@ -800,6 +803,7 @@ const mapDispatchToProps = (dispatch) => {
     toggleSnackbarAndSetText: (open, message, error) => dispatch(toggleSnackbarAndSetText(open, message, error)),
     fetchAssessments: (fetchAssessmentsQueryObject) => dispatch(fetchAssessments(fetchAssessmentsQueryObject)),
     fetchAmendment: (fetchAmendmentQueryObject) => dispatch(fetchAmendment(fetchAmendmentQueryObject)),
+    fetchLocalizationLabel: (locale, moduleName, tenantId)=> dispatch(fetchLocalizationLabel(locale, moduleName, tenantId)),
   };
 };
 

@@ -45,19 +45,20 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
             delete modifiedDemand.govtNotificationNumber
     }
     const demandDetails = getFromObject(preparedFinalObject, 'Amendment.demandDetails', []);
-    const estimateCardData = [{
-        name: {
-            labelName: 'BILL_TAX_HEADS',
-            labelKey: 'BILL_TAX_HEADS'
-        },
-        value: getLocaleLabels('BILL_REDUCED_AMOUNT_RS','BILL_REDUCED_AMOUNT_RS')
-    }]
+    const estimateCardData =[];
+    // const estimateCardData = [{
+    //     name: {
+    //         labelName: 'BILL_TAX_HEADS',
+    //         labelKey: 'BILL_TAX_HEADS'
+    //     },
+    //     value: getLocaleLabels('BILL_REDUCED_AMOUNT_RS','BILL_REDUCED_AMOUNT_RS')
+    // }]
     demandDetails.map(demand => {
-        if( demand.taxAmount > 0){
-            estimateCardData[0].value=getLocaleLabels('DEBIT_NOTE','DEBIT_NOTE');
-          }else{
-            estimateCardData[0].value=getLocaleLabels('CREDIT_NOTE','CREDIT_NOTE');
-          }
+        // if( demand.taxAmount > 0){
+        //     estimateCardData[0].value=getLocaleLabels('DEBIT_NOTE','DEBIT_NOTE');
+        //   }else{
+        //     estimateCardData[0].value=getLocaleLabels('CREDIT_NOTE','CREDIT_NOTE');
+        //   }
         estimateCardData.push({
             name: {
                 labelName: demand.taxHeadMasterCode,
