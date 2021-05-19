@@ -21,21 +21,32 @@ class Footer extends React.Component {
   };
   render() {
     let downloadMenu = [];
+    //Connection number was not properly populated(Old application was populating) in edit window
     const {
-      connectionNumber,
+      //connectionNumber,
       tenantId,
       toggleSnackbar,
-      applicationNo,
-      applicationNos,
+     // applicationNo,
+     // applicationNos,
       businessService,
-      bill
+      bill,
+      state
     } = this.props;
     const editButton = {
       label: "Edit",
       labelKey: "WS_MODIFY_CONNECTION_BUTTON",
-      link: async () => {
-        // checking for the due amount
-        let due = getQueryArg(window.location.href, "due");
+      link: async () => {     
+        const connectionObj = get(state.screenConfiguration.preparedFinalObject,"WaterConnection[0]");  
+        let connectionNumber = connectionObj.connectionNo
+        let applicationNo = connectionObj.applicationNo
+        let applicationNos = connectionObj.applicationNo
+              
+        let due = 0;
+        if(bill){             
+          due = bill.Bill[0].totalAmount
+        }
+         
+       // let due = getQueryArg(window.location.href, "due");
         let errLabel =
           applicationNo && applicationNo.includes("WS")
             ? "WS_DUE_AMOUNT_SHOULD_BE_ZERO"
@@ -175,6 +186,9 @@ const mapStateToProps = (state) => {
     "WaterConnection",
     []
   );
+
+
+
   /* For WorkFlow check */
   let applicationNos = get(
     state.screenConfiguration.preparedFinalObject,
