@@ -536,15 +536,22 @@ class PTAcknowledgement extends React.Component {
                     >
                       {Button1 && Button1.visibility && (
                         <Button
+                        className="tax-button"
                           onClick={Button1.buttonClick}
                           label={<Label buttonLabel={true} label={Button1.name} fontSize="16px" />}
                           primary={true}
                           style={{ lineHeight: "auto", minWidth: "inherit", width: "200px" }}
                         />
                       )}
+                      </div>
+                       <div
+                      className="button-container col-xs-12 col-md-4 col-lg-2 property-info-access-btn first-button"
+                      style={{ float: "right", right: "20px", width: "auto" }}
+                    >
                       {/* //&& properties.source != "MUNICIPAL_RECORDS" */}
                       {properties && properties.source != "MUNICIPAL_RECORDS" && Button3 && Button3.visibility && (
                         <Button
+                        className="tax-button"
                           onClick={Button3.buttonClick}
                           label={<Label buttonLabel={true} label={Button3.name} fontSize="16px" />}
                           primary={true}

@@ -127,6 +127,9 @@ span{
   @media only screen and (max-width: 768px) {
    .button-container{
      right:0px !important;
+  }
+  .tax-button {
+    padding-top: 10px;
    }
    .first-button{
      min-width: -webkit-fill-available;
