@@ -280,7 +280,7 @@ class FormWizardDataEntry extends Component {
                ),
                  prepareFinalObject(
                    `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_DEMAND`,
-                   `${Math.trunc(demandData.taxAmount)}`
+                  `${(demandData.taxAmount)}`
                  ),
                  prepareFinalObject(
                    `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_COLLECTED`,
@@ -623,11 +623,9 @@ class FormWizardDataEntry extends Component {
                demandData.taxHeadMasterCode
              ),
               
-             
-
                prepareFinalObject(
                  `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_DEMAND`,
-                 `${Math.trunc(demandData.taxAmount)}`
+                 `${(demandData.taxAmount)}`
                ),
                prepareFinalObject(
                  `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_COLLECTED`,
@@ -2303,9 +2301,9 @@ class FormWizardDataEntry extends Component {
               demandDetails1.push({
                 ...demandDetail,
                 taxHeadMasterCode: demandValue.PT_TAXHEAD,
-                taxAmount: parseInt(
+                taxAmount:
                   demandValue.PT_DEMAND != "" ? demandValue.PT_DEMAND : 0
-                ),
+                ,
                 collectionAmount: parseInt(
                   demandValue.PT_COLLECTED != ""
                     ? demandValue.PT_COLLECTED
