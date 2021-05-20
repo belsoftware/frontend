@@ -126,7 +126,8 @@ const taxHeadsLabel = {
 };
 const currentDemandLabel = {
   display: "flex",
-  alignItems: "center"
+  alignItems: "center",
+paddingLeft: "15px"
 };
 
 class AdjustmentAmountContainer extends Component {
@@ -291,10 +292,10 @@ class AdjustmentAmountContainer extends Component {
     return (
       <div>
         <Grid container={true} className="bill-tax-head">
-          <Grid item={true} xs={4} sm={3} md={3} style={taxHeadsLabel} className="billTaxHeads">
+          <Grid item={true} xs={3} sm={3} md={3} style={taxHeadsLabel} className="billTaxHeads">
             <LabelContainer labelKey={getTransformedLocale("TAX_HEADS")} />
           </Grid>
-          <Grid item={true} xs={3} sm={2} md={3} style={currentDemandLabel} className="billTaxHeads">
+          <Grid item={true} xs={2} sm={2} md={2} style={currentDemandLabel} className="billTaxHeads">
             <LabelContainer
               labelName="Current Demand"
               labelKey={getTransformedLocale("CURRENT_DEMAND")}
