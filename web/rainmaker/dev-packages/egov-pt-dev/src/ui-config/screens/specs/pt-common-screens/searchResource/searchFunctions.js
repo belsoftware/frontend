@@ -53,7 +53,8 @@ const searchApiCall = async (state, dispatch) => {
   }  else if (
     (searchScreenObject["propertyIds"] === undefined || searchScreenObject["propertyIds"] === "") &&
     (searchScreenObject["mobileNumber"] === undefined || searchScreenObject["mobileNumber"] === "") &&
-    (searchScreenObject["oldpropertyids"] === undefined || searchScreenObject["oldpropertyids"] === "")
+    (searchScreenObject["oldpropertyids"] === undefined || searchScreenObject["oldpropertyids"] === "") &&
+    (searchScreenObject["abasPropertyids"] === undefined || searchScreenObject["abasPropertyids"] === "")
   ) {
     dispatch(toggleSnackbar(true, { labelName:"In addition to CB, please provide any one of the other parameters to search for property.",labelKey: "ERR_PT_COMMON_FILL_VALID_FIELDS" }, "warning"));
   }else{
