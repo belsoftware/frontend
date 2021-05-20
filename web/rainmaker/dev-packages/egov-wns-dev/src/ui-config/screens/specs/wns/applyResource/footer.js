@@ -465,9 +465,6 @@ const callBackForNext = async (state, dispatch) => {
   }
   /* validations for Additional /Docuemnts details screen */
   if (activeStep === 2 && process.env.REACT_APP_NAME !== "Citizen") {
-
-   
-   
     var plumberInfo = get(state.screenConfiguration.preparedFinalObject, "applyScreen.plumberInfo", null); 
     //console.log("plumber info--"+JSON.stringify(plumberInfo));
     if(plumberInfo && plumberInfo.length>0)
@@ -475,7 +472,7 @@ const callBackForNext = async (state, dispatch) => {
       if(plumberInfo[0].licenseNo || plumberInfo[0].name || plumberInfo[0].mobileNumber)
       {
       //console.log("additionalDetails--"+get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null));
-      if(get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null) === null || get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null) === "NA") 
+      if(get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null) === null || get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null) === "NA" || get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null) === "") 
       {
        dispatch(prepareFinalObject("applyScreen.additionalDetails.detailsProvidedBy", "ULB"));
        //console.log("plumber dtl--"+get(state.screenConfiguration.preparedFinalObject, "applyScreen.additionalDetails.detailsProvidedBy", null));

@@ -363,11 +363,13 @@ const searchResults = async (action, state, dispatch, connectionNumber) => {
         },
         {
           key: "consumerCode",
-          value: waterConnection.applicationNo,
+         // value: waterConnection.applicationNo,
+         value: waterConnection.connectionNo,
         },
         {
           key: "businessService",
-          value: "WS.ONE_TIME_FEE",
+         // value: "WS.ONE_TIME_FEE",
+         value: "WS",
         },
       ];
       const bill = await getBill(queryObjForBill,dispatch);

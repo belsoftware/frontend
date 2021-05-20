@@ -290,14 +290,14 @@ export const meterReadingEditable =
                                     true
                                 )
                             );
-                            dispatch(
+                           /* dispatch(
                                 handleField(
                                     "meter-reading",
                                     "components.div.children.meterReadingEditable.children.card.children.cardContent.children.fifthContainer.children.currentReadingDate.props",
                                     "disabled",
                                     true
                                 )
-                            );
+                            );*/
                             dispatch(
                                 handleField(
                                     "meter-reading",
