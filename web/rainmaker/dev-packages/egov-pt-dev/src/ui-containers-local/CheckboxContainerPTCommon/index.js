@@ -109,26 +109,26 @@ class CheckboxLabels extends React.Component {
         preparedFinalObject,
         "Property.address.buildingName"
       );
-      let finalAddress = doorNo + ", " + buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      let finalAddress = doorNo + ", " + buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
       if((doorNo == null || doorNo =="")){
         if(buildingName == null || buildingName == ""){
-          finalAddress = getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+          finalAddress = getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
         }else{
-          finalAddress = buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+          finalAddress = buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
         }
       }else{
         if(buildingName == null || buildingName == ""){
-          finalAddress =  doorNo + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+          finalAddress =  doorNo + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
         }else{
-          finalAddress =  doorNo + ", " + buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+          finalAddress =  doorNo + ", " + buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
         }
       }
       // if((doorNo == null || doorNo =="") && (buildingName != null || buildingName != "")){
-      //   finalAddress = buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      //   finalAddress = buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
       // } else if((doorNo != null || doorNo !="") && (buildingName == null || buildingName == "")){
-      //   finalAddress = doorNo + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      //   finalAddress = doorNo + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
       // } else if((doorNo == null || doorNo =="") && (buildingName == null || buildingName == "")){
-      //   finalAddress = getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      //   finalAddress = getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
       // }
 
       this.setState({ [name]: event.target.checked }, () => {
