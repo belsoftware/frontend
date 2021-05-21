@@ -326,8 +326,9 @@ class ApplicationPreview extends Component {
     let logoUrl = "";
     let corpCity = "";
     let ulbGrade = "";
+    let tenantid = getQueryValue(window.location.href, "tenantId");
     if (get(properties, "tenantId")) {
-      let tenantid = get(properties, "tenantId");
+    tenantid = get(properties, "tenantId");
       // logoUrl = get(properties, "tenantId") ? this.getLogoUrl(get(properties, "tenantId")) : "";
       logoUrl = window.location.origin + `/${commonConfig.tenantId}-egov-assets/${tenantid}/logo.png`;
       corpCity = `TENANT_TENANTS_${get(properties, "tenantId").toUpperCase().replace(/[.:-\s\/]/g, "_")}`;
@@ -336,7 +337,7 @@ class ApplicationPreview extends Component {
     }
     return <div>
       <Screen className={""}>
-        <PTHeader header={header} subHeaderTitle='PT_PROPERTY_APPLICATION_NO' subHeaderValue={applicationNumber} />
+        <PTHeader header={header} subHeaderTitle='PT_PROPERTY_APPLICATION_NO:' subHeaderValue={applicationNumber} tenantId={tenantid}/>
         <div className="form-without-button-cont-generic" >
           <div>
             <WorkFlowContainer dataPath={applicationType.dataPath}

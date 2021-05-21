@@ -2792,6 +2792,7 @@ class FormWizardDataEntry extends Component {
     );
 
     const wPropertyId = getQueryValue(search, "propertyId");
+    const tenantId = getQueryValue(search, "tenantId");
     return (
       <div className="wizard-form-main-cont">
         <div className="form-header">
@@ -2800,6 +2801,7 @@ class FormWizardDataEntry extends Component {
             subHeaderTitle="PT_PROPERTY_PTUID"
             headerValue={headerValue}
             subHeaderValue={subHeaderValue}
+            tenantId ={tenantId}
           />
         </div>
         <WizardComponent

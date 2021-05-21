@@ -10,12 +10,12 @@ import { getQueryArg} from "egov-ui-framework/ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import "./index.css";
 
-const PTHeader = ({ header = '', headerValue = '', subHeaderTitle = '', subHeaderValue = '', downloadPrintButton = false ,download,print,totalBillAmountDue=0}) => {
+const PTHeader = ({ header = '', headerValue = '', subHeaderTitle = '', subHeaderValue = '', downloadPrintButton = false ,download,print,totalBillAmountDue=0,tenantId=''}) => {
   const locale = getLocale() || "en_IN";
   const localizationLabelsData = initLocalizationLabels(locale);
   let downloadButton;
   let printButton
-  let tenantId = getTenantId();
+//let tenantId = getTenantId();
   if (downloadPrintButton) {
     let applicationDownloadObject = {
       label: { labelName: "Application", labelKey: "PT_APPLICATION" },
@@ -39,7 +39,7 @@ download?download():generatePdfFromDiv("download", subHeaderValue, "#property-re
       link: () => {
         const billQueryStr = [
           { key: "propertyId", value: subHeaderValue },
-          { key: "tenantId", value: tenantId }
+          { key: "tenantId", value: tenantId}
         ]
         downloadPTBill(billQueryStr,"download"); 
       },

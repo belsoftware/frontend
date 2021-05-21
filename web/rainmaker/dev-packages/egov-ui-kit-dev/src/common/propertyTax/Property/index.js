@@ -354,6 +354,7 @@ class Property extends Component {
       totalBillAmountDue,
       documentsUploaded,
       loading,
+      tenantId,
       Payments = [],
       Assessments = [],
       Amendment = []
@@ -394,7 +395,7 @@ class Property extends Component {
     });
     return (
       <Screen className={clsName} loading={loading}>
-        <PTHeader header="PT_PROPERTY_INFORMATION" subHeaderTitle="PT_PROPERTY_PTUID" subHeaderValue={propertyId} downloadPrintButton={true} download={() => this.download()} print={() => this.print()} totalBillAmountDue={totalBillAmountDue} />
+        <PTHeader header="PT_PROPERTY_INFORMATION" subHeaderTitle="PT_PROPERTY_PTUID" subHeaderValue={propertyId} downloadPrintButton={true} download={() => this.download()} print={() => this.print()} totalBillAmountDue={totalBillAmountDue} tenantId={tenantId}/>
         {
           <AssessmentList
             onItemClick={this.onListItemClick}

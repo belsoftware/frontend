@@ -420,7 +420,7 @@ class PTAcknowledgement extends React.Component {
     return (
       <div>
         <div className="mainContainer flex-container">
-          <PTHeader header={ptHeader && ptHeader.labelKey} subHeaderTitle="PT_PROPERTY_ID" subHeaderValue={propertyId} totalBillAmountDue={totalBillAmountDue}/>
+          <PTHeader header={ptHeader && ptHeader.labelKey} subHeaderTitle="PT_PROPERTY_ID" subHeaderValue={propertyId} totalBillAmountDue={totalBillAmountDue} tenantId={tenantId}/>
           {/* <Label
           label={ptHeader&&ptHeader.labelKey}
           color="rgba(0, 0, 0, 0.87)"
