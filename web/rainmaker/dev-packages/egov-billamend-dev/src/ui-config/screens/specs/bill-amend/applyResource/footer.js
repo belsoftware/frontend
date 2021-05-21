@@ -86,7 +86,7 @@ const callBackForNext = async (state, dispatch) => {
   let activeStep = get(state.screenConfiguration.screenConfig["apply"], "components.div.children.stepper.props.activeStep", 0);
   let isFormValid = true;
   let hasFieldToaster = false;
-
+let hasFieldToaster1 = false;
   if (activeStep === 0) {
     const isAddDemandRevisionBasisCard = validateFields(
       "components.div.children.formwizardFirstStep.children.AddDemandRevisionBasis.children.cardContent.children.demandRevisionContainer.children",
@@ -193,27 +193,44 @@ const callBackForNext = async (state, dispatch) => {
               "warning"
             ));
             validateDocumentField = false;
+           hasFieldToaster1=true;
             break;
           }
         } else {
-          validateDocumentField = true;
+          if (documents && documents.length > 0) {
+            if (get(documentsFormat[i], "dropdown.value")) {
+              validateDocumentField = true;
+            }
+            else {
+              validateDocumentField = false;
+              hasFieldToaster1 = false;
+              break;
+            }
+          }
+          else {
+            validateDocumentField = true;
+            break;
+          }
         }
       }
+    }
       if (!validateDocumentField) {
         isFormValid = false;
         hasFieldToaster = true;
+       
       } else {
         getSummaryRequiredDetails(state, dispatch);
       }
     } else {
       getSummaryRequiredDetails(state, dispatch);
     }
-  }
+
 
   if (activeStep !== 4) {
     if (isFormValid) {
       changeStep(state, dispatch);
-    } else if (hasFieldToaster) {
+    }
+    else if (hasFieldToaster) {
       let errorMessage = {
         labelName: "Please fill all mandatory fields and upload the documents!",
         labelKey: "ERR_UPLOAD_MANDATORY_DOCUMENTS_TOAST",
@@ -225,9 +242,23 @@ const callBackForNext = async (state, dispatch) => {
             labelKey: "BILL_ERR_PROVIDE_REQ_DETAILS_TOAST",
           };
           break;
+          case 1:
+          if (hasFieldToaster1) {
+            errorMessage = {
+              labelName: "Please fill all mandatory fields and upload the documents!",
+              labelKey: "ERR_UPLOAD_MANDATORY_DOCUMENTS_TOAST",
+            };
+          }
+          else {
+            errorMessage = {
+              labelName: "Please select type of Document!",
+              labelKey: "BILL_FOOTER_SELECT_DOC_TYPE"
+            };
+          }
+          break;
       }
       dispatch(toggleSnackbar(true, errorMessage, "warning"));
-    }
+    } 
   }
 };
 
