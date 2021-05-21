@@ -25,6 +25,7 @@ export const generateWSAcknowledgement = (preparedFinalObject, fileName = "print
     additionDetailsWater.reviewMotorInfo.localiseValue=true;
     additionDetailsWater.reviewAuthorizedConnection.localiseValue=true;
     additionDetailsWater.reviewUsageType.localiseValue=true;
+    additionDetailsWater.reviewSubUsageType.localiseValue=true;
     let propDetail = generateKeyValue(preparedFinalObject, propertyDetails);
     let propertyDetail = propDetail.map(cur => {
         if (cur.key === "Rainwater harvesting Facility") {

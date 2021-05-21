@@ -25,7 +25,7 @@ const processBills = async (state, data, viewBillTooltip, dispatch) => {
   data.Bill[0].billDetails.forEach(bills => {
     let des, obj, groupBillDetails = [];
     bills.billAccountDetails.forEach(async element => {
-      let cessKey = element.taxHeadCode
+      let cessKey = element.taxHeadCode;
       let body;
       if (service === serviceConst.WATER) {
         body = { "MdmsCriteria": { "tenantId": getTenantId(), "moduleDetails": [{ "moduleName": "ws-services-calculation", "masterDetails": [{ "name": cessKey }] }] } }
@@ -48,12 +48,15 @@ const processBills = async (state, data, viewBillTooltip, dispatch) => {
         }
         if (viewBillTooltip.length >= data.Bill[0].billDetails.length) {          
           let bPeriodMDMS = get(state.screenConfiguration.preparedFinalObject, "billingPeriodMDMS", {});
-          let expiryDemandDate = billingPeriodMDMS(bills.toPeriod,bPeriodMDMS,service);
+          let sortedBills = viewBillTooltip.sort((a, b) => b.toPeriod - a.toPeriod);
+          //In case of old bill consider the latest bill to period
+          let expiryDemandDate =  billingPeriodMDMS(sortedBills[0].toPeriod,bPeriodMDMS,service);
+
           let dataArray = [{
             total: data.Bill[0].totalAmount,
             expiryDate: expiryDemandDate
           }]
-          let sortedBills = viewBillTooltip.sort((a, b) => b.toPeriod - a.toPeriod);
+          
           let forward = 0;
           let currentDemand=sortedBills[0];
           if (data.Bill[0].totalAmount < 0) {
@@ -92,6 +95,7 @@ const processBills = async (state, data, viewBillTooltip, dispatch) => {
             description: currentDemand,
             data: dataArray
           }]
+          console.log("FINAL_ARRY",finalArray);
           dispatch(prepareFinalObject("viewBillToolipData", finalArray));
         }
       }
