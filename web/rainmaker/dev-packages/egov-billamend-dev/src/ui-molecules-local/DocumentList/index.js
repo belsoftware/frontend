@@ -277,7 +277,7 @@ class DocumentList extends Component {
             optionValue="code"
             optionLabel="label"
             autoSelect={true}
-            required={ card.required ? card.required : true}
+            required={ card.required ? true : false}
             onChange={event => this.handleChange(key, event)}
             jsonPath={jsonPath}
           />

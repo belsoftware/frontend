@@ -272,7 +272,7 @@ export const getMdmsData = async (action, state, dispatch) => {
               const currentdemand = demandResponse[0];
               currentdemand.demandDetails.forEach(demand => {
                 if(bill.taxHeadCode == demand.taxHeadMasterCode){
-                  bill.demand = bill.demand + demand.taxAmount;
+                  bill.demand = bill.demand + demand.taxAmount - demand.collectionAmount;
                 }
                 
               });
