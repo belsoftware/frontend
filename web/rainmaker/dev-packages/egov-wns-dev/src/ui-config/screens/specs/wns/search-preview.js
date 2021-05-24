@@ -742,9 +742,11 @@ const screenConfig = {
                   }
               });
 
-              if(data.additionalDetails.initialMeterReading === null){               
-                data.additionalDetails.initialMeterReading = 0;
-              }              
+              if(data.additionalDetails.initialMeterReading === null  || isNaN(data.additionalDetails.initialMeterReading) == true){               
+                data.additionalDetails.initialMeterReading = 0;              
+              }       
+              
+        
               
 
               set(data, 'propertyId', get(data, 'property.propertyId', null));
