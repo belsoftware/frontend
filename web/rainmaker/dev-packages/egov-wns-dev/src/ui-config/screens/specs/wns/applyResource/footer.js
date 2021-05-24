@@ -438,7 +438,7 @@ const callBackForNext = async (state, dispatch) => {
       let modificationContainerValid = true;
       let applicationStatus = get(state.screenConfiguration.preparedFinalObject, "applyScreen.applicationStatus");
       if(applicationStatus == "PENDING_FOR_CONNECTION_ACTIVATION"){
-        console.info("DC-appln in FI and modify mode")
+      
         modificationContainerValid = validateFields("components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.modificationsEffectiveFrom.children.cardContent.children.modificationEffectiveDate.children",state,dispatch);
       
       }
@@ -512,6 +512,7 @@ const callBackForNext = async (state, dispatch) => {
 
     }
         
+ //   console.info("DC-connection valid?",addConnDetailValid)
     //Check one full row is filled/not
     let roadCuttingDataRowValidation =  checkRoadCuttingRowFilledOrNot(state,dispatch,isFormValid);
     let roadCuttingDataValiation = true;      
@@ -737,18 +738,50 @@ const callBackForNext = async (state, dispatch) => {
     return false;
  }
  const validateWaterConnectionDetails =(state)=>{
+  // console.info("DC-validate connection details")
+ 
   let connectionType = get(state.screenConfiguration.preparedFinalObject, "applyScreen.connectionType");
   let  noOfTaps =get(state.screenConfiguration.preparedFinalObject, "applyScreen.noOfTaps");
   let pipeSize = get(state.screenConfiguration.preparedFinalObject, "applyScreen.pipeSize");
+  let usageType =  get(state.screenConfiguration.preparedFinalObject, "applyScreen.usageCategory");
  // let authorizedConnection = get(state.screenConfiguration.preparedFinalObject, "applyScreen.authorizedConnection");
  // let motorInfo = get(state.screenConfiguration.preparedFinalObject, "applyScreen.motorInfo");
   let waterSource = get(state.screenConfiguration.preparedFinalObject, "DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType");
   let waterSubSource = get(state.screenConfiguration.preparedFinalObject, "DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource");
+  let waterSubSourceTransformed = get(state.screenConfiguration.preparedFinalObject,"DynamicMdms.ws-services-masters.waterSource.waterSubSourceTransformed.allDropdown[0]")
   
-  if(connectionType !==null && noOfTaps !==null && pipeSize!==null &&  waterSource!==null && waterSubSource !=="null.null" )
+  //console.info("DC- waterSubSource",waterSubSource)
+  //console.info("DC- waterSubSourceTransformed",waterSubSourceTransformed)
+
+  let waterSubSourceValid = false;
+  if(waterSource !=null){
+    if(waterSubSourceTransformed != undefined ){
+      if(waterSubSourceTransformed[0].code != undefined){
+        let waterSubSrcCheck = waterSubSourceTransformed.filter(item => item.code === waterSubSource);
+        if(waterSubSrcCheck && waterSubSrcCheck.length)
+           waterSubSourceValid = true
+        else
+          waterSubSourceValid = false
+      }
+      else{
+        waterSubSourceValid = true;
+      }
+      
+   }
+  
+  }
+  
+  
+  //console.info("DC sub src..",waterSubSourceValid)
+  if(connectionType !==null && noOfTaps !==null && pipeSize!==null && usageType !=null && waterSource!==null && waterSubSourceValid == true )
      return true;
   else
     return false;
+ 
+  // if(connectionType !==null && noOfTaps !==null && pipeSize!==null &&  waterSource!==null && waterSubSource !=="null.null" && usageType !=null)
+  //    return true;
+  // else
+  //   return false;
  
 
  }
