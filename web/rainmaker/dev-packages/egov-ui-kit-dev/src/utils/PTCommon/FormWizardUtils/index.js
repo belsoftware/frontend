@@ -530,7 +530,8 @@ export const validateUnitandPlotSize = (plotDetails, form) => {
         return unitTotal;
       }, 0);
       const plotSizeInFt = parseFloat(plotDetails.fields.plotSize.value) * 9;
-      if (unitTotal > plotSizeInFt) {
+      const plotSizeInsqft = parseFloat(plotDetails.fields.plotSize.value)
+      if (unitTotal > plotSizeInsqft) {
         alert(`Built-up area of floor ${floorNo} has exceeded the plot size`);
         isValid = false;
       }
