@@ -148,16 +148,21 @@ export const getUnitInfo = (units = [], propertyDetails, oldPropertydetails) => 
         key: getTranslatedLabel("PT_ASSESMENT_INFO_SUB_USAGE_TYPE", localizationLabelsData),
         value: getUnitSubUsageTypeInfo(unit, propertyDetails),
         oldValue: oldPropertydetails && oldPropertydetails.units.name && oldPropertydetails.units[index].name && getUnitSubUsageTypeInfo(oldPropertydetails.units[index].name, oldPropertydetails) || "NA",
+      },
+      {
+      key: getTranslatedLabel("PT_ASSESMENT_INFO_AREA_RENT", localizationLabelsData),
+      value: unit.arv ? unit.arv + '' : "NA",
+      oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && (oldPropertydetails.units[index].arv + '') || "NA",
       }
     ];
     
-      if (unit.occupancyType === "RENTED" || unit.occupancyType === "SELFOCCUPIED") {
-        floor.push({
-          key: getTranslatedLabel("PT_ASSESMENT_INFO_AREA_RENT", localizationLabelsData),
-          value: unit.arv ? unit.arv + '' : "NA",
-          oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && (oldPropertydetails.units[index].arv + '') || "NA",
-        })
-      }
+      // if (unit.occupancyType === "RENTED" || unit.occupancyType === "SELFOCCUPIED") {
+      //   floor.push({
+      //     key: getTranslatedLabel("PT_ASSESMENT_INFO_AREA_RENT", localizationLabelsData),
+      //     value: unit.arv ? unit.arv + '' : "NA",
+      //     oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && (oldPropertydetails.units[index].arv + '') || "NA",
+      //   })
+      // }
       if (!floors[unit['floorNo']]) {
         floors[unit['floorNo']] = [floor];
       } else {

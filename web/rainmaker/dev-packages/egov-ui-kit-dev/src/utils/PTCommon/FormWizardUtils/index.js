@@ -206,7 +206,7 @@ export const configOwnersDetailsFromDraft = (ownerFormKeys, component) => {
 };
 
 const convertBuiltUpAreaToSqFt = (builtUpArea) => {
-  const builtUpAreaTransform = builtUpArea * 9;
+  const builtUpAreaTransform = builtUpArea;
   return Math.round(builtUpAreaTransform * 100) / 100;
 };
 

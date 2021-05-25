@@ -535,7 +535,7 @@ const transform = (floor, key, generalMDMSDataById, propertyDetails) => {
   const { propertySubType, usageCategoryMajor } = propertyDetails;
   const { masterName, dataKey } = key;
   if (!masterName) {
-    return floor["occupancyType"] === "RENTED" || floor["occupancyType"] === "SELFOCCUPIED" ? `INR ${floor["arv"]}` : `${Math.round(floor[dataKey] * 100) / 100} sq ft`;
+    return floor["occupancyType"] ? `INR ${floor["arv"]}` : `${Math.round(floor[dataKey] * 100) / 100} sq ft`;
   } else {
     if (floor[dataKey]) {
       if (dataKey === "usageCategoryDetail") {

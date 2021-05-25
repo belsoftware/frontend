@@ -132,21 +132,21 @@ export const occupancy = {
     },
     dropDownData: [],
     formName: "plotDetails",
-    updateDependentFields: ({ formKey, field: sourceField, dispatch }) => {
-      const { value } = sourceField;
-      const dependentFields1 = ["annualRent"];
-      switch (value) {
-        case "RENTED":
-          setDependentFields(dependentFields1, dispatch, formKey, false);
-          break;
-          case "SELFOCCUPIED":
-            setDependentFields(dependentFields1, dispatch, formKey, false);
-            break;
-        default:
-          setDependentFields(dependentFields1, dispatch, formKey, true);
-          break;
-      }
-    },
+    // updateDependentFields: ({ formKey, field: sourceField, dispatch }) => {
+    //   const { value } = sourceField;
+    //   const dependentFields1 = ["annualRent"];
+    //   switch (value) {
+    //     case "RENTED":
+    //       setDependentFields(dependentFields1, dispatch, formKey, false);
+    //       break;
+    //       case "SELFOCCUPIED":
+    //         setDependentFields(dependentFields1, dispatch, formKey, false);
+    //         break;
+    //     default:
+    //       setDependentFields(dependentFields1, dispatch, formKey, true);
+    //       break;
+    //   }
+    // },
   },
 };
 
@@ -205,7 +205,7 @@ export const annualRent = {
     toolTipMessage: "PT_TOTAL_ANNUAL_RENT_TOOLTIP_MESSAGE",
     required: true,
     pattern: /^([1-9]\d{0,7})(\.\d+)?$/,
-    hideField: true,
+    hideField: false,
     numcols: 4,
     formName: "plotDetails",
   },
@@ -372,15 +372,15 @@ export const beforeInitForm = {
         )
       );
     }
-    if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED") {
+    // if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED") {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // } 
+    // else if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "SELFOCCUPIED") {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // }
+    // else {
       set(action, "form.fields.annualRent.hideField", false);
-    } 
-    else if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "SELFOCCUPIED") {
-      set(action, "form.fields.annualRent.hideField", false);
-    }
-    else {
-      set(action, "form.fields.annualRent.hideField", true);
-    }
+    // }
     return action;
   },
 };
@@ -466,14 +466,14 @@ export const beforeInitFormForPlot = {
       dispatch(prepareFormData(`Properties[0].propertyDetails[0].noOfFloors`, 2));
       // dispatch(prepareFormData(`Properties[0].propertyDetails[0].units[0].floorNo`, -1));
     }
-    if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED" ) {
+    // if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED" ) {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // } else if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "SELFOCCUPIED" ) {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // }
+    // else {
       set(action, "form.fields.annualRent.hideField", false);
-    } else if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "SELFOCCUPIED" ) {
-      set(action, "form.fields.annualRent.hideField", false);
-    }
-    else {
-      set(action, "form.fields.annualRent.hideField", true);
-    }
+    // }
     return action;
   },
 };
