@@ -151,7 +151,7 @@ export const getUnitInfo = (units = [], propertyDetails, oldPropertydetails) => 
       }
     ];
     
-      if (unit.occupancyType === "RENTED") {
+      if (unit.occupancyType === "RENTED" || unit.occupancyType === "SELFOCCUPIED") {
         floor.push({
           key: getTranslatedLabel("PT_ASSESMENT_INFO_AREA_RENT", localizationLabelsData),
           value: unit.arv ? unit.arv + '' : "NA",

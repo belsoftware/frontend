@@ -139,6 +139,9 @@ export const occupancy = {
         case "RENTED":
           setDependentFields(dependentFields1, dispatch, formKey, false);
           break;
+          case "SELFOCCUPIED":
+            setDependentFields(dependentFields1, dispatch, formKey, false);
+            break;
         default:
           setDependentFields(dependentFields1, dispatch, formKey, true);
           break;
@@ -369,9 +372,13 @@ export const beforeInitForm = {
         )
       );
     }
-    if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED") {
+    if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED" || "SELFOCCUPIED") {
       set(action, "form.fields.annualRent.hideField", false);
-    } else {
+    } 
+    // else if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED") {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // }
+    else {
       set(action, "form.fields.annualRent.hideField", true);
     }
     return action;
