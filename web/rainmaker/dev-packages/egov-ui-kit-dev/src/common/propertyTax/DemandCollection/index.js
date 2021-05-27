@@ -61,7 +61,7 @@ class DemandCollection extends React.Component {
         finalData.map((data, index) => {
           return (
             <div>
-              <div key={index}>{data.financialYear}</div>
+              <div key={index}>{index == 0 ? data.financialYear : "Arrears"}</div>
               <Card
                 key={index}
                 style={{ backgroundColor: "white" }}
@@ -149,7 +149,7 @@ class DemandCollection extends React.Component {
                                   }
 
                                 onWheel={event => { event.preventDefault(); }}
-                                disabled={taxData.code==='PT_TIME_REBATE' || (index == 0  ? taxData.code==='PT_TIME_INTEREST' : false ) ||  taxData.code === 'PT_TIME_PENALTY' || taxData.code==='PT_DEMANDNOTICE_CHARGE' ? true : false  }
+                                disabled={taxData.code==='PT_TIME_REBATE' || (index == 0  ? taxData.code==='PT_TIME_INTEREST' : false ) ||  taxData.code === 'PT_TIME_PENALTY' ||(index == 0 ? taxData.code==='PT_DEMANDNOTICE_CHARGE' : false) ? true : false  }
                                 
                               />
                             </div>
