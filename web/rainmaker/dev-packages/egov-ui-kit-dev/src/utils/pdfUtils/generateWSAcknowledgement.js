@@ -21,6 +21,7 @@ export const generateWSAcknowledgement = (preparedFinalObject, fileName = "print
     propertyOwnerDetail.specialApplicantCategory.localiseValue = true;
     propertyOwnerDetail.relationship.localiseValue = true;
     additionDetailsWater.reviewWaterSource.localiseValue=true;
+    additionDetailsWater.reviewConnectionType.localiseValue=true;
     additionDetailsWater.reviewWaterSubSource.localiseValue=true;
     additionDetailsWater.reviewMotorInfo.localiseValue=true;
     additionDetailsWater.reviewAuthorizedConnection.localiseValue=true;
