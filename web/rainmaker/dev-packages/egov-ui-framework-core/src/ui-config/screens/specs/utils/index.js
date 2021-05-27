@@ -650,6 +650,8 @@ export const getPattern = type => {
        // return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,50}$/i;
     case "OldLicenceNo":
         return /^[a-zA-Z0-9-/]{0,64}$/;
+    case "meterReading":
+        return /^[1-9]\d*$/i;
 
   }
 };
