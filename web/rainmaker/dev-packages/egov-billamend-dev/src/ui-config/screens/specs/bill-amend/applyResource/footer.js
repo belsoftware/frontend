@@ -129,7 +129,10 @@ let hasFieldToaster1 = false;
         return;
       }
 
-      if (demandRevisionBasisValue !== "COURT_CASE_SETTLEMENT") {
+      if (demandRevisionBasisValue == "COURT_CASE_SETTLEMENT" || demandRevisionBasisValue == "TRIENNIAL_ASSESSMENT" || demandRevisionBasisValue == "REVISION_IN_DEMAND" || demandRevisionBasisValue == "ERRONEOUS_ENTRIES" || demandRevisionBasisValue == "TRIENNIAL_ASSESSMENT" || demandRevisionBasisValue == "SUPPLIMENTARY_DEMAND_ON_RETROSPECTIVE_EFFECT" || demandRevisionBasisValue == "OBJECTION_AS_PER_CANTT_ACT" || demandRevisionBasisValue == "DUE_TO_SUBDIVISION_OF_PROPERTY" || demandRevisionBasisValue == "ADVANCE_PAYMENT_OF_PROPERTY") {
+        await prepareDocumentsUploadData(state, dispatch);
+        dispatch(prepareFinalObject("AmendmentTemp.amendmentReason", demandRevisionBasisValue));
+      } else {
         const fromDate = get(state.screenConfiguration.preparedFinalObject, "Amendment.effectiveFrom");
         const toDate = get(state.screenConfiguration.preparedFinalObject, "Amendment.effectiveTill");
         if (new Date(fromDate) >= new Date(toDate)) {
@@ -143,9 +146,7 @@ let hasFieldToaster1 = false;
           await prepareDocumentsUploadData(state, dispatch);
           dispatch(prepareFinalObject("AmendmentTemp.amendmentReason", demandRevisionBasisValue));
         }
-      } else {
-        await prepareDocumentsUploadData(state, dispatch);
-        dispatch(prepareFinalObject("AmendmentTemp.amendmentReason", demandRevisionBasisValue));
+        
       }
     }
   }

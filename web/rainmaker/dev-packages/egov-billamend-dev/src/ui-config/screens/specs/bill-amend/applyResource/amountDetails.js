@@ -115,6 +115,24 @@ export const AddDemandRevisionBasis = getCommonCard({
                 md: 6
             }
         }),
+        documentNo: getTextField({
+            label: {
+                labelName: "Document No",
+                labelKey: "BILL_DOCUMNET_NO_LABEL"
+            },
+            placeholder: {
+                labelName: "Enter Document No",
+                labelKey: "BILL_DOCUMENT_NO_PLACEHOLDER"
+            },
+            visible: false,
+            required: true,
+            jsonPath: "Amendment.reasonDocumentNumber",
+            gridDefination: {
+                xs: 12,
+                sm: 12,
+                md: 6
+            }
+        }),
         dateEffectiveFrom: getDateField({
             label: {
                 labelName: "Date Effective From",
@@ -143,24 +161,6 @@ export const AddDemandRevisionBasis = getCommonCard({
             placeholder: {
                 labelName: "Enter Govt Notification No",
                 labelKey: "BILL_GOVT_NOTIFICATION_NO_PLACEHOLDER"
-            },
-            visible: false,
-            required: true,
-            jsonPath: "Amendment.reasonDocumentNumber",
-            gridDefination: {
-                xs: 12,
-                sm: 12,
-                md: 6
-            }
-        }),
-        documentNo: getTextField({
-            label: {
-                labelName: "Document No",
-                labelKey: "BILL_DOCUMNET_NO_LABEL"
-            },
-            placeholder: {
-                labelName: "Enter Document No",
-                labelKey: "BILL_DOCUMENT_NO_PLACEHOLDER"
             },
             visible: false,
             required: true,

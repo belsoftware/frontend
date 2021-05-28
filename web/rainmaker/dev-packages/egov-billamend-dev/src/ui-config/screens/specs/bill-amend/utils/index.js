@@ -253,6 +253,7 @@ export const onDemandRevisionBasis = async (state, dispatch) => {
       break;
     case "DCB_CORRECTION":
     case "REMISSION_FOR_PROPERTY_TAX":
+     
     case "OTHERS":
       dispatch(
         handleField(
@@ -303,6 +304,63 @@ export const onDemandRevisionBasis = async (state, dispatch) => {
         )
       );
       break;
+      case "TRIENNIAL_ASSESSMENT":
+        case "REVISION_IN_DEMAND":
+        case "ERRONEOUS_ENTRIES":
+        case "SUPPLIMENTARY_DEMAND_ON_RETROSPECTIVE_EFFECT":
+        case "OBJECTION_AS_PER_CANTT_ACT":
+        case "DUE_TO_SUBDIVISION_OF_PROPERTY":
+        case "ADVANCE_PAYMENT_OF_PROPERTY":
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.courtOrderNo",
+              "visible",
+              false
+            )
+          );
+         
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.govtNotificationNumber",
+              "visible",
+              false
+            )
+          );
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.documentNo",
+              "visible",
+              true
+            )
+          );
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.dateEffectiveFrom",
+              "visible",
+              true
+            )
+          );
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.fromDate",
+              "visible",
+              false
+            )
+          );
+          dispatch(
+            handleField(
+              "apply",
+              "components.div.children.formwizardThirdStep.children.summary.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.toDate",
+              "visible",
+              false
+            )
+          );
+          break;
     default:
 
       break;

@@ -363,6 +363,7 @@ export const onDemandRevisionBasisHidendShowFields = async (state, dispatch, act
                 true
             );
             break;
+
         case "DCB_CORRECTION":
         case "REMISSION_FOR_PROPERTY_TAX":
         case "OTHERS":
@@ -400,6 +401,45 @@ export const onDemandRevisionBasisHidendShowFields = async (state, dispatch, act
 
 
             break;
+            case "TRIENNIAL_ASSESSMENT":
+                case "REVISION_IN_DEMAND":
+                case "ERRONEOUS_ENTRIES":
+                case "SUPPLIMENTARY_DEMAND_ON_RETROSPECTIVE_EFFECT":
+                case "OBJECTION_AS_PER_CANTT_ACT":
+                case "DUE_TO_SUBDIVISION_OF_PROPERTY":
+                case "ADVANCE_PAYMENT_OF_PROPERTY":
+                    set(
+                        action,
+                        "screenConfig.components.div.children.bodyDiv.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.courtOrderNo.visible",
+                        false
+                    );
+                    set(
+                        action,
+                        "screenConfig.components.div.children.bodyDiv.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.govtNotificationNumber.visible",
+                        false
+                    );
+        
+                    set(
+                        action,
+                        "screenConfig.components.div.children.bodyDiv.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.documentNo.visible",
+                        true
+                    );
+                    set(
+                        action,
+                        "screenConfig.components.div.children.bodyDiv.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.dateEffectiveFrom.visible",
+                        true
+                    );
+                    set(
+                        action,
+                        "screenConfig.components.div.children.bodyDiv.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.fromDate.visible",
+                        false
+                    );
+                    set(
+                        action,
+                        "screenConfig.components.div.children.bodyDiv.children.cardContent.children.grayDiv.children.cardContent.children.demandRevisionContainer.children.toDate.visible",
+                        false
+                    );
+break;
         default:
 
             break;
