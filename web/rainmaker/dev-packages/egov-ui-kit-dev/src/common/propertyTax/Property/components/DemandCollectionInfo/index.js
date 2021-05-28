@@ -32,7 +32,7 @@ class DemandCollectionInfo extends React.Component {
                       <div>
                       <div>
                       <div className="col-sm-12 col-xs-12" style={{ padding: "5px 0px 0px 15px" }}>
-                       <b>{datas}</b>
+                       <b>{index == 0 ? datas : "Arrears"}</b>
                        </div>
                         {demand.demand[datas].map((data, ind) => {
                           if(Object.keys(data).length==2){
