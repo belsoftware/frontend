@@ -3,6 +3,7 @@ import { setDependentFields } from "./utils/enableDependentFields";
 import get from "lodash/get";
 import set from "lodash/set";
 import { setFieldProperty, handleFieldChange } from "egov-ui-kit/redux/form/actions";
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
 const formConfig = {
   name: "ownerInfo",
@@ -281,13 +282,26 @@ const formConfig = {
       // if (get(state, `form.${formKey}.fields.ownerRelationship.value`, "NONE") === "NONE") {
       //   dispatch(handleFieldChange(formKey, "ownerRelationship", "FATHER"));
       // }
+      if(getQueryArg(window.location.href,  "purpose") == 'update'){
+        dispatch(setFieldProperty(formKey, "ownerName", "disabled", true));
+      } else {
+        dispatch(setFieldProperty(formKey, "ownerName", "disabled", false));
 
+      }
       if (get(state, `form.${formKey}.fields.ownerCategory.value`, "NONE") === "NONE") {
         dispatch(setFieldProperty(formKey, "ownerCategoryId", "hideField", true));
         dispatch(setFieldProperty(formKey, "ownerCategoryIdType", "hideField", true));
       } else {
         dispatch(setFieldProperty(formKey, "ownerCategoryId", "hideField", false));
         dispatch(setFieldProperty(formKey, "ownerCategoryIdType", "hideField", false));
+      }
+
+      if (get(state, `form.${formKey}.fields.isSameAsPropertyAddress.value`, false)) {
+        dispatch(setFieldProperty(formKey, "ownerAddress", "disabled", true));
+
+      } else {
+        dispatch(setFieldProperty(formKey, "ownerAddress", "disabled", false));
+
       }
       const currentCategory = get(state, `form.${action.form.name}.fields.ownerCategory.value`, "NONE");
       let documentTypes = get(

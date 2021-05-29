@@ -391,7 +391,7 @@ class Property extends Component {
     />
     } */
     let payLen = Payments && Payments.find(item =>{
-      return item && item.instrumentStatus === "APPROVED"
+      return item && item.instrumentStatus === "APPROVED" || item.instrumentStatus === "REMITTED"
     });
     return (
       <Screen className={clsName} loading={loading}>
@@ -433,7 +433,8 @@ class Property extends Component {
         }        
 
                       
-         {!isCitizen && Payments.length<=0 &&
+{isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
+        || !payLen ) &&
            <Button
            className="tax-button"
               label={
