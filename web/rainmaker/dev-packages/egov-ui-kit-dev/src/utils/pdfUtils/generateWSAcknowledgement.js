@@ -15,6 +15,8 @@ export const generateWSAcknowledgement = (preparedFinalObject, fileName = "print
     connectionHolderDetails.gender.localiseValue = true;
     connectionHolderDetails.relationship.localiseValue = true;
     connectionHolderDetails.specialApplicantCategory.localiseValue = true;
+    plumberDetails.reviewPlumberProvidedBy.localiseValue = true;
+    roadDetails.reviewRate.localiseValue = true;
     //roadDetails.localiseValue = true;
     roadDetails.getCommonContainerreviewRoadType.localiseValue = true;
     propertyOwnerDetail.gender.localiseValue = true;
