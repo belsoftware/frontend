@@ -91,7 +91,7 @@ export const generateWSAcknowledgement = (preparedFinalObject, fileName = "print
 
     let ownerDetail = []
     let ownerDetailInfo = []
-    if (WaterConnection.property.owners.length > 1) {
+    if (WaterConnection.property && WaterConnection.property.owners && WaterConnection.property.owners.length > 1) {
         ownerDetailInfo = getMultiItems(preparedFinalObject, propertyOwnerDetail, 'WaterConnection[0].property.owners')
         ownerDetail = getMultipleItemCard(ownerDetailInfo, 'WS_OWNER');
     } else {
