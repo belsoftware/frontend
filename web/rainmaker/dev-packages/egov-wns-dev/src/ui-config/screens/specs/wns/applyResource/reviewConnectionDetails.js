@@ -8,6 +8,7 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { changeStep } from "./footer";
 import { convertEpochToDateAndHandleNA, handlePropertySubUsageType, handleNA } from '../../utils';
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
 
 const getHeader = label => {
@@ -120,11 +121,21 @@ const propertyLocationDetails = {
             labelName: "City",
             labelKey: "WS_PROP_DETAIL_CITY"
           },
-          { jsonPath: "applyScreen.property.address.city", callBack: handleNA },
+          {
+            localePrefix: {
+              moduleName: "TENANT_TENANTS",
+              masterName: "PB"
+            },
+             jsonPath: "applyScreen.property.address.city", callBack: handleNA },
           {
             labelKey: "WS_OLD_LABEL_NAME"
           },
-          { jsonPath: "applyScreenOld.property.address.city", callBack: handleNA },
+          { 
+            localePrefix: {
+              moduleName: "TENANT_TENANTS",
+              masterName: "PB"
+            },
+            jsonPath: "applyScreenOld.property.address.city", callBack: handleNA },
         ),
         reviewLocation: getLabelWithValueForModifiedLabel(
           {
@@ -185,11 +196,21 @@ const propertyLocationDetails = {
             labelName: "Locality/Mohalla",
             labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL"
           },
-          { jsonPath: "applyScreen.property.address.locality.name", callBack: handleNA },
+          { 
+            localePrefix: {
+              moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : "",
+              masterName: "REVENUE"
+            },
+            jsonPath: "applyScreen.property.address.locality.code", callBack: handleNA },
           {
             labelKey: "WS_OLD_LABEL_NAME"
           },
-          { jsonPath: "applyScreenOld.property.address.locality.name", callBack: handleNA },
+          { 
+            localePrefix: {
+              moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : "",
+              masterName: "REVENUE"
+            },
+            jsonPath: "applyScreenOld.property.address.locality.code", callBack: handleNA },
         ),
         // reviewPincode: getLabelWithValueForModifiedLabel(
         //   {
@@ -681,6 +702,10 @@ export const taskApplicationType = getLabelWithValueForModifiedLabel(
     labelKey: "WS_APPLY_FOR"
   },
   {
+    localePrefix: {
+      moduleName: "WS",
+      masterName: "APPLY"
+    },
     jsonPath: "applyScreen.service",
     callBack: handleNA
   },
