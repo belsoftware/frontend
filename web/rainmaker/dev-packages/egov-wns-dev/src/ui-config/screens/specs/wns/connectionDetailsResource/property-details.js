@@ -5,7 +5,7 @@ import {
   getLabelWithValue,
   getLabel
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { changeStep } from "../viewBillResource/footer";
 
 import { handlePropertySubUsageType, handleNA } from '../../utils';
@@ -114,6 +114,10 @@ const propertyLocationDetails = getCommonContainer({
       labelKey: "WS_PROP_DETAIL_CITY"
     },
     {
+      localePrefix: {
+        moduleName: "TENANT_TENANTS",
+        masterName: "PB"
+      },
       jsonPath: "WaterConnection[0].property.address.city",
     }
   ),
@@ -159,7 +163,11 @@ const propertyLocationDetails = getCommonContainer({
       labelKey: "WS_PROP_DETAIL_LOCALITY_LABEL"
     },
     {
-      jsonPath: "WaterConnection[0].property.address.locality.name",
+      localePrefix: {
+        moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : "",
+        masterName: "REVENUE"
+      },
+      jsonPath: "WaterConnection[0].property.address.locality.code",
     }
   ),
   // pincode: getLabelWithValue(

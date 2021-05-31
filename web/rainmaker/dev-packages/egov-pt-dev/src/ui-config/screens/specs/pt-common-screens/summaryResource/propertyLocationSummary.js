@@ -53,6 +53,10 @@ export const propertyLocationSummary = getCommonGrayCard({
         labelKey: "PT_COMMON_CITY"
       },
       {
+        localePrefix: {
+          moduleName: "TENANT_TENANTS",
+          masterName: "PB"
+        },
         jsonPath: "Property.address.city"
       }
     ),
