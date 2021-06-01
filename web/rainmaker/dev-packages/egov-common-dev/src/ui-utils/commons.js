@@ -804,7 +804,7 @@ export const downloadMultipleBill = async (bills = [], configKey) => {
     ]
     downloadPTBill(billQueryStr,"download"); 
   }
-  if(bills && bills[0].businessService=='WS' || bills && bills[0].businessService=='SW'){
+  else if(bills && bills[0].businessService=='WS' || bills && bills[0].businessService=='SW'){
     let consumerNos = '';
     for (var i = 0; i < bills.length; i++) {
       consumerNos += bills[i]['consumerCode'] + ",";
