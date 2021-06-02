@@ -512,7 +512,7 @@ export const normalizePropertyDetails = (properties, self) => {
   return propertyInfo;
 };
 
-export const validateUnitandPlotSize = (plotDetails, form) => {
+export const validateUnitandPlotSize = (plotDetails, form, toggleSnackbarAndSetText) => {
   //needs to be in utils
   let isValid = true;
   Object.keys(form).forEach((formKey, ind) => {
@@ -532,8 +532,22 @@ export const validateUnitandPlotSize = (plotDetails, form) => {
       const plotSizeInFt = parseFloat(plotDetails.fields.plotSize.value) * 9;
       const plotSizeInsqft = parseFloat(plotDetails.fields.plotSize.value)
       if (unitTotal > plotSizeInsqft) {
-        alert(`Built-up area of floor ${floorNo} has exceeded the plot size`);
-        isValid = false;
+       // alert(`Built-up area of floor ${floorNo} has exceeded the plot size`);
+       if(toggleSnackbarAndSetText){
+        toggleSnackbarAndSetText(
+          true,
+          {
+            labelName: `Built-up area of floor ${floorNo} has exceeded the plot size`,
+            labelKey: `Built-up area of floor ${floorNo} has exceeded the plot size`
+          },
+          "error"
+        );
+    
+        
+       }
+       else
+       alert(`Built-up area of floor ${floorNo} has exceeded the plot size`);
+       isValid = false;
       }
     }
   });
