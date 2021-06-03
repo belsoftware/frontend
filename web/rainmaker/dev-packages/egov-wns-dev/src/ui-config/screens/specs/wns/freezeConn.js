@@ -8,15 +8,16 @@ import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
 import set from "lodash/set";
-import { httpRequest } from "../../../../../ui-utils";
+import { httpRequest } from "../../../../ui-utils";
 
-import './index.css'
+import './freezeConnection/index.css'
 
 const screenConfig = {
     uiFramework: "material-ui",
-    name: "freezeConnection",
+    name: "freezeConn",
     beforeInitScreen: (action, state, dispatch) => {
        // pageReset(dispatch);
+       console.log("in this paage ---------->>>");
         let consumerCode = getQueryArg(window.location.href, "consumerCode");
         let tenantId = getQueryArg(window.location.href, "tenantId");
         let businessService = getQueryArg(window.location.href, "businessService");
@@ -28,7 +29,7 @@ const screenConfig = {
             componentPath: "Form",
             props: {
                 className: "common-div-css",
-                id: "pay"
+                id: "index"
             },
             children: {
                 headerDiv: {
