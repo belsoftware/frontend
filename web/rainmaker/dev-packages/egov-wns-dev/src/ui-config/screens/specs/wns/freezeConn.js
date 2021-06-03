@@ -29,7 +29,7 @@ const screenConfig = {
             componentPath: "Form",
             props: {
                 className: "common-div-css",
-                id: "index"
+                id: "freezeConn"
             },
             children: {
                 headerDiv: {

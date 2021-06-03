@@ -10,10 +10,10 @@ import { getQueryArg, setBusinessServiceDataToLocalStorage, setDocuments } from 
 import { loadUlbLogo } from "egov-ui-kit/utils/pdfUtils/generatePDF";
 import get from "lodash/get";
 import set from "lodash/set";
-import { findAndReplace, getDescriptionFromMDMS, getSearchResults, getSearchResultsForSewerage, getWaterSource, getWorkFlowData, isModifyMode, serviceConst, swEstimateCalculation, waterEstimateCalculation, getConsumptionDetails } from "../../../../ui-utils/commons";
+import { findAndReplace, getDescriptionFromMDMS, getSearchResults, getSearchResultsForSewerage, getWaterSource, getWorkFlowData, isModifyMode, serviceConst, swEstimateCalculation, waterEstimateCalculation,waterBillEstimateCalculation, getConsumptionDetails } from "../../../../ui-utils/commons";
 import {
   convertDateToEpoch, createEstimateData,
-  getDialogButton, getFeesEstimateOverviewCard,
+  getDialogButton,getBillEstimateDialogButton, getFeesEstimateOverviewCard,
   getTransformedStatus, showHideAdhocPopup
 } from "../utils";
 import { downloadPrintContainer } from "../wns/acknowledgement";
@@ -157,6 +157,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
      
         
       let estimate;
+      let billEstimate;
       if (processInstanceAppStatus === "CONNECTION_ACTIVATED") {
         let connectionNumber = parsedObject.connectionNo;
         set(action.screenConfig, "components.div.children.headerDiv.children.header1.children.connection.children.connectionNumber.props.number", connectionNumber);
@@ -182,6 +183,18 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
               dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
             }
           }
+          billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);
+          if (billEstimate !== null && billEstimate !== undefined) {
+           
+            if (billEstimate.BillEstimation != undefined) {
+              
+              //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
+              //estimate.Calculation[0].appStatus = processInstanceAppStatus;
+              dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
+            }
+          }
+
+
         } else {
           let queryObjectForEst = [{
             applicationNo: applicationNumber,
@@ -371,7 +384,6 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
   }
 
   dispatch(prepareFinalObject("WaterConnection[0].tempRoadType",newRoad));
-  //Populate Road cutting -DC
  
 
 
@@ -380,7 +392,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
     displayRoadCuttingEstimate(newRoad[i],i,dispatch);
   }
 
-  //Populate road cutting end-DC
+ 
 
 
   //If Road cutting is not entered
@@ -565,6 +577,12 @@ const estimate = getCommonGrayCard({
     "WS_PAYMENT_VIEW_BREAKUP",
     "search-preview"
   ),
+  viewBillBtn: getBillEstimateDialogButton(
+    "VIEW BILL ESTIMATE",
+    "WS_BILL_ESTIMATE_VIEW",
+    "search-preview"
+  ),
+
   // addPenaltyRebateButton: {
   //   componentPath: "Button",
   //   props: {
@@ -621,7 +639,7 @@ const setActionItems = (action, object) => {
 
 export const taskDetails = getCommonCard({
   title,
-  estimate,
+  estimate, 
   reviewConnectionDetails,
   reviewDocumentDetails,
   reviewOwnerDetails,
@@ -783,6 +801,20 @@ const screenConfig = {
         screenKey: "search-preview",
       }
     },
+
+    billEstimateDialog:{
+      uiFramework: "custom-containers-local",
+      moduleName: "egov-wns",
+      componentPath: "ViewBillEstimateContainer",
+      props: {
+        open: false,
+        maxWidth: "md",
+        screenKey: "search-preview",
+      }
+    },
+
+
+
     adhocDialog: {
       uiFramework: "custom-containers-local",
       moduleName: "egov-wns",
@@ -802,7 +834,7 @@ const screenConfig = {
 //----------------- search code (feb17)---------------------- //
 const searchResults = async (action, state, dispatch, applicationNumber, processInstanceAppStatus) => {
   let queryObjForSearch = [{ key: "tenantId", value: tenantId }, { key: "applicationNumber", value: applicationNumber }]
-  let viewBillTooltip = [], estimate, payload = [];
+  let viewBillTooltip = [], estimate,billEstimate, payload = [];
   if (service === serviceConst.WATER) {
     payload = [];
     payload = await getSearchResults(queryObjForSearch);
@@ -866,6 +898,17 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
         dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
       }
     }
+
+    billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);
+   if (billEstimate !== null && billEstimate !== undefined) {
+     
+      if (billEstimate.BillEstimation != undefined) {
+        //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
+        //estimate.Calculation[0].appStatus = processInstanceAppStatus;
+        dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
+      }
+    }
+
 
     if (isModifyMode()) {
       let connectionNo = payload.WaterConnection[0].connectionNo;
