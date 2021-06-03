@@ -194,7 +194,7 @@ class Footer extends React.Component {
           }
            store.dispatch(
             setRoute(
-              `/wns/freezeConnection/index?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=FREEZE`
+              `/wns/freezeConn?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=FREEZE`
             )
           );
  
