@@ -95,7 +95,7 @@ function FeesEstimateCard(props) {
                             <Grid xs={4} align="right">
                             <LabelContainer
                              labelName="Demand Amount(Rs)" 
-                             labelKey=  "BILL_CURRENT_DEMAND"
+                             labelKey=  "CURRENT_DEMAND"
                              style={{fontWeight:"bold"}}
                             />
                             </Grid>
