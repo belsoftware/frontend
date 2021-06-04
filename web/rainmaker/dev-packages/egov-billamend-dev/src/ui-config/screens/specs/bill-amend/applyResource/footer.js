@@ -8,7 +8,8 @@ import {
   prepareDocumentsUploadData,
   validateFields,
   onDemandRevisionBasis,
-  submitApplication
+  submitApplication,
+  getPropertyDetails
 } from "../utils";
 import {
   toggleSnackbar,
@@ -53,17 +54,41 @@ export const summaryAdjustmentAmountDetails = async(state, dispatch) => {
   const amountType = get (state.screenConfiguration.preparedFinalObject, "BILL.AMOUNTTYPE", "");
   let billDetails = [];
   fetchBillDetails.map(bill => {
-    if (bill.reducedAmountValue || bill.additionalAmountValue) {
+    // if (bill.reducedAmountValue || bill.additionalAmountValue) {
       billDetails.push({
         taxHeadMasterCode: bill.taxHeadCode,
         taxAmount: amountType == "reducedAmount" ? parseFloat(bill.reducedAmountValue) : parseFloat(bill.additionalAmountValue),
-        amountType: amountType
+        amountType: amountType,
+        demand: bill.demand
       });
-    }
+  //  }
   });
   dispatch(prepareFinalObject("AmendmentTemp[0].estimateCardData", billDetails, []));
 }
 
+
+
+export const getPropetyAddressDetails = async( dispatch) => {
+  const tenantId = getTenantId() || getQueryArg(window.location.href, "tenantId");
+  const businessService = getQueryArg( window.location.href, "businessService");
+  const connectionNumber = getQueryArg(window.location.href, "connectionNumber");
+  let response = await getPropertyDetails([
+      {
+          
+              key: "tenantId",
+              value: tenantId     
+      },
+      {
+        key: "propertyIds",
+        value: connectionNumber
+      }
+  ])
+
+  let propertyDetails= get(response, "Properties", []);
+  dispatch(prepareFinalObject("Properties[0]", propertyDetails[0]));
+  
+  console.log("propertyDetails1--");
+}
 export const getSummaryRequiredDetails = async (state, dispatch) => {
   const effectiveFrom = get (state.screenConfiguration.preparedFinalObject, "Amendment.effectiveFrom", "");
   const effectiveTill = get (state.screenConfiguration.preparedFinalObject, "Amendment.effectiveTill", "");
@@ -78,6 +103,9 @@ export const getSummaryRequiredDetails = async (state, dispatch) => {
   await onDemandRevisionBasis(state, dispatch);
   await preparingDocumentsReview(state, dispatch);
   await summaryAdjustmentAmountDetails(state, dispatch);
+  await getPropetyAddressDetails(dispatch);
+  
+  
 
 }
 

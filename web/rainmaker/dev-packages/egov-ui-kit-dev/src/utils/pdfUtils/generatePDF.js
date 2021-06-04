@@ -296,6 +296,46 @@ export const getDocumentsCard = (documentsUploadRedux) => {
         return { key: getLocaleLabels(item.title, item.title), value: item.name }
     })
 }
+export const getPropertyCard = (item) => {
+  let keyValue = []
+
+           
+  keyValue.push({
+     
+        key : getLocaleLabels("PT_OWNER_NAME", "PT_OWNER_NAME"),
+        value : item.owners[0].name 
+      
+  })
+  keyValue.push({
+     
+    key : getLocaleLabels("PT_HOUSE_NO", "PT_HOUSE_NO"),
+    value : item.address.doorNo 
+  
+}) 
+keyValue.push({
+     
+    key : getLocaleLabels("PT_STREET_NO", "PT_STREET_NO"),
+    value : item.address.street 
+  
+})   
+keyValue.push({
+     
+    key : getLocaleLabels("PT_LOCATION", "PT_LOCATION"),
+    value : item.address.location 
+  
+})  
+keyValue.push({
+     
+    key : getLocaleLabels("PT_WARD", "PT_WARD"),
+    value : item.address.locality.name 
+  
+}) 
+
+        
+         return keyValue;   
+       
+
+}
 
 
 export const generateKeyValue = (preparedFinalObject, containerObject) => {

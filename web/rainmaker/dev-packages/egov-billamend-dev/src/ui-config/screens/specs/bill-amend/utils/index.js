@@ -373,8 +373,10 @@ export const submitApplication = async (state, dispatch) => {
   let fetchBillDetails = get(state.screenConfiguration.preparedFinalObject, "fetchBillDetails", []);
   let billDetail = get(state.screenConfiguration.preparedFinalObject, "billDetail", {});
   let amountType = get(state.screenConfiguration.preparedFinalObject, "BILL.AMOUNTTYPE", "");
+ let PropertyDetail = get(state.screenConfiguration.preparedFinalObject, "Properties", {})
   let reduxDocuments = get(state, "screenConfiguration.preparedFinalObject.documentsUploadRedux", {});
   let documentsPreview = [], demandDetails = [];;
+ let properties = [];
   jp.query(reduxDocuments, "$.*").forEach(doc => {
     if (doc.documents && doc.documents.length > 0 && doc.dropdown) {
       doc.documents.forEach(docDetail => {
@@ -390,11 +392,12 @@ export const submitApplication = async (state, dispatch) => {
   });
 
   fetchBillDetails.map(data => {
-    if (data.reducedAmountValue || data.additionalAmountValue) {
+     if (data.reducedAmountValue || data.additionalAmountValue) {
       let obj = {};
       obj.taxHeadMasterCode = data.taxHeadCode;
       obj.tenantId = data.tenantId;
       obj.collectionAmount = data.collectionAmount;
+     //obj.demand = data.demand
       if (amountType == "reducedAmount") {
         obj.taxAmount = data.reducedAmountValue ? -data.reducedAmountValue : 0;
       } else {
@@ -403,9 +406,19 @@ export const submitApplication = async (state, dispatch) => {
       demandDetails.push(obj);
     }
   });
+  
+ 
+ let obj1 ={}
+obj1.name=PropertyDetail[0].owners[0].name;
+obj1.doorNo= PropertyDetail[0].address.doorNo;
+obj1.street = PropertyDetail[0].address.street;
+obj1.location=PropertyDetail[0].address.location;
+obj1.localityName=PropertyDetail[0].address.locality.name;
+properties.push(obj1);
 
   billAmdDetails.documents = documentsPreview && documentsPreview.length > 0 ? documentsPreview : null;
   billAmdDetails.demandDetails = demandDetails;
+  billAmdDetails.Properties=properties;
 
   if (get(billAmdDetails, "effectiveFrom")) {
     billAmdDetails.effectiveFrom = convertDateToEpoch(get(billAmdDetails, "effectiveFrom"));
@@ -428,8 +441,10 @@ export const submitApplication = async (state, dispatch) => {
       [],
       { Amendment: billAmdDetails }
     );
-    dispatch(prepareFinalObject("Amendment", response.Amendments[0]));
-
+    let Amendmentss = response.Amendments[0];
+Amendmentss.Properties=properties
+    //dispatch(prepareFinalObject("Amendment", response.Amendments[0]));
+     dispatch(prepareFinalObject("Amendment",Amendmentss ));
     dispatch(
       setRoute(`/bill-amend/acknowledgement?purpose=apply&status=success&applicationNumber=${response.Amendments[0].amendmentId}&consumerCode=${response.Amendments[0].consumerCode}&tenantId=${response.Amendments[0].tenantId}&businessService=${response.Amendments[0].businessService}`)
     );

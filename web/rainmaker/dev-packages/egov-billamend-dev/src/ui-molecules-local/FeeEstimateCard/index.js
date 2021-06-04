@@ -89,10 +89,17 @@ function FeesEstimateCard(props) {
                 <div style={{ marginTop: 48, maxWidth: 400 }}>
                     <Grid container >
                         <Grid container style={{ marginBottom: 10 }}>
-                            <Grid container xs={6}>
+                            <Grid container xs={4}>
                                 <LabelContainer labelName="Tax Heads" labelKey="BILL_TAX_HEADS" style={{fontWeight:"bold"}}/>
                             </Grid>
-                            <Grid xs={6} align="right">
+                            <Grid xs={4} align="right">
+                            <LabelContainer
+                             labelName="Demand Amount(Rs)" 
+                             labelKey=  "BILL_CURRENT_DEMAND"
+                             style={{fontWeight:"bold"}}
+                            />
+                            </Grid>
+                            <Grid xs={4} align="right">
                             <LabelContainer 
                             labelName="Reduced Amount(Rs)" 
                             labelKey= {get(estimate, "fees[0].amountType", "") === "reducedAmount" ? "BILL_REDUCED_AMOUNT_RS" : "BILL_ADDITIONAL_AMOUNT_RS"}
@@ -106,7 +113,7 @@ function FeesEstimateCard(props) {
                                     ""
                                 );
                             let textLeft = fee.taxHeadMasterCode ? (
-                                <Grid container xs={8}>
+                                <Grid container xs={4}>
                                     <LabelContainer 
                                         labelKey = {getTransformedLocale(`BILL_${fee.taxHeadMasterCode}`)}
                                         className={classes.taxHeadMasterCodes}
@@ -117,6 +124,13 @@ function FeesEstimateCard(props) {
                             ) : (
                                     <Grid xs={8} />
                                 );
+                                let textMiddle = (
+                                    <Grid xs={4} align="right">
+                                        <Typography variant="body2" className={classes.taxHeadMasterCodes}>
+                                            {fee.demand}
+                                        </Typography>
+                                    </Grid>
+                                )    
                             let textRight = fee ? (
                                 <Grid xs={4} align="right">
                                     <Typography variant="body2" className={classes.taxHeadMasterCodes}>
@@ -129,6 +143,7 @@ function FeesEstimateCard(props) {
                             return (
                                 <Grid container>
                                     {textLeft}
+                                    {textMiddle}
                                     {textRight}
                                 </Grid>
                             );

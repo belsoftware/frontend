@@ -64,7 +64,7 @@ const searchResults = async (dispatch, applicationNo, tenantId, businessService)
         "Amendments[0]",
         {}
       )))
-
+      dispatch(prepareFinalObject("Properties[0]", connectionDetail));
 };
 
 const downloadprintMenu = (state, dispatch, status) => {

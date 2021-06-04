@@ -315,6 +315,7 @@ const screenConfig = {
     dispatch(prepareFinalObject("documentsContract", []));
     dispatch(prepareFinalObject("AmendmentTemp.isPreviousDemandRevBasisValue", true));
     dispatch(prepareFinalObject("DemandPropertiesResponse", []));
+    dispatch(prepareFinalObject("Properties", {}))
     getData(action, state, dispatch).then(responseAction => {
 
     });

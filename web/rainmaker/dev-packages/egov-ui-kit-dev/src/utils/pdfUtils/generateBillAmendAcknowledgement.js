@@ -1,7 +1,7 @@
 // import { tradeInstitutionDetails, tradeOwnerDetails } from "egov-tradelicence/ui-config/screens/specs/tradelicence/applyResource/review-owner";
 // import { tradeAccessoriesDetails, tradeLocationDetails, tradeReviewDetails, tradetypeDetails } from "egov-tradelicence/ui-config/screens/specs/tradelicence/applyResource/review-trade";
 import { billAmendDemandRevisionContainer } from "egov-billamend/ui-config/screens/specs/bill-amend/search-preview";
-import { generateKeyValue, generatePDF, getDocumentsCard, getEstimateCardDetails } from "./generatePDF";
+import { generateKeyValue, generatePDF,getPropertyCard, getDocumentsCard, getEstimateCardDetails } from "./generatePDF";
 import { getFromObject } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
 import { getLocaleLabels } from "egov-ui-framework/ui-utils/commons";
 
@@ -64,7 +64,8 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
                 labelName: demand.taxHeadMasterCode,
                 labelKey: demand.taxHeadMasterCode
             },
-            value: demand.taxAmount == 0 ? '0' : Math.abs(demand.taxAmount)
+            value: Math.abs(demand.taxAmount),
+           
         })
     })
 
@@ -72,7 +73,8 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
     const documentCard = getDocumentsCard(documentsUploadRedux);
     const estimateDetails = getEstimateCardDetails(estimateCardData, undefined, false, true,true)
     const billAmendDemandRevisionSummary = generateKeyValue(preparedFinalObject, modifiedDemand);
-
+ const propertydetails = getFromObject(preparedFinalObject, 'Properties[0]', []);
+ const propertyCard = getPropertyCard(propertydetails)
     let pdfData = {
         header: "BILLAMEND_APPLICATION", tenantId: Amendment.tenantId,
         applicationNoHeader: 'BILLAMEND_APPLICATIONNO', applicationNoValue: Amendment.amendmentId,
@@ -81,7 +83,9 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
             { header: "BILL_ADJUSTMENT_AMOUNT_DETAILS", type: 'header' },
             { items: estimateDetails, type: 'estimate' },
             { header: "BILL_DEMAND_REVISION_BASIS_DETAILS", items: billAmendDemandRevisionSummary },
-            { header: 'BILL_DOCUMENTS', items: documentCard }]
+            { header: 'BILL_DOCUMENTS', items: documentCard },
+             {header: 'BILL_PROPERTY_DETAILS', items: propertyCard }
+        ]
     }
 
     generatePDF(UlbLogoForPdf, pdfData, fileName,true);

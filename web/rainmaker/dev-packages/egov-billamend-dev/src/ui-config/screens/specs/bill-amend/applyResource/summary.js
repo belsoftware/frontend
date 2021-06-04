@@ -54,6 +54,10 @@ const headerrow = getCommonContainer({
         }
     },
 });
+export const checkValueForNA = value => {
+    return value == null || value == undefined || value == '' ? "NA" : value;
+  };
+ 
 
 const summary = getCommonCard({
     title: getCommonTitle({ labelName: "Summary", labelKey: "BILL_SUMMARY" }),
@@ -186,6 +190,84 @@ const summary = getCommonCard({
         }),
 
     }),
-    documents: getReviewDocuments(true, false)
+    documents: getReviewDocuments(true, false),
+    propertyInfo: getCommonGrayCard({
+        headerDiv: {
+            uiFramework: "custom-atoms",
+            componentPath: "Container",
+            children: {
+                header: {
+                    gridDefination: {
+                        xs: 12,
+                        sm: 10
+                    },
+                    ...getCommonSubHeader({
+                        labelName: "Property Details",
+                        labelKey: "BILL_PROPERTY_DETAILS"
+                    })
+
+                },
+                propertydetails: getCommonContainer({
+                    AssesseName: getLabelWithValue(
+                        {
+                            labelName: "Assess name",
+                            labelKey: "PT_OWNER_NAME"
+                        },
+                        {
+                            jsonPath: "Properties[0].owners[0].name"
+                        }
+
+                    ),
+                    houseNo: getLabelWithValue(
+                        {
+                            labelName: "houseNo",
+                            labelKey: "PT_HOUSE_NO"
+                        },
+                        {
+                            jsonPath: "Properties[0].address.doorNo",
+                            callBack: checkValueForNA
+                        }
+                    ),
+                    street: getLabelWithValue(
+                        {
+                            labelName: "strret",
+                            labelKey: "PT_STREET_NO"
+                        },
+                        {
+                            jsonPath: "Properties[0].address.street",
+                            callBack: checkValueForNA
+                        }
+                    ),
+                    location: getLabelWithValue(
+                        {
+                            labelName: "location",
+                            labelKey: "PT_LOCATION"
+                        },
+                        {
+                            jsonPath: "Properties[0].address.location"
+
+                        }
+                    ),
+                    ward: getLabelWithValue(
+                        {
+                            labelName: "Ward",
+                            labelKey: "PT_WARD"
+                        },
+                        {
+                            jsonPath: "Properties[0].address.locality.name"
+                        }
+                    ),
+
+
+                }),
+
+
+            }
+        }
+
+    })
+
+
+
 })
 export default summary;
