@@ -203,7 +203,9 @@ class DemandCollection extends React.Component {
 
                                 }}
                                 onWheel={event => { event.preventDefault(); }}
-                                disabled={taxData.isDebit}
+                               // disabled={taxData.isDebit}
+                                disabled={taxData.code==='PT_TIME_REBATE' || (index == 0  ? taxData.code==='PT_TIME_INTEREST' : false ) ||(index == 0 ? taxData.code==='PT_DEMANDNOTICE_CHARGE' : false) ? true : false  }
+                                
                               />
                             </div>
                           );
