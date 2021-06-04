@@ -45,7 +45,10 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
             delete modifiedDemand.govtNotificationNumber
     }
     const demandDetails = getFromObject(preparedFinalObject, 'Amendment.demandDetails', []);
+    const estdemandDetails = getFromObject(preparedFinalObject, 'AmendmentTemp[0].estimateCardData', []);
+    console.log("estdemandDetails",estdemandDetails);
     const estimateCardData =[];
+    const demanddata = [];
     // const estimateCardData = [{
     //     name: {
     //         labelName: 'BILL_TAX_HEADS',
@@ -67,14 +70,29 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
             value: Math.abs(demand.taxAmount),
            
         })
+
     })
 
+    estdemandDetails.map(est => {
+
+        demanddata.push({
+            name: {
+                labelName: est.taxHeadMasterCode,
+                labelKey: est.taxHeadMasterCode
+            },
+            value: Math.abs(est.demand),
+           
+        })
+
+    })
+
+console.log("demanddata:",demanddata);
     const documentsUploadRedux = getFromObject(preparedFinalObject, 'bill-amend-review-document-data', []);
     const documentCard = getDocumentsCard(documentsUploadRedux);
-    const estimateDetails = getEstimateCardDetails(estimateCardData, undefined, false, true,true)
+    const estimateDetails = getEstimateCardDetails(estimateCardData, undefined,demanddata)
     const billAmendDemandRevisionSummary = generateKeyValue(preparedFinalObject, modifiedDemand);
- const propertydetails = getFromObject(preparedFinalObject, 'Properties[0]', []);
- const propertyCard = getPropertyCard(propertydetails)
+    const propertydetails = getFromObject(preparedFinalObject, 'Properties[0]', []);
+    const propertyCard = getPropertyCard(propertydetails)
     let pdfData = {
         header: "BILLAMEND_APPLICATION", tenantId: Amendment.tenantId,
         applicationNoHeader: 'BILLAMEND_APPLICATIONNO', applicationNoValue: Amendment.amendmentId,

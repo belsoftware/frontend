@@ -24,7 +24,7 @@ import jp from "jsonpath";
 import get from "lodash/get";
 import set from "lodash/set";
 import commonConfig from "../../../../config/common";
-import { getBillAmdSearchResult, searchBill } from "../../../../ui-utils/commons";
+import { getBillAmdSearchResult, searchBill,searchDemand } from "../../../../ui-utils/commons";
 import { getReviewDocuments } from "./document-review";
 import { generateBillAmendPdf } from "./utils";
 import "./index.css";
@@ -236,7 +236,7 @@ const headerrow = getCommonContainer({
     },
 });
 
-export const adjustmentAmountDetails = async (state, dispatch, amendment) => {
+export const adjustmentAmountDetails = async (state, dispatch, amendment,demandobj) => {
     let amountType = amendment && amendment.demandDetails &&
         amendment.demandDetails.length > 0 && amendment.demandDetails.filter(details => details.taxAmount < 0);
     if (amountType && amountType.length > 0) {
@@ -245,15 +245,39 @@ export const adjustmentAmountDetails = async (state, dispatch, amendment) => {
         amountType = "additionalAmount"
     }
     let billDetails = [];
-    amendment.demandDetails.map(bill => {
-        if (bill && bill.taxAmount) {
+    demandobj.demandDetails.map(dem => {
+        let found = false;
+        amendment.demandDetails.map(bill => {
+            if (bill && bill.taxAmount) {
+                if(dem && dem.taxAmount
+                    && dem.taxHeadMasterCode ==bill.taxHeadMasterCode) {
+                        found = true;
+                    if( dem.id!= bill.id ){
+                        billDetails.push({
+                            taxHeadMasterCode: bill.taxHeadMasterCode,
+                            taxAmount: Math.abs(parseFloat(bill.taxAmount)),
+                            amountType: amountType,
+                            demand:dem.taxAmount
+            
+                        });
+                    }
+                }
+            
+            }
+        });
+        if(found == false){
             billDetails.push({
-                taxHeadMasterCode: bill.taxHeadMasterCode,
-                taxAmount: Math.abs(parseFloat(bill.taxAmount)),
-                amountType: amountType
+                taxHeadMasterCode: dem.taxHeadMasterCode,
+                taxAmount: 0,
+                amountType: amountType,
+                demand:dem.taxAmount
+
             });
+
         }
     });
+    
+
     dispatch(prepareFinalObject("AmendmentTemp[0].estimateCardData", billDetails, []));
 }
 
@@ -481,6 +505,12 @@ export const setSearchResponse = async (state, dispatch, action) => {
         }]
         let resp = await searchBill(newQuery, dispatch);
         let connectionDetail = get(resp, 'Bill[0]', {});
+        const queryString = [
+            { key: "consumerCode", value: get(amendments[0], "consumerCode") },
+            { key: "tenantId", value: tenantId }
+          ]
+        let demandresp = await searchDemand(queryString)
+        
         let consumerName = get(connectionDetail, "additionalDetails.ownerName", "NA");
         let consumerAddress = getAddress(get(connectionDetail, "tenantId"), get(connectionDetail, "additionalDetails.locality"));
         set(amendments[0], 'additionalDetails.ownerName', consumerName);
@@ -488,7 +518,7 @@ export const setSearchResponse = async (state, dispatch, action) => {
         dispatch(prepareFinalObject("Amendment", amendments[0]));
         dispatch(prepareFinalObject("AmendmentUpdate", amendments[0]));
         dispatch(prepareFinalObject("Properties[0]", connectionDetail));
-        adjustmentAmountDetails(state, dispatch, amendments[0]);
+        adjustmentAmountDetails(state, dispatch, amendments[0],demandresp.Demands[0]);
         documentDetailsPreview(state, dispatch, amendments[0]);
         onDemandRevisionBasisHidendShowFields(state, dispatch, action, amendments[0]);
         setDownloadMenu(state, dispatch, applicationNumber);

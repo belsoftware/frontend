@@ -238,3 +238,27 @@ export const getBillAmdSearchResult = async (queryObject, dispatch) => {
     );
   }
 };
+
+export const searchDemand = async (queryObject) => {
+ // let returnObject={'Demands':[]};
+  try {
+    const response = await httpRequest(
+      "post",
+      "/billing-service/demand/_search",
+      "_demand",
+      queryObject
+  );
+    if (
+      response !== null &&
+      response !== undefined &&
+      response.Demands &&
+      response.Demands.length > 0
+    ) {
+     // returnObject.Demands.push(...response.Demands);
+      return response;
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+};

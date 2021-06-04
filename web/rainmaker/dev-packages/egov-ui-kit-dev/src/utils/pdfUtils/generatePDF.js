@@ -396,10 +396,11 @@ const totalAmount = (arr) => {
         .map(item => (item.value ? item.value : 0))
         .reduce((prev, next) => prev + next, 0);
 }
-export const getEstimateCardDetails = (fees = [], color) => {
+export const getEstimateCardDetails = (fees = [], color,demanddata=[]) => {
     let estimateCard = {};
 
     let total = totalAmount(fees);
+    let totaldemand = totalAmount(demanddata);
 
     let card = [];
     let row1 = []
@@ -416,17 +417,57 @@ export const getEstimateCardDetails = (fees = [], color) => {
     card.push(row2);
     let rowLast = []
 
-    rowLast.push(getLabel(getLocaleLabels('TL_COMMON_TOTAL_AMT', 'TL_COMMON_TOTAL_AMT'), 'totalAmount'))
-    rowLast.push(getLabel(total, 'totalAmount'))
-    rowLast.push(getLabel(' ', 'header'))
+    rowLast.push(getLabel(getLocaleLabels('TL_COMMON_TOTAL_AMT', 'TL_COMMON_TOTAL_AMT'), 'totalAmount')); 
+    if(demanddata.length>0 ){
+        rowLast.push(getLabel(totaldemand, 'totalAmount'))
+        rowLast.push(getLabel(total, 'totalAmount'))
+    }
+    else{
+        rowLast.push(getLabel(total, 'totalAmount'))
+        rowLast.push(getLabel(' ', 'header'))
+    }
+    
+    
 
-    fees.map(fee => {
-        let row = []
-        row.push(getLabel(getLocaleLabels(fee.name.labelName, fee.name.labelKey), 'value'))
-        row.push(getLabel(fee.value, 'nonZero'))
-        row.push(getLabel(' ', 'value'))
-        card.push(row);
-    })
+    if(demanddata.length >0 ){
+        demanddata.map(demand => {
+            let row = [];  
+            row.push(getLabel(getLocaleLabels(demand.name.labelName, demand.name.labelKey), 'value'))
+            row.push(getLabel(demand.value, 'nonZero'))
+            let found = false;
+            fees.map(fee => {
+               
+                if(demand.name.labelKey == fee.name.labelKey) 
+                { 
+                    found =true;
+                    row.push(getLabel(fee.value, 'nonZero'))
+                          
+                    
+                }
+
+            })
+            if(found==false){
+                row.push(getLabel(0, 'nonZero'))
+
+            }
+
+            
+            card.push(row);
+        })
+        }
+    
+        else{
+            fees.map(fee => {
+            let row = [];
+
+            row.push(getLabel(getLocaleLabels(fee.name.labelName, fee.name.labelKey), 'value'))
+            row.push(getLabel(fee.value, 'nonZero'))
+            row.push(getLabel(' ', 'value'))
+            card.push(row);
+            });
+        }
+
+   
 
     card.push(rowLast);
 

@@ -7,7 +7,7 @@ import { loadUlbLogo } from "egov-ui-kit/utils/pdfUtils/generatePDF";
 import get from "lodash/get";
 import set from "lodash/set";
 import commonConfig from "../../../../config/common";
-import { getBillAmendSearchResult, searchBill } from "../../../../ui-utils/commons";
+import { getBillAmendSearchResult, searchBill,searchDemand } from "../../../../ui-utils/commons";
 import acknowledgementCard from "./acknowledgementResource/acknowledgementUtils";
 import { applicationSuccessFooter } from "./acknowledgementResource/applicationSuccessFooter";
 import { approvalSuccessFooter } from "./acknowledgementResource/approvalSuccessFooter";
@@ -49,6 +49,20 @@ const searchResults = async (dispatch, applicationNo, tenantId, businessService)
   }]
   let resp = await searchBill(newQuery, dispatch);
   let connectionDetail = get(resp, 'Bill[0]', {});
+  const queryString = [
+    { key: "consumerCode",value: get(
+      payload,
+      "Amendments[0].consumerCode",
+      ''
+    ) },
+    { key: "tenantId", value: tenantId }
+  ]
+let demandresp = await searchDemand(queryString);
+demandresp && dispatch(prepareFinalObject("Demand",get(
+  demandresp,
+  "Demands[0]",
+  {}
+)))
 
   let consumerName = get(connectionDetail, "additionalDetails.ownerName", "NA");
   let consumerAddress = getAddress(get(connectionDetail, "tenantId"), get(connectionDetail, "additionalDetails.locality"));
