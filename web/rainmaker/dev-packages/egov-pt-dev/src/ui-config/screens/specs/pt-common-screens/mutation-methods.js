@@ -207,7 +207,7 @@ export const searchPropertyDetails = getCommonCard({
         visible: false
       },      
       required: false,
-      pattern: /^[a-zA-Z0-9/-]*$/i,
+      // pattern: /^[a-zA-Z0-9/-]*$/i,
       errorMessage: "ERR_INVALID_PROPERTY_CODE",
       jsonPath: "searchScreen.oldpropertyids"
     }),
@@ -229,7 +229,7 @@ export const searchPropertyDetails = getCommonCard({
         visible: false
       },      
       required: false,
-      pattern: /^[a-zA-Z0-9/-]*$/i,
+      //pattern: /^[a-zA-Z0-9/-]*$/i,
       errorMessage: "ERR_INVALID_ABAS_ID",
       jsonPath: "searchScreen.abasPropertyids"
     })
