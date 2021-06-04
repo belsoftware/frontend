@@ -7,6 +7,14 @@ import {
   } from "egov-ui-framework/ui-config/screens/specs/utils";
   import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
   import { handleNA } from '../../utils';
+  import { getTenantId, getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
+  let tenantId = ''; 
+  if (process.env.REACT_APP_NAME == "Citizen"){
+    tenantId = getQueryArg(window.location.href, "tenantId"); 
+  } else{
+    tenantId = getTenantId(); 
+  }
+  console.log('tenantId: ' + tenantId)
   export const propertyLocationDetails = getCommonContainer({
     city: getLabelWithValue(
       {
@@ -67,7 +75,7 @@ import {
       },
       {
         localePrefix: {
-          moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : "",
+          moduleName: tenantId ? tenantId.replace('.', '_').toUpperCase() : "",
           masterName: "REVENUE"
         },
         jsonPath: "applyScreen.property.address.locality.code",

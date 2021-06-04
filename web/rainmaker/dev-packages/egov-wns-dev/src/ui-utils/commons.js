@@ -1983,6 +1983,30 @@ export const waterEstimateCalculation = async (queryObject, dispatch) => {
 
 };
 
+// api call to calculate water estimate
+export const waterBillEstimateCalculation = async(queryObject, dispatch) => {
+    dispatch(toggleSpinner());
+    try {
+        const response = await httpRequest(
+            "post",
+            "ws-calculator/waterCalculator/_estimateBillForConnection",
+            "_estimateBillForConnection",
+            [],
+
+            {
+                isconnectionCalculation: false,
+                CalculationCriteria: queryObject
+            }
+        );
+        dispatch(toggleSpinner());
+        return findAndReplace(response, null, "NA");
+    } catch (error) {
+        dispatch(toggleSpinner());
+        console.log(error);
+    }
+
+};
+
 // api call to calculate sewerage estimate
 export const swEstimateCalculation = async (queryObject, dispatch) => {
     dispatch(toggleSpinner());

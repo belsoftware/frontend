@@ -8,6 +8,8 @@ import {
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { changeStep } from "../viewBillResource/footer";
 
+import { handlePropertySubUsageType, handleNA } from '../../utils';
+
 const getHeader = label => {
   return {
     uiFramework: "custom-molecules-local",
@@ -31,6 +33,12 @@ const propertyLocationDetailsHeader = getHeader({
 });
 
 const propertyDetails = getCommonContainer({
+  propertyId: getLabelWithValue(
+    {
+      labelKey: "WS_PROPERTY_ID_LABEL"
+    },
+    { jsonPath: "WaterConnection[0].property.propertyId" }
+  ),
   propertyType: getLabelWithValue(
     {
       labelKey: "WS_PROPERTY_TYPE_LABEL"
@@ -53,7 +61,21 @@ const propertyDetails = getCommonContainer({
       moduleName: "WS",
       masterName: "PROPUSGTYPE"
     }
- }
+   }
+  ),
+  propertySubUsageType: getLabelWithValue(
+    {
+      labelKey: "WS_PROPERTY_SUB_USAGE_TYPE_LABEL",
+      labelName: "Property Sub Usage Type"
+    },
+    {
+      jsonPath: "applyScreen.property.units[0].usageCategory",
+      callBack: handlePropertySubUsageType,
+      localePrefix: {
+        moduleName: "WS",
+        masterName: "PROPSUBUSGTYPE"
+      }
+    }
   ),
   plotSize: getLabelWithValue(
     {
@@ -70,18 +92,23 @@ const propertyDetails = getCommonContainer({
     { 
       jsonPath: "WaterConnection[0].property.superBuiltUpArea"
     }
+  ),
+  arv: getLabelWithValue(
+    {
+      labelKey: "WS_PROP_DETAIL_ARV_LABEL"
+    },
+    {
+      jsonPath: "WaterConnection[0].property.units[0].arv",
+      callBack: handleNA
+
+    }
   )
 })
 
 // const locationOnMap = WaterConnection[0].property.address.locality.code + WaterConnection[0].property.address.locality.code
 
 const propertyLocationDetails = getCommonContainer({
-  propertyId: getLabelWithValue(
-    {
-      labelKey: "WS_PROPERTY_ID_LABEL"
-    },
-    { jsonPath: "WaterConnection[0].property.propertyId" }
-  ),
+
   city: getLabelWithValue(
     {
       labelKey: "WS_PROP_DETAIL_CITY"
@@ -92,6 +119,19 @@ const propertyLocationDetails = getCommonContainer({
         masterName: "PB"
       },
       jsonPath: "WaterConnection[0].property.address.city",
+    }
+  ),
+  location: getLabelWithValue(
+    {
+      labelKey: "WS_PROP_DETAIL_LOCATION",
+      labelName:"Property Location"
+    },
+    {
+      jsonPath: "WaterConnection[0].property.address.location",
+      localePrefix: {
+        moduleName: "WS",
+        masterName: "PROP_LOCATION"
+      }
     }
   ),
   plotOrHouseOrSurveyNo: getLabelWithValue(

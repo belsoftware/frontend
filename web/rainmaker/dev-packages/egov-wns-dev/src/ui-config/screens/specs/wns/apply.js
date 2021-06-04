@@ -384,7 +384,7 @@ export const getMdmsData = async dispatch => {
 
 const showHideFieldModifyConnection = (action) => {
   let fieldsChanges = [
-    ["components.div.children.formwizardFirstStep.children.OwnerInfoCard", false],
+    ["components.div.children.formwizardFirstStep.children.OwnerInfoCard", false],     
     ["components.div.children.formwizardFourthStep.children.snackbarWarningMessage.children.clickHereLink", true],
    // ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven", false],
    // ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewEight", false],
@@ -400,7 +400,7 @@ const showHideFieldModifyConnection = (action) => {
   }
 }
 
-export const getData = async (action, state, dispatch) => {
+export const getData = async (action, state, dispatch) => { 
   let applicationNo = getQueryArg(window.location.href, "applicationNumber");
   const connectionNo = getQueryArg(window.location.href, "connectionNumber");
   const tenantId = getQueryArg(window.location.href, "tenantId");
@@ -415,12 +415,12 @@ export const getData = async (action, state, dispatch) => {
 
 
   if (applicationNo) {
-    //Edit/Update Flow ----
+    //Edit/Update Flow ----   
     let queryObject = [
       { key: "tenantId", value: tenantId },
       { key: "applicationNumber", value: applicationNo }
-    ];
-    if (actionType && (actionType.toUpperCase() === "EDIT")) {
+     ];
+     if (actionType && (actionType.toUpperCase() === "EDIT")) {
       if (connectionNo) {
         handleApplicationNumberDisplay(dispatch, connectionNo)
       } else {
@@ -478,7 +478,7 @@ export const getData = async (action, state, dispatch) => {
            sewerageConnections[0].plumberInfo =[];
       }
       if (isModifyMode() && isModifyModeAction()) {
-        // ModifyEdit should not call create.
+        // ModifyEdit should not call create.       
         dispatch(prepareFinalObject("modifyAppCreated", true));
       }
 
@@ -653,11 +653,27 @@ export const getData = async (action, state, dispatch) => {
       }
 
 
-      if (propertyID) {
+      if (propertyID) {       
         let queryObject = [{ key: "tenantId", value: tenantId }, { key: "propertyIds", value: propertyID }];
         getApplyPropertyDetails(queryObject, dispatch, propertyID, state)
-      } else {
-        let propId = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.propertyId")
+      } else {       
+        let propId = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.propertyId")       
+        //Aleady existing connection count
+        let queryObjectProperty = [];
+        queryObjectProperty = [{ key: "searchType", value: "CONNECTION" }];
+        queryObjectProperty.push({ key: "tenantId", value: tenantId });
+        queryObjectProperty.push({ key: "propertyId", value: propId });
+        try {           
+          let payloadWater = await getSearchResults(queryObjectProperty);
+          let wsConns = get(payloadWater,"WaterConnection",[]); 
+          let count = wsConns.length; 
+          let connStr =[];         
+          wsConns.forEach(obj => connStr.push(obj.connectionNo));
+          dispatch(prepareFinalObject("applyScreen.existingWaterConnCount", count));
+          dispatch(prepareFinalObject("applyScreen.existingWaterConn", connStr.join(", ")));          
+        } catch (error) { console.error(error); };
+
+        //Connection count
         dispatch(prepareFinalObject("searchScreen.propertyIds", propId));
       }
       //For Modify Connection hide the connection details card
@@ -676,7 +692,7 @@ export const getData = async (action, state, dispatch) => {
       let docs = get(state, "screenConfiguration.preparedFinalObject");
       await prefillDocuments(docs, "displayDocs", dispatch);
     }
-  } else if (propertyID) {
+  } else if (propertyID) {   
     let queryObject = [{ key: "tenantId", value: tenantId }, { key: "propertyIds", value: propertyID }];
     getApplyPropertyDetails(queryObject, dispatch, propertyID, state)
     if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
@@ -743,7 +759,7 @@ const checkCardPermission = (state, cardName) => {
 
 const getApplyPropertyDetails = async (queryObject, dispatch, propertyID, state) => {
   let payload = await getPropertyResults(queryObject, dispatch);
-  let propertyObj = payload.Properties[0];
+  let propertyObj = payload.Properties[0]; 
   if (!isActiveProperty(propertyObj)) {
     dispatch(toggleSnackbar(true, { labelKey: `ERR_WS_PROP_STATUS_${propertyObj.status}`, labelName: `Property Status is ${propertyObj.status}` }, "warning"));
     showHideFieldsFirstStep(dispatch, propertyObj.propertyId, false);

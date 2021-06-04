@@ -13,7 +13,7 @@ import {
 } from "../../ui-utils/commons";
 import { httpRequest } from "../../ui-utils/api";
 import store from "ui-redux/store";
-import { showHideAdhocPopup } from "../../ui-config/screens/specs/utils";
+import { showHideAdhocPopup ,ifUserRoleExists} from "../../ui-config/screens/specs/utils";
 // import { getRequiredDocData, showHideAdhocPopup } from "egov-billamend/ui-config/screens/specs/utils"
 class Footer extends React.Component {
   state = {
@@ -139,16 +139,77 @@ class Footer extends React.Component {
         // store.dispatch(setRoute(`/wns/apply?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=MODIFY`));
       },
     };
+
+    const deactivateButton = {
+      label: "Edit",
+      labelKey: "WS_DEACTIVATE_CONNECTION_BUTTON",
+      link: async () => {     
+        const connectionObj = get(state.screenConfiguration.preparedFinalObject,"WaterConnection[0]");  
+        let connectionNumber = connectionObj.connectionNo
+        let applicationNo = connectionObj.applicationNo
+        //let applicationNos = connectionObj.applicationNo
+        
+        let due = 0;
+        if(bill){             
+          due = bill.Bill[0].totalAmount
+        }
+         
+       // let due = getQueryArg(window.location.href, "due");
+        let errLabel =
+          applicationNo && applicationNo.includes("WS")
+            ? "WS_DUE_AMOUNT_SHOULD_BE_ZERO"
+            : "SW_DUE_AMOUNT_SHOULD_BE_ZERO";
+        if (due && parseInt(due) > 0) {
+          toggleSnackbar(
+            true,
+            {
+              labelName: "Due Amount should be zero!",
+              labelKey: errLabel,
+            },
+            "error"
+          );
+
+          return false;
+        }
+
+        // check for the WF Exists
+        const queryObj = [
+          { key: "businessIds", value: applicationNos },
+          { key: "tenantId", value: tenantId },
+        ];
+
+        let isApplicationApproved = await isWorkflowExists(queryObj);
+
+         
+          if (!isApplicationApproved ) {
+            toggleSnackbar(
+              true,
+              {
+                labelName: "WorkFlow already Initiated",
+                labelKey: "WS_WORKFLOW_ALREADY_INITIATED",
+              },
+              "error"
+            );
+            return false;
+          }
+           store.dispatch(
+            setRoute(
+              `/wns/freezeConn?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=FREEZE`
+            )
+          );
+ 
+      },
+    };
     //if(applicationType === "MODIFY"){
     downloadMenu && downloadMenu.push(editButton);
-    if (
-      businessService.includes("ws-services-calculation") ||
-      businessService.includes("sw-services-calculation")
-    ) {
-      if (bill.Bill && bill.Bill.length > 0) {
-        downloadMenu && downloadMenu.push(BillAmendment);
-      }
-    }
+    // if (
+    //   businessService.includes("ws-services-calculation") ||
+    //   businessService.includes("sw-services-calculation")
+    // ) {
+    //   if (bill.Bill && bill.Bill.length > 0) {
+    //     downloadMenu && downloadMenu.push(BillAmendment);
+    //   }
+    // }
 
     //}
     const buttonItems = {
@@ -217,12 +278,13 @@ const mapStateToProps = (state) => {
       ? connectionObj[0].applicationNo
       : "";
  
-
+   
   const businessService = connectDetailsData.BillingService.BusinessService.map(
     (item) => {
       return item.businessService;
     }
   );
+  // console.log("businessService---"+businessService);
   return { state, applicationNo, applicationNos, businessService, bill };
 };
 

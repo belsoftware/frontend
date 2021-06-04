@@ -438,7 +438,12 @@ export const additionDetails = getCommonCard({
         required: true,
         pattern: getPattern("Date"),
         errorMessage: "ERR_INVALID_DATE",
-        jsonPath: "applyScreen.connectionExecutionDate"
+        jsonPath: "applyScreen.connectionExecutionDate",
+        props: {
+          inputProps: {
+            min: getTodaysDateInYMD()
+          }
+        }
       }),
       meterID: getTextField({
         label: {
@@ -469,7 +474,12 @@ export const additionDetails = getCommonCard({
         required: false,
         pattern: getPattern("Date"),
         errorMessage: "ERR_INVALID_DATE",
-        jsonPath: "applyScreen.meterInstallationDate"
+        jsonPath: "applyScreen.meterInstallationDate",
+        props: {
+          inputProps: {
+            min: getTodaysDateInYMD()
+          }
+        }
       }),
       initialMeterReading: getTextField({
         label: {

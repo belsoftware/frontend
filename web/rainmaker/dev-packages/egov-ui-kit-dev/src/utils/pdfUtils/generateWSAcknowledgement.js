@@ -15,12 +15,15 @@ export const generateWSAcknowledgement = (preparedFinalObject, fileName = "print
     connectionHolderDetails.gender.localiseValue = true;
     connectionHolderDetails.relationship.localiseValue = true;
     connectionHolderDetails.specialApplicantCategory.localiseValue = true;
+    plumberDetails.reviewPlumberProvidedBy.localiseValue = true;
+    roadDetails.reviewRate.localiseValue = true;
     //roadDetails.localiseValue = true;
     roadDetails.getCommonContainerreviewRoadType.localiseValue = true;
     propertyOwnerDetail.gender.localiseValue = true;
     propertyOwnerDetail.specialApplicantCategory.localiseValue = true;
     propertyOwnerDetail.relationship.localiseValue = true;
     additionDetailsWater.reviewWaterSource.localiseValue=true;
+    additionDetailsWater.reviewConnectionType.localiseValue=true;
     additionDetailsWater.reviewWaterSubSource.localiseValue=true;
     additionDetailsWater.reviewMotorInfo.localiseValue=true;
     additionDetailsWater.reviewAuthorizedConnection.localiseValue=true;
@@ -90,7 +93,7 @@ export const generateWSAcknowledgement = (preparedFinalObject, fileName = "print
 
     let ownerDetail = []
     let ownerDetailInfo = []
-    if (WaterConnection.property.owners.length > 1) {
+    if (WaterConnection.property && WaterConnection.property.owners && WaterConnection.property.owners.length > 1) {
         ownerDetailInfo = getMultiItems(preparedFinalObject, propertyOwnerDetail, 'WaterConnection[0].property.owners')
         ownerDetail = getMultipleItemCard(ownerDetailInfo, 'WS_OWNER');
     } else {

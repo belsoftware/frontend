@@ -413,7 +413,7 @@ const connectionHolders = connHolderDetailsSummary();
 
 const connectionHoldersSameAsOwner = connHolderDetailsSameAsOwnerSummary();
 
-const getConnectionDetailsFooterAction =  (ifUserRoleExists('WS_CEMP') || ifUserRoleExists('SW_CEMP')) ? connectionDetailsFooter : {};
+const getConnectionDetailsFooterAction =  (ifUserRoleExists('WS_CEMP') || ifUserRoleExists('SW_CEMP')  || ifUserRoleExists('WS_FIELD_INSPECTOR')) ? connectionDetailsFooter : {};
 //const getConnectionDetailsFooterAction =   {};
 
 

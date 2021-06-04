@@ -1270,6 +1270,18 @@ export const showHideBreakupPopup = (state, dispatch, screenKey) => {
     handleField(screenKey, "components.breakUpDialog", "props.open", !toggle)
   );
 };
+
+export const showHideBillEstimatePopup = (state, dispatch, screenKey) => {
+  let toggle = get(
+    state.screenConfiguration.screenConfig[screenKey],
+    "components.billEstimateDialog.props.open",
+    false
+  );
+  dispatch(
+    handleField(screenKey, "components.billEstimateDialog", "props.open", !toggle)
+  );
+};
+
 export const getDialogButton = (name, key, screenKey) => {
   return {
     componentPath: "Button",
@@ -1287,6 +1299,29 @@ export const getDialogButton = (name, key, screenKey) => {
       action: "condition",
       callBack: (state, dispatch) => {
         showHideBreakupPopup(state, dispatch, screenKey);
+      }
+    }
+    //visible: false
+  };
+};
+
+export const getBillEstimateDialogButton =(name,key,screenKey) => {
+  return {
+    componentPath: "Button",
+    props: {
+      color: "primary",
+      style: {}
+    },
+    children: {
+      previousButtonLabel: getLabel({
+        labelName: name,
+        labelKey: key
+      })
+    },
+    onClickDefination: {
+      action: "condition",
+      callBack: (state, dispatch) => {
+        showHideBillEstimatePopup(state, dispatch, screenKey);
       }
     }
     //visible: false
