@@ -254,11 +254,15 @@ export const searchDemand = async (queryObject) => {
       response.Demands &&
       response.Demands.length > 0
     ) {
-     // returnObject.Demands.push(...response.Demands);
-      return response;
-    }
+     const demands =
+     response.Demands.sort(function(a, b) {
+       return b.taxPeriodFrom - a.taxPeriodFrom;
+      
+    });
+    return response;
 
-  } catch (error) {
+  } 
+}catch (error) {
     console.log(error)
   }
 };

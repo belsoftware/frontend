@@ -518,7 +518,9 @@ export const setSearchResponse = async (state, dispatch, action) => {
         dispatch(prepareFinalObject("Amendment", amendments[0]));
         dispatch(prepareFinalObject("AmendmentUpdate", amendments[0]));
         dispatch(prepareFinalObject("Properties[0]", connectionDetail));
-        adjustmentAmountDetails(state, dispatch, amendments[0],demandresp.Demands[0]);
+        let demandResponse = get(demandresp, "Demands", []), demandDetails;
+        console.log("Demand Details:",demandResponse)
+        adjustmentAmountDetails(state, dispatch, amendments[0],demandResponse[0]);
         documentDetailsPreview(state, dispatch, amendments[0]);
         onDemandRevisionBasisHidendShowFields(state, dispatch, action, amendments[0]);
         setDownloadMenu(state, dispatch, applicationNumber);
@@ -603,6 +605,57 @@ export const billAmendDemandRevisionContainer = {
             }
         }
     )
+}
+
+export const billAmendpropertyContainer = {
+    AssesseName: getLabelWithValue(
+        {
+            labelName: "Assess name",
+            labelKey: "PT_OWNER_NAME"
+        },
+        {
+            jsonPath: "Properties[0].owners[0].name"
+        }
+
+    ),
+    houseNo: getLabelWithValue(
+        {
+            labelName: "houseNo",
+            labelKey: "PT_HOUSE_NO"
+        },
+        {
+            jsonPath: "Properties[0].address.doorNo",
+            callBack: checkValueForNA
+        }
+    ),
+    street: getLabelWithValue(
+        {
+            labelName: "strret",
+            labelKey: "PT_STREET_NO"
+        },
+        {
+            jsonPath: "Properties[0].address.street",
+            callBack: checkValueForNA
+        }
+    ),
+    location: getLabelWithValue(
+        {
+            labelName: "location",
+            labelKey: "PT_LOCATION"
+        },
+        {
+            jsonPath: "Properties[0].address.location"
+        }
+    ),
+    ward: getLabelWithValue(
+        {
+            labelName: "Ward",
+            labelKey: "PT_WARD"
+        },
+        {
+            jsonPath: "Properties[0].address.locality.name"
+        }
+    ),
 }
 
 export const getData = async (action, state, dispatch) => {
@@ -701,6 +754,12 @@ const screenConfig = {
                             getFeesEstimateCard({
                                 sourceJsonPath: "LicensesTemp[0].estimateCardData"
                             }),
+                            propertyHeader: getHeader({
+                                labelName: "Propert Details",
+                                labelKey: "BILL_PROPERTY_DETAILS"
+                            }),
+                            break1: getBreak(),
+                            propertyContainer:getCommonContainer(billAmendpropertyContainer),
                         demandRevisionHeader: getHeader({
                             labelName: "Demand Revision Basis Details",
                             labelKey: "BILL_DEMAND_REVISION_BASIS_DETAILS"
@@ -710,82 +769,6 @@ const screenConfig = {
 
                     }),
                     documents: getReviewDocuments(false, false),
-                    
-                    propertyInfo: getCommonGrayCard({
-                        headerDiv: {
-                            uiFramework: "custom-atoms",
-                            componentPath: "Container",
-                            children: {
-                                header: {
-                                    gridDefination: {
-                                        xs: 12,
-                                        sm: 10
-                                    },
-                                    ...getHeader({
-                                        labelName: "Property Details",
-                                        labelKey: "BILL_PROPERTY_DETAILS"
-                                    })
-
-                                },
-                                propertydetails: getCommonContainer({
-                                    AssesseName: getLabelWithValue(
-                                        {
-                                            labelName: "Assess name",
-                                            labelKey: "PT_OWNER_NAME"
-                                        },
-                                        {
-                                            jsonPath: "Properties[0].owners[0].name"
-                                        }
-
-                                    ),
-                                    houseNo: getLabelWithValue(
-                                        {
-                                            labelName: "houseNo",
-                                            labelKey: "PT_HOUSE_NO"
-                                        },
-                                        {
-                                            jsonPath: "Properties[0].address.doorNo",
-                                            callBack: checkValueForNA
-                                        }
-                                    ),
-                                    street: getLabelWithValue(
-                                        {
-                                            labelName: "strret",
-                                            labelKey: "PT_STREET_NO"
-                                        },
-                                        {
-                                            jsonPath: "Properties[0].address.street",
-                                            callBack: checkValueForNA
-                                        }
-                                    ),
-                                    location: getLabelWithValue(
-                                        {
-                                            labelName: "location",
-                                            labelKey: "PT_LOCATION"
-                                        },
-                                        {
-                                            jsonPath: "Properties[0].address.location"
-                                        }
-                                    ),
-                                    ward: getLabelWithValue(
-                                        {
-                                            labelName: "Ward",
-                                            labelKey: "PT_WARD"
-                                        },
-                                        {
-                                            jsonPath: "Properties[0].address.locality.name"
-                                        }
-                                    ),
-
-
-                                }),
-
-
-                            }
-                        }
-
-                    })
-
                 }),
 
 

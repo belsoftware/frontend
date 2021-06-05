@@ -1,7 +1,7 @@
 // import { tradeInstitutionDetails, tradeOwnerDetails } from "egov-tradelicence/ui-config/screens/specs/tradelicence/applyResource/review-owner";
 // import { tradeAccessoriesDetails, tradeLocationDetails, tradeReviewDetails, tradetypeDetails } from "egov-tradelicence/ui-config/screens/specs/tradelicence/applyResource/review-trade";
-import { billAmendDemandRevisionContainer } from "egov-billamend/ui-config/screens/specs/bill-amend/search-preview";
-import { generateKeyValue, generatePDF,getPropertyCard, getDocumentsCard, getEstimateCardDetails } from "./generatePDF";
+import { billAmendDemandRevisionContainer ,billAmendpropertyContainer} from "egov-billamend/ui-config/screens/specs/bill-amend/search-preview";
+import { generateKeyValue, generatePDF, getDocumentsCard, getEstimateCardDetails } from "./generatePDF";
 import { getFromObject } from "egov-ui-kit/utils/PTCommon/FormWizardUtils/formUtils";
 import { getLocaleLabels } from "egov-ui-framework/ui-utils/commons";
 
@@ -13,12 +13,16 @@ const getDate=(date)=>{
 
 export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName = "acknowledgement.pdf") => {
 
+
     billAmendDemandRevisionContainer.demandRevisionBasis.localiseValue = true;
+    billAmendpropertyContainer.ward.localiseValue=true;
+    billAmendpropertyContainer.location.localiseValue =true;
  
     let UlbLogoForPdf = getFromObject(preparedFinalObject, 'UlbLogoForPdf', '');
     let Amendment = getFromObject(preparedFinalObject, 'Amendment', {});
 
     const modifiedDemand = { ...billAmendDemandRevisionContainer };
+    const propertydetails = { ...billAmendpropertyContainer };
     let demandRevisionBasis = getFromObject(Amendment, "amendmentReason", "");
     switch (demandRevisionBasis) {
         case "COURT_CASE_SETTLEMENT":
@@ -91,8 +95,8 @@ console.log("demanddata:",demanddata);
     const documentCard = getDocumentsCard(documentsUploadRedux);
     const estimateDetails = getEstimateCardDetails(estimateCardData, undefined,demanddata)
     const billAmendDemandRevisionSummary = generateKeyValue(preparedFinalObject, modifiedDemand);
-    const propertydetails = getFromObject(preparedFinalObject, 'Properties[0]', []);
-    const propertyCard = getPropertyCard(propertydetails)
+    //const propertydetails = getFromObject(preparedFinalObject, 'Properties[0]', []);
+    const propertyCard = generateKeyValue(preparedFinalObject,propertydetails)
     let pdfData = {
         header: "BILLAMEND_APPLICATION", tenantId: Amendment.tenantId,
         applicationNoHeader: 'BILLAMEND_APPLICATIONNO', applicationNoValue: Amendment.amendmentId,
@@ -100,9 +104,10 @@ console.log("demanddata:",demanddata);
         cards: [
             { header: "BILL_ADJUSTMENT_AMOUNT_DETAILS", type: 'header' },
             { items: estimateDetails, type: 'estimate' },
+            {header: 'BILL_PROPERTY_DETAILS', items: propertyCard },
             { header: "BILL_DEMAND_REVISION_BASIS_DETAILS", items: billAmendDemandRevisionSummary },
             { header: 'BILL_DOCUMENTS', items: documentCard },
-             {header: 'BILL_PROPERTY_DETAILS', items: propertyCard }
+            
         ]
     }
 
