@@ -327,7 +327,19 @@ class ShowField extends Component {
         (reportResult.reportHeader[i].type == "currency" || reportResult.reportHeader[i].total)
       ) {
         return this.addCommas(Number(val) % 1 === 0 ? Number(val) : Number(val).toFixed(2));
-      } else {
+      } else 
+      if (
+        reportResult &&
+        reportResult.reportHeader &&
+        reportResult.reportHeader.length &&
+        reportResult.reportHeader[i] &&
+        reportResult.reportHeader[i].type == "string" && val &&
+        (val.indexOf("\n") > -1 )
+      ) {
+        return <pre>{val}</pre>;
+      }
+      else
+      {
         return val;
       }
     }
