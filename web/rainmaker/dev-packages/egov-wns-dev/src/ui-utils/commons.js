@@ -443,6 +443,9 @@ export const validateFeildsForBothWaterAndSewerage = (applyScreenObject) => {
         applyScreenObject.hasOwnProperty("proposedPipeSize") &&
         applyScreenObject["proposedPipeSize"] !== undefined &&
         applyScreenObject["proposedPipeSize"] !== "" &&
+        applyScreenObject.hasOwnProperty("proposedUsageCategory") &&
+        applyScreenObject["proposedUsageCategory"] !== undefined &&
+        applyScreenObject["proposedUsageCategory"] !== "" &&
         applyScreenObject.hasOwnProperty("proposedDrainageSize") &&
         applyScreenObject["proposedDrainageSize"] !== undefined &&
         applyScreenObject["proposedDrainageSize"] !== "" &&
@@ -510,7 +513,10 @@ export const validateFeildsForWater = (applyScreenObject) => {
         applyScreenObject["proposedTaps"].toString().match(/^[1-9][0-9]*$/i) &&
         applyScreenObject.hasOwnProperty("proposedPipeSize") &&
         applyScreenObject["proposedPipeSize"] !== undefined &&
-        applyScreenObject["proposedPipeSize"] !== ""
+        applyScreenObject["proposedPipeSize"] !== "" &&
+        applyScreenObject.hasOwnProperty("proposedUsageCategory") &&
+        applyScreenObject["proposedUsageCategory"] !== undefined &&
+        applyScreenObject["proposedUsageCategory"] !== ""
     ) { return true; } else { return false; }
 }
 

@@ -16,6 +16,23 @@ export const toggleWater = (onFieldChange, value) => {
     "visible",
     value
   );
+  //Water usage type and sub type
+
+  onFieldChange(
+    "apply",
+    "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.proposedUsageCategory",
+    "visible",
+    value
+  );
+
+  // onFieldChange(
+  //   "apply",
+  //   "components.div.children.formwizardFirstStep.children.OwnerInfoCard.children.cardContent.children.tradeUnitCardContainer.children.proposedSubUsageCategory",
+  //   "visible",
+  //   value
+  // );
+
+  //Water usage type and sub type
   onFieldChange(
     "apply",
     `components.div.children.${mStep}.children.additionDetails.children.cardContent.children.connectiondetailscontainer.children.cardContent.children.connectionDetails.children.connectionType`,
