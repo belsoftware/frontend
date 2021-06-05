@@ -1096,12 +1096,37 @@ export const applyForWater = async (state, dispatch) => {
             }
             queryObject.additionalDetails.locality = queryObject.property.address.locality.code;
             set(queryObject, "processInstance.action", "INITIATE")
+
+            let defaultMotorInfo = get(
+                state.screenConfiguration.preparedFinalObject,
+                "applyScreenMdmsData.ws-services-masters.motorInfo",
+                []
+                ).filter(item => item.default == true );  
+                
+                          
+            let defaultAuthorizedConnection = get(
+                state.screenConfiguration.preparedFinalObject,
+                "applyScreenMdmsData.ws-services-masters.authorizedConnection",
+                []
+                ).filter(item => item.default == true );
+
+                            
+            set(queryObject, "motorInfo",defaultMotorInfo[0].code);
+            set(queryObject, "authorizedConnection",defaultAuthorizedConnection[0].code);
+
             queryObject = findAndReplace(queryObject, "NA", null);
             if (isModifyMode()) {
                 set(queryObject, "waterSource", getWaterSource(queryObject.waterSource, queryObject.waterSubSource));
             }
             response = await httpRequest("post", "/ws-services/wc/_create", "", [], { WaterConnection: queryObject });
+                                
             dispatch(prepareFinalObject("WaterConnection", response.WaterConnection));
+            dispatch(prepareFinalObject("applyScreen.motorInfo", response.WaterConnection[0].motorInfo));
+            dispatch(prepareFinalObject("applyScreen.authorizedConnection", response.WaterConnection[0].authorizedConnection));
+            dispatch(prepareFinalObject("applyScreen.usageCategory", response.WaterConnection[0].usageCategory));
+            dispatch(prepareFinalObject("applyScreen.pipeSize", response.WaterConnection[0].pipeSize));
+            dispatch(prepareFinalObject("applyScreen.noOfTaps", response.WaterConnection[0].noOfTaps));
+           
             enableField('apply', "components.div.children.footer.children.nextButton", dispatch);
             enableField('apply', "components.div.children.footer.children.payButton", dispatch);
             if (isModifyMode()) {
