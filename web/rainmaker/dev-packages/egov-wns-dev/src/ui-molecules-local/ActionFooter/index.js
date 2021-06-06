@@ -147,6 +147,8 @@ class Footer extends React.Component {
         const connectionObj = get(state.screenConfiguration.preparedFinalObject,"WaterConnection[0]");  
         let connectionNumber = connectionObj.connectionNo
         let applicationNo = connectionObj.applicationNo
+         let service = getQueryArg(window.location.href, "service");
+         console.log("service data---"+service);
         //let applicationNos = connectionObj.applicationNo
         
         let due = 0;
@@ -159,11 +161,11 @@ class Footer extends React.Component {
           applicationNo && applicationNo.includes("WS")
             ? "WS_DUE_AMOUNT_SHOULD_BE_ZERO"
             : "SW_DUE_AMOUNT_SHOULD_BE_ZERO";
-        if (due && parseInt(due) > 0) {
+        if (due && parseInt(due) <= 0) {
           toggleSnackbar(
             true,
             {
-              labelName: "Due Amount should be zero!",
+              labelName: "Cannot be deactivated as all dues are cleared!",
               labelKey: errLabel,
             },
             "error"
@@ -194,7 +196,7 @@ class Footer extends React.Component {
           }
            store.dispatch(
             setRoute(
-              `/wns/freezeConn?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=FREEZE`
+              `/wns/freezeConn?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&service=${service}&action=edit&mode=FREEZE`
             )
           );
  
@@ -267,6 +269,8 @@ const mapStateToProps = (state) => {
     state.screenConfiguration.preparedFinalObject,
     "connectDetailsData"
   );
+
+
 
   if (connectionObj.length === 0) {
     connectionObj = get(
