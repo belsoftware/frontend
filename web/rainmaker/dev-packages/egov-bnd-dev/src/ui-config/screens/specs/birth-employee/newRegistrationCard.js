@@ -19,7 +19,157 @@ import get from "lodash/get";
 import { getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
 import {patterns} from "../utils/constants";
 import {showHideAddHospitalDialog} from "./newRegistration";
+import {showHideConfirmationPopup} from "./newRegistration";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import {confirmationDialog} from "./newRegistrationConfirmDialog";
+
+
+export const getAdditionalDetailsForm= (type) =>{
+  return getCommonContainer({
+    firstName: getTextField({
+      label: {
+        labelName: "First Name",
+        labelKey: "BND_FIRSTNAME_LABEL"
+      },
+      placeholder: {
+        labelName: "First Name",
+        labelKey: "BND_FIRSTNAME_LABEL"
+      },
+      required:true,
+      visible: true,
+      pattern: patterns["name"],
+      jsonPath: `bnd.birth.newRegistration.${type}.firstname`,
+      gridDefination: {
+        xs: 12,
+        sm: 4
+      }
+    }),
+    
+    dob: getDateField({
+      label: { labelName: "DOB", labelKey: "BND_BIRTH_DOB" },
+      placeholder: {
+        labelName: "Date of Birth",
+        labelKey: "BND_BIRTH_DOB"
+      },
+      jsonPath: "bnd.birth.newRegistration.dateofbirthepoch",
+      gridDefination: {
+        xs: 12,
+        sm: 4
+      },
+      pattern: getPattern("Date"),
+      errorMessage: "ERR_INVALID_DATE",
+      required: true,
+      props: {
+        inputProps: {
+          max: getTodaysDateInYMD()
+        }
+      }
+    }),
+
+    gender: getSelectField({
+      label: {
+        labelName: "Select value",
+        labelKey: "BND_VALUE"
+      },
+      placeholder: {
+        labelName: "Select value",
+        labelKey: "BND_VALUE_PLACEHOLDER"
+      },
+      required: true,
+      data: [
+        {
+          code: "1",
+          label: "1"
+        },
+        {
+          code: "2",
+          label: "2"
+        },
+        {
+          code: "3",
+          label: "3"
+        },
+        {
+          code: "4",
+          label: "4"
+        }
+      ],
+      labelsFromLocalisation: false,
+      props:{
+        disabled: false,
+      },
+      gridDefination: {
+        xs: 12,
+        sm: 4
+      },
+      jsonPath: "bnd.birth.newRegistration.genderStr",
+      autoSelect: true,
+      visible: true,
+      beforeFieldChange: (action, state, dispatch) => {
+      
+      },
+      afterFieldChange: (action, state, dispatch) => {
+      
+      },
+    }),
+    mobNo: getTextField({
+      label: {
+        labelName: "No.",
+        labelKey: "CORE_COMMON_NUMBER"
+      },
+      props:{
+        className:"applicant-details-error"
+      },
+      placeholder: {
+        labelName: "Enter No.",
+        labelKey: "CORE_COMMON_NUMBER"
+      },
+      required: false,
+      pattern: getPattern("MobileNo"),
+      jsonPath: `bnd.birth.newRegistration.${type}.mobileno`,
+      gridDefination: {
+        xs: 12,
+        sm: 4
+      }
+    }),
+
+    Confirm: {
+      componentPath: "Button",
+      visible: (getQueryArg(window.location.href, "action")!="VIEW"),
+      props: {
+        disableValidation:true,
+        variant: "contained",
+        color: "primary",
+        style: {
+          minWidth: "100px",
+          height: "20px",
+          marginRight: "20px",
+          marginTop: "16px"
+        }
+      },
+      children: {
+        previousButtonLabel: getLabel({
+          labelName: "YES",
+          labelKey: "ADD_HOSPITAL"
+        })
+      },
+      onClickDefination: {
+        action: "condition",
+        callBack: (state, dispatch) => {
+          showHideConfirmationPopup(state, dispatch, "newRegistration")
+        }
+      }
+    },
+
+
+
+
+
+
+    
+  });
+}
+
 
 export const getPersonDetailsForm = (type) =>{
   return getCommonContainer({
@@ -787,6 +937,29 @@ export const newRegistrationForm = getCommonCard(
       ),
       mothersInfo: getPersonDetailsForm("birthMotherInfo")
     }),
+
+    additionalInfo: getCommonGrayCard({
+      header: getCommonSubHeader(
+        {
+          labelName: "",
+          labelKey: "BND_ADDITIONAL_INFO"
+        },
+        {
+          style: {
+            marginBottom: 18
+          }
+        }
+      ),
+      additionalInfo: getAdditionalDetailsForm("birthadditionalInfo")
+    }),
+
+
+
+
+
+
+
+
     addrTimeOfBirth: getCommonGrayCard({
       header: getCommonSubHeader(
         {
