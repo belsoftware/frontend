@@ -64,7 +64,7 @@ const fetchBill = async (action, state, dispatch, consumerCode, tenantId, billBu
       }); 
 console.log("rebate:::"+rebate)
       if(rebate!=0){
-       // dispatch(prepareFinalObject("isFullPayment", true));
+        dispatch(prepareFinalObject("isFullPayment", true));
       }
     }
 
