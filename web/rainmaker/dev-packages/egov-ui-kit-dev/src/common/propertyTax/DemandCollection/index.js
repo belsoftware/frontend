@@ -61,7 +61,9 @@ class DemandCollection extends React.Component {
         finalData.map((data, index) => {
           return (
             <div>
-              <div key={index}>{index == 0 ? data.financialYear : "PT_DEMAND_ARREARS"}</div>
+              <div key={index}>{index == 0 ? data.financialYear : <Label
+              label={"PT_DEMAND_ARREARS"}
+              /> }</div>
               <Card
                 key={index}
                 style={{ backgroundColor: "white" }}
