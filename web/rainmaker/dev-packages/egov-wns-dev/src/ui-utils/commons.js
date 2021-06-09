@@ -443,6 +443,9 @@ export const validateFeildsForBothWaterAndSewerage = (applyScreenObject) => {
         applyScreenObject.hasOwnProperty("proposedPipeSize") &&
         applyScreenObject["proposedPipeSize"] !== undefined &&
         applyScreenObject["proposedPipeSize"] !== "" &&
+        applyScreenObject.hasOwnProperty("proposedUsageCategory") &&
+        applyScreenObject["proposedUsageCategory"] !== undefined &&
+        applyScreenObject["proposedUsageCategory"] !== "" &&
         applyScreenObject.hasOwnProperty("proposedDrainageSize") &&
         applyScreenObject["proposedDrainageSize"] !== undefined &&
         applyScreenObject["proposedDrainageSize"] !== "" &&
@@ -510,7 +513,10 @@ export const validateFeildsForWater = (applyScreenObject) => {
         applyScreenObject["proposedTaps"].toString().match(/^[1-9][0-9]*$/i) &&
         applyScreenObject.hasOwnProperty("proposedPipeSize") &&
         applyScreenObject["proposedPipeSize"] !== undefined &&
-        applyScreenObject["proposedPipeSize"] !== ""
+        applyScreenObject["proposedPipeSize"] !== "" &&
+        applyScreenObject.hasOwnProperty("proposedUsageCategory") &&
+        applyScreenObject["proposedUsageCategory"] !== undefined &&
+        applyScreenObject["proposedUsageCategory"] !== ""
     ) { return true; } else { return false; }
 }
 
@@ -1090,12 +1096,37 @@ export const applyForWater = async (state, dispatch) => {
             }
             queryObject.additionalDetails.locality = queryObject.property.address.locality.code;
             set(queryObject, "processInstance.action", "INITIATE")
+
+            let defaultMotorInfo = get(
+                state.screenConfiguration.preparedFinalObject,
+                "applyScreenMdmsData.ws-services-masters.motorInfo",
+                []
+                ).filter(item => item.default == true );  
+                
+                          
+            let defaultAuthorizedConnection = get(
+                state.screenConfiguration.preparedFinalObject,
+                "applyScreenMdmsData.ws-services-masters.authorizedConnection",
+                []
+                ).filter(item => item.default == true );
+
+                            
+            set(queryObject, "motorInfo",defaultMotorInfo[0].code);
+            set(queryObject, "authorizedConnection",defaultAuthorizedConnection[0].code);
+
             queryObject = findAndReplace(queryObject, "NA", null);
             if (isModifyMode()) {
                 set(queryObject, "waterSource", getWaterSource(queryObject.waterSource, queryObject.waterSubSource));
             }
             response = await httpRequest("post", "/ws-services/wc/_create", "", [], { WaterConnection: queryObject });
+                                
             dispatch(prepareFinalObject("WaterConnection", response.WaterConnection));
+            dispatch(prepareFinalObject("applyScreen.motorInfo", response.WaterConnection[0].motorInfo));
+            dispatch(prepareFinalObject("applyScreen.authorizedConnection", response.WaterConnection[0].authorizedConnection));
+            dispatch(prepareFinalObject("applyScreen.usageCategory", response.WaterConnection[0].usageCategory));
+            dispatch(prepareFinalObject("applyScreen.pipeSize", response.WaterConnection[0].pipeSize));
+            dispatch(prepareFinalObject("applyScreen.noOfTaps", response.WaterConnection[0].noOfTaps));
+           
             enableField('apply', "components.div.children.footer.children.nextButton", dispatch);
             enableField('apply', "components.div.children.footer.children.payButton", dispatch);
             if (isModifyMode()) {
@@ -2101,6 +2132,11 @@ export const isEditAction = () => {
 export const isModifyMode = () => {
     let isMode = getQueryArg(window.location.href, "mode");
     return (isMode && isMode.toUpperCase() === 'MODIFY');
+}
+
+export const isFreezeMode = () => {
+    let isMode = getQueryArg(window.location.href, "mode");
+    return (isMode && isMode.toUpperCase() === 'FREEZE');
 }
 
 export const isModifyModeAction = () => {
