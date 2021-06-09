@@ -384,6 +384,8 @@ export const getMdmsData = async dispatch => {
 
 const showHideFieldModifyConnection = (action) => {
   let fieldsChanges = [
+    ["components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyID.children.clickHereLink",false],
+    ["components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyID.children.wnsPtySearchButton",false],
     ["components.div.children.formwizardFirstStep.children.OwnerInfoCard", false],     
     ["components.div.children.formwizardFourthStep.children.snackbarWarningMessage.children.clickHereLink", true],
    // ["components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven", false],
@@ -679,6 +681,8 @@ export const getData = async (action, state, dispatch) => {
       //For Modify Connection hide the connection details card
       if (isModifyMode()) {
         showHideFieldModifyConnection(action);
+        //Disable property Id field
+        disableField('apply', "components.div.children.formwizardFirstStep.children.IDDetails.children.cardContent.children.propertyID.children.propertyID", dispatch);
 
         if(data.waterSource == "OTHERS")
         {         
