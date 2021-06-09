@@ -10,6 +10,7 @@ import isEmpty from "lodash/isEmpty";
 import orderBy from "lodash/orderBy";
 import set from "lodash/set";
 import { httpRequest, uploadFile } from "./api.js";
+import store from "ui-redux/store";
 
 export const addComponentJsonpath = (components, jsonPath = "components") => {
   for (var componentKey in components) {
@@ -408,6 +409,7 @@ export const handleFileUpload = (event, handleDocument, props) => {
         uploadDocument = false;
       }
       //VAPT observation --Showing error in case of invalid file
+      store.dispatch(toggleSpinner());
       try{
       if (uploadDocument) {
         if (file.type.match(/^image\//)) {
@@ -432,6 +434,7 @@ export const handleFileUpload = (event, handleDocument, props) => {
         console.log("Error catched",err);
         alert(`Error in uploading file.Please upload valid file`);
       }
+      store.dispatch(toggleSpinner());
     });
   }
 };
