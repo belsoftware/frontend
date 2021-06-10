@@ -1233,7 +1233,8 @@ class FormWizardDataEntry extends Component {
           );
           
           if (rebateHeadObject.code === "PT_HOUSE_TAX" || rebateHeadObject.code === "PT_WATER_TAX" ||
-          rebateHeadObject.code === "PT_CONSERVANCY_TAX" || rebateHeadObject.code === "PT_LIGHTINING_TAX" || rebateHeadObject.code === "PT_EDUCATION_TAX") {
+          rebateHeadObject.code === "PT_CONSERVANCY_TAX" || rebateHeadObject.code === "PT_LIGHTINING_TAX" 
+          || rebateHeadObject.code === "PT_EDUCATION_TAX" || rebateHeadObject.code === "PT_CONSOLIDATED_PROPERTY_TAX") {
             let rebateHeads = [];
             Object.keys(get(generalMDMSDataById, `TaxHeadMaster`, {})).forEach(
               key => {
@@ -1309,7 +1310,8 @@ class FormWizardDataEntry extends Component {
                         errorCode = "ERR04_DEMAND_ENTER_THE_DATA";
                       }
                     }
-                    if (data.demand[data1][data2].PT_TAXHEAD === "PT_HOUSE_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_WATER_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_CONSERVANCY_TAX") {
+                    if (data.demand[data1][data2].PT_TAXHEAD === "PT_HOUSE_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_WATER_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_CONSERVANCY_TAX"
+                    || data.demand[data1][data2].PT_TAXHEAD === "PT_CONSOLIDATED_PROPERTY_TAX") {
                       hasPropertyTax = true;
                       propertyTaxAmount = data.demand[data1][data2].PT_DEMAND;
                       let collectedAmount = parseInt(data.demand[data1][data2].PT_COLLECTED);
