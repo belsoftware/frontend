@@ -135,7 +135,7 @@ const billSearchAndResult = {
                 sm: 6,
                 align: "right"
               },
-              visible: enableButton,
+              visible: process.env.REACT_APP_NAME === "Employee" ? enableButton : false,
               props: {
                 variant: "contained",
                 color: "primary",
@@ -159,7 +159,7 @@ const billSearchAndResult = {
                     ? `/egov-ui-framework/abg/groupBills`
                     : `/abg/groupBills`
               },
-              visible: true
+              visible: process.env.REACT_APP_NAME === "Employee" ? true : false,
             },
             howitWorksButton:{
               componentPath:"Button",
