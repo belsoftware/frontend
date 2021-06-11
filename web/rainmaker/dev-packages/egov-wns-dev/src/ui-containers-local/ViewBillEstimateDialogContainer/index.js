@@ -138,6 +138,7 @@ class ViewBillEstimateContainer extends React.Component {
   render() {
     const {
       open,
+      billingSlab,
       connectionType,
       propertyLocation,
       buildingType,
@@ -170,7 +171,8 @@ class ViewBillEstimateContainer extends React.Component {
         onClose={handleClose}
         fullWidth={true}
         children={[
-            payableBillAmount > 0  ? (
+          billingSlab != null ?(
+           // payableBillAmount > 0  ? (
             <div style={{ padding: "26px" }}>
               <div
                 onClick={handleClose}
@@ -339,10 +341,17 @@ const mapStateToProps = (state, ownProps, dispatch) => {
   const { screenKey } = ownProps;
   const { screenConfig, preparedFinalObject } = screenConfiguration;
   
+  const billingSlab = get(
+           preparedFinalObject,
+          "billEstimation.BillingSlab"
+       );
+
+
   const connectionType = get(
     preparedFinalObject,
     "billEstimation.BillingSlab.connectionType"
   );
+
   
   const buildingType = get(
     preparedFinalObject,
@@ -394,6 +403,7 @@ const mapStateToProps = (state, ownProps, dispatch) => {
   
   return {
     open,
+    billingSlab,
     connectionType,
     buildingType,
     calculationAttribute,

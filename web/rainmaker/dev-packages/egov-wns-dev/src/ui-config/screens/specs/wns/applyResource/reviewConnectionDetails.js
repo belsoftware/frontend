@@ -745,6 +745,26 @@ export const taskPipeSizeProposed = getLabelWithValueForModifiedLabel(
   { jsonPath: "applyScreenOld.proposedPipeSize", callBack: handleNA },
 )
 
+export const taskUsageCategoryProposed = getLabelWithValueForModifiedLabel(
+  {
+      labelName:"No of  usage category proposed",
+      labelKey: "WS_COMMON_USAGE_TYPE",        
+  },
+  {
+      localePrefix: {
+        moduleName: "WS",
+        masterName: "WSUSGTYPE"
+      },
+      jsonPath: "applyScreen.proposedUsageCategory",
+      callBack: handleNA
+  },
+  {
+    labelKey: "WS_OLD_LABEL_NAME"
+  },
+  { jsonPath: "applyScreenOld.proposedUsageCategory", callBack: handleNA },
+  
+  );
+
 export const taskNoOfClosets = getLabelWithValueForModifiedLabel(
   {
     labelKey: "WS_TASK_DETAILS_CONN_DETAIL_NO_OF_CLOSETS_PROPOSED"
@@ -790,6 +810,7 @@ export const renderService = () => {
     taskApplicationType,
     taskNumberOfTapsPropsed,
     taskPipeSizeProposed,
+    taskUsageCategoryProposed,
     taskNoOfClosets,
     taskNoOfToilets,
     taskDrainageSizeProposed

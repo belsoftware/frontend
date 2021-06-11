@@ -16,6 +16,7 @@ import {
   findAndReplace,
   isActiveProperty,
   isModifyMode,
+  isFreezeMode,
   isModifyModeAction, prepareDocumentsUploadData,
   pushTheDocsUploadedToRedux,
   serviceConst,
@@ -815,7 +816,7 @@ const callBackForNext = async (state, dispatch) => {
   const status = "success";
   const applicationNoWater = get(combinedArray[0], "applicationNo");
   const applicationNoSewerage = get(combinedArray[1], "applicationNo");
-  let mode = (isModifyMode()) ? "&mode=MODIFY" : ""
+  let mode = (isModifyMode()) ? "&mode=MODIFY" : (isFreezeMode()) ? "&mode=FREEZE" : ""
   if (applicationNoWater && applicationNoSewerage) {
     dispatch(
       setRoute(
