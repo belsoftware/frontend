@@ -547,13 +547,21 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                     {
                         "text": [
                             {
-                                "text": applicationData.applicationNoHeader ? getLocaleLabels(applicationData.applicationNoHeader, applicationData.applicationNoHeader) : '',
+                                "text": applicationData.applicationNoHeader ? getLocaleLabels(applicationData.applicationNoHeader, applicationData.applicationNoHeader) + " : ": '',
                                 bold: true
                             },
                             {
                                 "text": applicationData.applicationNoValue ? getLocaleLabels(applicationData.applicationNoValue, applicationData.applicationNoValue) : '',
                                 italics: true,
                                 "style": "pdf-application-no-value"
+                            },
+                            {
+                                "text": applicationData.applicationStatusValue ? getLocaleLabels(applicationData.applicationStatusValue, applicationData.applicationStatusValue) : '',
+                               
+                                "style": {
+                                    "color": "red"
+                                }
+                                
                             }
                         ],
                         "alignment": "left"

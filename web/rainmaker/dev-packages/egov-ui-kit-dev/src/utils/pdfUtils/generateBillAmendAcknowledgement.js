@@ -20,7 +20,7 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
  
     let UlbLogoForPdf = getFromObject(preparedFinalObject, 'UlbLogoForPdf', '');
     let Amendment = getFromObject(preparedFinalObject, 'Amendment', {});
-
+   let status1 = (Amendment.status === "INACTIVE" ? " " + "(" +'BILL_INACTIVE' + " )": " ");
     const modifiedDemand = { ...billAmendDemandRevisionContainer };
     const propertydetails = { ...billAmendpropertyContainer };
     let demandRevisionBasis = getFromObject(Amendment, "amendmentReason", "");
@@ -99,7 +99,7 @@ console.log("demanddata:",demanddata);
     const propertyCard = generateKeyValue(preparedFinalObject,propertydetails)
     let pdfData = {
         header: "BILLAMEND_APPLICATION", tenantId: Amendment.tenantId,
-        applicationNoHeader: 'BILLAMEND_APPLICATIONNO', applicationNoValue: Amendment.amendmentId,
+        applicationNoHeader: 'BILLAMEND_APPLICATIONNO', applicationNoValue: Amendment.amendmentId, applicationStatusValue: status1,
         additionalHeader: "BILLAMEND_APPLICATIONDATE", additionalHeaderValue:getDate(Amendment.auditDetails.createdTime) ,
         cards: [
             { header: "BILL_ADJUSTMENT_AMOUNT_DETAILS", type: 'header' },
