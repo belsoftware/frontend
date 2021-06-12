@@ -351,7 +351,7 @@ const getCustomCard = (body = [], width = [], layout = {}, color = 'grey') => {
 }
 const totalAmount = (arr) => {
     return arr
-        .map(item => (item.value ? item.value : 0))
+        .map(item => (!isNaN(item.value) ? item.value : 0))
         .reduce((prev, next) => prev + next, 0);
 }
 export const getEstimateCardDetails = (fees = [], color,demanddata=[]) => {
@@ -569,7 +569,7 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                     {
                         "text": [
                             {
-                                "text": applicationData.additionalHeader ? getLocaleLabels(applicationData.additionalHeader, applicationData.additionalHeader) : '',
+                                "text": applicationData.additionalHeader ? getLocaleLabels(applicationData.additionalHeader, applicationData.additionalHeader) + " : " : '',
                                 bold: true
                             },
                             {

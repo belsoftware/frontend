@@ -51,21 +51,26 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
     const demandDetails = getFromObject(preparedFinalObject, 'Amendment.demandDetails', []);
     const estdemandDetails = getFromObject(preparedFinalObject, 'AmendmentTemp[0].estimateCardData', []);
     console.log("estdemandDetails",estdemandDetails);
-    const estimateCardData =[];
-    const demanddata = [];
-    // const estimateCardData = [{
-    //     name: {
-    //         labelName: 'BILL_TAX_HEADS',
-    //         labelKey: 'BILL_TAX_HEADS'
-    //     },
-    //     value: getLocaleLabels('BILL_REDUCED_AMOUNT_RS','BILL_REDUCED_AMOUNT_RS')
-    // }]
+   //const estimateCardData =[];
+    const demanddata = [{
+        name: {
+            labelName: 'BILL_TAX_HEADS',
+            labelKey: 'BILL_TAX_HEADS'
+        },
+    }];
+    const estimateCardData = [{
+        name: {
+            labelName: 'BILL_TAX_HEADS',
+            labelKey: 'BILL_TAX_HEADS'
+        }
+       
+    }]
     demandDetails.map(demand => {
-        // if( demand.taxAmount > 0){
-        //     estimateCardData[0].value=getLocaleLabels('DEBIT_NOTE','DEBIT_NOTE');
-        //   }else{
-        //     estimateCardData[0].value=getLocaleLabels('CREDIT_NOTE','CREDIT_NOTE');
-        //   }
+        if( demand.taxAmount > 0){
+            estimateCardData[0].value=getLocaleLabels('BILL_ADDITIONAL_AMOUNT_RS','BILL_ADDITIONAL_AMOUNT_RS');
+          }else{
+            estimateCardData[0].value=getLocaleLabels('BILL_REDUCED_AMOUNT_RS','BILL_REDUCED_AMOUNT_RS');
+          }
         estimateCardData.push({
             name: {
                 labelName: demand.taxHeadMasterCode,
@@ -78,7 +83,7 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
     })
 
     estdemandDetails.map(est => {
-
+            demanddata[0].value=getLocaleLabels('BILL_CURRENT_DEMAND','BILL_CURRENT_DEMAND');
         demanddata.push({
             name: {
                 labelName: est.taxHeadMasterCode,
@@ -94,6 +99,8 @@ console.log("demanddata:",demanddata);
     const documentsUploadRedux = getFromObject(preparedFinalObject, 'bill-amend-review-document-data', []);
     const documentCard = getDocumentsCard(documentsUploadRedux);
     const estimateDetails = getEstimateCardDetails(estimateCardData, undefined,demanddata)
+    console.log("estimateCardData",estimateCardData);
+    console.log("demanddata",demanddata);
     const billAmendDemandRevisionSummary = generateKeyValue(preparedFinalObject, modifiedDemand);
     //const propertydetails = getFromObject(preparedFinalObject, 'Properties[0]', []);
     const propertyCard = generateKeyValue(preparedFinalObject,propertydetails)
