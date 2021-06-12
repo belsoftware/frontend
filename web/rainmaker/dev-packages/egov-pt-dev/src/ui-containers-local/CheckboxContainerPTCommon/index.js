@@ -145,9 +145,10 @@ class CheckboxLabels extends React.Component {
       );
     }
   };
-
   render() {
-    const { classes, labelKey, required } = this.props;
+    const { classes, labelKey, required, preparedFinalObject, jsonPath } = this.props;
+     let fieldValue = this.state.checkedG
+    if (jsonPath) fieldValue = get(preparedFinalObject, jsonPath);
 
     return (
       <div
@@ -163,7 +164,7 @@ class CheckboxLabels extends React.Component {
               classes={{ label: "checkbox-button-label" }}
               control={
                 <Checkbox
-                  checked={this.state.checkedG}
+                  checked={fieldValue || this.state.checkedG}
                   onChange={this.handleChange("checkedG")}
                   classes={{
                     root: classes.radioRoot,
