@@ -297,7 +297,7 @@ const callBackForApply = async (state, dispatch) => {
     }
     propertyPayload.additionalDetails = additionalDetails;
     try {
-      if (propertyPayload.propertyType === 'BUILTUP.SHAREDPROPERTY') {
+      //if (propertyPayload.propertyType === 'BUILTUP.SHAREDPROPERTY' || propertyPayload.propertyType === 'BUILTUP.INDEPENDENTPROPERTY') {
         let unit = {};
         if(propertyPayload.units && propertyPayload.units.length!=0){
           propertyPayload.units[0].usageCategory = propertyPayload.subUsageCategory ? propertyPayload.subUsageCategory : propertyPayload.usageCategory;
@@ -325,7 +325,7 @@ const callBackForApply = async (state, dispatch) => {
         propertyPayload.units = [];
         propertyPayload.units.push(unit);
       }
-      }
+     // }
       propertyPayload.creationReason = propertyPayload.creationReason || 'CREATE';
       let payload = null;
       console.log("--propertyPayload at create--",cloneDeep(propertyPayload));
