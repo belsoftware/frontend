@@ -712,6 +712,7 @@ export const getFileUrlFromAPI = async fileStoreId => {
 
 export const downloadReceipt = (receiptQueryString) => {
   return async (dispatch) => {
+    let DOWNLOADRECEIPT = {}
     if (receiptQueryString) {
       // dispatch(downloadReceiptPending());
       try {
@@ -724,15 +725,34 @@ export const downloadReceipt = (receiptQueryString) => {
         if (oldFileStoreId) {
           downloadReceiptFromFilestoreID(oldFileStoreId, "download")
         }
-        else {
-          httpRequest(DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, queryStr, { Payments: payloadReceiptDetails.Payments }, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
-            .then(res => {
-              getFileUrlFromAPI(res.filestoreIds[0]).then((fileRes) => {
-                var win = window.open(fileRes[res.filestoreIds[0]], '_blank');
-                win.focus();
-              });
+        else { 
+          DOWNLOADRECEIPT = {
+          GET: {
+            URL: "/egov-pdf/download/PAYMENT/consolidatedreceipt",
+            ACTION: "_get",
+          },
+        };
+        try {
 
+          httpRequest( DOWNLOADRECEIPT.GET.URL, DOWNLOADRECEIPT.GET.ACTION, receiptQueryString, {},{ 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
+            .then(res => {
+              if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+                res.filestoreIds.map(fileStoreId => {
+                  downloadReceiptFromFilestoreID(fileStoreId, "download")
+                })
+              } else {
+                console.log('Some Error Occured while downloading Receipt!');
+                dispatch(downloadReceiptError("Error in Receipt Generation"));
+
+              }
             });
+      
+      
+        } catch (exception) {
+          console.log('Some Error Occured while downloading Receipt!');
+          dispatch(downloadReceiptError("Error in Receipt Generation"));
+
+        }
         }
       } catch (error) {
         dispatch(downloadReceiptError(error.message));
