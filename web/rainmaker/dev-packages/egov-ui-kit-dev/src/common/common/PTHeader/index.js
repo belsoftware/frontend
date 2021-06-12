@@ -6,15 +6,13 @@ import Label from "egov-ui-kit/utils/translationNode";
 import React from "react";
 import { generatePdfFromDiv } from "../../../utils/PTCommon";
 import { downloadPTBill  } from "egov-common/ui-utils/commons";
-import { getQueryArg} from "egov-ui-framework/ui-utils/commons";
-import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-import { getUserInfo} from "egov-ui-kit/utils/localStorageUtils";
+
 import "./index.css";
 
 const PTHeader = ({ header = '', headerValue = '', subHeaderTitle = '', subHeaderValue = '', downloadPrintButton = false ,download,print,totalBillAmountDue=0,tenantId=''}) => {
   const locale = getLocale() || "en_IN";
-  const userType = getUserInfo() && JSON.parse(getUserInfo()).type;
   const localizationLabelsData = initLocalizationLabels(locale);
+  let isCitizen = process.env.REACT_APP_NAME === "Citizen";
   let downloadButton;
   let printButton
 //let tenantId = getTenantId();
@@ -66,19 +64,24 @@ download?download():generatePdfFromDiv("download", subHeaderValue, "#property-re
     };
     let downloadMenu = [];
     let printMenu = [];
-    if(userType === "EMPLOYEE"){
+    if(!isCitizen){
     downloadMenu.push(applicationDownloadObject);
+    printMenu.push(tlCertificatePrintObject);
     
     }
 
-    printMenu.push(tlCertificatePrintObject);
+    
    
     if(totalBillAmountDue!=0){
       downloadMenu.push(billDownloadObject);
       printMenu.push(billPrintObject);
     }
+    if(downloadMenu.length!=0){
+    
     downloadButton = { menu: downloadMenu, visibility: true };
     printButton = { menu: printMenu, visibility: true };
+    }
+    else{  downloadPrintButton = false;}
   }
 
   return (
