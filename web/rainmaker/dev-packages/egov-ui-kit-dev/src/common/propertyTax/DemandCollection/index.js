@@ -14,6 +14,7 @@ import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configurat
 import get from "lodash/get";
 import set from "lodash/set";
 import Label from "egov-ui-kit/utils/translationNode";
+import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 class DemandCollection extends React.Component {
   render() {
     const { prepareFinalObject, preparedFinalObject,Properties = [] } = this.props;
@@ -114,7 +115,15 @@ class DemandCollection extends React.Component {
                                   }
                                   else
                                   {
-                                    alert( "Integer numbers are only allowed and enter upto two decimal places.");  
+                                    this.props.toggleSnackbarAndSetText(
+                                      true,
+                                      {
+                                        labelName: "Integer numbers are only allowed and enter upto two decimal places.",
+                                        labelKey: "ERR_DCB_VALIDATIONS_FAILED"
+                                      },
+                                      "error"
+                                    );
+                                   // alert( "Integer numbers are only allowed and enter upto two decimal places.");  
                                     return value = "" ; 
                                   }
                                  
@@ -129,7 +138,15 @@ class DemandCollection extends React.Component {
                                   {
                                       if (Math.sign(e.target.value)===-1) 
                                       {  
-                                      alert( "Negative numbers are not allowed.");
+                                        this.props.toggleSnackbarAndSetText(
+                                          true,
+                                          {
+                                            labelName: "Negative numbers are not allowed..",
+                                            labelKey: "ERR_DCB_NEGATIVE_FAILED"
+                                          },
+                                          "error"
+                                        );
+                                      //alert( "Negative numbers are not allowed.");
                                       return value = "" ;
                                       }
                                   }
@@ -138,7 +155,15 @@ class DemandCollection extends React.Component {
                                   {
                                       if (Math.sign(e.target.value)===-1) 
                                       {  
-                                      alert( "Please enter valid value for House Taxax/Water Tax/Conservancy Tax/Lightining Tax/Education Tax");
+                                        this.props.toggleSnackbarAndSetText(
+                                          true,
+                                          {
+                                            labelName: "Please enter valid value for House Taxax/Water Tax/Conservancy Tax/Lightining Tax/Education Tax",
+                                            labelKey: "ERR_DCB_TAX_HEAD_FAILED"
+                                          },
+                                          "error"
+                                        ); 
+                                     // alert( "Please enter valid value for House Taxax/Water Tax/Conservancy Tax/Lightining Tax/Education Tax");
                                       return value = "" ;
                                       }
                                   }
@@ -196,7 +221,15 @@ class DemandCollection extends React.Component {
                                    }
                                    else
                                    {
-                                     alert( "Integer numbers are only allowed and enter upto two decimal places.");  
+                                    this.props.toggleSnackbarAndSetText(
+                                      true,
+                                      {
+                                        labelName: "Integer numbers are only allowed and enter upto two decimal places.",
+                                        labelKey: "ERR_DCB_VALIDATIONS_FAILED"
+                                      },
+                                      "error"
+                                    );
+                                    // alert( "Integer numbers are only allowed and enter upto two decimal places.");  
                                      return value = "" ; 
                                    }
 
@@ -249,7 +282,9 @@ const mapDispatchToProps = (dispatch) => {
     prepareFormData: (path, value) => dispatch(prepareFormData(path, value)),
     loadMDMSData: (requestBody, moduleName, masterName) => dispatch(loadMDMSData(requestBody, moduleName, masterName)),
     reset_property_reset: () => dispatch(reset_property_reset()),
-    prepareFinalObject: (jsonPath, value) => dispatch(prepareFinalObject(jsonPath, value))
+    prepareFinalObject: (jsonPath, value) => dispatch(prepareFinalObject(jsonPath, value)),
+    toggleSnackbarAndSetText: (open, message, error) =>
+    dispatch(toggleSnackbarAndSetText(open, message, error)),
   };
 };
 export default connect(

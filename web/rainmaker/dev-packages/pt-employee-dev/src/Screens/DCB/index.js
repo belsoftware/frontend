@@ -226,7 +226,15 @@ class FormWizardDataEntry extends Component {
           
           if(duplicatedYears>0)
                   {
-                    alert("This Property has duplicate demands for  please contact Administrator ");
+                    this.props.toggleSnackbarAndSetText(
+                      true,
+                      {
+                        labelName: "This Property has duplicate demands for  please contact Administrator.",
+                        labelKey: "ERR_DCB_DUPLICATE_VALIDATIONS"
+                      },
+                      "error"
+                    );
+                   // alert("This Property has duplicate demands for  please contact Administrator ");
                     duplicatedYears = duplicatedYears+1                    
                   } 
 
@@ -562,7 +570,15 @@ class FormWizardDataEntry extends Component {
 
         if(duplicatedYears>0)
                 {
-                  alert("This Property has duplicate demands for  please contact Administrator ");
+                  this.props.toggleSnackbarAndSetText(
+                    true,
+                    {
+                      labelName: "This Property has duplicate demands for  please contact Administrator.",
+                      labelKey: "ERR_DCB_DUPLICATE_VALIDATIONS"
+                    },
+                    "error"
+                  );
+                  //alert("This Property has duplicate demands for  please contact Administrator ");
                   duplicatedYears = duplicatedYears+1                    
                 } 
 
@@ -2690,7 +2706,15 @@ class FormWizardDataEntry extends Component {
           this.pay();
         }
       } else {
-        alert("Amount cannot be a fraction!");
+        this.props.toggleSnackbarAndSetText(
+          true,
+          {
+            labelName: "Amount cannot be a fraction",
+            labelKey: "ERR_DCB_FRACTION_VALIDATIONS_FAILED"
+          },
+          "error"
+        );
+       // alert("Amount cannot be a fraction!");
       }
     } catch (e) {
       hideSpinner();
