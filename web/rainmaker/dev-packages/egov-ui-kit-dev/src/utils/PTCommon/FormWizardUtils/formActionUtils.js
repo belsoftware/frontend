@@ -2,7 +2,7 @@
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { toggleSnackbarAndSetText, setRoute } from "egov-ui-kit/redux/app/actions";
 import { createPropertyPayload } from "egov-ui-kit/config/forms/specs/PropertyTaxPay/propertyCreateUtils";
-import { hideSpinner } from "egov-ui-kit/redux/common/actions";
+import { showSpinner, hideSpinner } from "egov-ui-kit/redux/common/actions";
 import { httpRequest } from "egov-ui-kit/utils/api";
 import { getBusinessServiceNextAction } from "egov-ui-kit/utils/PTCommon/FormWizardUtils";
 import { getQueryValue } from "egov-ui-kit/utils/PTCommon";
@@ -126,6 +126,7 @@ export const createProperty = async (Properties, action, props, isModify, prepar
         }
         
         propertyPayload.additionalDetails?{...propertyPayload.additionalDetails,...propertyAdditionalDetails}:{...propertyAdditionalDetails};
+        store.dispatch(showSpinner()); 
         const propertyResponse = await httpRequest(
             `property-services/property/${propertyMethodAction}`,
             `${propertyMethodAction}`,
@@ -145,8 +146,10 @@ export const createProperty = async (Properties, action, props, isModify, prepar
                 // Navigate to success page
                 if (action == '_create') {
                     routeToAcknowledgement(PROPERTY_FORM_PURPOSE.CREATE, 'success', propertyId, tenantId, acknowldgementNumber);
+                    store.dispatch(hideSpinner());
                 } else {
                     routeToAcknowledgement(PROPERTY_FORM_PURPOSE.UPDATE, 'success', propertyId, tenantId, acknowldgementNumber);
+                    store.dispatch(hideSpinner());
                 }
             }
         }

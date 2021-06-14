@@ -1540,6 +1540,7 @@ class FormWizardDataEntry extends Component {
       this
     );
     // Create/Update property call, action will be either create or update
+    showSpinner();
     propertySubmitAction(properties, action, this.props);
   };
 
