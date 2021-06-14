@@ -9,6 +9,7 @@ import {
 import { changeStep } from "./footer";
 import { convertEpochToDateAndHandleNA, handlePropertySubUsageType, handleNA } from '../../utils';
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import { getTenantIdCommon } from "egov-ui-kit/utils/localStorageUtils";
 
 
 const getHeader = label => {
@@ -198,7 +199,7 @@ const propertyLocationDetails = {
           },
           { 
             localePrefix: {
-              moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : "",
+              moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : getTenantIdCommon(),
               masterName: "REVENUE"
             },
             jsonPath: "applyScreen.property.address.locality.code", callBack: handleNA },
@@ -207,7 +208,7 @@ const propertyLocationDetails = {
           },
           { 
             localePrefix: {
-              moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : "",
+              moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : getTenantIdCommon(),
               masterName: "REVENUE"
             },
             jsonPath: "applyScreenOld.property.address.locality.code", callBack: handleNA },

@@ -37,7 +37,9 @@ import { reviewDocuments } from "./applyResource/reviewDocuments";
 import { reviewModificationsEffective } from "./applyResource/reviewModificationsEffective";
 import { reviewOwner } from "./applyResource/reviewOwner";
 import { getTransformedLocale } from "egov-ui-framework/ui-utils/commons";
-
+import { getLocale } from "egov-ui-kit/utils/localStorageUtils";
+import { fetchLocalizationLabel } from "egov-ui-kit/redux/app/actions";
+import { WaterSewerageOnProperty } from "./applyResource/functions";
 import './index.css'
 
 let isMode = isModifyMode();
@@ -412,10 +414,9 @@ export const getData = async (action, state, dispatch) => {
   await getMdmsData(dispatch);
   if (tenantId) {
     await getCBMdmsData(dispatch, tenantId);
+    dispatch(fetchLocalizationLabel(getLocale(), tenantId, tenantId));
   }
-
-
-
+        
   if (applicationNo) {
     //Edit/Update Flow ----   
     let queryObject = [
@@ -429,30 +430,30 @@ export const getData = async (action, state, dispatch) => {
         handleApplicationNumberDisplay(dispatch, applicationNo)
       }
       let payloadWater, payloadSewerage;
-      if (applicationNo.includes("SW")) {
-        try { payloadSewerage = await getSearchResultsForSewerage(queryObject, dispatch) } catch (error) { console.error(error); }
-        payloadSewerage.SewerageConnections[0].water = false;
-        payloadSewerage.SewerageConnections[0].sewerage = true;
-        payloadSewerage.SewerageConnections[0].service = "Sewerage";
-        dispatch(prepareFinalObject("SewerageConnection", payloadSewerage.SewerageConnections));
-      } else {
-        try { payloadWater = await getSearchResults(queryObject) } catch (error) { console.error(error); };
-        payloadWater.WaterConnection[0].water = true;
-        payloadWater.WaterConnection[0].sewerage = false;
-        payloadWater.WaterConnection[0].service = "Water";
-        dispatch(prepareFinalObject("WaterConnection", payloadWater.WaterConnection));
-        if (get(payloadWater, "WaterConnection[0].waterSource", null) && get(payloadWater, "WaterConnection[0].waterSubSource", null)) {
-          dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", [{
-            waterSourceType: get(payloadWater, "WaterConnection[0].waterSource", null),
-            waterSubSource: get(payloadWater, "WaterConnection[0].waterSourceSubSource", null)
-          }]))
-        } else if (get(payloadWater, "WaterConnection[0].waterSource", null)) {
-          dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", [{
-            waterSourceType: get(payloadWater, "WaterConnection[0].waterSource", null),
-            waterSubSource: get(payloadWater, "WaterConnection[0].waterSourceSubSource", null)
-          }]))
-        }
+      // if (applicationNo.includes("SW")) {
+      try { payloadSewerage = await getSearchResultsForSewerage(queryObject, dispatch) } catch (error) { console.error(error); }
+      payloadSewerage.SewerageConnections[0].water = false;
+      payloadSewerage.SewerageConnections[0].sewerage = true;
+      payloadSewerage.SewerageConnections[0].service = "Sewerage";
+      dispatch(prepareFinalObject("SewerageConnection", payloadSewerage.SewerageConnections));
+      // } else {
+      try { payloadWater = await getSearchResults(queryObject) } catch (error) { console.error(error); };
+      payloadWater.WaterConnection[0].water = true;
+      payloadWater.WaterConnection[0].sewerage = false;
+      payloadWater.WaterConnection[0].service = "Water";
+      dispatch(prepareFinalObject("WaterConnection", payloadWater.WaterConnection));
+      if (get(payloadWater, "WaterConnection[0].waterSource", null) && get(payloadWater, "WaterConnection[0].waterSubSource", null)) {
+        dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", [{
+          waterSourceType: get(payloadWater, "WaterConnection[0].waterSource", null),
+          waterSubSource: get(payloadWater, "WaterConnection[0].waterSourceSubSource", null)
+        }]))
+      } else if (get(payloadWater, "WaterConnection[0].waterSource", null)) {
+        dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", [{
+          waterSourceType: get(payloadWater, "WaterConnection[0].waterSource", null),
+          waterSubSource: get(payloadWater, "WaterConnection[0].waterSourceSubSource", null)
+        }]))
       }
+      // }
       const waterConnections = payloadWater ? payloadWater.WaterConnection : []
       if (waterConnections.length > 0) {
         waterConnections[0].additionalDetails.locality = get(waterConnections[0], "property.address.locality.code");
@@ -482,7 +483,7 @@ export const getData = async (action, state, dispatch) => {
       if (isModifyMode() && isModifyModeAction()) {
         // ModifyEdit should not call create.       
         dispatch(prepareFinalObject("modifyAppCreated", true));
-      }
+      }      
 
       dispatch(prepareFinalObject("applyScreen", findAndReplace(combinedArray[0], "null", "NA")));
       // For oldvalue display
@@ -657,7 +658,7 @@ export const getData = async (action, state, dispatch) => {
 
       if (propertyID) {       
         let queryObject = [{ key: "tenantId", value: tenantId }, { key: "propertyIds", value: propertyID }];
-        getApplyPropertyDetails(queryObject, dispatch, propertyID, state)
+        getApplyPropertyDetails(queryObject, dispatch, propertyID, tenantId, state)
       } else {       
         let propId = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.propertyId")       
         //Aleady existing connection count
@@ -674,7 +675,15 @@ export const getData = async (action, state, dispatch) => {
           dispatch(prepareFinalObject("applyScreen.existingWaterConnCount", count));
           dispatch(prepareFinalObject("applyScreen.existingWaterConn", connStr.join(", ")));          
         } catch (error) { console.error(error); };
-
+        try {
+          let payloadSewerage = await getSearchResultsForSewerage(queryObject, dispatch);
+          let swConns = get(payloadSewerage, "SewerageConnections", []);
+          let count = swConns.length;
+          let connStr = [];
+          swConns.forEach(obj => connStr.push(obj.connectionNo));
+          dispatch(prepareFinalObject("applyScreen.existingSewerageConnCount", count));
+          dispatch(prepareFinalObject("applyScreen.existingSewerageConn", connStr.join(", ")));
+        } catch (error){ console.error(error); };
         //Connection count
         dispatch(prepareFinalObject("searchScreen.propertyIds", propId));
       }
@@ -698,7 +707,8 @@ export const getData = async (action, state, dispatch) => {
     }
   } else if (propertyID) {   
     let queryObject = [{ key: "tenantId", value: tenantId }, { key: "propertyIds", value: propertyID }];
-    getApplyPropertyDetails(queryObject, dispatch, propertyID, state)
+    getApplyPropertyDetails(queryObject, dispatch, propertyID, tenantId, state)
+    WaterSewerageOnProperty(tenantId, propertyID, dispatch)
     if (get(state.screenConfiguration.preparedFinalObject, "applyScreen.water") && get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage")) {
       toggleWaterFeilds(action, true);
       toggleSewerageFeilds(action, true);
@@ -761,7 +771,7 @@ const checkCardPermission = (state, cardName) => {
 //   return false;
 // }
 
-const getApplyPropertyDetails = async (queryObject, dispatch, propertyID, state) => {
+const getApplyPropertyDetails = async (queryObject, dispatch, propertyID, tenantId, state) => {
   let payload = await getPropertyResults(queryObject, dispatch);
   let propertyObj = payload.Properties[0]; 
   if (!isActiveProperty(propertyObj)) {
@@ -775,6 +785,18 @@ const getApplyPropertyDetails = async (queryObject, dispatch, propertyID, state)
   dispatch(prepareFinalObject("searchScreen.propertyIds", propertyID));
   showHideFieldsFirstStep(dispatch, propertyObj.propertyId, true);
   if (propertyID) {
+    const mohallaLocalePrefix = {
+      moduleName: tenantId,
+      masterName: "REVENUE"
+    };
+    dispatch(
+      handleField(
+        "apply",
+        "components.div.children.formwizardFirstStep.children.Details.children.cardContent.children.propertyDetail.children.viewFour.children.locality.children.value.children.key",
+        "props.localePrefix",
+        mohallaLocalePrefix
+      )
+    );
     let ownershipCategory = get(payload, "Properties[0].ownershipCategory", "");
     if (ownershipCategory.includes("INDIVIDUAL")) {
       dispatch(
@@ -792,7 +814,7 @@ const getApplyPropertyDetails = async (queryObject, dispatch, propertyID, state)
           "visible",
           true
         )
-      );
+      );      
     } else {
       dispatch(
         handleField(

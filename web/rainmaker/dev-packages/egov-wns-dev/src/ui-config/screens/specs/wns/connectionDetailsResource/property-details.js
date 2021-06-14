@@ -7,7 +7,7 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { changeStep } from "../viewBillResource/footer";
-
+import { getTenantIdCommon } from "egov-ui-kit/utils/localStorageUtils";
 import { handlePropertySubUsageType, handleNA } from '../../utils';
 
 const getHeader = label => {
@@ -164,7 +164,7 @@ const propertyLocationDetails = getCommonContainer({
     },
     {
       localePrefix: {
-        moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : "",
+        moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : getTenantIdCommon(),
         masterName: "REVENUE"
       },
       jsonPath: "WaterConnection[0].property.address.locality.code",
