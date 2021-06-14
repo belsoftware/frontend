@@ -261,10 +261,23 @@ export const adjustmentAmountDetails = async (state, dispatch, amendment,demando
             
                         });
                     }
+                    
                 }
-            
+               else if(!demandobj.demandDetails.find(element => element.taxHeadMasterCode === bill.taxHeadMasterCode)){
+                billDetails.push({
+                    taxHeadMasterCode: bill.taxHeadMasterCode,
+                    taxAmount: Math.abs(parseFloat(bill.taxAmount)),
+                    amountType: amountType,
+                    demand:0
+                })
+               
             }
+            }
+           
+              
+               
         });
+      
         if(found == false){
             billDetails.push({
                 taxHeadMasterCode: dem.taxHeadMasterCode,
@@ -273,12 +286,17 @@ export const adjustmentAmountDetails = async (state, dispatch, amendment,demando
                 demand:dem.taxAmount
 
             });
+           
 
         }
     });
-    
+    console.log("Bill Details" + JSON.stringify(billDetails))
+    const unique =  billDetails.map(e => e.taxHeadMasterCode)
+    .map((e, i, final) => final.indexOf(e) === i && i)
+   .filter((e) => billDetails[e]).map(e => billDetails[e]);
 
-    dispatch(prepareFinalObject("AmendmentTemp[0].estimateCardData", billDetails, []));
+
+    dispatch(prepareFinalObject("AmendmentTemp[0].estimateCardData", unique, []));
 }
 
 const documentMaping = async (documentsPreview) => {
