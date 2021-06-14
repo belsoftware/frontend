@@ -531,7 +531,7 @@ export const dummy = {
     type: "singleValueList",
     floatingLabelText: "PT_COMMON_PROPERTY_LOCATION",
     hintText: "PT_COMMON_PROPERTY_LOCATION_PLACEHOLDER",
-    localePrefix: true,//{ moduleName: "PropertyTax", masterName: "PropertyLocation" },
+    localePrefix: "PT_COMMON_PROPERTY_LOCATION",//{ moduleName: "PropertyTax", masterName: "PropertyLocation" },
     numcols: 6,
     fullWidth: true,
     errorMessage: "PT_PROPERTY_DETAILS_DOOR_NUMBER_ERRORMSG",
