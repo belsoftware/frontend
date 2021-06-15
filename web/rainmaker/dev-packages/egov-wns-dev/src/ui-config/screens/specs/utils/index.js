@@ -1323,8 +1323,9 @@ export const getBillEstimateDialogButton =(name,key,screenKey) => {
       callBack: (state, dispatch) => {
         showHideBillEstimatePopup(state, dispatch, screenKey);
       }
-    }
+    },
     //visible: false
+    visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
   };
 };
 

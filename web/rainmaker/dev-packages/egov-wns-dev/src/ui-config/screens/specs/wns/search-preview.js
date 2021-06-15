@@ -183,7 +183,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
               dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
             }
           }
-          billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);
+          billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);          
           if (billEstimate !== null && billEstimate !== undefined) {
            
             if (billEstimate.BillEstimation != undefined) {
@@ -810,7 +810,9 @@ const screenConfig = {
         open: false,
         maxWidth: "md",
         screenKey: "search-preview",
-      }
+        visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+      },
+      visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
     },
 
 
@@ -898,17 +900,19 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
         dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
       }
     }
-
-    billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);
-   if (billEstimate !== null && billEstimate !== undefined) {
-     
-      if (billEstimate.BillEstimation != undefined) {
-        //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
-        //estimate.Calculation[0].appStatus = processInstanceAppStatus;
-        dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
-      }
+  
+   
+    if(process.env.REACT_APP_NAME != "Citizen" ){
+      billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);     
+     if (billEstimate !== null && billEstimate !== undefined) {     
+        if (billEstimate.BillEstimation != undefined) {
+          //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
+          //estimate.Calculation[0].appStatus = processInstanceAppStatus;
+          dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
+        }
+      }  
     }
-
+   
 
     if (isModifyMode()) {
       let connectionNo = payload.WaterConnection[0].connectionNo;
