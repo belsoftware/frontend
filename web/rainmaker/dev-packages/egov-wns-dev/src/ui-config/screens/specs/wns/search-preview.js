@@ -740,12 +740,12 @@ const screenConfig = {
             editredirect: editredirect,
             beforeSubmitHook: (data) => {              
               data = data[0];
-              data.wsTaxHeads.forEach(item => {
+              data && data.wsTaxHeads && data.wsTaxHeads.forEach(item => {
                 if (!item.amount || item.length === null) {
                   item.amount = 0;
                 }
               });
-              data.roadTypeEst.forEach(item => {
+              data && data.roadTypeEst && data.roadTypeEst.forEach(item => {
                 if (!item.length || item.length === null) {
                     item.length = 0;
                   }
