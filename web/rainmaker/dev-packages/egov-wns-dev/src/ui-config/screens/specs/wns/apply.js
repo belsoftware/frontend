@@ -430,30 +430,30 @@ export const getData = async (action, state, dispatch) => {
         handleApplicationNumberDisplay(dispatch, applicationNo)
       }
       let payloadWater, payloadSewerage;
-      // if (applicationNo.includes("SW")) {
-      try { payloadSewerage = await getSearchResultsForSewerage(queryObject, dispatch) } catch (error) { console.error(error); }
-      payloadSewerage.SewerageConnections[0].water = false;
-      payloadSewerage.SewerageConnections[0].sewerage = true;
-      payloadSewerage.SewerageConnections[0].service = "Sewerage";
-      dispatch(prepareFinalObject("SewerageConnection", payloadSewerage.SewerageConnections));
-      // } else {
-      try { payloadWater = await getSearchResults(queryObject) } catch (error) { console.error(error); };
-      payloadWater.WaterConnection[0].water = true;
-      payloadWater.WaterConnection[0].sewerage = false;
-      payloadWater.WaterConnection[0].service = "Water";
-      dispatch(prepareFinalObject("WaterConnection", payloadWater.WaterConnection));
-      if (get(payloadWater, "WaterConnection[0].waterSource", null) && get(payloadWater, "WaterConnection[0].waterSubSource", null)) {
-        dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", [{
-          waterSourceType: get(payloadWater, "WaterConnection[0].waterSource", null),
-          waterSubSource: get(payloadWater, "WaterConnection[0].waterSourceSubSource", null)
-        }]))
-      } else if (get(payloadWater, "WaterConnection[0].waterSource", null)) {
-        dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", [{
-          waterSourceType: get(payloadWater, "WaterConnection[0].waterSource", null),
-          waterSubSource: get(payloadWater, "WaterConnection[0].waterSourceSubSource", null)
-        }]))
-      }
-      // }
+       if (applicationNo.includes("SW")) {
+         try { payloadSewerage = await getSearchResultsForSewerage(queryObject, dispatch) } catch (error) { console.error(error); }
+         payloadSewerage.SewerageConnections[0].water = false;
+         payloadSewerage.SewerageConnections[0].sewerage = true;
+         payloadSewerage.SewerageConnections[0].service = "Sewerage";
+         dispatch(prepareFinalObject("SewerageConnection", payloadSewerage.SewerageConnections));
+       } else {
+         try { payloadWater = await getSearchResults(queryObject) } catch (error) { console.error(error); };
+         payloadWater.WaterConnection[0].water = true;
+         payloadWater.WaterConnection[0].sewerage = false;
+         payloadWater.WaterConnection[0].service = "Water";
+         dispatch(prepareFinalObject("WaterConnection", payloadWater.WaterConnection));
+         if (get(payloadWater, "WaterConnection[0].waterSource", null) && get(payloadWater, "WaterConnection[0].waterSubSource", null)) {
+           dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", [{
+             waterSourceType: get(payloadWater, "WaterConnection[0].waterSource", null),
+             waterSubSource: get(payloadWater, "WaterConnection[0].waterSourceSubSource", null)
+           }]))
+         } else if (get(payloadWater, "WaterConnection[0].waterSource", null)) {
+           dispatch(prepareFinalObject("DynamicMdms.ws-services-masters.waterSource.selectedValues", [{
+             waterSourceType: get(payloadWater, "WaterConnection[0].waterSource", null),
+             waterSubSource: get(payloadWater, "WaterConnection[0].waterSourceSubSource", null)
+           }]))
+         }
+       }
       const waterConnections = payloadWater ? payloadWater.WaterConnection : []
       if (waterConnections.length > 0) {
         waterConnections[0].additionalDetails.locality = get(waterConnections[0], "property.address.locality.code");
