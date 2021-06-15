@@ -238,6 +238,7 @@ export const floorName = {
     type: "AutocompleteDropdown",
     floatingLabelText: "PT_FLOOR_NO",
     localePrefix: { moduleName: "PROPERTYTAX", masterName: "FLOOR" },
+    labelsFromLocalisation: true,
     hintText: "PT_FLOOR_NO",
     numcols: 4,
     gridDefination: {
