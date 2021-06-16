@@ -171,18 +171,18 @@ class Property extends Component {
       });
     }
   };
-  editDemand= () =>{
-    const {  propertyId, tenantId } = this.props;
-
-    if(process.env.REACT_APP_NAME !='citizen'){  
-
-  this.props.history.push(`/property-tax/demand-and-collection?propertyId=${propertyId}&edit=true`);
+  editDemand = () => {
+    const { propertyId, tenantId, selPropertyDetails } = this.props;
+    if (selPropertyDetails.status != "ACTIVE") {
+      this.props.toggleSnackbarAndSetText(true, { labelName: "Property in Workflow", labelKey: "ERROR_PROPERTY_IN_WORKFLOW" }, "error");
+    } else if (process.env.REACT_APP_NAME != "citizen") {
+      this.props.history.push(`/property-tax/demand-and-collection?propertyId=${propertyId}&edit=true`);
     }
     // this.setState({
     //   dialogueOpen: true,
     //   urlToAppend: `/property-tax/assessment-form?assessmentId=${assessmentNo}&isReassesment=true&isAssesment=true&propertyId=${propertyId}&tenantId=${tenantId}`,
-    // }); 
-  }
+    // });
+  };
   onEditPropertyClick = () => {
     const { latestPropertyDetails, propertyId, tenantId, selPropertyDetails } = this.props;
     const assessmentNo = latestPropertyDetails && latestPropertyDetails.assessmentNumber;
