@@ -183,7 +183,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
               dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
             }
           }
-          billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);
+          billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);          
           if (billEstimate !== null && billEstimate !== undefined) {
            
             if (billEstimate.BillEstimation != undefined) {
@@ -740,12 +740,12 @@ const screenConfig = {
             editredirect: editredirect,
             beforeSubmitHook: (data) => {              
               data = data[0];
-              data.wsTaxHeads.forEach(item => {
+              data && data.wsTaxHeads && data.wsTaxHeads.forEach(item => {
                 if (!item.amount || item.length === null) {
                   item.amount = 0;
                 }
               });
-              data.roadTypeEst.forEach(item => {
+              data && data.roadTypeEst && data.roadTypeEst.forEach(item => {
                 if (!item.length || item.length === null) {
                     item.length = 0;
                   }
@@ -810,7 +810,9 @@ const screenConfig = {
         open: false,
         maxWidth: "md",
         screenKey: "search-preview",
-      }
+        visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
+      },
+      visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
     },
 
 
@@ -898,17 +900,19 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
         dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
       }
     }
-
-    billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);
-   if (billEstimate !== null && billEstimate !== undefined) {
-     
-      if (billEstimate.BillEstimation != undefined) {
-        //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
-        //estimate.Calculation[0].appStatus = processInstanceAppStatus;
-        dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
-      }
+  
+   
+    if(process.env.REACT_APP_NAME != "Citizen" ){
+      billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);     
+     if (billEstimate !== null && billEstimate !== undefined) {     
+        if (billEstimate.BillEstimation != undefined) {
+          //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
+          //estimate.Calculation[0].appStatus = processInstanceAppStatus;
+          dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
+        }
+      }  
     }
-
+   
 
     if (isModifyMode()) {
       let connectionNo = payload.WaterConnection[0].connectionNo;

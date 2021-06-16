@@ -61,7 +61,7 @@ const formConfig = {
       type: "singleValueList",
       floatingLabelText: "PT_COMMON_PROPERTY_LOCATION",
       hintText: "PT_COMMON_PROPERTY_LOCATION_PLACEHOLDER",
-      localePrefix: true,
+      localePrefix: "PT_COMMON_PROPERTY_LOCATION",
       numcols: 6,
       fullWidth: true,
       errorMessage: "PT_PROPERTY_DETAILS_DOOR_NUMBER_ERRORMSG",

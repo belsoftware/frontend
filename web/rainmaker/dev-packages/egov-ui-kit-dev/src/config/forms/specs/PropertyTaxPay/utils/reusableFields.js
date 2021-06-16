@@ -92,7 +92,11 @@ export const subUsageType = {
     id: "assessment-subUsageType",
     jsonPath: "Properties[0].propertyDetails[0].units[0].usageCategoryDetail",
     type: "AutocompleteDropdown",
-    localePrefix: "PROPERTYTAX_BILLING_SLAB",
+    localePrefix: {
+      moduleName: "PROPERTYTAX",
+      masterName: "BILLING_SLAB"
+    },
+    labelsFromLocalisation: true,
     floatingLabelText: "PT_COMMON_SUB_USAGE_TYPE",
     hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
@@ -121,7 +125,11 @@ export const occupancy = {
     id: "assessment-occupancy",
     jsonPath: "Properties[0].propertyDetails[0].units[0].occupancyType",
     type: "AutocompleteDropdown",
-    localePrefix: { moduleName: "PropertyTax", masterName: "OccupancyType" },
+    localePrefix: {
+      moduleName: "PROPERTYTAX",
+      masterName: "OCCUPANCYTYPE"
+    },
+    labelsFromLocalisation: true,
     floatingLabelText: "PT_ASSESMENT_INFO_OCCUPLANCY",
     hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
     required: true,
@@ -229,7 +237,8 @@ export const floorName = {
     id: "floorName",
     type: "AutocompleteDropdown",
     floatingLabelText: "PT_FLOOR_NO",
-    localePrefix: { moduleName: "PropertyTax", masterName: "Floor" },
+    localePrefix: { moduleName: "PROPERTYTAX", masterName: "FLOOR" },
+    labelsFromLocalisation: true,
     hintText: "PT_FLOOR_NO",
     numcols: 4,
     gridDefination: {
@@ -540,7 +549,7 @@ export const dummy = {
     type: "singleValueList",
     floatingLabelText: "PT_COMMON_PROPERTY_LOCATION",
     hintText: "PT_COMMON_PROPERTY_LOCATION_PLACEHOLDER",
-    localePrefix: true,//{ moduleName: "PropertyTax", masterName: "PropertyLocation" },
+    localePrefix: "PT_COMMON_PROPERTY_LOCATION",//{ moduleName: "PropertyTax", masterName: "PropertyLocation" },
     numcols: 6,
     fullWidth: true,
     errorMessage: "PT_PROPERTY_DETAILS_DOOR_NUMBER_ERRORMSG",

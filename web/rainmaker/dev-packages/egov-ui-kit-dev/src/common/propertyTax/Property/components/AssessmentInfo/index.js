@@ -43,7 +43,7 @@ export const getBuildingTypeInfo = (generalMDMSDataById, propertyDetails) => {
   if (!generalMDMSDataById) {
     return propertyDetails.propertySubType ? propertyDetails.propertySubType : propertyDetails.propertyType ? propertyDetails.propertyType : 'NA';
   } else {
-    return get(generalMDMSDataById, `PropertySubType.${propertyDetails.propertySubType}.name`, get(generalMDMSDataById, `PropertyType.${propertyDetails.propertyType}.name`, "NA"))
+    return getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + get(generalMDMSDataById, `PropertySubType.${propertyDetails.propertySubType}.code`, get(generalMDMSDataById, `PropertyType.${propertyDetails.propertyType}.code`, "NA")), localizationLabelsData)
   }
 }
 

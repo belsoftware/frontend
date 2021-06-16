@@ -19,12 +19,15 @@ import isEqual from "lodash/isEqual";
 import orderby from "lodash/orderBy";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { hideSpinner, showSpinner } from "egov-ui-kit/redux/common/actions";
+
 import PTHeader from "../../common/PTHeader";
 import AssessmentList from "../AssessmentList";
 import YearDialogue from "../YearDialogue";
 import AmendmentDialogue from "../AmendmentDialogue"
 import PropertyInformation from "./components/PropertyInformation";
 import "./index.css";
+
 
 const innerDivStyle = {
   padding: "0",
@@ -168,18 +171,18 @@ class Property extends Component {
       });
     }
   };
-  editDemand= () =>{
-    const {  propertyId, tenantId } = this.props;
-
-    if(process.env.REACT_APP_NAME !='citizen'){  
-
-  this.props.history.push(`/property-tax/demand-and-collection?propertyId=${propertyId}&edit=true`);
+  editDemand = () => {
+    const { propertyId, tenantId, selPropertyDetails } = this.props;
+    if (selPropertyDetails.status != "ACTIVE") {
+      this.props.toggleSnackbarAndSetText(true, { labelName: "Property in Workflow", labelKey: "ERROR_PROPERTY_IN_WORKFLOW" }, "error");
+    } else if (process.env.REACT_APP_NAME != "citizen") {
+      this.props.history.push(`/property-tax/demand-and-collection?propertyId=${propertyId}&edit=true`);
     }
     // this.setState({
     //   dialogueOpen: true,
     //   urlToAppend: `/property-tax/assessment-form?assessmentId=${assessmentNo}&isReassesment=true&isAssesment=true&propertyId=${propertyId}&tenantId=${tenantId}`,
-    // }); 
-  }
+    // });
+  };
   onEditPropertyClick = () => {
     const { latestPropertyDetails, propertyId, tenantId, selPropertyDetails } = this.props;
     const assessmentNo = latestPropertyDetails && latestPropertyDetails.assessmentNumber;
@@ -306,17 +309,24 @@ class Property extends Component {
     // if (this.props.userID !== prevProps.userID) {
     //   this.fetchData(this.props.userID);
     // }
-
+    let {
+     
+      showSpinner,
+      hideSpinner,
+      
+    } = this.props;
 
     const propertyId = decodeURIComponent(this.props.match.params.propertyId);
     const { totalBillAmountDue, Assessments } = this.props;
     if (Assessments && Assessments.length > 0 && Assessments[0].propertyId == propertyId && !this.state.billFetched) {
       this.setState({ billFetched: true })
+      showSpinner();
       this.props.fetchTotalBillAmount([
         { key: "consumerCode", value: propertyId },
         { key: "tenantId", value: this.props.match.params.tenantId },
         { key: "businessService", value: 'PT' }
       ]);
+      hideSpinner();
     }
   }
 
@@ -809,6 +819,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchAssessments: (fetchAssessmentsQueryObject) => dispatch(fetchAssessments(fetchAssessmentsQueryObject)),
     fetchAmendment: (fetchAmendmentQueryObject) => dispatch(fetchAmendment(fetchAmendmentQueryObject)),
     fetchLocalizationLabel: (locale, moduleName, tenantId)=> dispatch(fetchLocalizationLabel(locale, moduleName, tenantId)),
+    showSpinner: () => dispatch(showSpinner()),
+    hideSpinner: () => dispatch(hideSpinner()),
   };
 };
 

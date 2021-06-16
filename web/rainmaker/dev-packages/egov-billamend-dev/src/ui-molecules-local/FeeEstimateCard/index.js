@@ -169,7 +169,7 @@ function FeesEstimateCard(props) {
                 </Typography>
                 <Card className={classes.whiteCard}>
                     <Grid container style={{display:"flex"}}>
-                        <Grid item><ErrorIcon className={classes.leftIcon} /></Grid>
+                        {/* <Grid item><ErrorIcon className={classes.leftIcon} /></Grid> */}
                         <Grid>
                             {estimate.extra.map((item, key) => {
                                 let textLeft, textRight;
