@@ -508,7 +508,7 @@ export const getTextToLocalMapping = label => {
   }
 };
 
-export const loadCertDetails = async (action, state, dispatch,data) => {
+export const loadGuestHouseDetails = async (action, state, dispatch,data) => {
 
   let requestBody = {};
   const queryParams = [
@@ -516,18 +516,12 @@ export const loadCertDetails = async (action, state, dispatch,data) => {
     { key: "id", value: data.id}    
   ];
 
-  if(data.birthcertificateno)
-    queryParams.push({ key: "birthcertificateno", value: data.birthcertificateno})
-  else
-  if(data.deathcertificateno)
-    queryParams.push({ key: "deathcertificateno", value: data.deathcertificateno})
-
   try{
     let payload = null;
     payload = await httpRequest(
       "post",
-      `/birth-death-services/${data.module}/_viewCertData`,
-      "_viewCertData",
+      `/obm-services/guestHouse/_search`,
+      "_search",
       queryParams,
       requestBody
     );
@@ -543,7 +537,7 @@ export const loadCertDetails = async (action, state, dispatch,data) => {
       "error"
     );
     console.error(e);
-    //return {"RequestInfo":{"apiId":"Mihy","ver":".01","ts":null,"resMsgId":"uief87324","msgId":"20170310130900|en_IN","status":"successful"},"BirthCertificate":[{"id":"1","createdby":null,"createdtime":null,"dateofbirth":1614063655148,"dateofreport":1614063655148,"firstname":"san","gender":1,"hospitalname":null,"informantsaddress":null,"informantsname":null,"lastname":null,"middlename":null,"placeofbirth":"Bangalore","registrationno":"2021-1","remarks":null,"lastmodifiedby":null,"lastmodifiedtime":null,"counter":0,"tenantid":null,"fullname":"SRI V S","birthFatherInfo":{"id":null,"aadharno":null,"createdby":null,"createdtime":null,"education":null,"emailid":null,"firstname":"abc","lastname":null,"middlename":null,"mobileno":null,"nationality":null,"proffession":null,"religion":null,"lastmodifiedby":null,"lastmodifiedtime":null,"fullname":"R S H"},"birthMotherInfo":{"id":null,"aadharno":null,"createdby":null,"createdtime":null,"education":null,"emailid":null,"firstname":"abc1","lastname":null,"middlename":null,"mobileno":null,"nationality":null,"proffession":null,"religion":null,"lastmodifiedby":null,"lastmodifiedtime":null,"fullname":"S V H"},"birthPermaddr":{"fullAddress":"100 112 CROSS 108 Church Servant Qtr. Jalapahar"},"birthPresentaddr":{"fullAddress":"100 112 CROSS 108 Church Servant Qtr. Jalapahar"}}]};
+    return [{"name":"Residency","tenantId":"pb.agra","address":"5th Cross, 85 Main Road, Agra","longitude":"12.972442","latitude":"77.580643","contactNo":"87412458652","id":"GH_1","priceText":"Starting at 1200/day","availability":"Available","fullDetails":{"maxAllowedBookingDays":20,"maxAllowedHalls":10},"halls":[{"hallId":"hall1","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}}]}];
   }
 }
 
@@ -815,5 +809,30 @@ export const downloadReceipt = async (consumerCode,tenantId) => {
   return response;
 
 }
+
+export const searchForGuestHouse = async (dispatch,queryParams,queryObject) => {
+  try {
+    dispatch(toggleSpinner());
+    const response = await httpRequest(
+      "post",
+      "obm-services/guestHouseBooking/_search",
+      "_search",
+      queryParams,
+      {}//{ searchCriteria: queryObject }
+    );
+    dispatch(toggleSpinner());
+    return response;
+  } catch (error) {
+    dispatch(toggleSpinner());
+    console.error(error);
+    store.dispatch(
+      toggleSnackbar(
+        true,
+        { labelName: error.message, labelCode: error.message },
+        "error"
+      )
+    );
+  }
+};
 
 

@@ -1,12 +1,35 @@
 import {
   getCommonCardWithHeader,
-  getLabel
+  getLabel,
+  getDateField,
+  getPattern
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 
 const screenConfig = {
   uiFramework: "material-ui",
   name: "mihyLoginScreen",
   components: {
+    fromDate: getDateField({
+      label: { labelName: "fromDate", labelKey: "COMMON_FROM_DATE" },
+      placeholder: {
+        labelName: "From Date",
+        labelKey: "COMMON_FROM_DATE"
+      },
+      jsonPath: "ghb.fromDate",
+      gridDefination: {
+        xs: 12,
+        sm: 4
+      },
+      pattern: getPattern("Date"),
+      errorMessage: "ERR_INVALID_DATE",
+      required: true,
+      props: {
+        inputProps: {
+          //max: getTodaysDateInYMD()
+        }
+      },
+      visible: true,
+    }),
     mihyLoginGrid: {
       uiFramework: "custom-atoms",
       componentPath: "Container",
