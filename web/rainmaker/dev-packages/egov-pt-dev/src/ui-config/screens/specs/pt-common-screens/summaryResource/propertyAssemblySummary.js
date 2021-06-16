@@ -154,6 +154,10 @@ export const propertyAssemblySummary = getCommonGrayCard({
                 finalValue = value;
               }
             }
+          if(propertyType=="VACANT")
+          {
+            dispatch(prepareFormData("Properties[0].propertyDetails[0].units[0].usageCategory",usageType ));
+          }
           return finalValue ? finalValue : "NA";
         }
       }

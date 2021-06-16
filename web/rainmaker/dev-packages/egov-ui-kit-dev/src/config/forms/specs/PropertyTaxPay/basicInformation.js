@@ -140,7 +140,8 @@ const mergeMaster = (masterOne, masterTwo, parentName = "") => {
   // console.log(masterOneData);
   for (var i = 0; i < masterOneData.length; i++) {
     // masterOneData[i][parentName]=masterOneData[i].code;
-    dropDownData.push({ label: masterOneData[i].name, value: masterOneData[i].code });
+    if(masterOneData[i].code != "SLUM" )
+       dropDownData.push({ label: masterOneData[i].name, value: masterOneData[i].code });
   }
   return dropDownData;
 };

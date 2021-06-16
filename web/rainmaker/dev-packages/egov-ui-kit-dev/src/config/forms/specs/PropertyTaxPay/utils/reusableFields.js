@@ -22,7 +22,7 @@ for (var i = 1; i <= 17; i++) {
 export const plotSize = {
   plotSize: {
     id: "assessment-plot-size",
-    jsonPath: "Properties[0].propertyDetails[0].buildUpArea",
+    jsonPath: "Properties[0].propertyDetails[0].landArea",
     type: "number",
     floatingLabelText: "PT_ASSESMENT_INFO_PLOT_SIZE",
     hintText: "PT_FORM2_PLOT_SIZE_PLACEHOLDER",
@@ -397,6 +397,7 @@ export const beforeInitFormForPlot = {
         set(action, "form.fields.floorName.dropDownData", prepareDropDownData(Floor));
       } else {
         set(action, "form.fields.floorName.hideField", true);
+        
       }
     }
     if (propertyType != "VACANT") {
@@ -459,11 +460,19 @@ export const beforeInitFormForPlot = {
         );
       }
     }
-    if (propertyType == "VACANT") {
+     if (propertyType == "VACANT") {
+      var usageCategoryMinor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMinor");
+    var usageCategoryMajor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMajor");
+     dispatch(prepareFormData("Properties[0].propertyDetails[0].units[0].usageCategoryMinor", usageCategoryMinor));
+     dispatch(prepareFormData("Properties[0].propertyDetails[0].units[0].usageCategoryMajor", usageCategoryMajor));
       dispatch(prepareFormData(`Properties[0].propertyDetails[0].noOfFloors`, 1));
-    }
+     dispatch(prepareFormData(`Properties[0].propertyDetails[0].units[0].occupancyType`, "SELFOCCUPIED"));
+      
+
+     }
     if (propertyType == "SHAREDPROPERTY") {
       dispatch(prepareFormData(`Properties[0].propertyDetails[0].noOfFloors`, 2));
+      //dispatch(prepareFormData(`Properties[0].propertyDetails[0].landArea`, 0));
       // dispatch(prepareFormData(`Properties[0].propertyDetails[0].units[0].floorNo`, -1));
     }
     // if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED" ) {

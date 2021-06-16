@@ -154,7 +154,22 @@ class FormWizardDataEntry extends Component {
             }
           ]
         );
+        const purpose = getQueryValue(search, "purpose");
         searchPropertyResponse = getCreatePropertyResponse(searchPropertyResponse);
+        
+        console.log("purpose",purpose);
+        if(purpose == "update"){
+          if (
+            searchPropertyResponse.Properties &&
+            searchPropertyResponse.Properties.length > 0
+          ) {
+              if(searchPropertyResponse.Properties[0].propertyType=="VACANT"){
+                searchPropertyResponse.Properties[0].propertySubType=searchPropertyResponse.Properties[0].propertyType;
+                 console.log(" searchPropertyResponse.Properties[0].propertySubType", searchPropertyResponse.Properties[0].propertySubType);
+              }
+
+          }
+        }
         await prefillPTDocuments(
           searchPropertyResponse,
           "Properties[0].documents",
@@ -166,6 +181,9 @@ class FormWizardDataEntry extends Component {
           searchPropertyResponse.Properties[0].propertyDetails &&
           searchPropertyResponse.Properties[0].propertyDetails.length > 0
         ) {
+          if(purpose == "update" && searchPropertyResponse.Properties[0].propertyType=="VACANT"){
+            searchPropertyResponse.Properties[0].propertyDetails[0].propertySubType="VACANT"
+          }
           searchPropertyResponse.Properties[0].propertyDetails.forEach(item => {
             item.units = sortBy(
               item.units,
@@ -814,7 +832,7 @@ class FormWizardDataEntry extends Component {
           if (isBasicInformationFormValid) {
             if (plotDetails) {
               const isPlotDetailsFormValid = validateForm(plotDetails);
-              if (isPlotDetailsFormValid) {
+              if (isPlotDetailsFormValid && basicInformation.fields.typeOfBuilding.value != "SHAREDPROPERTY") {
                 const isTotalUnitSizeValid = plotDetails.fields.plotSize
                   ? validateUnitandPlotSize(plotDetails, form, this.props.toggleSnackbarAndSetText)
                   : true;
@@ -850,7 +868,16 @@ class FormWizardDataEntry extends Component {
                     });
                   }
                 }
-              } else {
+              }
+              else if(isPlotDetailsFormValid && basicInformation.fields.typeOfBuilding.value == "SHAREDPROPERTY") {
+                callDraft(this);
+                window.scrollTo(0, 0);
+                this.setState({
+                  selected: index,
+                  formValidIndexArray: [...formValidIndexArray, selected]
+                });
+              }
+                else {
                 displayFormErrorsAction("plotDetails");
               }
             }

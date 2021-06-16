@@ -133,15 +133,18 @@ export const getUnitInfo = (units = [], propertyDetails, oldPropertydetails) => 
         key: getTranslatedLabel("PT_ASSESSMENT_UNIT_USAGE_TYPE", localizationLabelsData),
         value: getUnitUsageTypeInfo(unit, propertyDetails),
         oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && getUnitUsageTypeInfo(oldPropertydetails.units[index], oldPropertydetails) || "NA",
-      }, {
+      }, 
+      {
 
         key: getTranslatedLabel("PT_ASSESMENT_INFO_OCCUPLANCY", localizationLabelsData),
-        value: getOccupancyInfo(unit),
+        value: propertyDetails.propertyType === "VACANT"?"NA":getOccupancyInfo(unit),
         oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && getOccupancyInfo(oldPropertydetails.units[index]) || "NA",
-      }, {
+       },     
+
+       {
 
         key: getTranslatedLabel("PT_ASSESMENT_INFO_BUILT_UP_AREA", localizationLabelsData),
-        value: unit.unitArea ? unit.unitArea + '' : "NA",
+        value: propertyDetails.propertyType === "VACANT"? "NA":unit.unitArea ? unit.unitArea + '' : "NA",
         oldValue: oldPropertydetails && oldPropertydetails.units && oldPropertydetails.units[index] && (oldPropertydetails.units[index].unitArea+ ' ') || "NA",
       },
       {
