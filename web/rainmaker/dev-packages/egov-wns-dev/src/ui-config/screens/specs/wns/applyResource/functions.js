@@ -4,11 +4,12 @@ import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/
 import { getPropertyResults, isActiveProperty, showHideFieldsFirstStep, getSearchResults, getSearchResultsForSewerage , getCBMdmsData,prepareDocumentsUploadData } from "../../../../../ui-utils/commons";
 import { getUserInfo, getTenantIdCommon, getLocale } from "egov-ui-kit/utils/localStorageUtils";
 import { fetchLocalizationLabel , setRoute } from "egov-ui-kit/redux/app/actions";
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import store from "ui-redux/store";
 export const propertySearchApiCall = async (state, dispatch) => {
   showHideFields(dispatch, false);
   let tenantId = getTenantIdCommon();
-  let queryObject = process.env.REACT_APP_NAME === "Citizen"?[]:[{ key: "tenantId", value: tenantId }];
+  let queryObject = process.env.REACT_APP_NAME === "Citizen"?[{ key: "tenantId", value:getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId") : tenantId }]:[{ key: "tenantId", value: tenantId }];
   let searchScreenObject = get(state.screenConfiguration.preparedFinalObject, "searchScreen", {});
   dispatch(
     handleField(

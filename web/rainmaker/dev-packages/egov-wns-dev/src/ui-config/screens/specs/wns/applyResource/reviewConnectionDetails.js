@@ -197,21 +197,13 @@ const propertyLocationDetails = {
             labelName: "Locality/Mohalla",
             labelKey: "WS_PROP_DETAIL_LOCALITY_MOHALLA_LABEL"
           },
-          { 
-            localePrefix: {
-              moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : getTenantIdCommon(),
-              masterName: "REVENUE"
-            },
-            jsonPath: "applyScreen.property.address.locality.code", callBack: handleNA },
+          {             
+            jsonPath: "applyScreen.property.address.locality.name", callBack: handleNA },
           {
             labelKey: "WS_OLD_LABEL_NAME"
           },
-          { 
-            localePrefix: {
-              moduleName: getQueryArg(window.location.href, "tenantId") ? getQueryArg(window.location.href, "tenantId").replace('.', '_').toUpperCase() : getTenantIdCommon(),
-              masterName: "REVENUE"
-            },
-            jsonPath: "applyScreenOld.property.address.locality.code", callBack: handleNA },
+          {             
+            jsonPath: "applyScreenOld.property.address.locality.name", callBack: handleNA },
         ),
         // reviewPincode: getLabelWithValueForModifiedLabel(
         //   {
