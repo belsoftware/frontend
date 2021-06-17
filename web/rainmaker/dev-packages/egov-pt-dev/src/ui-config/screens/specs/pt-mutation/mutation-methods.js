@@ -132,6 +132,7 @@ export const resetFields = (state, dispatch) => {
     "ptSearchScreen.abasPropertyids",
     ''
   ))
+  dispatch(prepareFinalObject('workflow.ProcessInstances',[]))
 
 };
 

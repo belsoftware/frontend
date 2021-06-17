@@ -22,7 +22,7 @@ import OwnerInfo from "../Property/components/OwnerInfo";
 import PdfHeader from "../Property/components/PdfHeader";
 import PropertyAddressInfo from "../Property/components/PropertyAddressInfo";
 import "./index.css";
-
+import { hideSpinner, showSpinner } from "egov-ui-kit/redux/common/actions";
 
 const innerDivStyle = {
   padding: "0",
@@ -137,12 +137,15 @@ class ApplicationPreview extends Component {
     this.fetchApplication();
   };
   setBusinessServiceDataToLocalStorage = async (queryObject) => {
-    const { toggleSnackbarAndSetText } = this.props;
+    const { toggleSnackbarAndSetText,showSpinner, hideSpinner, } = this.props;
     try {
+      showSpinner();
       const payload = await httpRequest("egov-workflow-v2/egov-wf/businessservice/_search", "_search", queryObject);
+      hideSpinner();
       localStorageSet("businessServiceData", JSON.stringify(get(payload, "BusinessServices")));
       return get(payload, "BusinessServices");
     } catch (e) {
+      hideSpinner();
       toggleSnackbarAndSetText(
         true,
         {
@@ -154,11 +157,13 @@ class ApplicationPreview extends Component {
     }
   };
   fetchApplication = async () => {
+    const { showSpinner, hideSpinner, } = this.props;
     const applicationType = this.getApplicationType();
     try {
+      showSpinner();
       const payload = await httpRequest(applicationType.endpoint.GET.URL, applicationType.endpoint.GET.ACTION, applicationType.queryParams
       );
-
+      hideSpinner();
       const responseObject = payload[applicationType.responsePath] && payload[applicationType.responsePath].length > 0 && payload[applicationType.responsePath][0];
       if (!responseObject.workflow) {
 
@@ -185,6 +190,7 @@ class ApplicationPreview extends Component {
       }
       this.props.prepareFinalObject(applicationType.dataPath, payload[applicationType.responsePath] && responseObject)
     } catch (e) {
+      hideSpinner();
       console.log(e);
 
     }
@@ -205,6 +211,7 @@ class ApplicationPreview extends Component {
 
   }
   getPropertyId = async (applicationNumber, tenantId) => {
+    const { showSpinner, hideSpinner, } = this.props;
     const applicationType = getQueryValue(window.location.href, "type");
     if (applicationType == 'assessment') {
       const queryObject = [
@@ -212,15 +219,18 @@ class ApplicationPreview extends Component {
         { key: "tenantId", value: tenantId }
       ];
       try {
+        showSpinner();
         const payload = await httpRequest(
           "property-services/assessment/_search",
           "_search",
           queryObject
         );
+        hideSpinner();
         if (payload && payload.Assessments.length > 0) {
           return payload.Assessments[0].propertyId;
         }
       } catch (e) {
+        hideSpinner();
         console.log(e);
       }
     } else {
@@ -229,15 +239,18 @@ class ApplicationPreview extends Component {
         { key: "tenantId", value: tenantId }
       ];
       try {
+        showSpinner();
         const payload = await httpRequest(
           "property-services/property/_search",
           "_search",
           queryObject
         );
+        hideSpinner();
         if (payload && payload.Properties.length > 0) {
           return payload.Properties[0].propertyId;
         }
       } catch (e) {
+        hideSpinner();
         console.log(e);
       }
     }
@@ -397,7 +410,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchProperties: (queryObjectProperty) => dispatch(fetchProperties(queryObjectProperty)),
     toggleSnackbarAndSetText: (open, message, error) => dispatch(toggleSnackbarAndSetText(open, message, error)),
     prepareFinalObject: (jsonPath, value) => dispatch(prepareFinalObject(jsonPath, value)),
-    fetchLocalizationLabel: (locale, moduleName, tenantId)=> dispatch(fetchLocalizationLabel(locale, moduleName, tenantId))
+    fetchLocalizationLabel: (locale, moduleName, tenantId)=> dispatch(fetchLocalizationLabel(locale, moduleName, tenantId)),
+    showSpinner: () => dispatch(showSpinner()),
+    hideSpinner: () => dispatch(hideSpinner()),
   };
 };
 
