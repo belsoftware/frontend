@@ -30,12 +30,11 @@ const viewReceipt = {
       }
     ];
 
-      const response = getReceiptData(queryObject);
-    if (response && response.Payments && response.Payments.length > 0) {
-      dispatch(prepareFinalObject("receiptData", response.Payments[0]));
-    }
-    
-
+     getReceiptData(queryObject).then((response)=>{
+        if (response && response.Payments && response.Payments.length > 0) {
+          dispatch(prepareFinalObject("receiptData", response.Payments[0]));
+        }
+      });
     return action;
 
   },
@@ -44,7 +43,7 @@ const viewReceipt = {
     mainDiv: getCommonCard({
         caption2: getCommonCaption({
           labelName: "NOTE",
-          labelKey: "Note : The information provided in this page is for verifying the authenticity of the birth/death certificate. "+
+          labelKey: "Note : The information provided in this page is for verifying the authenticity of the receipt downloaded. "+
             "The information provided below is as per the records maintained in eChhawani. You have to validate the information against the information present in your copy."
         }),
         divider1: getDivider(),
