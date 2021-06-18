@@ -454,8 +454,23 @@ const callBackForNext = async (state, dispatch) => {
         await pushTheDocsUploadedToRedux(state, dispatch);
         isFormValid = true; 
         hasFieldToaster = false;
-        if (process.env.REACT_APP_NAME === "Citizen" && getQueryArg(window.location.href, "action") === "edit") {
-          setReviewPageRoute(state, dispatch);
+        if (process.env.REACT_APP_NAME === "Citizen"){
+          const tenantId = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.tenantId");  
+          const mohallaLocalePrefix = {      
+            moduleName: tenantId,
+            masterName: "REVENUE"
+          };
+          // dispatch(
+          //   handleField(
+          //     "apply",
+          //     "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewConnDetails.children.cardContent.children.viewTwo.props.items[0].item0.children.cardContent.children.propertyLocationDetailsContainer.children.reviewLocalityOrMohalla.children.value1.children.key",
+          //     "props.localePrefix",
+          //     mohallaLocalePrefix
+          //   )
+          // );
+          if(getQueryArg(window.location.href, "action") === "edit"){
+            setReviewPageRoute(state, dispatch);
+          }
         }
       }
       else {
@@ -634,17 +649,18 @@ const callBackForNext = async (state, dispatch) => {
     }
 
 
-   }
+   }  
    if (activeStep === 3) {
       let sewerageForm = get(state.screenConfiguration.preparedFinalObject, "applyScreen.sewerage");
-      let waterForm = get(state.screenConfiguration.preparedFinalObject, "applyScreen.water");
+      let waterForm = get(state.screenConfiguration.preparedFinalObject, "applyScreen.water");      
       if (sewerageForm && waterForm) {
         isFormValid = await acknoledgementForBothWaterAndSewerage(state, activeStep, isFormValid, dispatch);
       } else if (waterForm) {
         isFormValid = await acknoledgementForWater(state, activeStep, isFormValid, dispatch);
       } else {
-        isFormValid = await acknoledgementForSewerage(state, activeStep, isFormValid, dispatch);
+        isFormValid = await acknoledgementForSewerage(state, activeStep, isFormValid, dispatch);      
       }
+        
       // responseStatus === "success" && changeStep(activeStep, state, dispatch);
    }
   if (activeStep !== 3) {
