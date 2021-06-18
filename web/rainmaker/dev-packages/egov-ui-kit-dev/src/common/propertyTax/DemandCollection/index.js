@@ -151,7 +151,9 @@ class DemandCollection extends React.Component {
                                       }
                                   }
                                   if(taxData.code === 'PT_HOUSE_TAX' || taxData.code === 'PT_WATER_TAX' ||taxData.code === 'PT_CONSERVANCY_TAX'
-                                  || taxData.code === 'PT_LIGHTINING_TAX' || taxData.code === 'PT_EDUCATION_TAX' || taxData.code === 'PT_CONSOLIDATED_PROPERTY_TAX' )
+                                  || taxData.code === 'PT_LIGHTINING_TAX' || taxData.code === 'PT_EDUCATION_TAX' || taxData.code === 'PT_CONSOLIDATED_PROPERTY_TAX'
+                                  || taxData.code === "PT_LIGHTING_TAX"|| taxData.code === "PT_DRAINAGE_TAX"|| taxData.code ==="PT_ADDL_WATER_TAX" 
+                                  || taxData.code === "PT_SANITARY_CESS"|| taxData.code === "PT_EDUCATION_CESS" )
                                   {
                                       if (Math.sign(e.target.value)===-1) 
                                       {  
