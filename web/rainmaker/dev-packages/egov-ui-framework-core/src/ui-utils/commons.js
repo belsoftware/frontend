@@ -392,7 +392,7 @@ export const handleFileUpload = (event, handleDocument, props) => {
     endPoint: "filestore/v1/files"
   };
   let uploadDocument = true;
-  const { inputProps, maxFileSize, moduleName } = props;
+  const { inputProps, maxFileSize, moduleName, hideSpinner, showSpinner } = props;
   const input = event.target;
   if (input.files && input.files.length > 0) {
     const files = input.files;
@@ -409,7 +409,8 @@ export const handleFileUpload = (event, handleDocument, props) => {
         uploadDocument = false;
       }
       //VAPT observation --Showing error in case of invalid file
-      store.dispatch(toggleSpinner());
+      
+      showSpinner? showSpinner(): store.dispatch(toggleSpinner());
       try{
       if (uploadDocument) {
         if (file.type.match(/^image\//)) {
@@ -431,10 +432,12 @@ export const handleFileUpload = (event, handleDocument, props) => {
         }
       }
       }catch(err){
+        hideSpinner ? hideSpinner() : store.dispatch(toggleSpinner());
         console.log("Error catched",err);
         alert(`Error in uploading file.Please upload valid file`);
       }
-      store.dispatch(toggleSpinner());
+      hideSpinner ? hideSpinner() : store.dispatch(toggleSpinner());
+
     });
   }
 };
