@@ -1026,7 +1026,15 @@ class FormWizardDataEntry extends Component {
           });
         }
         if (!uploadedDocs || temp < maxDocuments) {
-          alert("Please upload all the required documents and documents type.")
+          //alert("Please upload all the required documents and documents type.")
+          this.props.toggleSnackbarAndSetText(
+            true,
+            {
+              labelName: "Please upload all the required documents and documents type",
+              labelKey: "ERR_UPLOAD_REQUIRED_DOCUMENTS"
+            },
+            "error"
+          );
         } else {
           this.setState({
             selected: index,

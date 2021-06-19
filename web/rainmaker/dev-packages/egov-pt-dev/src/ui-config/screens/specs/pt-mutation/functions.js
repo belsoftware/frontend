@@ -72,6 +72,14 @@ const removeValidation = (state, dispatch, index) => {
       false
     )
   );
+  dispatch(
+    handleField(
+      "propertySearch",
+      "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.olPropertyId",
+      "props.error",
+      false
+    )
+  );
 
 
   dispatch(
@@ -118,6 +126,14 @@ const removeValidation = (state, dispatch, index) => {
     handleField(
       "propertySearch",
       "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.applicationPropertyTaxUniqueId",
+      "isFieldValid",
+      true
+    )
+  );
+  dispatch(
+    handleField(
+      "propertySearch",
+      "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.olPropertyId",
       "isFieldValid",
       true
     )
@@ -169,7 +185,7 @@ const searchApiCall = async (state, dispatch, index) => {
       formValid = true;
     }
   } else {
-    if (searchScreenObject.ids != '' || searchScreenObject.mobileNumber != '' || searchScreenObject.acknowledgementIds != '') {
+    if (searchScreenObject.ids != '' || searchScreenObject.mobileNumber != '' || searchScreenObject.oldpropertyid != ''|| searchScreenObject.acknowledgementIds != '') {
       formValid = true;
     }
   }
@@ -251,7 +267,12 @@ const searchApiCall = async (state, dispatch, index) => {
     dispatch,
     "propertySearch"
   ) || searchScreenObject.ids == '';
-
+  const ispropertyTaxOldPropertyIdRowValid = validateFields(
+    "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.olPropertyId",
+    state,
+    dispatch,
+    "propertySearch"
+  ) || searchScreenObject.oldpropertyid == '';
 
 
 
@@ -280,7 +301,7 @@ const searchApiCall = async (state, dispatch, index) => {
       )
     );
     return;
-  } else if (index == 1 && !(ispropertyTaxApplicationPidRowValid && ispropertyTaxApplicationOwnerNoRowValid && ispropertyTaxApplicationNoRowValid)) {
+  } else if (index == 1 && !(ispropertyTaxApplicationPidRowValid && ispropertyTaxApplicationOwnerNoRowValid && ispropertyTaxApplicationNoRowValid && ispropertyTaxOldPropertyIdRowValid)) {
     dispatch(
       toggleSnackbar(
         true,

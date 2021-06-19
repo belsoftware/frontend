@@ -112,6 +112,14 @@ export const resetFields = (state, dispatch) => {
       ""
     )
   );
+  dispatch(
+    handleField(
+      "propertySearch",
+      "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.olPropertyId",
+      "props.value",
+      ""
+    )
+  );
   dispatch(prepareFinalObject(
     "ptSearchScreen.acknowledgementIds",
     ''
@@ -402,6 +410,25 @@ export const searchApplicationDetails = getCommonCard({
       pattern: /^[a-zA-Z0-9-]*$/i,
       errorMessage: "ERR_INVALID_PROPERTY_ID",
       jsonPath: "ptSearchScreen.ids"
+    }),
+    olPropertyId: getTextField({
+      label: {
+        labelName: "Existing Property ID",
+        labelKey: "PT_EXISTING_PROPERTY_ID"
+      },
+      placeholder: {
+        labelName: "Enter Existing Property ID",
+        labelKey: "PT_EXISTING_PROPERTY_ID_PLACEHOLDER"
+      },
+      gridDefination: {
+        xs: 12,
+        sm: 4,
+
+      },
+      required: false,
+      // pattern: /^[a-zA-Z0-9-]*$/i,
+      errorMessage: "ERR_INVALID_PROPERTY_ID",
+      jsonPath: "ptSearchScreen.oldpropertyid"
     }),
   }),
   button: getCommonContainer({
