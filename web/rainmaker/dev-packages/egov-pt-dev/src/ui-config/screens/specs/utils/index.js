@@ -483,7 +483,20 @@ export const getReceiptData = async queryObject => {
     return {};
   }
 };
-
+export const getTransactionDetails = async queryObject => {
+  try {
+    let response = await httpRequest(
+      "post",
+      "pg-service/transaction/v1/_search",
+      "",
+      queryObject
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    return {};
+  }
+};
 export const getMdmsData = async queryObject => {
   try {
     const response = await httpRequest(
