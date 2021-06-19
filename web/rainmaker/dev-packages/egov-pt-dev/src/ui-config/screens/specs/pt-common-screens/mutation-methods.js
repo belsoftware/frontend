@@ -209,7 +209,7 @@ export const searchPropertyDetails = getCommonCard({
       required: false,
       // pattern: /^[a-zA-Z0-9/-]*$/i,
       errorMessage: "ERR_INVALID_PROPERTY_CODE",
-      jsonPath: "searchScreen.oldpropertyids"
+      jsonPath: "searchScreen.oldpropertyid"
     }),
     abasPropertyId: getTextField({
       label: {
