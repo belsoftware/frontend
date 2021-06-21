@@ -36,7 +36,7 @@ const viewReceipt = {
      getReceiptData(queryObject).then((response)=>{
       console.log("transs"+ JSON.stringify(response))
         if (response && response.Payments && response.Payments.length > 0) {
-        const receiptDetails = dispatch(prepareFinalObject("receiptData", response.Payments[0]));
+       dispatch(prepareFinalObject("receiptData", response.Payments[0]));
         }
        let queryObject1 = [
          {
@@ -120,7 +120,7 @@ const viewReceipt = {
             payerName:getLabelWithValue(
               {
                 labelName: "Payer Name",
-                labelKey: "Payer Name"
+                labelKey: "PT_PAYER_NAME"
             },
             {
                 jsonPath: "receiptData.payerName"
@@ -130,7 +130,7 @@ const viewReceipt = {
             totalAmountPaid: getLabelWithValue(
               {
                 labelName: "Total Amount Paid",
-                labelKey: "Total Amount Paid"
+                labelKey: "PT_TOTAL_AMOUNT_PAID"
             },
             {
                 jsonPath: "receiptData.totalAmountPaid"
@@ -140,7 +140,7 @@ const viewReceipt = {
             PropertyId: getLabelWithValue(
               {
                 labelName: "Property Id",
-                labelKey: "Property Id"
+                labelKey: "PT_PROPERTY_UNIQUE_ID"
             },
             {
                 jsonPath: "receiptData.paymentDetails[0].bill.consumerCode"
