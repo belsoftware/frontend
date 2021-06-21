@@ -187,7 +187,7 @@ export const superArea = {
     ErrorText: "Enter a valid super built area size",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     toolTip: true,
-    toolTipMessage: "Total Carpet Area + Total balcony area + Total thickness of outer walls + Total common area (lift, stairs, lobby etc.)",
+    toolTipMessage: "PT_BUILT_UP_AREA_TOOLTIP_MESSAGE",
     required: true,
     numcols: 4,
     hideField: false,
