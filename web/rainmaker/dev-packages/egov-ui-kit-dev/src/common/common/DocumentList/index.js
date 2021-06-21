@@ -271,6 +271,7 @@ class DocumentList extends Component {
         ]
       }
     });
+
     hideSpinner();
   };
 
@@ -368,7 +369,7 @@ class DocumentList extends Component {
             onButtonClick={() => this.onUploadClick(key)}
             inputProps={this.props.inputProps}
             buttonLabel={this.props.buttonLabel}
-            disabled={card.disabled && documentsUploadRedux[key] && documentsUploadRedux[key].documents ? true : false}
+           // disabled={card.disabled && documentsUploadRedux[key] && documentsUploadRedux[key].documents ? true : false}
           />
         </Grid>
       </Grid>
