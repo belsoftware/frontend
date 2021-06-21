@@ -193,7 +193,7 @@ const AssessmentInfo = ({ properties, editIcon, generalMDMSDataById, OldProperty
     if (propertyDetails && propertyDetails.length > 0) {
       subUnitItems = getUnitInfo(propertyDetails[0]['units'], propertyDetails[0], oldPropertydetails);
       assessmentItems = getAssessmentInfo(propertyDetails[0], generalMDMSDataById, properties, oldPropertydetails, OldProperty);
-      if (propertyDetails[0].propertySubType === "SHAREDPROPERTY") {
+      if (propertyDetails[0].propertySubType === "SHAREDPROPERTY" ||propertyDetails[0].propertyType === "VACANT" ) {
         hideSubsectionLabel = true;
       }
     }
