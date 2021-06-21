@@ -398,8 +398,11 @@ export const beforeInitFormForPlot = {
   beforeInitForm: (action, store) => {
     let state = store.getState();
     let { dispatch } = store;
+    // const { form } = action;
+   const { name: formKey, fields } = action;
     const propertyType = get(state, "form.basicInformation.fields.typeOfBuilding.value");
     const { Floor } = state.common && state.common.generalMDMSDataById;
+    const { localizationLabels } = state.app;
     if (get(action, "form.fields.floorName")) {
       if (propertyType === "SHAREDPROPERTY") {
         set(action, "form.fields.floorName.hideField", false);
@@ -409,7 +412,15 @@ export const beforeInitFormForPlot = {
         
       }
     }
+    
     if (propertyType != "VACANT") {
+
+      let usageCategoryMajor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMajor");
+    if (usageCategoryMajor !== "MIXED") {
+      const usageTypeValue = get(action, "form.fields.usageType.value");
+      set(action, "form.fields.usageType.value", getTranslatedLabel(usageTypeValue, localizationLabels));
+      dispatch(setFieldProperty(formKey, "usageType", "value", getTranslatedLabel(usageTypeValue, localizationLabels)));
+    }
       var occupancy = get(state, "common.generalMDMSDataById.OccupancyType");
       var usageCategoryMinor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMinor");
       var usageCategoryMajor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMajor");
