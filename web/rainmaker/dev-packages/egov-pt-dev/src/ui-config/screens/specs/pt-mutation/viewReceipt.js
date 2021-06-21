@@ -85,7 +85,7 @@ const viewReceipt = {
         header: getCommonSubHeader(
           {
             labelName: "Receipt",
-            labelKey: "Receipt Details"
+            labelKey: "PT_RECEIPT_DETAILS"
           },
           {
             style: {
@@ -106,7 +106,7 @@ const viewReceipt = {
               },
               ...getCommonSubHeader({
                   labelName: "Payment Information",
-                  labelKey: "Payment Information"
+                  labelKey: "PT_PAYMENT_INFORMATION"
               },
               {
                 style: {
@@ -152,7 +152,7 @@ const viewReceipt = {
             payment:getLabelWithValue(
               {
                 labelName: "Payment Mode",
-                labelKey: "Payment Mode"
+                labelKey: "PT_PAYMENT_MODE"
             },
             {
                 jsonPath: "receiptData.paymentMode"
@@ -161,7 +161,7 @@ const viewReceipt = {
             transaction:getLabelWithValue(
               {
                 labelName: "Transaction No",
-                labelKey: "Transaction No"
+                labelKey: "PT_TRANSACTION_NO"
             },
             {
                 jsonPath: "receiptData.transactionNumber"
@@ -170,7 +170,7 @@ const viewReceipt = {
             banktxnNp:getLabelWithValue(
               {
                 labelName: "Bank Transaction No",
-                labelKey: "Bank Transaction No"
+                labelKey: "PT_BANK_TRANSACTION_NO"
             },
             {
                 jsonPath: "TransactionTemp[0].bankTransactionNo",
