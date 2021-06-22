@@ -177,8 +177,9 @@ class PTInformation extends React.Component {
                   viewHistory={true}
                   propertiesAudit={propertiesAudit}
                 ></OwnerInfo>
-                        {!isLegary &&
-            <DocumentsInfo documentsUploaded={documentsUploaded}></DocumentsInfo> }
+                        {/* {!isLegary && */}
+            <DocumentsInfo documentsUploaded={documentsUploaded}></DocumentsInfo>
+             {/* } */}
            <div id="property-assess-form">
                  {/* <AssessmentHistory></AssessmentHistory>  */}
                   <PaymentHistory></PaymentHistory>
