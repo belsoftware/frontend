@@ -23,6 +23,7 @@ import PdfHeader from "../Property/components/PdfHeader";
 import PropertyAddressInfo from "../Property/components/PropertyAddressInfo";
 import "./index.css";
 import { hideSpinner, showSpinner } from "egov-ui-kit/redux/common/actions";
+import { generatePTAcknowledgment } from "egov-ui-kit/utils/pdfUtils/generatePTAcknowledgment";
 
 const innerDivStyle = {
   padding: "0",
@@ -306,6 +307,14 @@ class ApplicationPreview extends Component {
     const filteredCity = cities && cities.length > 0 && cities.filter(item => item.code === tenantId);
     return filteredCity ? get(filteredCity[0], "logoId") : "";
   }
+  download() {
+    const { UlbLogoForPdf, properties, generalMDMSDataById } = this.props;
+    generatePTAcknowledgment(properties, generalMDMSDataById, UlbLogoForPdf, `pt-acknowledgement-${properties.propertyId}.pdf`);
+  }
+  print() {
+    const { UlbLogoForPdf, properties, generalMDMSDataById } = this.props;
+    generatePTAcknowledgment(properties, generalMDMSDataById, UlbLogoForPdf, 'print');
+  }
 
   render() {
     const { location, documentsUploaded } = this.props;
@@ -350,7 +359,7 @@ class ApplicationPreview extends Component {
     }
     return <div>
       <Screen className={""}>
-        <PTHeader header={header} subHeaderTitle='PT_PROPERTY_APPLICATION_NO' subHeaderValue={applicationNumber} tenantId={tenantid}/>
+        <PTHeader header={header} subHeaderTitle='PT_PROPERTY_APPLICATION_NO' subHeaderValue={applicationNumber} tenantId={tenantid} downloadPrintButton={true} download={() => this.download()} print={() => this.print()}/>
         <div className="form-without-button-cont-generic" >
           <div>
             <WorkFlowContainer dataPath={applicationType.dataPath}
@@ -388,11 +397,11 @@ const mapStateToProps = (state, ownProps) => {
   const { propertiesById, loading, } = state.properties || {};
   const { location } = ownProps;
   const { search } = location;
-
   const { preparedFinalObject = {} } = screenConfiguration;
   const { PTApplication = {} } = preparedFinalObject;
   const { propertyId = '' } = PTApplication;
   const { cities } = state.common || [];
+  const { UlbLogoForPdf = '' } = preparedFinalObject;
 
 
 
@@ -400,7 +409,7 @@ const mapStateToProps = (state, ownProps) => {
   const { documentsUploaded } = properties || [];
   return {
     ownProps,
-    generalMDMSDataById, properties, documentsUploaded, propertyId, cities
+    generalMDMSDataById, properties, documentsUploaded, propertyId, cities,UlbLogoForPdf
   };
 };
 
