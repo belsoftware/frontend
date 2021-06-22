@@ -97,7 +97,7 @@ const formConfig = {
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
       toolTip: true,
       //pattern: /^[^\$\"'<>?\\\\~`!@$%^+={}*,.:;“”‘’]{1,64}$/i,
-      toolTipMessage: "PT_ABAS_ID",
+      toolTipMessage: "PT_TOOLTIP_ABAS_ID",
       maxLength: 64,
     },
   },
