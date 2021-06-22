@@ -15,7 +15,7 @@ const formConfig = {
       id: "city",
       jsonPath: "PropertiesTemp[0].address.city",
       required: true,
-      localePrefix: { moduleName: "tenant", masterName: "tenants" },
+      localePrefix: { moduleName: "TENANT", masterName: "TENANTS" },
       labelsFromLocalisation: true,
       type: "AutocompleteDropdown",
       floatingLabelText: "CORE_COMMON_CITY",

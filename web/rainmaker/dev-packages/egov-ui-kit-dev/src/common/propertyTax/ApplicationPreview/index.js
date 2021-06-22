@@ -350,7 +350,7 @@ class ApplicationPreview extends Component {
     }
     return <div>
       <Screen className={""}>
-        <PTHeader header={header} subHeaderTitle='PT_PROPERTY_APPLICATION_NO:' subHeaderValue={applicationNumber} tenantId={tenantid}/>
+        <PTHeader header={header} subHeaderTitle='PT_PROPERTY_APPLICATION_NO' subHeaderValue={applicationNumber} tenantId={tenantid}/>
         <div className="form-without-button-cont-generic" >
           <div>
             <WorkFlowContainer dataPath={applicationType.dataPath}
