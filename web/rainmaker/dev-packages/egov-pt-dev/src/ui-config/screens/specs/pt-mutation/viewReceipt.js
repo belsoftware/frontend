@@ -165,7 +165,13 @@ const viewReceipt = {
             },
             {
                 jsonPath: "receiptData.transactionNumber"
-            }
+            },
+            {
+                style: {
+                 paddingRight: "16px",
+                 wordBreak: "break-word"
+                }
+              }
             ),
             banktxnNp:getLabelWithValue(
               {
