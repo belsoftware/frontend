@@ -41,7 +41,25 @@ const viewGuestHouse = {
       }),
       appTradeAndMobNumContainer: getCommonContainer({
       })
-    })
+    }),
+    hallList:  {
+      required: true,
+      uiFramework: "custom-containers-local",
+      moduleName: "egov-obm",
+      componentPath: "ListCard",
+      props: {
+        content: "For this property"
+      }
+    },
+    hallList2:  {
+      required: true,
+      uiFramework: "custom-containers-local",
+      moduleName: "egov-obm",
+      componentPath: "ListCard2",
+      props: {
+        content: "For this property"
+      }
+    }
   }
 }
 
