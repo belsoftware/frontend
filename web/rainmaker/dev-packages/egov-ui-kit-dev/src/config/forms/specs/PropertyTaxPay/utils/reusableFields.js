@@ -737,6 +737,7 @@ export const mergeMaster = (masterOne, masterTwo, parentName = "") => {
   }
   let masterOneData = getAbsentMasterObj(prepareDropDownData(masterOne, true), prepareDropDownData(masterTwo, true), parentName);
   for (var i = 0; i < masterOneData.length; i++) {
+    if(masterOneData[i].code != "SLUM" )
     dropDownData.push({ label: masterOneData[i].name, value: masterOneData[i].code });
   }
   return dropDownData;

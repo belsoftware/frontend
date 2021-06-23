@@ -61,7 +61,7 @@ const formConfig = {
       hintText: "PT_COMMON_AUTHORISED_ADDRESS_PLACEHOLDER",
       errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,256}$/,
+      pattern: /^[^\$\"'<>?\\\\~`!@$%^+={}\[\]*:;“”‘’]{1,256}$/,
     //  errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
     },
     ownerRelationship: {
