@@ -124,6 +124,9 @@ class InboxData extends React.Component {
     else if (row[0].subtext === "ModifyWSConnection") {
       queryParams += '&history=true&service=WATER&mode=MODIFY';
     }
+    else if (row[0].subtext === "BS.AMENDMENT") {
+      queryParams += '&businessService=PT';
+    }
     this.props.setRoute(`${contextPath}?${queryParams}`);
   };
 
