@@ -69,8 +69,8 @@ const formConfig = {
       required: true,
       jsonPath: "Properties[0].propertyDetails[0].owners[0].relationship",
       type: "AutocompleteDropdown",
-      localePrefix: "PT_RELATION",
-      labelsFromLocalisation: false,
+      localePrefix: { moduleName: "PT", masterName: "RELATION" },
+      labelsFromLocalisation: true,
       floatingLabelText: "PT_FORM3_RELATIONSHIP",
       hintText: "",
       gridDefination: {
