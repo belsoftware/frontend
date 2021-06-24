@@ -422,7 +422,7 @@ class Property extends Component {
           />
         }
         <div id="tax-wizard-buttons" className="wizard-footer col-sm-12" style={{ textAlign: "right" }}>
-        {/* {!isCitizen && Assessments && Assessments.length > 0 &&
+        {!isCitizen && Assessments && Assessments.length > 0 &&
         <Button
         className="tax-button"
               onClick={() => this.onAmendBtnClick()}
@@ -430,7 +430,7 @@ class Property extends Component {
               primary={true}
               style={{ lineHeight: "auto", minWidth: "inherit", marginLeft:"10px" }}
             />
-        } */}
+        }
         {!isMigratedProperty && 
 
          <Button
