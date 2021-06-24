@@ -155,7 +155,12 @@ const viewReceipt = {
                 labelKey: "PT_PAYMENT_MODE"
             },
             {
-                jsonPath: "receiptData.paymentMode"
+                jsonPath: "receiptData.paymentMode",
+                localePrefix: {
+                  moduleName: "PT",
+                  masterName: "PAYMENT_METHOD"
+
+          }
             }
             ),
             transaction:getLabelWithValue(
