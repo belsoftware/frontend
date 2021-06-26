@@ -39,7 +39,7 @@ import {
   getEstimateFromBill
 } from "egov-ui-kit/utils/PTCommon";
 import { get, set, isEqual } from "lodash";
-import { fetchFromLocalStorage } from "egov-ui-kit/utils/commons";
+import { fetchFromLocalStorage, isDocumentValid } from "egov-ui-kit/utils/commons";
 import range from "lodash/range";
 import { hideSpinner, showSpinner } from "egov-ui-kit/redux/common/actions";
 import {
@@ -782,7 +782,7 @@ class FormWizardDataEntry extends Component {
       financialYearFromQuery,
       estimation
     } = this.state;
-    const { setRoute, displayFormErrorsAction, form } = this.props;
+    const { setRoute, displayFormErrorsAction, form, requiredDocCount } = this.props;
 
     switch (selected) {
       //validating property address is validated
@@ -1008,40 +1008,37 @@ class FormWizardDataEntry extends Component {
         break;
        case 3:
         window.scrollTo(0, 0);
+        const newDocs = {};
         const uploadedDocs = get(this.props, "documentsUploadRedux");
-        let temp = 0;
-        let maxDocuments = 0;
-        if (uploadedDocs) {
-          let docsArray = [];
-          Object.keys(uploadedDocs).map(key => {
-            docsArray.push(uploadedDocs[key]);
-          })
-          docsArray.map(docs => {
-            if (docs && docs.isDocumentRequired) {
-              maxDocuments++;
-            }
-            if (docs && docs.isDocumentRequired && docs.documents && docs.dropdown) {
-              temp++;
-            }
-          });
-        }
-        if (!uploadedDocs || temp < maxDocuments) {
-          //alert("Please upload all the required documents and documents type.")
+        if (!isDocumentValid(uploadedDocs, requiredDocCount)) {
           this.props.toggleSnackbarAndSetText(
-            true,
-            {
-              labelName: "Please upload all the required documents and documents type",
-              labelKey: "ERR_PT_UPLOAD_REQUIRED_DOCUMENTS"
-            },
-            "error"
-          );
+                true,
+                {
+                  labelName: "Please upload all the required documents and documents type",
+                  labelKey: "ERR_PT_UPLOAD_REQUIRED_DOCUMENTS"
+                },
+                "error"
+              );
         } else {
           this.setState({
             selected: index,
             formValidIndexArray: [...formValidIndexArray, selected]
           });
+          if (Object.keys(uploadedDocs).length != requiredDocCount) {
+            Object.keys(uploadedDocs).map(key => {
+              if (key < requiredDocCount) {
+                newDocs[key] = uploadedDocs[key];
+              }
+            })
+            this.props.prepareFinalObject('documentsUploadRedux', newDocs)
+          }
         }
-
+        let prepareFormData = { ...this.props.prepareFormData };
+        let additionalDetails = get(
+          prepareFormData,
+          "Properties[0].additionalDetails", {})
+        this.props.prepareFinalObject('propertyAdditionalDetails', additionalDetails);
+       
         break; 
       // createAndUpdate(index);
       case 4:
@@ -2165,7 +2162,8 @@ const mapStateToProps = state => {
     (propertyAddress && propertyAddress.fields && propertyAddress.fields) || {};
   const currentTenantId = (city && city.value) || commonConfig.tenantId;
   const { preparedFinalObject } = screenConfiguration;
-  const { documentsUploadRedux, newProperties = [], propertiesEdited = false } = preparedFinalObject;
+  const { documentsUploadRedux, newProperties = [], propertiesEdited = false, ptDocumentCount = 0 } = preparedFinalObject;
+  let requiredDocCount = ptDocumentCount;
   return {
     form,
     currentTenantId,
@@ -2174,7 +2172,8 @@ const mapStateToProps = state => {
     app,
     documentsUploadRedux,
     newProperties,
-    propertiesEdited
+    propertiesEdited,
+    requiredDocCount
   };
 };
 
