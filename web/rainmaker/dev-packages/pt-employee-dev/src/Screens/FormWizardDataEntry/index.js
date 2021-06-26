@@ -1031,7 +1031,7 @@ class FormWizardDataEntry extends Component {
             true,
             {
               labelName: "Please upload all the required documents and documents type",
-              labelKey: "ERR_UPLOAD_REQUIRED_DOCUMENTS"
+              labelKey: "ERR_PT_UPLOAD_REQUIRED_DOCUMENTS"
             },
             "error"
           );

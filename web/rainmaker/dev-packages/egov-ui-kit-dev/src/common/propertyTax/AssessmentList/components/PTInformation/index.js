@@ -152,7 +152,7 @@ class PTInformation extends React.Component {
                     />
                     { openBreakup && ( <TaxBreakup open={true}  closeBreakupDialogue = {closeBreakupDialogue}/>)}
                     <Button onClick={() => this.openBreakUpDialog()} color="primary" >
-                      {<Label buttonLabel={false} label="BILL BREAKUP" fontSize="16px" color="#fe7a51" />}
+                      {<Label buttonLabel={false} label="BILL_BREAKUP" fontSize="16px" color="#fe7a51" />}
                     </Button>
 
                   </div>

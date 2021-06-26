@@ -77,7 +77,7 @@ class TaxBreakup extends Component {
         children={[
           <div>
             <div style={{ display: "table", width: "90%" }}>
-              <Label fontSize="16px" color="#fe7a51" fontWeight="bolder" label="Bill Breakup" />
+              <Label fontSize="16px" color="#fe7a51" fontWeight="bolder" label="BILL_BREAKUP" />
               <Card
                 textChildren={
                   <div>
@@ -106,7 +106,7 @@ class TaxBreakup extends Component {
                     <div>
                       <div>
                         <div className="col-sm-9" style={{ padding: 0 }}>
-                          <Label label="Arrears" fontSize="15px" color="black" />
+                          <Label label="PT_DEMAND_ARREARS" fontSize="15px" color="black" />
                         </div>
                         <div className="col-sm-3">
                           <Label
