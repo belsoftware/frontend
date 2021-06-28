@@ -310,9 +310,9 @@ class ViewBillEstimateContainer extends React.Component {
                 {
                  getBillGridItem("WS_BILL_MONTHS_TO_CHARGE","WS_BILL_MONTHS_TO_CHARGE",monthsToCharge,classes)
                }
-
+               
             <Divider className={classes.root} />
-                {getGridItem(Math.round(payableBillAmount), classes, style)}
+                {getGridItem(Math.round(billAmount), classes, style)}
              </div>
           ) : (
               <div style={{ padding: "16px", width: "500px" }}>
@@ -327,7 +327,7 @@ class ViewBillEstimateContainer extends React.Component {
                     }}
                   />
                 </div>
-                {getGridItem(Math.round(payableBillAmount), classes, style)}
+                {getGridItem(Math.round(billAmount), classes, style)}
               </div>
             )
         ]}
@@ -366,10 +366,13 @@ const mapStateToProps = (state, ownProps, dispatch) => {
     preparedFinalObject,
     "billEstimation.BillingSlab.propertyLocation"
   );
-  const billAmount = get(
+  const billAmount = (isNaN(get(
     preparedFinalObject,
     "billEstimation.billAmount"
-  );
+  )) === false ? get(
+    preparedFinalObject,
+    "billEstimation.billAmount"
+  ): 0 )
 
   const payableBillAmount = get(preparedFinalObject,
     "billEstimation.payableBillAmount"

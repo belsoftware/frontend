@@ -2034,12 +2034,7 @@ export const waterBillEstimateCalculation = async(queryObject, dispatch) => {
     } catch (error) {
         dispatch(toggleSpinner());
         console.log(error);
-        store.dispatch(
-            toggleSnackbar(
-                true, { labelName: error.message, labelCode: error.message },
-                "error"
-            )
-        );
+      
     }
 
 };
