@@ -12,7 +12,7 @@ const formConfig = {
       floatingLabelText: "PT_COMMON_USAGE_TYPE",
       // value: "Other",
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
-      value: "PROPERTYTAX_BILLING_SLAB_SHARED",
+      value: "PROPERTYTAX_BILLING_SLAB_OTHER",
       required: true,
       disabled: true,
       numcols: 4,

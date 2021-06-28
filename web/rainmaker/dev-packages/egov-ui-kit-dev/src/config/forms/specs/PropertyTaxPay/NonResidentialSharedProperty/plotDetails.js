@@ -9,7 +9,7 @@ const formConfig = {
       type: "textfield",
       floatingLabelText: "PT_COMMON_USAGE_TYPE",
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
-      value: "Non Residential",
+      value: "PROPERTYTAX_BILLING_SLAB_NONRESIDENTIAL",
       required: true,
       disabled: true,
       numcols: 4,
