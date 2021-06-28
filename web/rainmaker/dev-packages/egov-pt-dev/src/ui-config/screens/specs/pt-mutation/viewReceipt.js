@@ -80,6 +80,11 @@ const viewReceipt = {
           labelName: "NOTE",
           labelKey: "Note : The information provided in this page is for verifying the authenticity of the receipt downloaded. "+
             "The information provided below is as per the records maintained in eChhawani. You have to validate the information against the information present in your copy."
+        },
+        {
+          style: {
+            marginTop: 50
+          }
         }),
         divider1: getDivider(),
         header: getCommonSubHeader(
