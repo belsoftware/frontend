@@ -10,7 +10,7 @@ import { getQueryArg, setBusinessServiceDataToLocalStorage, setDocuments } from 
 import { loadUlbLogo } from "egov-ui-kit/utils/pdfUtils/generatePDF";
 import get from "lodash/get";
 import set from "lodash/set";
-import { findAndReplace, getDescriptionFromMDMS, getSearchResults, getSearchResultsForSewerage, getWaterSource, getWorkFlowData, isModifyMode, serviceConst, swEstimateCalculation, waterEstimateCalculation,waterBillEstimateCalculation, getConsumptionDetails } from "../../../../ui-utils/commons";
+import { findAndReplace, getDescriptionFromMDMS, getSearchResults, getSearchResultsForSewerage, getWaterSource, getWorkFlowData, isModifyMode, serviceConst, swEstimateCalculation, waterEstimateCalculation,waterBillEstimateCalculation, getConsumptionDetails,getWaterObjectForOperations } from "../../../../ui-utils/commons";
 import {
   convertDateToEpoch, createEstimateData,
   getDialogButton,getBillEstimateDialogButton, getFeesEstimateOverviewCard,
@@ -166,10 +166,12 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
       }
       //Call estimate for both field inspector and doc verifier
       if (processInstanceAppStatus === "PENDING_FOR_FIELD_INSPECTION" || processInstanceAppStatus === "PENDING_FOR_DOCUMENT_VERIFICATION") {
+        let waterObjForBillEstimate = getWaterObjectForOperations(state,parsedObject);
         let queryObjectForEst = [{
           applicationNo: applicationNumber,
           tenantId: tenantId,
-          waterConnection: parsedObject
+         // waterConnection: parsedObject
+         waterConnection:waterObjForBillEstimate
         }]
         if (parsedObject.applicationNo.includes("WS")) {
           estimate = await waterEstimateCalculation(queryObjectForEst, dispatch);
@@ -183,16 +185,12 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
               dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
             }
           }
-          billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);          
+          billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);            
           if (billEstimate !== null && billEstimate !== undefined) {
-           
-            if (billEstimate.BillEstimation != undefined) {
-              
-              //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
-              //estimate.Calculation[0].appStatus = processInstanceAppStatus;
+            if (billEstimate.BillEstimation != undefined) {              
               dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
             }
-          }
+          }   
 
 
         } else {

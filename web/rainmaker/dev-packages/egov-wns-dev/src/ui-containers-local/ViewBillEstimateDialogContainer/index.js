@@ -203,7 +203,10 @@ class ViewBillEstimateContainer extends React.Component {
                 getBillGridItem("WS_PROP_DETAIL_LOCATION" ,"WS_PROP_DETAIL_LOCATION",propertyLocation, classes)
               }
              
-              {getBillGridItem("WS_COMMON_USAGE_TYPE" ,"WS_COMMON_USAGE_TYPE",buildingType, classes)}  
+              {
+                buildingType != "NA" &&
+                  getBillGridItem("WS_COMMON_USAGE_TYPE" ,"WS_COMMON_USAGE_TYPE",buildingType, classes)
+              }  
               
               {
                 motorInfo != "NA" &&
@@ -240,6 +243,7 @@ class ViewBillEstimateContainer extends React.Component {
                  <Divider className={classes.root} />,
                 wsBillingSlab && wsBillingSlab.length > 0 ?
                 (
+                  
                   <div>
                          {getBillGridItem("WS_BILL_SLAB_FROM" ,"WS_BILL_SLAB_FROM",from, classes)}
                          {getBillGridItem("WS_BILL_SLAB_TO" ,"WS_BILL_SLAB_TO",to, classes)}
@@ -302,7 +306,7 @@ class ViewBillEstimateContainer extends React.Component {
               <Divider className={classes.root} />
               
               {
-                 getBillGridItem("Billing Period Start date","WS_BILL_START_DATE",billingCycleStartDate,classes)
+                 getBillGridItem("Billing Period Start date","WS_BILL_START_DATE",convertEpochToDate(billingCycleStartDate),classes)
                }
                {
                  getBillGridItem("Billing Period End date","WS_BILL_END_DATE",convertEpochToDate(billingCycleEndDate),classes)
@@ -396,7 +400,7 @@ const mapStateToProps = (state, ownProps, dispatch) => {
   const monthsToCharge = get(preparedFinalObject,"billEstimation.monthsToCharge")
   const motorChargePayable = get(preparedFinalObject,"billEstimation.motorChargePayable")
   const billingCycleEndDate = get(preparedFinalObject,"billEstimation.billingCycleEndDate")
-  const billingCycleStartDate = convertEpochToDate(new Date())
+  const billingCycleStartDate = get(preparedFinalObject,"billEstimation.billingDate")            //convertEpochToDate(new Date())
  
   const open = get(
     screenConfig,
