@@ -10,6 +10,13 @@ import Divider from "@material-ui/core/Divider";
 import Icon from "@material-ui/core/Icon";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { convertEpochToDate } from '../../ui-config/screens/specs/utils';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 const styles = theme => ({
   root: {
@@ -44,6 +51,56 @@ class ViewBillEstimateContainer extends React.Component {
       marginRight: 5
     }
   };
+
+  getBillingSlabTable = (billSlab) =>{
+    return (
+      <div>
+       
+          <Table>
+            <TableHead style={{ backgroundColor: "white", borderBottom: "1px solid rgb(211, 211, 211)" }}>
+              <TableRow>                
+                <TableCell>
+                  <LabelContainer labelName="From"  labelKey="WS_BILL_SLAB_FROM" />                 
+                </TableCell>
+                <TableCell>
+                <LabelContainer labelName="From"  labelKey="WS_BILL_SLAB_TO" />                 
+                </TableCell>
+                <TableCell>
+                <LabelContainer labelName="From"  labelKey="WS_BILL_CHARGE" />                 
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            
+            {billSlab.map((item, i) => {                   
+                      return (
+                        <TableRow>
+                        <TableCell >
+                          <span >{item.from}</span>
+                        </TableCell>
+
+                        <TableCell >
+                         <span  >{item.to}</span>
+                        </TableCell>
+
+                        <TableCell >
+                          <span  >{item.charge}</span>
+                        </TableCell>
+                      </TableRow>
+                      );                  
+                })
+              }
+        
+       </TableBody>
+          
+    </Table>
+       
+        
+      </div>
+    );
+
+
+  }
 
   getBillGridItem = (labelName,labelKey,data,classes,style) =>{
     return (
@@ -163,7 +220,7 @@ class ViewBillEstimateContainer extends React.Component {
       classes
     } = this.props;
     const { style } = this.state;
-    const { getGridItem, handleClose,getBillGridItem } = this;
+    const { getGridItem, handleClose,getBillGridItem,getBillingSlabTable } = this;
 
     return (
       <Dialog
@@ -242,14 +299,8 @@ class ViewBillEstimateContainer extends React.Component {
                  /></div>,
                  <Divider className={classes.root} />,
                 wsBillingSlab && wsBillingSlab.length > 0 ?
-                (
-                  
-                  <div>
-                         {getBillGridItem("WS_BILL_SLAB_FROM" ,"WS_BILL_SLAB_FROM",from, classes)}
-                         {getBillGridItem("WS_BILL_SLAB_TO" ,"WS_BILL_SLAB_TO",to, classes)}
-                         {getBillGridItem("charge" ,"WS_BILL_CHARGE","Rs "+charge, classes)}
-                         
-                    </div>
+                (                  
+                  getBillingSlabTable(wsBillingSlab)
                 )
                 :
                 (
@@ -270,7 +321,7 @@ class ViewBillEstimateContainer extends React.Component {
                 )
 
               ]}
-              <Divider className={classes.root} />
+            
               <div style={{ paddingBottom: "16px", paddingTop: "8px" }}>
                 <LabelContainer
                   labelName="Bill Estimate"
