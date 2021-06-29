@@ -355,159 +355,6 @@ export const getLabelOnlyValue = (value, props = {}) => {
 };
 
 
-export const onActionClick = (rowData) =>{
-  switch(rowData[8]){
-    case "PAY" : return "";
-    case "DOWNLOAD RECEIPT" : ""
-    case "GENERATE NEW RECEIPT" : ""
-  }
-}
-
-export const getTextToLocalMapping = label => {
-  const localisationLabels = getTransformedLocalStorgaeLabels();
-  switch (label) {
-    case "Bill No.":
-      return getLocaleLabels(
-        "Bill No.",
-        "ABG_COMMON_TABLE_COL_BILL_NO",
-        localisationLabels
-      );
-
-    case "Consumer Name":
-      return getLocaleLabels(
-        "Consumer Name",
-        "ABG_COMMON_TABLE_COL_CONSUMER_NAME",
-        localisationLabels
-      );
-
-    case "Service Category":
-      return getLocaleLabels(
-        "Service Category",
-        "ABG_COMMON_TABLE_COL_SERVICE_CATEGORY",
-        localisationLabels
-      );
-    case "Bill Date":
-      return getLocaleLabels(
-        "Bill Date",
-        "ABG_COMMON_TABLE_COL_BILL_DATE",
-        localisationLabels
-      );
-
-    case "Bill Amount(Rs)":
-      return getLocaleLabels(
-        "Bill Amount(Rs)",
-        "ABG_COMMON_TABLE_COL_BILL_AMOUNT",
-        localisationLabels
-      );
-
-    case "Status":
-      return getLocaleLabels(
-        "Status",
-        "ABG_COMMON_TABLE_COL_STATUS",
-        localisationLabels
-      );
-    case "Action":
-      return getLocaleLabels(
-        "Action",
-        "ABG_COMMON_TABLE_COL_ACTION",
-        localisationLabels
-      );
-
-    case "Consumer ID":
-      return getLocaleLabels(
-        "Consumer ID",
-        "ABG_COMMON_TABLE_COL_CONSUMER_ID",
-        localisationLabels
-      );
-
-   case "Owner Name":
-      return getLocaleLabels(
-        "Owner Name",
-        "ABG_COMMON_TABLE_COL_OWN_NAME",
-        localisationLabels
-      );
-
-  case "Download":
-      return getLocaleLabels(
-        "Download",
-        "ABG_COMMON_TABLE_COL_DOWNLOAD_BUTTON"
-      );
-
-    case "View button":
-      return getLocaleLabels(
-        "Action",
-        "ABG_COMMON_TABLE_COL_VIEW_BUTTON",
-        localisationLabels
-      );
-
-      case "ACTIVE":
-      return getLocaleLabels(
-        "Pending",
-        "BILL_GENIE_ACTIVE_LABEL",
-        localisationLabels
-      );
-
-      case "CANCELLED":
-      return getLocaleLabels(
-        "Cancelled",
-        "BILL_GENIE_CANCELLED_LABEL",
-        localisationLabels
-      );
-
-      case "PAID":
-      return getLocaleLabels(
-        "Paid",
-        "BILL_GENIE_PAID_LABEL",
-        localisationLabels
-      );
-      case "PAY":
-      case "PARTIALLY PAID":
-      return getLocaleLabels(
-        "PAY",
-        "BILL_GENIE_PAY",
-        localisationLabels
-      );
-      case "EXPIRED":
-      return getLocaleLabels(
-        "Expired",
-        "BILL_GENIE_EXPIRED",
-        localisationLabels
-      );
-      case "GENERATE NEW BILL":
-      return getLocaleLabels(
-        "GENERATE NEW BILL",
-        "BILL_GENIE_GENERATE_NEW_BILL",
-        localisationLabels
-      );
-
-      case "DOWNLOAD RECEIPT":
-        return getLocaleLabels(
-          "DOWNLOAD RECEIPT",
-          "BILL_GENIE_DOWNLOAD_RECEIPT",
-          localisationLabels
-        );
-      case "Search Results for Bill":
-        return getLocaleLabels(
-          "Search Results for Bill",
-          "BILL_GENIE_SEARCH_TABLE_HEADER",
-          localisationLabels
-        );
-      case "PARTIALLY_PAID":
-      case "PARTIALLY PAID":
-        return getLocaleLabels(
-            "Partially Paid",
-            "BILL_GENIE_PARTIALLY_PAID",
-            localisationLabels
-          ); 
-      case "BILL_GENIE_GROUP_SEARCH_HEADER" : 
-          return getLocaleLabels(
-            "Search Results for Group Bills",
-            "BILL_GENIE_GROUP_SEARCH_HEADER",
-            localisationLabels
-          ); 
-  }
-};
-
 export const loadGuestHouseDetails = async (action, state, dispatch,data) => {
 
   let requestBody = {};
@@ -538,40 +385,6 @@ export const loadGuestHouseDetails = async (action, state, dispatch,data) => {
     );
     console.error(e);
     return [{"name":"Residency","tenantId":"pb.agra","address":"5th Cross, 85 Main Road, Agra","longitude":"12.972442","latitude":"77.580643","contactNo":"87412458652","id":"GH_1","priceText":"Starting at 1200/day","availability":"Available","fullDetails":{"maxAllowedBookingDays":20,"maxAllowedHalls":10},"halls":[{"hallId":"hall1","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}}]}];
-  }
-}
-
-export const loadFullCertDetails = async (action, state, dispatch,data) => {
-
-  let requestBody = {};
-  const queryParams = [
-    { key: "tenantId", value: data.tenantId},
-    { key: "id", value: data.id}    
-  ];
-
-  let payload = null;
-  try{
-    payload = await httpRequest(
-      "post",
-      `/birth-death-services/${data.module}/_viewfullCertData`,
-      "_viewCertData",
-      queryParams,
-      requestBody
-    );
-    return payload;
-  }
-  catch (e) {
-    toggleSnackbar(
-      true,
-      {
-        labelName: "Api Error",
-        labelKey: "ERR_API_ERROR"
-      },
-      "error"
-    );
-    console.error(e);
-    return payload;
-    //return {"RequestInfo":{"apiId":"Mihy","ver":".01","ts":null,"resMsgId":"uief87324","msgId":"20170310130900|en_IN","status":"successful"},"BirthCertificate":[{"id":"1","createdby":null,"createdtime":null,"dateofbirth":1614063655148,"dateofreport":1614063655148,"firstname":"san","gender":1,"hospitalname":null,"informantsaddress":null,"informantsname":null,"lastname":null,"middlename":null,"placeofbirth":"Bangalore","registrationno":"2021-1","remarks":null,"lastmodifiedby":null,"lastmodifiedtime":null,"counter":0,"tenantid":null,"fullname":"SRI V S","birthFatherInfo":{"id":null,"aadharno":null,"createdby":null,"createdtime":null,"education":null,"emailid":null,"firstname":"abc","lastname":null,"middlename":null,"mobileno":null,"nationality":null,"proffession":null,"religion":null,"lastmodifiedby":null,"lastmodifiedtime":null,"fullname":"R S H"},"birthMotherInfo":{"id":null,"aadharno":null,"createdby":null,"createdtime":null,"education":null,"emailid":null,"firstname":"abc1","lastname":null,"middlename":null,"mobileno":null,"nationality":null,"proffession":null,"religion":null,"lastmodifiedby":null,"lastmodifiedtime":null,"fullname":"S V H"},"birthPermaddr":{"fullAddress":"100 112 CROSS 108 Church Servant Qtr. Jalapahar"},"birthPresentaddr":{"fullAddress":"100 112 CROSS 108 Church Servant Qtr. Jalapahar"}}]};
   }
 }
 
@@ -625,191 +438,6 @@ export const loadMdmsData = async (action, state, dispatch) => {
   }
 }
 
-export const loadHospitals = async (action, state, dispatch, module, tenantId) => {
-  let requestBody = {};
-  let payload = null;
-
-  const queryParams = [
-    { key: "tenantId", value: tenantId }  
-    ];
-  
-  try
-  {
-    payload = await httpRequest(
-      "post",
-      "birth-death-services/common/getHospitals",
-      "getHospitals",
-      queryParams,
-      requestBody
-    );
-  }
-  catch(e)
-  {
-    toggleSnackbar(
-      true,
-      {
-        labelName: "",
-        labelKey: "ERR_API_ERROR"
-      },
-      "error"
-    );
-    console.error(e);
-  }
-  return payload;
-}
-
-export const downloadCert = async (tenantId, id, module) => {
-  let requestBody = {};
-  let payload = null;
-
-  const queryParams = [
-    { key: "tenantId", value: tenantId } ,
-    { key: "id" , value: id }
-    ];
-  try
-  {
-    payload = await httpRequest(
-      "post",
-      `/birth-death-services/${module}/_download`,
-      "_download",
-      queryParams,
-      requestBody
-    );
-  }
-  catch(e)
-  {
-    console.error(e);
-    toggleSnackbar(
-      true,
-      {
-        labelName: "Could not initiate download",
-        labelKey: "ERR_API_ERROR"
-      },
-      "error"
-    );
-    //toBeRemoved
-    //payload = {consumerCode:"CH-CB-AGRA-2020-001504", filestoreId:"4f0d9299-7fa0-4af6-9077-389ebf2367c4", tenantId: "pb.agra"};
-  }
-
-  return payload;
-}
-
-
-export const postPaymentSuccess = async(data) => {
-
-  store.dispatch(toggleSpinner());
-  setTimeout(() => {     
-    postPaymentActivity(data);
-    store.dispatch(toggleSpinner());
-  }, 4000); //Give 2 sec gap so that the screen is loaded correctly
-    
-};
-
-export const postPaymentActivity = async(data) => {
-  try {
-    if(data.tenantId && data.consumerCode)
-    {
-      store.dispatch(toggleSpinner());
-      let queryParams = [{key:"tenantId",value:data.tenantId},{key:"consumerCode",value:data.consumerCode}];
-      let module = (data.businessService == "BIRTH_CERT")? "birth" : "death";
-      const response = await httpRequest(
-        "post",
-        `birth-death-services/${module}/_getfilestoreid`,
-        "getfilestoreid",
-        queryParams,
-        {}//{ searchCriteria: queryObject }
-      );
-      store.dispatch(toggleSpinner());
-      if(response && response.filestoreId)
-      {
-        let mode = 'download';
-        downloadReceiptFromFilestoreID(response.filestoreId, mode);
-      }
-      return response;
-    }
-  } catch (error) {
-    store.dispatch(toggleSpinner());
-    console.error(error);
-    store.dispatch(
-      toggleSnackbar(
-        true,
-        { labelName: error.message, labelCode: error.message },
-        "error"
-      )
-    );
-  }
-};
-
-export const triggerDownload = (module) => {
-
-  const state = store.getState();
-  const certificateId = get(state,`screenConfiguration.preparedFinalObject.bnd.${module}.download.certificateId`);
-  const tenantId = get(state,`screenConfiguration.preparedFinalObject.bnd.${module}.download.tenantId`);
-  const businessService = get(state,`screenConfiguration.preparedFinalObject.bnd.${module}.download.businessService`);
-
-  downloadCert(tenantId,certificateId, module).then((response) => {
-
-    if(response && response.consumerCode) // Redirect to payment page
-    {
-      const appName =
-          process.env.REACT_APP_NAME === "Citizen"
-            ? "citizen"
-            : "employee";
-            
-      const url =
-      process.env.NODE_ENV === "development"
-        ? `/egov-common/pay?consumerCode=${
-            response.consumerCode
-          }&tenantId=${tenantId}&businessService=${
-            businessService
-          }`
-        : `/${appName}/egov-common/pay?consumerCode=${
-            response.consumerCode
-          }&tenantId=${tenantId}&businessService=${
-            businessService
-          }`;
-      document.location.href = `${document.location.origin}${url}`;
-    }
-    else 
-    if(response && response.filestoreId)
-    {
-      downloadReceiptFromFilestoreID(response.filestoreId,'download')
-    }
-
-  });
-
-}
-
-export const downloadReceipt = async (consumerCode,tenantId) => {
-
-  const state = store.getState();
-
-  store.dispatch(toggleSpinner());
-  let queryParams = [{key:"tenantId",value:tenantId},{key:"consumerCodes",value:consumerCode}];
-  const response = await httpRequest(
-    "post",
-    "collection-services/payments/_search",
-    "_search",
-    queryParams,
-    {}//{ searchCriteria: queryObject }
-  );
-  store.dispatch(toggleSpinner());
-  if(response && response.Payments && response.Payments.length>0 && response.Payments[0].fileStoreId)
-  {
-    let mode = 'download';
-    downloadReceiptFromFilestoreID(response.Payments[0].fileStoreId, mode);
-  }else
-  {
-    store.dispatch(
-      setRoute(
-        `/uc-citizen/search`
-      )
-    );
-  }
-  return response;
-
-}
-
 export const searchForGuestHouse = async (dispatch,queryParams,queryObject) => {
   try {
     dispatch(toggleSpinner());
@@ -835,4 +463,170 @@ export const searchForGuestHouse = async (dispatch,queryParams,queryObject) => {
   }
 };
 
+export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
+  console.log("fieldInfo",fieldInfo)
+  try {
+    const cardIndex = fieldInfo && fieldInfo.index ? fieldInfo.index : "0";
+    const ownerNo = get(
+      state.screenConfiguration.preparedFinalObject,
+      `lamsStore.Lease[0].userDetails[${cardIndex}].mobileNumber`,
+      ""
+    );
+    if(!ownerNo){
+      dispatch(
+        toggleSnackbar(
+          true,
+          {
+            labelName: "Please enter Mobile Number to search !",
+            labelKey: "ERR_OWNER_NOT_ENTERED"
+          },
+          "error"
+        )
+      );
+      return;
+    }
+    const owners = get(
+      state.screenConfiguration.preparedFinalObject,
+      `lamsStore.Lease[0].userDetails`,
+      []
+    );
+    //owners from search call before modification.
+    const oldOwnersArr = get(
+      state.screenConfiguration.preparedFinalObject,
+      "LicensesTemp[0].tradeLicenseDetail.owners",
+      []
+    );
+    //Same no search on Same index
+    if (ownerNo === owners[cardIndex].userName) {
+      dispatch(
+        toggleSnackbar(
+          true,
+          {
+            labelName: "Owner already added !",
+            labelKey: "ERR_OWNER_ALREADY_ADDED"
+          },
+          "error"
+        )
+      );
+      return;
+    }
 
+    //Same no search in whole array
+    const matchingOwnerIndex = owners.findIndex(
+      item => item.userName === ownerNo
+    );
+    if (matchingOwnerIndex > -1) {
+      if (
+        !isUndefined(owners[matchingOwnerIndex].userActive) &&
+        owners[matchingOwnerIndex].userActive === false
+      ) {
+        //rearrange
+        dispatch(
+          prepareFinalObject(
+            `lamsStore.Lease[0].userDetails[${matchingOwnerIndex}].userActive`,
+            true
+          )
+        );
+        dispatch(
+          prepareFinalObject(
+            `lamsStore.Lease[0].userDetails[${cardIndex}].userActive`,
+            false
+          )
+        );
+        //Delete if current card was not part of oldOwners array - no need to save.
+        if (
+          oldOwnersArr.findIndex(
+            item => owners[cardIndex].userName === item.userName
+          ) == -1
+        ) {
+          owners.splice(cardIndex, 1);
+          dispatch(
+            prepareFinalObject(`lamsStore.Lease[0].userDetails`, owners)
+          );
+        }
+      } else {
+        dispatch(
+          toggleSnackbar(
+            true,
+            {
+              labelName: "Owner already added !",
+              labelKey: "ERR_OWNER_ALREADY_ADDED_1"
+            },
+            "error"
+          )
+        );
+      }
+      return;
+    } else {
+      //New number search only
+      let payload = await httpRequest(
+        "post",
+        `/user/_search?tenantId=${commonConfig.tenantId}`,
+        "_search",
+        [],
+        {
+          tenantId: commonConfig.tenantId,
+          userName: `${ownerNo}`
+        }
+      );
+      if (payload && payload.user && payload.user.hasOwnProperty("length")) {
+        if (payload.user.length === 0) {
+          dispatch(
+            toggleSnackbar(
+              true,
+              {
+                labelName: "This mobile number is not registered ! Enter all details and continue.",
+                labelKey: "LAMS_ERR_MOBILE_NUMBER_NOT_REGISTERED"
+              },
+              "info"
+            )
+          );
+        } else {
+          const userInfo =
+            payload.user &&
+            payload.user[0] &&
+            JSON.parse(JSON.stringify(payload.user[0]));
+          if (userInfo && userInfo.createdDate) {
+            userInfo.createdDate = convertDateTimeToEpoch(userInfo.createdDate);
+            userInfo.lastModifiedDate = convertDateTimeToEpoch(
+              userInfo.lastModifiedDate
+            );
+            userInfo.pwdExpiryDate = convertDateTimeToEpoch(
+              userInfo.pwdExpiryDate
+            );
+          }
+          let currOwnersArr = get(
+            state.screenConfiguration.preparedFinalObject,
+            "lamsStore.Lease[0].userDetails",
+            []
+          );
+
+          currOwnersArr[cardIndex] = userInfo;
+          // if (oldOwnersArr.length > 0) {
+          //   currOwnersArr.push({
+          //     ...oldOwnersArr[cardIndex],
+          //     userActive: false,
+          //    // isDeleted:false
+          //   });
+          // }
+          dispatch(
+            prepareFinalObject(
+              `Licenses[0].tradeLicenseDetail.owners`,
+              currOwnersArr
+            )
+          );
+          // dispatch(
+          //   prepareFinalObject(
+          //     `Licenses[0].tradeLicenseDetail.owners[0].mobileNumber`,
+          //     ownerNo
+          //   )
+          // );
+          //validateOwners(state, dispatch);
+        }
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    dispatch(toggleSnackbar(true, e.message, "info"));
+  }
+};

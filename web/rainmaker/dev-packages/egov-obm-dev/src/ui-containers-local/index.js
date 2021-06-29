@@ -19,8 +19,14 @@ const ListCard2 = Loadable({
   loading: () => <Loading />
 });
 
+const DocumentListContainer = Loadable({
+  loader: () => import("./DocumentListContainer"),
+  loading: () => <Loading />
+});
+
 export {
   TestContainer,
   ListCard,
-  ListCard2
+  ListCard2,
+  DocumentListContainer
 };
