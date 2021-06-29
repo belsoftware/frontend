@@ -836,11 +836,10 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
   let queryObjForSearch = [{ key: "tenantId", value: tenantId }, { key: "applicationNumber", value: applicationNumber }]
   let viewBillTooltip = [], estimate,billEstimate, payload = [];
   if (service === serviceConst.WATER) {
-    payload = [];
+   // payload = [];
     payload = await getSearchResults(queryObjForSearch);
     set(payload, 'WaterConnection[0].service', service);
     const convPayload = findAndReplace(payload, "NA", null)
-
     payload.WaterConnection[0].wsTaxHeads.forEach(item => {   
    if (!item.amount || item.amount == null) {
      item.amount = 0;
@@ -891,7 +890,6 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
     if (estimate !== null && estimate !== undefined) {
       if (estimate.Calculation.length > 0) {
         await processBills(estimate, viewBillTooltip, dispatch);
-
         // viewBreakUp 
         estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
         estimate.Calculation[0].appStatus = processInstanceAppStatus;
@@ -901,11 +899,17 @@ const searchResults = async (action, state, dispatch, applicationNumber, process
   
    
     if(process.env.REACT_APP_NAME != "Citizen" ){
+      //Manipulate waterSrc and SubSrc for calculator
+      let billEstimateWaterObj = convPayload.WaterConnection[0];
+      billEstimateWaterObj.waterSource = convPayload.WaterConnection[0].waterSourceSubSource;
+      let queryObjectForEst = [{
+        applicationNo: applicationNumber,
+        tenantId: tenantId,
+        waterConnection: billEstimateWaterObj
+      }]
       billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);     
-     if (billEstimate !== null && billEstimate !== undefined) {     
-        if (billEstimate.BillEstimation != undefined) {
-          //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
-          //estimate.Calculation[0].appStatus = processInstanceAppStatus;
+      if (billEstimate !== null && billEstimate !== undefined) {     
+        if (billEstimate.BillEstimation != undefined) {        
           dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
         }
       }  

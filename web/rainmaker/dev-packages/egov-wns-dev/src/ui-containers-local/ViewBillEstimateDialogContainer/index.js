@@ -357,13 +357,16 @@ class ViewBillEstimateContainer extends React.Component {
               <Divider className={classes.root} />
               
               {
-                 getBillGridItem("Billing Period Start date","WS_BILL_START_DATE",convertEpochToDate(billingCycleStartDate),classes)
+                billingCycleStartDate != "NA"  &&
+                  getBillGridItem("Billing Period Start date","WS_BILL_START_DATE",convertEpochToDate(billingCycleStartDate),classes)
                }
                {
-                 getBillGridItem("Billing Period End date","WS_BILL_END_DATE",convertEpochToDate(billingCycleEndDate),classes)
+                 billingCycleEndDate != "NA"  &&
+                  getBillGridItem("Billing Period End date","WS_BILL_END_DATE",convertEpochToDate(billingCycleEndDate),classes)
                }
                 {
-                 getBillGridItem("WS_BILL_MONTHS_TO_CHARGE","WS_BILL_MONTHS_TO_CHARGE",monthsToCharge,classes)
+                 monthsToCharge > 0 && 
+                  getBillGridItem("WS_BILL_MONTHS_TO_CHARGE","WS_BILL_MONTHS_TO_CHARGE",monthsToCharge,classes)
                }
                
             <Divider className={classes.root} />
