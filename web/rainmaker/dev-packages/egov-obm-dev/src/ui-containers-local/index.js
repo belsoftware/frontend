@@ -24,9 +24,15 @@ const DocumentListContainer = Loadable({
   loading: () => <Loading />
 });
 
+const AutosuggestContainer = Loadable({
+  loader: () => import("./AutosuggestContainer"),
+  loading: () => <Loading />
+});
+
 export {
   TestContainer,
   ListCard,
   ListCard2,
-  DocumentListContainer
+  DocumentListContainer,
+  AutosuggestContainer
 };

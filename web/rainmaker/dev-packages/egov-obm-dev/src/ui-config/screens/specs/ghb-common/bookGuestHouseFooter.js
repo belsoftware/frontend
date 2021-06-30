@@ -6,26 +6,23 @@ import {
     prepareFinalObject
   } from "egov-ui-framework/ui-redux/screen-configuration/actions";   //returns action object
   import { validateFields } from "../utils";
-  import {checkIfCitizenEditScreen} from "../lams-utils/utils";
   import { toggleSpinner , toggleSnackbar} from "egov-ui-framework/ui-redux/screen-configuration/actions";
   import { httpRequest } from "egov-ui-framework/ui-utils/api";
   import get from "lodash/get";
   import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
   import jp from "jsonpath";
-  import {eVerify} from "../../../../ui-utils/commons"
-  import "./index.css";
 
 const checkIfFormIsValid = async (state, dispatch) => {
 
   let isFormValid = true;
 
-  const isLeaseDetailsValid = validateFields(
+  const isBookingDetailsValid = validateFields(
     //"components.div1.children.details.newApplicationDetailsCard.children.cardContent.children",
     "components.div1.children.details.children.cardContent.children.optionSelection.children",
     //"components.div.children.newCollectionConsumerDetailsCard.children.cardContent.children.ucConsumerContainer.children",
     state,
     dispatch,
-    "newApplication"
+    "bookGuestHouse"
   );  
 
   const isEmployeeDetailsValid = validateFields(
@@ -229,10 +226,6 @@ const getCommonApplyFooter = children => {
     },
     children
   };
-};
-
-const callBackeVerify = async (state, dispatch) => {
-  eVerify(state, dispatch);
 };
 
 export const footer = getCommonApplyFooter({

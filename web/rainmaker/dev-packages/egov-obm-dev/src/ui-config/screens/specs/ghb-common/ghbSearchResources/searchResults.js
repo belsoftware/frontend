@@ -143,8 +143,8 @@ const getActionButton = (value, tableMeta) => {
           let tenantId = tableMeta.rowData[1];
           let id = tableMeta.rowData[0];
 
-          store.dispatch(prepareFinalObject("ghb.book.guestHouseId", id));
-          store.dispatch(prepareFinalObject("ghb.book.tenantId", tenantId));
+          store.dispatch(prepareFinalObject("ghb.search.guestHouseId", id));
+          store.dispatch(prepareFinalObject("ghb.search.tenantId", tenantId));
 
       }}
     >

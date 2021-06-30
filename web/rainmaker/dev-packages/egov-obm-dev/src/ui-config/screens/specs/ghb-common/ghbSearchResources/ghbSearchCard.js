@@ -66,7 +66,7 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
 const cbChanged = (action, state, dispatch) => {
 
   console.log(state.screenConfiguration.preparedFinalObject.obm);
- let tenantId = get(state.screenConfiguration.preparedFinalObject.obm,"book.tenantId");
+ let tenantId = get(state.screenConfiguration.preparedFinalObject.obm,"search.tenantId");
 
  loadHospitals(action, state, dispatch, "birth", tenantId).then((response)=>{
    if(response && response.hospitalDtls)
@@ -122,7 +122,7 @@ export const searchSetCommon = getCommonContainer({
      labelName: "From Date",
      labelKey: "COMMON_FROM_DATE"
    },
-   jsonPath: "ghb.book.fromDate",
+   jsonPath: "ghb.search.fromDate",
    gridDefination: {
      xs: 12,
      sm: 4
@@ -143,7 +143,7 @@ export const searchSetCommon = getCommonContainer({
      labelName: "To Date",
      labelKey: "COMMON_TO_DATE"
    },
-   jsonPath: "ghb.book.todate",
+   jsonPath: "ghb.search.todate",
    gridDefination: {
      xs: 12,
      sm: 4
@@ -162,7 +162,7 @@ export const searchSetCommon = getCommonContainer({
    uiFramework: "custom-containers",
      //moduleName: "egov-lams",
      componentPath: "AutosuggestContainer",
-     jsonPath: "ghb.book.tenantId",
+     jsonPath: "ghb.search.tenantId",
      sourceJsonPath: "ghb.allTenants",
      visible:true,
      autoSelect:true,
@@ -186,7 +186,7 @@ export const searchSetCommon = getCommonContainer({
        },
        labelsFromLocalisation: true,
        required: true,
-       jsonPath: "ghb.book.tenantId",
+       jsonPath: "ghb.search.tenantId",
        sourceJsonPath: "ghb.allTenants",
        inputLabelProps: {
          shrink: true

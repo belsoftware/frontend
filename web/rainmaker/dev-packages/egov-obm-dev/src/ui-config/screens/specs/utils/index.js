@@ -463,13 +463,28 @@ export const searchForGuestHouse = async (dispatch,queryParams,queryObject) => {
   }
 };
 
+export const convertDateTimeToEpoch = dateTimeString => {
+  //example input format : "26-07-2018 17:43:21"
+  try {
+    // const parts = dateTimeString.match(
+    //   /(\d{2})\-(\d{2})\-(\d{4}) (\d{2}):(\d{2}):(\d{2})/
+    // );
+    const parts = dateTimeString.match(
+      /(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2}):(\d{2})/
+    );
+    return Date.UTC(+parts[3], parts[2] - 1, +parts[1], +parts[4], +parts[5]);
+  } catch (e) {
+    return dateTimeString;
+  }
+};
+
 export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
   console.log("fieldInfo",fieldInfo)
   try {
     const cardIndex = fieldInfo && fieldInfo.index ? fieldInfo.index : "0";
     const ownerNo = get(
       state.screenConfiguration.preparedFinalObject,
-      `lamsStore.Lease[0].userDetails[${cardIndex}].mobileNumber`,
+      `ghb.booking.userDetails[${cardIndex}].mobileNumber`,
       ""
     );
     if(!ownerNo){
@@ -487,7 +502,7 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
     }
     const owners = get(
       state.screenConfiguration.preparedFinalObject,
-      `lamsStore.Lease[0].userDetails`,
+      `ghb.booking.userDetails`,
       []
     );
     //owners from search call before modification.
@@ -602,26 +617,13 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
           );
 
           currOwnersArr[cardIndex] = userInfo;
-          // if (oldOwnersArr.length > 0) {
-          //   currOwnersArr.push({
-          //     ...oldOwnersArr[cardIndex],
-          //     userActive: false,
-          //    // isDeleted:false
-          //   });
-          // }
+
           dispatch(
             prepareFinalObject(
-              `Licenses[0].tradeLicenseDetail.owners`,
+              `ghb.booking.userDetails`,
               currOwnersArr
             )
           );
-          // dispatch(
-          //   prepareFinalObject(
-          //     `Licenses[0].tradeLicenseDetail.owners[0].mobileNumber`,
-          //     ownerNo
-          //   )
-          // );
-          //validateOwners(state, dispatch);
         }
       }
     }
