@@ -110,8 +110,8 @@ export const getOwnerInfo = (latestPropertyDetails, generalMDMSDataById, oldProp
             }
             : {
               key: getTranslatedLabel("PT_OWNERSHIP_INFO_GENDER", localizationLabelsData),
-              value: owner.gender || "NA",
-              oldValue: oldPropertydetails && oldPropertydetails.owners && Array.isArray( oldPropertydetails.owners) && oldPropertydetails.owners[index].gender,
+              value: (getTranslatedLabel((`PT_COMMON_GENDER_${owner.gender}`).toUpperCase(), localizationLabelsData)) || "NA",
+              oldValue: oldPropertydetails && oldPropertydetails.owners && (getTranslatedLabel((`PT_COMMON_GENDER_${owner.gender}`).toUpperCase(), localizationLabelsData)) || "NA",
               jsonPath:'gender'
             },
           isInstitution

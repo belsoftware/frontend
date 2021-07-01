@@ -678,7 +678,7 @@ const getOwnerInfo = (latestPropertyDetails, generalMDMSDataById) => {
                 }
                 : {
                   key: getTranslatedLabel("PT_OWNERSHIP_INFO_GENDER", localizationLabelsData),
-                  value: owner.gender || "NA",
+                  value: (getTranslatedLabel((`PT_COMMON_GENDER_${owner.gender}`).toUpperCase(), localizationLabelsData)) || "NA",
                 },
               isInstitution
                 ? {
