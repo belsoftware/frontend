@@ -253,7 +253,7 @@ class WorkFlowContainer extends React.Component {
         if (moduleName == "PT.CREATE") {
           this.props.setRoute(`/pt-mutation/acknowledgement?${this.getPurposeString(
             label
-          )}&moduleName=${moduleName}&applicationNumber=${get(payload, 'Properties[0].acknowldgementNumber', "")}&tenantId=${get(payload, 'Properties[0].tenantId', "")}`);
+          )}&moduleName=${moduleName}&applicationNumber=${get(payload, 'Properties[0].acknowldgementNumber', "")}&tenantId=${get(payload, 'Properties[0].tenantId', "")}&secondNumber=${get(payload, 'Properties[0].propertyId', "")}`);
           return;
         }
         if (moduleName == "ASMT") {
