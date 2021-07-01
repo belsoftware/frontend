@@ -533,6 +533,21 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
     let receiptTableWidth = ["*", "*", "*", "*"];
     let fontStyle = getDefaultFontStyle(getLocale());
     console.log("fontStyle--",fontStyle); 
+    let applNo = "";
+    let addlHeader = "";
+    if(applicationData)
+    {
+        if(applicationData.applicationNoHeader){
+            applNo = getLocaleLabels(applicationData.applicationNoHeader, applicationData.applicationNoHeader);
+            applNo = applNo.indexOf("CB-AC") === -1?applNo + ":":applNo;
+        }
+        if(applicationData.additionalHeader){
+            addlHeader = getLocaleLabels(applicationData.additionalHeader, applicationData.additionalHeader)
+            addlHeader = addlHeader.indexOf("PT-") === -1?addlHeader + ":": addlHeader;
+
+        }
+    }
+
     data = {
         defaultStyle: {
             font: fontStyle
@@ -547,7 +562,7 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                     {
                         "text": [
                             {
-                                "text": applicationData.applicationNoHeader ? getLocaleLabels(applicationData.applicationNoHeader, applicationData.applicationNoHeader) + " : ": '',
+                                "text": applicationData.applicationNoHeader ? applNo : '',
                                 bold: true
                             },
                             {
@@ -569,7 +584,7 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                     {
                         "text": [
                             {
-                                "text": applicationData.additionalHeader ? getLocaleLabels(applicationData.additionalHeader, applicationData.additionalHeader) + " : " : '',
+                                "text": applicationData.additionalHeader ?addlHeader : '',
                                 bold: true
                             },
                             {
