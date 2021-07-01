@@ -85,7 +85,7 @@ download?download():generatePdfFromDiv("download", subHeaderValue, "#property-re
   }
 
   return (
-    <div className="search-preview-header flex-child" style={{ display: "flex", marginBottom: downloadPrintButton ? 20 : 10, marginTop: 20, marginRight: 10, justifyContent: "space-between" }}>
+    <div className="search-preview-header flex-child" style={{ display: "flex", marginBottom: downloadPrintButton ? 20 : 10, marginTop: 20, justifyContent: "space-between" }}>
       <div>
         <Label
           label={`${getTranslatedLabel(header, localizationLabelsData)} ${headerValue}`}

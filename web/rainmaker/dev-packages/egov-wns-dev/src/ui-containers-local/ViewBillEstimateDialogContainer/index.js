@@ -10,6 +10,13 @@ import Divider from "@material-ui/core/Divider";
 import Icon from "@material-ui/core/Icon";
 import { handleScreenConfigurationFieldChange as handleField } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { convertEpochToDate } from '../../ui-config/screens/specs/utils';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 const styles = theme => ({
   root: {
@@ -44,6 +51,56 @@ class ViewBillEstimateContainer extends React.Component {
       marginRight: 5
     }
   };
+
+  getBillingSlabTable = (billSlab) =>{
+    return (
+      <div>
+       
+          <Table>
+            <TableHead style={{ backgroundColor: "white", borderBottom: "1px solid rgb(211, 211, 211)" }}>
+              <TableRow>                
+                <TableCell>
+                  <LabelContainer labelName="From"  labelKey="WS_BILL_SLAB_FROM" />                 
+                </TableCell>
+                <TableCell>
+                <LabelContainer labelName="From"  labelKey="WS_BILL_SLAB_TO" />                 
+                </TableCell>
+                <TableCell>
+                <LabelContainer labelName="From"  labelKey="WS_BILL_CHARGE" />                 
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            
+            {billSlab.map((item, i) => {                   
+                      return (
+                        <TableRow>
+                        <TableCell >
+                          <span >{item.from}</span>
+                        </TableCell>
+
+                        <TableCell >
+                         <span  >{item.to}</span>
+                        </TableCell>
+
+                        <TableCell >
+                          <span  >{item.charge}</span>
+                        </TableCell>
+                      </TableRow>
+                      );                  
+                })
+              }
+        
+       </TableBody>
+          
+    </Table>
+       
+        
+      </div>
+    );
+
+
+  }
 
   getBillGridItem = (labelName,labelKey,data,classes,style) =>{
     return (
@@ -163,7 +220,7 @@ class ViewBillEstimateContainer extends React.Component {
       classes
     } = this.props;
     const { style } = this.state;
-    const { getGridItem, handleClose,getBillGridItem } = this;
+    const { getGridItem, handleClose,getBillGridItem,getBillingSlabTable } = this;
 
     return (
       <Dialog
@@ -203,7 +260,10 @@ class ViewBillEstimateContainer extends React.Component {
                 getBillGridItem("WS_PROP_DETAIL_LOCATION" ,"WS_PROP_DETAIL_LOCATION",propertyLocation, classes)
               }
              
-              {getBillGridItem("WS_COMMON_USAGE_TYPE" ,"WS_COMMON_USAGE_TYPE",buildingType, classes)}  
+              {
+                buildingType != "NA" &&
+                  getBillGridItem("WS_COMMON_USAGE_TYPE" ,"WS_COMMON_USAGE_TYPE",buildingType, classes)
+              }  
               
               {
                 motorInfo != "NA" &&
@@ -239,13 +299,8 @@ class ViewBillEstimateContainer extends React.Component {
                  /></div>,
                  <Divider className={classes.root} />,
                 wsBillingSlab && wsBillingSlab.length > 0 ?
-                (
-                  <div>
-                         {getBillGridItem("WS_BILL_SLAB_FROM" ,"WS_BILL_SLAB_FROM",from, classes)}
-                         {getBillGridItem("WS_BILL_SLAB_TO" ,"WS_BILL_SLAB_TO",to, classes)}
-                         {getBillGridItem("charge" ,"WS_BILL_CHARGE","Rs "+charge, classes)}
-                         
-                    </div>
+                (                  
+                  getBillingSlabTable(wsBillingSlab)
                 )
                 :
                 (
@@ -266,7 +321,7 @@ class ViewBillEstimateContainer extends React.Component {
                 )
 
               ]}
-              <Divider className={classes.root} />
+            
               <div style={{ paddingBottom: "16px", paddingTop: "8px" }}>
                 <LabelContainer
                   labelName="Bill Estimate"
@@ -302,17 +357,20 @@ class ViewBillEstimateContainer extends React.Component {
               <Divider className={classes.root} />
               
               {
-                 getBillGridItem("Billing Period Start date","WS_BILL_START_DATE",billingCycleStartDate,classes)
+                billingCycleStartDate != "NA"  &&
+                  getBillGridItem("Billing Period Start date","WS_BILL_START_DATE",convertEpochToDate(billingCycleStartDate),classes)
                }
                {
-                 getBillGridItem("Billing Period End date","WS_BILL_END_DATE",convertEpochToDate(billingCycleEndDate),classes)
+                 billingCycleEndDate != "NA"  &&
+                  getBillGridItem("Billing Period End date","WS_BILL_END_DATE",convertEpochToDate(billingCycleEndDate),classes)
                }
                 {
-                 getBillGridItem("WS_BILL_MONTHS_TO_CHARGE","WS_BILL_MONTHS_TO_CHARGE",monthsToCharge,classes)
+                 monthsToCharge > 0 && 
+                  getBillGridItem("WS_BILL_MONTHS_TO_CHARGE","WS_BILL_MONTHS_TO_CHARGE",monthsToCharge,classes)
                }
-
+               
             <Divider className={classes.root} />
-                {getGridItem(Math.round(payableBillAmount), classes, style)}
+                {getGridItem(Math.round(billAmount), classes, style)}
              </div>
           ) : (
               <div style={{ padding: "16px", width: "500px" }}>
@@ -327,7 +385,7 @@ class ViewBillEstimateContainer extends React.Component {
                     }}
                   />
                 </div>
-                {getGridItem(Math.round(payableBillAmount), classes, style)}
+                {getGridItem(Math.round(billAmount), classes, style)}
               </div>
             )
         ]}
@@ -366,10 +424,13 @@ const mapStateToProps = (state, ownProps, dispatch) => {
     preparedFinalObject,
     "billEstimation.BillingSlab.propertyLocation"
   );
-  const billAmount = get(
+  const billAmount = (isNaN(get(
     preparedFinalObject,
     "billEstimation.billAmount"
-  );
+  )) === false ? get(
+    preparedFinalObject,
+    "billEstimation.billAmount"
+  ): 0 )
 
   const payableBillAmount = get(preparedFinalObject,
     "billEstimation.payableBillAmount"
@@ -393,7 +454,7 @@ const mapStateToProps = (state, ownProps, dispatch) => {
   const monthsToCharge = get(preparedFinalObject,"billEstimation.monthsToCharge")
   const motorChargePayable = get(preparedFinalObject,"billEstimation.motorChargePayable")
   const billingCycleEndDate = get(preparedFinalObject,"billEstimation.billingCycleEndDate")
-  const billingCycleStartDate = convertEpochToDate(new Date())
+  const billingCycleStartDate = get(preparedFinalObject,"billEstimation.billingDate")            //convertEpochToDate(new Date())
  
   const open = get(
     screenConfig,

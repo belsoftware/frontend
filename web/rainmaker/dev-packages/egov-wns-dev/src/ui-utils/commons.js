@@ -1027,39 +1027,23 @@ export const validateFields = (
     return isFormValid;
   }; 
 
-export const applyForWater = async (state, dispatch) => {
-    let queryObject = parserFunction(state);
-    let waterId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].id");
-    let method = waterId ? "UPDATE" : "CREATE";
-    try {
-        const tenantId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].property.tenantId");
-        let response;
-        queryObject.tenantId = (queryObject && queryObject.property && queryObject.property.tenantId) ? queryObject.property.tenantId : null;
-        if (method === "UPDATE") {
-            queryObject.additionalDetails.appCreatedDate = get(
-                state.screenConfiguration.preparedFinalObject,
-                "WaterConnection[0].additionalDetails.appCreatedDate"
-            )
+  export const getWaterObjectForOperations = (state,queryObject) =>{     
             let queryObjectForUpdate =  get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0]");
-
-            let waterSource = get(state.screenConfiguration.preparedFinalObject, "DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType", null);
-            let waterSubSource = get(state.screenConfiguration.preparedFinalObject, "DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource", null);
+            let waterSource = get(state,"screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType", null);
+            let waterSubSource = get(state, "screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource", null);
             queryObjectForUpdate.waterSource = queryObjectForUpdate.waterSource ? queryObjectForUpdate.waterSource : waterSource;
             queryObjectForUpdate.waterSubSource = queryObjectForUpdate.waterSubSource ? queryObjectForUpdate.waterSubSource : waterSubSource;
-            set(queryObjectForUpdate, "tenantId", tenantId);
+            set(queryObjectForUpdate, "tenantId", get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].property.tenantId"));
             queryObjectForUpdate = { ...queryObjectForUpdate, ...queryObject }
             set(queryObjectForUpdate, "processInstance.action", "SUBMIT_APPLICATION");
             let finalWaterSource = getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource);
             set(queryObjectForUpdate, "waterSource",finalWaterSource);
             set(queryObjectForUpdate, "waterSourceSubSource", finalWaterSource);
             //set(queryObjectForUpdate, "waterSource", getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource));
-            disableField('apply', "components.div.children.footer.children.nextButton", dispatch);
-            disableField('apply', "components.div.children.footer.children.payButton", dispatch);
-            if (typeof queryObjectForUpdate.additionalDetails !== 'object') {
+             if (typeof queryObjectForUpdate.additionalDetails !== 'object') {
                 queryObjectForUpdate.additionalDetails = {};
             }
             queryObjectForUpdate.additionalDetails.locality = queryObjectForUpdate.property.address.locality.code;
-           
             queryObjectForUpdate = findAndReplace(queryObjectForUpdate, "NA", null);
            //Remove null value from each tax heads
             queryObjectForUpdate.wsTaxHeads.forEach(item => {
@@ -1082,6 +1066,25 @@ export const applyForWater = async (state, dispatch) => {
                   }
 
               });
+              return queryObjectForUpdate;
+  }
+
+export const applyForWater = async (state, dispatch) => {
+    let queryObject = parserFunction(state);
+    let waterId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].id");
+    let method = waterId ? "UPDATE" : "CREATE";
+    try {
+       // const tenantId = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].property.tenantId");
+        let response;
+        queryObject.tenantId = (queryObject && queryObject.property && queryObject.property.tenantId) ? queryObject.property.tenantId : null;
+        if (method === "UPDATE") {
+            queryObject.additionalDetails.appCreatedDate = get(
+                state.screenConfiguration.preparedFinalObject,
+                "WaterConnection[0].additionalDetails.appCreatedDate"
+            )
+            let queryObjectForUpdate = getWaterObjectForOperations(state,queryObject);
+            disableField('apply', "components.div.children.footer.children.nextButton", dispatch);
+            disableField('apply', "components.div.children.footer.children.payButton", dispatch);
             await httpRequest("post", "/ws-services/wc/_update", "", [], { WaterConnection: queryObjectForUpdate });
             let searchQueryObject = [{ key: "tenantId", value: queryObjectForUpdate.tenantId }, { key: "applicationNumber", value: queryObjectForUpdate.applicationNo }];
             let searchResponse = await getSearchResults(searchQueryObject);
@@ -2033,13 +2036,8 @@ export const waterBillEstimateCalculation = async(queryObject, dispatch) => {
         return findAndReplace(response, null, "NA");
     } catch (error) {
         dispatch(toggleSpinner());
-        console.log(error);
-        store.dispatch(
-            toggleSnackbar(
-                true, { labelName: error.message, labelCode: error.message },
-                "error"
-            )
-        );
+        console.log("Error got-->",error);
+       
     }
 
 };

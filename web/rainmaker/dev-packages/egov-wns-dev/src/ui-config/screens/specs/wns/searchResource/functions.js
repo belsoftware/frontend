@@ -43,7 +43,7 @@ const renderSearchConnectionTable = async (state, dispatch) => {
         } else if (key === "toDate") {
           queryObject.push({ key: key, value: convertDateToEpoch(searchScreenObject[key], "dayend") });
         } else {
-          queryObject.push({ key: key, value: searchScreenObject[key].trim() });
+          queryObject.push({ key: key, value: encodeURIComponent(searchScreenObject[key].trim()) });
         }
       }
     }

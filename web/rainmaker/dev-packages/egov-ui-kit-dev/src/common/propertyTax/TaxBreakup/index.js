@@ -44,7 +44,6 @@ class TaxBreakup extends Component {
     estimate.tenantId = tenantId;
     estimate.collectedAmount = collectedAmount;
     estimate.arrears = arrears;
-    console.log("billAccountDetails:::"+JSON.stringify(billAccountDetails))
 
     const taxHeadEstimates = taxHeadsFromAPI.reduce((taxHeadEstimates, current) => {
       const taxHeadContent = billAccountDetails.filter((item) => item.taxHeadCode && item.taxHeadCode === current);

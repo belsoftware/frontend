@@ -607,7 +607,7 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                     nodeLength = ind;
                 }
             })
-            if (currentNode.startPosition.verticalRatio > 0.59 && currentNode.style == 'pdf-card-title') {
+            if (currentNode.startPosition.verticalRatio > 0.9 && currentNode.style == 'pdf-card-title') {
                 return true;
             }
             if (currentNode.startPosition.verticalRatio > 0.75 && currentNode.style == 'pdf-card-title' && nodeLength > 19) {

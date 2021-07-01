@@ -455,11 +455,12 @@ const callBackForNext = async (state, dispatch) => {
         isFormValid = true; 
         hasFieldToaster = false;
         if (process.env.REACT_APP_NAME === "Citizen"){
-          const tenantId = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.tenantId");  
-          const mohallaLocalePrefix = {      
-            moduleName: tenantId,
-            masterName: "REVENUE"
-          };
+          // let tenantId = get(state.screenConfiguration.preparedFinalObject, "applyScreen.property.tenantId");  
+          // const mohallaLocalePrefix = {      
+          //   moduleName: tenantId.replace('.', '_').toUpperCase(),
+          //   masterName: "REVENUE"
+          // };
+          // console.log("MOHALLA_PREFIX",mohallaLocalePrefix);
           // dispatch(
           //   handleField(
           //     "apply",
