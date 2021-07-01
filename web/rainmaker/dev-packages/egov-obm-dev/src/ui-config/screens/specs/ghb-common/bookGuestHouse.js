@@ -1,11 +1,13 @@
 import {getCommonCardWithHeader,getLabel} from "egov-ui-framework/ui-config/screens/specs/utils";
 import { prepareFinalObject,  handleScreenConfigurationFieldChange as handleField} 
   from "egov-ui-framework/ui-redux/screen-configuration/actions";   //returns action object
-import {getPattern, getTextField, getCommonGrayCard, getCommonCard, getCommonContainer, getCommonHeader,getDivider,getCommonCaption, getCommonSubHeader,getCommonParagraph, getCommonTitle, getStepperObject, getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
+import {getLabelWithValue, getPattern, getTextField, getCommonGrayCard, getCommonCard, getCommonContainer, getCommonHeader,getDivider,getCommonCaption, getCommonSubHeader,getCommonParagraph, getCommonTitle, getStepperObject, getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {loadCertDetails, loadGuestHouseDetails, getDetailsOfApplicant} from "../utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
 import {footer} from "./bookGuestHouseFooter";
+import { localStorageGet, localStorageSet } from "egov-ui-kit/utils/localStorageUtils";
+import { split } from "lodash";
 
 const header = getCommonHeader({
   labelName: "Search Certificate",
@@ -18,6 +20,12 @@ const onPurposeChange = (action, state, dispatch) =>{
 
 const onCategoryChange = (action, state, dispatch) =>{
   console.log("Category changed");
+}
+
+//Convert YYYY-MM-dd to dd-MM-YYYY
+const convertDate = (dateString) =>{
+  let splits = dateString.split("-");
+  return splits[2]+"-"+splits[1]+"-"+splits[0];
 }
 
 const bookGuestHouse = {
@@ -36,12 +44,12 @@ const bookGuestHouse = {
       }
     });
 
-    let fromDate = get(state,"preparedFinalObject.ghb.search.fromDate");
-    let toDate = get(state,"preparedFinalObject.ghb.search.toDate");
-    dispatch(prepareFinalObject("ghb.booking.fromToDateString", fromDate+"to"+toDate ));
+    let fromDate = convertDate(localStorageGet("ghb.search.fromDate"));
+    let toDate = convertDate(localStorageGet("ghb.search.toDate"));
+    dispatch(prepareFinalObject("ghb.booking.fromToDateString", fromDate+" to "+toDate ));
 
     //Set the documents data for display
-    dispatch(prepareFinalObject("documentsContract", [{"code":"OWNER","title":"OWNER","cards":[{"name":"OWNER.IDENTITYPROOF","code":"OWNER.IDENTITYPROOF","required":true,"dropdown":{"label":"WS_SELECT_DOC_DD_LABEL","required":true,"menu":[{"code":"OWNER.IDENTITYPROOF.AADHAAR","label":"OWNER_IDENTITYPROOF_AADHAAR"},{"code":"OWNER.IDENTITYPROOF.VOTERID","label":"OWNER_IDENTITYPROOF_VOTERID"},{"code":"OWNER.IDENTITYPROOF.DRIVING","label":"OWNER_IDENTITYPROOF_DRIVING"},{"code":"OWNER.IDENTITYPROOF.PAN","label":"OWNER_IDENTITYPROOF_PAN"},{"code":"OWNER.IDENTITYPROOF.PASSPORT","label":"OWNER_IDENTITYPROOF_PASSPORT"}]}},{"name":"OWNER.ADDRESSPROOF","code":"OWNER.ADDRESSPROOF","required":true,"dropdown":{"label":"WS_SELECT_DOC_DD_LABEL","required":true,"menu":[{"code":"OWNER.ADDRESSPROOF.ELECTRICITYBILL","label":"OWNER_ADDRESSPROOF_ELECTRICITYBILL"},{"code":"OWNER.ADDRESSPROOF.DL","label":"OWNER_ADDRESSPROOF_DL"},{"code":"OWNER.ADDRESSPROOF.VOTERID","label":"OWNER_ADDRESSPROOF_VOTERID"},{"code":"OWNER.ADDRESSPROOF.AADHAAR","label":"OWNER_ADDRESSPROOF_AADHAAR"},{"code":"OWNER.ADDRESSPROOF.PAN","label":"OWNER_ADDRESSPROOF_PAN"},{"code":"OWNER.ADDRESSPROOF.PASSPORT","label":"OWNER_ADDRESSPROOF_PASSPORT"}]}}]}]));
+    dispatch(prepareFinalObject("documentsContract", [{"code":"APPLICANT","title":"APPLICANT","cards":[{"name":"APPLICANT.IDENTITYPROOF","code":"APPLICANT.IDENTITYPROOF","required":true,"dropdown":{"label":"WS_SELECT_DOC_DD_LABEL","required":true,"menu":[{"code":"APPLICANT.IDENTITYPROOF.AADHAAR","label":"OWNER_IDENTITYPROOF_AADHAAR"},{"code":"APPLICANT.IDENTITYPROOF.VOTERID","label":"OWNER_IDENTITYPROOF_VOTERID"},{"code":"APPLICANT.IDENTITYPROOF.DRIVING","label":"OWNER_IDENTITYPROOF_DRIVING"},{"code":"APPLICANT.IDENTITYPROOF.PAN","label":"OWNER_IDENTITYPROOF_PAN"},{"code":"APPLICANT.IDENTITYPROOF.PASSPORT","label":"OWNER_IDENTITYPROOF_PASSPORT"}]}},{"name":"APPLICANT.ADDRESSPROOF","code":"APPLICANT.ADDRESSPROOF","required":true,"dropdown":{"label":"WS_SELECT_DOC_DD_LABEL","required":true,"menu":[{"code":"APPLICANT.ADDRESSPROOF.ELECTRICITYBILL","label":"OWNER_ADDRESSPROOF_ELECTRICITYBILL"},{"code":"APPLICANT.ADDRESSPROOF.DL","label":"OWNER_ADDRESSPROOF_DL"},{"code":"APPLICANT.ADDRESSPROOF.VOTERID","label":"OWNER_ADDRESSPROOF_VOTERID"},{"code":"APPLICANT.ADDRESSPROOF.AADHAAR","label":"OWNER_ADDRESSPROOF_AADHAAR"},{"code":"APPLICANT.ADDRESSPROOF.PAN","label":"OWNER_ADDRESSPROOF_PAN"},{"code":"APPLICANT.ADDRESSPROOF.PASSPORT","label":"OWNER_ADDRESSPROOF_PASSPORT"}]}}]}]));
     dispatch(prepareFinalObject("ghb.specialCategoryList", [{code:"Office Staff",name:"Office Staff"},{code:"Elected Member",name:"Elected Member"}]));
     dispatch(prepareFinalObject("ghb.purposeList", [{id:"purpose1",code:"Marriage",name:"Marriage"},{id:"purpose2",code:"Birthday",name:"Birthday"},{id:"purpose3",code:"Religious",name:"Religious"}]));
 
@@ -50,16 +58,16 @@ const bookGuestHouse = {
   },
 
   components:{
-    selectedGuestHouseDetails: getCommonCard({
-      subHeader: getCommonTitle({
-        labelName: "Booking Details",
-        labelKey: "OBM_SELECTED_DETAILS"
-      }),
-      subParagraph: getCommonParagraph({
-        labelName: "",
-        labelKey: "OBM_SELECTED_DETAILS"
-      })
-    }),
+    // selectedGuestHouseDetails: getCommonCard({
+    //   subHeader: getCommonTitle({
+    //     labelName: "Booking Details",
+    //     labelKey: "OBM_SELECTED_DETAILS"
+    //   }),
+    //   subParagraph: getCommonParagraph({
+    //     labelName: "",
+    //     labelKey: "OBM_SELECTED_DETAILS"
+    //   })
+    // }),
     bookingDetails: getCommonCard({
       subHeader: getCommonTitle({
         labelName: "Booking Details",
@@ -69,6 +77,29 @@ const bookGuestHouse = {
         labelName: "",
         labelKey: "OBM_BOOKING_DETAILS"
       }),
+      hallAndTime: getCommonContainer(
+        {
+          nameOfHall: getLabelWithValue(
+            {
+              labelName: "Name of the Hall",
+              labelKey: "OBM_HALL_NAME"
+            },
+            {
+              jsonPath: "ghb.viewGuestHouseDetails.name",
+              //callBack: checkNoData
+            }
+          ),
+          bookedTime: getLabelWithValue(
+            {
+              labelName: "Booking Dates",
+              labelKey: "OBM_BOOKING_DATES"
+            },
+            {
+              jsonPath: "ghb.booking.fromToDateString",
+              //callBack: getGenderStr
+            }
+          )
+        }),
       bookingDetails: getCommonGrayCard({
         // header: getCommonSubHeader(
         //   {
@@ -81,29 +112,6 @@ const bookGuestHouse = {
         //     }
         //   }
         // ),
-        hallAndTime: getCommonContainer(
-          {
-            nameOfHall: getLabelWithValue(
-              {
-                labelName: "Name of the Hall",
-                labelKey: "OBM_HALL_NAME"
-              },
-              {
-                jsonPath: "ghb.viewGuestHouseDetails.name",
-                //callBack: checkNoData
-              }
-            ),
-            bookedTime: getLabelWithValue(
-              {
-                labelName: "Gender",
-                labelKey: "Gender"
-              },
-              {
-                jsonPath: inJsonPath + "ghb.booking.timeString",
-                //callBack: getGenderStr
-              }
-            )
-          }),
         applicantDetailsCardContainer: getCommonContainer({
           purpose: {
             uiFramework: "custom-containers-local",
@@ -129,7 +137,7 @@ const bookGuestHouse = {
               },
               localePrefix: {
                 moduleName: "OBM",
-                masterName: ""
+                masterName: "CHB"
               },
               labelsFromLocalisation: true,
               required: true,
@@ -175,7 +183,7 @@ const bookGuestHouse = {
               },
               localePrefix: {
                 moduleName: "OBM",
-                masterName: ""
+                masterName: "CATEGORY"
               },
               labelsFromLocalisation: true,
               required: true,

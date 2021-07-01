@@ -24,7 +24,7 @@ export const searchApiCall = async (state, dispatch) => {
     queryParams.push({ key: "tenantId",value: tenantId});
 
   let fromdate = get(state.screenConfiguration.preparedFinalObject,"ghb.search.fromdate");
-  let todate = get(state.screenConfiguration.preparedFinalObject,"ghb.search.todate");
+  let todate = get(state.screenConfiguration.preparedFinalObject,"ghb.search.toDate");
 
   const isSearchSetValid = validateFields(
     "components.div.children.ghbSearchCard.children.cardContent.children.searchContainerCommon.children",
@@ -48,7 +48,7 @@ export const searchApiCall = async (state, dispatch) => {
   }
   if (fromdate && todate ) {
     let fromdateofsearch=get(state.screenConfiguration.preparedFinalObject,"ghb.search.fromdate")
-    let todateepochofsearch=get(state.screenConfiguration.preparedFinalObject,"ghb.search.todate")
+    let todateepochofsearch=get(state.screenConfiguration.preparedFinalObject,"ghb.search.toDate")
     if(fromdateofsearch>todateepochofsearch)
     {
     dispatch(

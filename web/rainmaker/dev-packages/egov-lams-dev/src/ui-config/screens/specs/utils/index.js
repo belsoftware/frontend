@@ -506,7 +506,7 @@ export const getDetailsForOwner = async (state, dispatch, fieldInfo) => {
     const cardIndex = fieldInfo && fieldInfo.index ? fieldInfo.index : "0";
     const ownerNo = get(
       state.screenConfiguration.preparedFinalObject,
-      `lamsStore.Lease[0].userDetails[${cardIndex}].mobileNumber`,
+      `ghb.booking.userDetails[${cardIndex}].mobileNumber`,
       ""
     );
     if(!ownerNo){
@@ -524,7 +524,7 @@ export const getDetailsForOwner = async (state, dispatch, fieldInfo) => {
     }
     const owners = get(
       state.screenConfiguration.preparedFinalObject,
-      `lamsStore.Lease[0].userDetails`,
+      `ghb.booking.userDetails`,
       []
     );
     //owners from search call before modification.

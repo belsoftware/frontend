@@ -7,8 +7,8 @@ import { searchApiCall } from "./function";
 import "./index.css"
 import { getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
-import {loadHospitals} from "../../utils"
 import {disclaimerDialog} from "./disclaimerDialog";
+import { localStorageGet, localStorageSet } from "egov-ui-kit/utils/localStorageUtils";
 
 // const tenantId = process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
 // console.log("tenantId--- ", tenantId);
@@ -64,21 +64,6 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
 };
 
 const cbChanged = (action, state, dispatch) => {
-
-  console.log(state.screenConfiguration.preparedFinalObject.obm);
- let tenantId = get(state.screenConfiguration.preparedFinalObject.obm,"search.tenantId");
-
- loadHospitals(action, state, dispatch, "birth", tenantId).then((response)=>{
-   if(response && response.hospitalDtls)
-   {
-     for (let hospital of response.hospitalDtls) {
-       hospital.code = hospital.id;
-       hospital.name = hospital.name;
-     }
-     response.hospitalDtls.push({code:"0",name:"Others / Non Institutional"})
-     dispatch(prepareFinalObject("obm.allHospitals", response.hospitalDtls));
-   }
- });
 }
 
 const setVisibilityOptionsSet1 = (state, dispatch, visible) => {
@@ -135,6 +120,9 @@ export const searchSetCommon = getCommonContainer({
        max: getTodaysDateInYMD()
      }
    },
+   afterFieldChange: (action, state, dispatch) => {
+    localStorageSet("ghb.search.fromDate",get(state,"screenConfiguration.preparedFinalObject.ghb.search.fromDate"));
+   },
    visible: true,
  }),
  todate: getDateField({
@@ -143,7 +131,7 @@ export const searchSetCommon = getCommonContainer({
      labelName: "To Date",
      labelKey: "COMMON_TO_DATE"
    },
-   jsonPath: "ghb.search.todate",
+   jsonPath: "ghb.search.toDate",
    gridDefination: {
      xs: 12,
      sm: 4
@@ -155,6 +143,9 @@ export const searchSetCommon = getCommonContainer({
      inputProps: {
        max: getTodaysDateInYMD()
      }
+   },
+   afterFieldChange: (action, state, dispatch) => {
+    localStorageSet("ghb.search.toDate",get(state,"screenConfiguration.preparedFinalObject.ghb.search.toDate"));
    },
    visible: true
  }),
