@@ -748,8 +748,10 @@ export const downloadPTBill = async (queryStr, mode = 'download') => {
     },
   };
   try {
+    store.dispatch(toggleSpinner());
     httpRequest("post", DOWNLOADBILL.GET.URL, DOWNLOADBILL.GET.ACTION, queryStr, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
       .then(res => {
+        store.dispatch(toggleSpinner());
         res.filestoreIds[0]
         if (res && res.filestoreIds && res.filestoreIds.length > 0) {
           res.filestoreIds.map(fileStoreId => {
@@ -760,6 +762,7 @@ export const downloadPTBill = async (queryStr, mode = 'download') => {
         }
       });
   } catch (exception) {
+    store.dispatch(toggleSpinner());
     alert('Some Error Occured while downloading Bill!');
   }
 
