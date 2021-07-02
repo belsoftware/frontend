@@ -12,7 +12,7 @@ import "./index.css";
 import RebateDialogue from '../RebateDialogue'
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { httpRequest as httpRequestnew } from "egov-ui-framework/ui-utils/api";
-
+import { hideSpinner, showSpinner } from "egov-ui-kit/redux/common/actions";
 const labelStyle = {
   color: "rgba(0, 0, 0, 0.6)",
   fontWeight: 400,
@@ -114,13 +114,14 @@ class TotalDues extends React.Component {
   };
   payAction = async (consumerCode, tenantId) => {
     const {isRebateApplicable} = this.state;
+    const { showSpinner,hideSpinner } = this.props;
     if(isRebateApplicable){
     this.setState({
       isDialog: true
     })
   }
   else{
-     
+     showSpinner();
     const payload = await httpRequestnew(
       "post",
       `/pt-calculator-v2/propertytax/_updatedemand?tenantId=${tenantId}&consumerCodes=${consumerCode}&isFullPayment=false`,
@@ -128,6 +129,7 @@ class TotalDues extends React.Component {
       [],
       {}
       );
+      hideSpinner();
     routeToCommonPay(consumerCode, tenantId);
   }
     // const status = get(this.props, 'propertyDetails[0].status', '');
@@ -146,6 +148,7 @@ class TotalDues extends React.Component {
     // this.setState({
     //   isDialog: true
     // })
+    const { showSpinner,hideSpinner } = this.props;
     if(selectedOption.length==0){
       this.props.toggleSnackbarAndSetText(
             true,
@@ -164,7 +167,7 @@ class TotalDues extends React.Component {
         "error"
       );
     } else {
-      
+      showSpinner();
       const payload = await httpRequestnew(
         "post",
         `/pt-calculator-v2/propertytax/_updatedemand?tenantId=${tenantId}&consumerCodes=${consumerCode}&isFullPayment=${isFullPayment}`,
@@ -172,6 +175,7 @@ class TotalDues extends React.Component {
         [],
         {}
         );
+        hideSpinner();
       routeToCommonPay(consumerCode, tenantId);
     }
   }
@@ -258,6 +262,8 @@ const mapDispatchToProps = (dispatch) => {
     toggleSnackbarAndSetText: (open, message, error) => dispatch(toggleSnackbarAndSetText(open, message, error)),
     prepareFinalObject: (jsonPath, value) =>
     dispatch(prepareFinalObject(jsonPath, value)),
+    showSpinner: () => dispatch(showSpinner()),
+    hideSpinner: () => dispatch(hideSpinner()),
   };
 };
 
