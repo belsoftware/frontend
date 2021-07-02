@@ -33,7 +33,7 @@ export const DownloadFile = (url) => {
           window.navigator.msSaveBlob(blob, fileName);
       } else {
           var url = window.URL || window.webkitURL;
-          var link = url.createObjectURL(blob);
+          link = url.createObjectURL(blob);
           var a = document.createElement("a");
           a.setAttribute("download", fileName);
           a.setAttribute("href", link);
