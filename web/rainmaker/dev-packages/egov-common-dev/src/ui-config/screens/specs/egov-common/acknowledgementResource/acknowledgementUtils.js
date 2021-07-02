@@ -32,7 +32,7 @@ const style = {
     fontFamily: "Roboto"
   },
   container: {
-    display: "block",
+    // display: "block",
     minHeight: "106px",
     justifyContent: "center",
     alignItems: "center"
