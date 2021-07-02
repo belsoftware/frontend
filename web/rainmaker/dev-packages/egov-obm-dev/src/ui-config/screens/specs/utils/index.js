@@ -354,6 +354,49 @@ export const getLabelOnlyValue = (value, props = {}) => {
   };
 };
 
+export const loadGuestHouseDetailsMdms = async (action, state, dispatch,data) => {
+
+  let requestBody = {
+    "MdmsCriteria": {
+      "tenantId": data.tenantId,
+      "moduleDetails": [
+         {
+            "moduleName": "CommunityHallBooking",
+              "masterDetails": [
+                {
+                  "name": "CommunityHalls",
+                  "filter": `[?(@.hallCode == "${data.id}")]`
+                }
+              ]
+          }
+        ]
+      }
+  }
+
+  try{
+    let payload = null;
+    payload = await httpRequest(
+      "post",
+      `/egov-mdms-service/v1/_search`,
+      "_search",
+      [],
+      requestBody
+    );
+    return payload;
+  }
+  catch (e) {
+    toggleSnackbar(
+      true,
+      {
+        labelName: "Api Error",
+        labelKey: "ERR_API_ERROR"
+      },
+      "error"
+    );
+    console.error(e);
+    return {"ResponseInfo":null,"MdmsRes":{"CommunityHallBooking":{"CommunityHalls":[{"hallCode":"1","name":"Elaan Convention Center","address":"Palace Grounds, 10th Main, Agra - 589120","geoLocation":"12.972442,77.580643","contactDetails":"9480734478 / 975412545","purposes":[{"purpose":"Marriage"},{"purpose":"Birthday"}],"specialCategories":[{"category":"Office Staff"},{"category":"Elected Member"}],"maxAllowedBookingDays":3,"hallDescription":"AC HALL with Dining Hall. 5000 sqft Area. Can accomodate 250 people.","termsAndCondition":"Allowed only for Office Staff and Elected Members and for family functions only.","cancellationPolicy":"Cancellation before 5 days is allowed"}]}}};
+  }
+}
 
 export const loadGuestHouseDetails = async (action, state, dispatch,data) => {
 

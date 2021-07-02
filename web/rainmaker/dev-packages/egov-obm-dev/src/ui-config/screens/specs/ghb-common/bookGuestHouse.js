@@ -2,7 +2,7 @@ import {getCommonCardWithHeader,getLabel} from "egov-ui-framework/ui-config/scre
 import { prepareFinalObject,  handleScreenConfigurationFieldChange as handleField} 
   from "egov-ui-framework/ui-redux/screen-configuration/actions";   //returns action object
 import {getLabelWithValue, getPattern, getTextField, getCommonGrayCard, getCommonCard, getCommonContainer, getCommonHeader,getDivider,getCommonCaption, getCommonSubHeader,getCommonParagraph, getCommonTitle, getStepperObject, getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
-import {loadCertDetails, loadGuestHouseDetails, getDetailsOfApplicant} from "../utils";
+import {loadCertDetails, loadGuestHouseDetails, loadGuestHouseDetailsMdms, getDetailsOfApplicant} from "../utils";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
 import {footer} from "./bookGuestHouseFooter";
@@ -44,14 +44,36 @@ const bookGuestHouse = {
       }
     });
 
+    loadGuestHouseDetailsMdms(action, state, dispatch, data).then((response) => {
+      if (response && response.MdmsRes && response.MdmsRes.CommunityHallBooking 
+        && response.MdmsRes.CommunityHallBooking.length >0 ) {
+        let guestHouseMdms = response.MdmsRes.CommunityHallBooking[0];
+        dispatch(prepareFinalObject("ghb.viewGuestHouseDetailsMdms", guestHouseMdms));
+
+        let purposeList = [];
+        jp.query(guestHouseMdms, "$.purposes.*").forEach(purpose => {
+          let purposeName = purpose.purpose;
+          purposeList.push({"id":purposeName,"name":purposeName,"code":purposeName});
+        });
+        dispatch(prepareFinalObject("ghb.purposeList", purposeList));
+
+        let specialCategoryList = [];
+        jp.query(guestHouseMdms, "$.specialCategories.*").forEach(category => {
+          let categoryName = category.category;
+          specialCategoryList.push({"id":categoryName,"name":categoryName,"code":categoryName});
+        });
+        dispatch(prepareFinalObject("ghb.specialCategoryList", specialCategoryList));
+
+      }
+
+    });
+
     let fromDate = convertDate(localStorageGet("ghb.search.fromDate"));
     let toDate = convertDate(localStorageGet("ghb.search.toDate"));
     dispatch(prepareFinalObject("ghb.booking.fromToDateString", fromDate+" to "+toDate ));
 
     //Set the documents data for display
     dispatch(prepareFinalObject("documentsContract", [{"code":"APPLICANT","title":"APPLICANT","cards":[{"name":"APPLICANT.IDENTITYPROOF","code":"APPLICANT.IDENTITYPROOF","required":true,"dropdown":{"label":"WS_SELECT_DOC_DD_LABEL","required":true,"menu":[{"code":"APPLICANT.IDENTITYPROOF.AADHAAR","label":"OWNER_IDENTITYPROOF_AADHAAR"},{"code":"APPLICANT.IDENTITYPROOF.VOTERID","label":"OWNER_IDENTITYPROOF_VOTERID"},{"code":"APPLICANT.IDENTITYPROOF.DRIVING","label":"OWNER_IDENTITYPROOF_DRIVING"},{"code":"APPLICANT.IDENTITYPROOF.PAN","label":"OWNER_IDENTITYPROOF_PAN"},{"code":"APPLICANT.IDENTITYPROOF.PASSPORT","label":"OWNER_IDENTITYPROOF_PASSPORT"}]}},{"name":"APPLICANT.ADDRESSPROOF","code":"APPLICANT.ADDRESSPROOF","required":true,"dropdown":{"label":"WS_SELECT_DOC_DD_LABEL","required":true,"menu":[{"code":"APPLICANT.ADDRESSPROOF.ELECTRICITYBILL","label":"OWNER_ADDRESSPROOF_ELECTRICITYBILL"},{"code":"APPLICANT.ADDRESSPROOF.DL","label":"OWNER_ADDRESSPROOF_DL"},{"code":"APPLICANT.ADDRESSPROOF.VOTERID","label":"OWNER_ADDRESSPROOF_VOTERID"},{"code":"APPLICANT.ADDRESSPROOF.AADHAAR","label":"OWNER_ADDRESSPROOF_AADHAAR"},{"code":"APPLICANT.ADDRESSPROOF.PAN","label":"OWNER_ADDRESSPROOF_PAN"},{"code":"APPLICANT.ADDRESSPROOF.PASSPORT","label":"OWNER_ADDRESSPROOF_PASSPORT"}]}}]}]));
-    dispatch(prepareFinalObject("ghb.specialCategoryList", [{code:"Office Staff",name:"Office Staff"},{code:"Elected Member",name:"Elected Member"}]));
-    dispatch(prepareFinalObject("ghb.purposeList", [{id:"purpose1",code:"Marriage",name:"Marriage"},{id:"purpose2",code:"Birthday",name:"Birthday"},{id:"purpose3",code:"Religious",name:"Religious"}]));
 
     return action;
 
