@@ -77,7 +77,7 @@ const formConfig = {
       localePrefix: { moduleName: "PT", masterName: "RELATION" },
       labelsFromLocalisation: true,
       floatingLabelText: "PT_FORM3_RELATIONSHIP",
-      hintText: "",
+      hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
       gridDefination: {
         xs: 12,
         sm: 6
