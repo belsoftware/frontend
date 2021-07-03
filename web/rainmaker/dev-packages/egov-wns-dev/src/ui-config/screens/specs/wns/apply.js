@@ -797,6 +797,17 @@ const getApplyPropertyDetails = async (queryObject, dispatch, propertyID, tenant
         mohallaLocalePrefix
       )
     );
+
+    dispatch(
+      handleField(
+        "apply",
+        "components.div.children.formwizardFourthStep.children.summaryScreen.children.cardContent.children.reviewConnDetails.children.cardContent.children.viewTwo.props.items[0].item0.children.cardContent.children.propertyLocationDetailsContainer.children.reviewLocalityOrMohalla.children.value1.children.key",
+        "props.localePrefix",
+        mohallaLocalePrefix
+      )
+    );
+
+
     let ownershipCategory = get(payload, "Properties[0].ownershipCategory", "");
     if (ownershipCategory.includes("INDIVIDUAL")) {
       dispatch(
@@ -965,8 +976,7 @@ const getIndividualTaxheads = (item, index, dispatch) => {
         },
 
         componentJsonpath: `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.wsConnectionTaxHeads.children.taxheadField_${item.code.split(".").join("_")}`,
-        pattern: getPattern("DecimalNumber"),
-        // visible:true,
+        pattern: getPattern("DecimalNumber"),       
         visible: item.code.endsWith('_ROAD_CUTTING_CHARGE') ? false : true,
         jsonPath: `applyScreen.wsTaxHeads[${index}].amount`,
 
@@ -1047,7 +1057,7 @@ const setRoadCuttingEstimate = (item, index, dispatch) => {
 
           // required: true,
           visible: true,
-          pattern: getPattern("DecimalNumber"),
+          pattern: getPattern("ThreeDigitDecimalNumber"),
           componentJsonpath: `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.roadCuttingChargeContainer.children.roadCutting_${index}.children.RoadCuttingLength`,
           jsonPath: `applyScreen.roadTypeEst[${index}].length`,
           gridDefination: {
@@ -1070,7 +1080,7 @@ const setRoadCuttingEstimate = (item, index, dispatch) => {
           },
           // required: true,
           visible: true,
-          pattern: getPattern("DecimalNumber"),
+          pattern: getPattern("ThreeDigitDecimalNumber"),
           componentJsonpath: `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.roadCuttingChargeContainer.children.roadCutting_${index}.children.RoadCuttingBreadth`,
           jsonPath: `applyScreen.roadTypeEst[${index}].breadth`,
           gridDefination: {
@@ -1093,7 +1103,7 @@ const setRoadCuttingEstimate = (item, index, dispatch) => {
           },
           // required: true,
           visible: true,
-          pattern: getPattern("DecimalNumber"),
+          pattern: getPattern("ThreeDigitDecimalNumber"),
           componentJsonpath: `components.div.children.formwizardThirdStep.children.additionDetails.children.cardContent.children.wsConnectionTaxHeadsContainer.children.cardContent.children.roadCuttingChargeContainer.children.roadCutting_${index}.children.RoadCuttingDepth`,
           jsonPath: `applyScreen.roadTypeEst[${index}].depth`,
           gridDefination: {
