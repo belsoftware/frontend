@@ -508,13 +508,25 @@ export const download = (receiptQueryString, mode = "download", configKey = "con
     const uiCommonPayConfig = get(state.screenConfiguration.preparedFinalObject, "commonPayInfo");
     configKey = get(uiCommonPayConfig, "receiptKey", "consolidatedreceipt");
   }
+
+// if(configKey == "newpt-receipt"){
+//   DOWNLOADRECEIPT = {
+//     GET: {
+//       URL: "/egov-pdf/download/PT/newpt-receipt",
+//       ACTION: "_get",
+//     },
+//   };
+
+// }
+// else{
   DOWNLOADRECEIPT = {
     GET: {
       URL: "/egov-pdf/download/PAYMENT/consolidatedreceipt",
       ACTION: "_get",
     },
   };
-  
+
+// }
 
   try {
 
@@ -736,6 +748,35 @@ export const downloadPTBill = async (queryStr, mode = 'download') => {
     },
   };
   try {
+    store.dispatch(toggleSpinner());
+    httpRequest("post", DOWNLOADBILL.GET.URL, DOWNLOADBILL.GET.ACTION, queryStr, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
+      .then(res => {
+        store.dispatch(toggleSpinner());
+        res.filestoreIds[0]
+        if (res && res.filestoreIds && res.filestoreIds.length > 0) {
+          res.filestoreIds.map(fileStoreId => {
+            downloadReceiptFromFilestoreID(fileStoreId, mode)
+          })
+        } else {
+          console.log("Error In Downloading Bill");
+        }
+      });
+  } catch (exception) {
+    store.dispatch(toggleSpinner());
+    alert('Some Error Occured while downloading Bill!');
+  }
+
+}
+
+export const downloadWSBill = async (queryStr, mode = 'download') => {
+
+  const DOWNLOADBILL = {
+    GET: {
+      URL: "egov-pdf/download/WS/waterbill",
+      ACTION: "_get",
+    },
+  };
+  try {
     httpRequest("post", DOWNLOADBILL.GET.URL, DOWNLOADBILL.GET.ACTION, queryStr, { 'Accept': 'application/json' }, { responseType: 'arraybuffer' })
       .then(res => {
         res.filestoreIds[0]
@@ -744,11 +785,11 @@ export const downloadPTBill = async (queryStr, mode = 'download') => {
             downloadReceiptFromFilestoreID(fileStoreId, mode)
           })
         } else {
-          console.log("Error In Acknowledgement form Download");
+          console.log("Error In Downloading Bill");
         }
       });
   } catch (exception) {
-    alert('Some Error Occured while downloading Acknowledgement form!');
+    alert('Some Error Occured while downloading Bill!');
   }
 
 }
@@ -765,6 +806,19 @@ export const downloadMultipleBill = async (bills = [], configKey) => {
       { key: "tenantId", value: bills[0].tenantId }
     ]
     downloadPTBill(billQueryStr,"download"); 
+  }
+  else if(bills && bills[0].businessService=='WS' || bills && bills[0].businessService=='SW'){
+    let consumerNos = '';
+    for (var i = 0; i < bills.length; i++) {
+      consumerNos += bills[i]['consumerCode'] + ",";
+    }
+    consumerNos = consumerNos.substring(0, consumerNos.length - 1);
+    const billQueryStr = [
+      { key: "consumerNo", value: consumerNos },
+      { key: "tenantId", value: bills[0].tenantId },
+      { key: "businessService", value: bills[0].businessService}
+    ]
+    downloadWSBill(billQueryStr,"download"); 
   }
   else{
   try {

@@ -89,7 +89,7 @@ class RebateDialogue extends Component {
          <br/>
          <div>
            <p>
-             If you make complete payment within <span>{rebateForCurrYear.endDate}</span>, you will be getting rebate of <span>{rebateForCurrYear.rate}</span>% of ARV
+             If you make complete payment within <span>{rebateForCurrYear.endDate}</span>, you will be getting rebate of <span>{rebateForCurrYear.rate}</span>% of <span>{rebateForCurrYear.attr}</span>
            </p>
      </div>
      </div>

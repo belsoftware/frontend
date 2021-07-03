@@ -144,6 +144,7 @@ class FormWizardDataEntry extends Component {
     try {
       let currentDraft;
       {    
+        showSpinner();
         const demandPropertyResponse = await httpRequest(
           "billing-service/demand/_search",
           "_get",
@@ -158,6 +159,7 @@ class FormWizardDataEntry extends Component {
             }
           ]
         );
+        hideSpinner();
         {
           demandPropertyResponse.length != []
             ? prepareFinalObject(
@@ -224,7 +226,15 @@ class FormWizardDataEntry extends Component {
           
           if(duplicatedYears>0)
                   {
-                    alert("This Property has duplicate demands for  please contact Administrator ");
+                    this.props.toggleSnackbarAndSetText(
+                      true,
+                      {
+                        labelName: "This Property has duplicate demands for  please contact Administrator.",
+                        labelKey: "ERR_DCB_DUPLICATE_VALIDATIONS"
+                      },
+                      "error"
+                    );
+                   // alert("This Property has duplicate demands for  please contact Administrator ");
                     duplicatedYears = duplicatedYears+1                    
                   } 
 
@@ -280,7 +290,7 @@ class FormWizardDataEntry extends Component {
                ),
                  prepareFinalObject(
                    `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_DEMAND`,
-                   `${Math.trunc(demandData.taxAmount)}`
+                  `${(demandData.taxAmount)}`
                  ),
                  prepareFinalObject(
                    `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_COLLECTED`,
@@ -459,7 +469,7 @@ class FormWizardDataEntry extends Component {
    // const data =  get(this.state.prepareFinalObject,"taxData", null)
 
      
-   
+   showSpinner();
     const demandPropertyResponse = await httpRequest(
       "billing-service/demand/_search",
       "_get",
@@ -474,6 +484,7 @@ class FormWizardDataEntry extends Component {
         }
       ]
     );
+    hideSpinner();
     {
     {
       demandPropertyResponse.length != []
@@ -559,7 +570,15 @@ class FormWizardDataEntry extends Component {
 
         if(duplicatedYears>0)
                 {
-                  alert("This Property has duplicate demands for  please contact Administrator ");
+                  this.props.toggleSnackbarAndSetText(
+                    true,
+                    {
+                      labelName: "This Property has duplicate demands for  please contact Administrator.",
+                      labelKey: "ERR_DCB_DUPLICATE_VALIDATIONS"
+                    },
+                    "error"
+                  );
+                  //alert("This Property has duplicate demands for  please contact Administrator ");
                   duplicatedYears = duplicatedYears+1                    
                 } 
 
@@ -589,10 +608,12 @@ class FormWizardDataEntry extends Component {
         } else {
           demand.demandDetails = [];
         }
+
         return demand.demandDetails.forEach((demandData, demandKey) => {
 
        
           if (demandData.order > -1 && demandData.isLegacy) {
+
             //year is greater, till get equarl to i have to null 
              
             let yearkeys = Object.keys(generalMDMSDataById.TaxPeriod).forEach(
@@ -615,14 +636,15 @@ class FormWizardDataEntry extends Component {
               if(finalYear===latestFinalData[i].financialYear)
               yearKey =i;
             }
-                   
+
             prepareFinalObject(
               `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_TAXHEAD`, 
                demandData.taxHeadMasterCode
              ),
+              
                prepareFinalObject(
                  `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_DEMAND`,
-                 `${Math.trunc(demandData.taxAmount)}`
+                 `${(demandData.taxAmount)}`
                ),
                prepareFinalObject(
                  `DemandProperties[0].propertyDetails[0].demand[${yearKey}].demand[${finalYear}][${demandData.order}].PT_COLLECTED`,
@@ -753,6 +775,7 @@ class FormWizardDataEntry extends Component {
     }
   };
   try {
+    showSpinner();
     const payload =  await httpRequestnew(
       "post",
       "/egov-mdms-service/v1/_search",
@@ -760,6 +783,7 @@ class FormWizardDataEntry extends Component {
       [],
       mdmsBody
     );
+    hideSpinner();
     taxData = payload.MdmsRes.BillingService;
 
    // dispatch(prepareFinalObject("taxData", payload.MdmsRes));
@@ -1190,6 +1214,7 @@ class FormWizardDataEntry extends Component {
     switch (selected) {
       //validating property address is validated
       case 0:
+        showSpinner();
         let {
           DemandProperties = [],
           prepareFinalObject,
@@ -1230,7 +1255,11 @@ class FormWizardDataEntry extends Component {
           );
           
           if (rebateHeadObject.code === "PT_HOUSE_TAX" || rebateHeadObject.code === "PT_WATER_TAX" ||
-          rebateHeadObject.code === "PT_CONSERVANCY_TAX" || rebateHeadObject.code === "PT_LIGHTINING_TAX" || rebateHeadObject.code === "PT_EDUCATION_TAX") {
+          rebateHeadObject.code === "PT_CONSERVANCY_TAX" || rebateHeadObject.code === "PT_LIGHTINING_TAX" 
+          || rebateHeadObject.code === "PT_EDUCATION_TAX" || rebateHeadObject.code === "PT_CONSOLIDATED_PROPERTY_TAX"
+          || rebateHeadObject.code === "PT_LIGHTING_TAX"|| rebateHeadObject.code === "PT_DRAINAGE_TAX"|| 
+          rebateHeadObject.code ==="PT_ADDL_WATER_TAX" || rebateHeadObject.code === "PT_SANITARY_CESS"||
+          rebateHeadObject.code === "PT_EDUCATION_CESS") {
             let rebateHeads = [];
             Object.keys(get(generalMDMSDataById, `TaxHeadMaster`, {})).forEach(
               key => {
@@ -1279,9 +1308,9 @@ class FormWizardDataEntry extends Component {
         if (!demandLength) {
           errorCode = "ERR01_DEMAND_ENTER_THE_DATA";
         } else {
-          // if (!demand[0]) {
-          //   errorCode = "ERR02_DEMAND_ENTER_THE_DATA";
-          // }
+          if (!demand[0]) {
+            errorCode = "ERR02_DEMAND_ENTER_THE_DATA";
+          }
           demand.forEach((data, key) => {
             data &&
               Object.keys(data.demand).forEach((data1, key1) => {
@@ -1306,7 +1335,9 @@ class FormWizardDataEntry extends Component {
                         errorCode = "ERR04_DEMAND_ENTER_THE_DATA";
                       }
                     }
-                    if (data.demand[data1][data2].PT_TAXHEAD === "PT_HOUSE_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_WATER_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_CONSERVANCY_TAX") {
+                    if (data.demand[data1][data2].PT_TAXHEAD === "PT_HOUSE_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_WATER_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_CONSERVANCY_TAX"
+                    || data.demand[data1][data2].PT_TAXHEAD === "PT_CONSOLIDATED_PROPERTY_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_LIGHTING_TAX"|| data.demand[data1][data2].PT_TAXHEAD === "PT_DRAINAGE_TAX"|| 
+                    data.demand[data1][data2].PT_TAXHEAD ==="PT_ADDL_WATER_TAX" || data.demand[data1][data2].PT_TAXHEAD === "PT_SANITARY_CESS"||data.demand[data1][data2].PT_TAXHEAD === "PT_EDUCATION_CESS") {
                       hasPropertyTax = true;
                       propertyTaxAmount = data.demand[data1][data2].PT_DEMAND;
                       let collectedAmount = parseInt(data.demand[data1][data2].PT_COLLECTED);
@@ -1393,9 +1424,9 @@ class FormWizardDataEntry extends Component {
           errorCode = "ERR01_DEMAND_ENTER_THE_DATA";
         }
 
-        // if (arrayOfEmptyYears.indexOf(0) != -1) {
-        //   errorCode = "ERR02_DEMAND_ENTER_THE_DATA";
-        // }
+        if (arrayOfEmptyYears.indexOf(0) != -1) {
+          errorCode = "ERR02_DEMAND_ENTER_THE_DATA";
+        }
 
         switch (errorCode) {
           case "ERR01_DEMAND_ENTER_THE_DATA":
@@ -1456,6 +1487,7 @@ class FormWizardDataEntry extends Component {
               formValidIndexArray: [...formValidIndexArray, selected]
             });
         }
+        hideSpinner();
         break;
       case 1:
         // if (estimation[0].totalAmount < 0) {
@@ -1465,9 +1497,11 @@ class FormWizardDataEntry extends Component {
         // createAndUpdate(index);
         // }
         // break;
+        showSpinner();
         window.scrollTo(0, 0);
         //createAndUpdate(index);
         createDemand(index);
+        hideSpinner();
         break;
       case 2:
        /*  const { assessedPropertyDetails = {} } = this.state;
@@ -1524,12 +1558,14 @@ class FormWizardDataEntry extends Component {
     //   });
 
     try {
+      showSpinner();
       const billResponse = await httpRequest(
         "pt-calculator-v2/propertytax/_getbill",
         "_create",
         queryObj,
         {}
       );
+      hideSpinner();
       return billResponse;
     } catch (e) {
       console.log(e);
@@ -1716,6 +1752,7 @@ class FormWizardDataEntry extends Component {
     }
 
     try {
+      showSpinner();
       const getReceipt = await httpRequest(
         "collection-services/receipts/_create", //todo Consumer code uniqueness
         "_create",
@@ -1723,6 +1760,7 @@ class FormWizardDataEntry extends Component {
         formData,
         []
       );
+      hideSpinner();
       if (getReceipt && getReceipt.Receipt && getReceipt.Receipt.length) {
         set(prepareFormData, "Receipt[0].Bill", []);
         set(prepareFormData, "Receipt[0].instrument", {}); // Clear prepareFormData
@@ -2077,7 +2115,7 @@ class FormWizardDataEntry extends Component {
         }
       });
       properties[0].propertyDetails = finalPropertyData;
-
+      showSpinner();
       let createPropertyResponse = await httpRequest(
         `pt-services-v2/property/${propertyMethodAction}`,
         `${propertyMethodAction}`,
@@ -2086,6 +2124,7 @@ class FormWizardDataEntry extends Component {
           Properties: properties
         }
       );
+      hideSpinner();
      showSpinner();
      
 
@@ -2108,6 +2147,7 @@ class FormWizardDataEntry extends Component {
           Demands: demandData
         }
       );
+      hideSpinner();
       this.setState({
         assessedPropertyDetails: createPropertyResponse,
         assessedDemandDetails: createDemandResponse,
@@ -2177,7 +2217,7 @@ class FormWizardDataEntry extends Component {
 
 
 
-
+    showSpinner();
     const demandResponsenew = await httpRequest(
       "billing-service/demand/_search",
       "_get",
@@ -2192,7 +2232,7 @@ class FormWizardDataEntry extends Component {
         }
       ]
     );
-
+    hideSpinner();
     const propertyMethodAction = demandResponsenew.Demands.length>0? "_update" : "_create";
 
 
@@ -2257,6 +2297,7 @@ class FormWizardDataEntry extends Component {
       demandObject[obj.taxPeriodFrom] = { ...obj };
       dmdObj[finaYr] = { ...obj };
     });
+    showSpinner();
     const createPropertyResponse = await httpRequest(
       "property-services/property/_search",
       "_search",
@@ -2271,6 +2312,7 @@ class FormWizardDataEntry extends Component {
         }
       ]
     );
+    hideSpinner();
     demandsData.forEach((demand, index) => {
       demand &&
         Object.keys(demand.demand).forEach((dataYear, key) => {
@@ -2298,9 +2340,9 @@ class FormWizardDataEntry extends Component {
               demandDetails1.push({
                 ...demandDetail,
                 taxHeadMasterCode: demandValue.PT_TAXHEAD,
-                taxAmount: parseInt(
+                taxAmount:
                   demandValue.PT_DEMAND != "" ? demandValue.PT_DEMAND : 0
-                ),
+                ,
                 collectionAmount: parseInt(
                   demandValue.PT_COLLECTED != ""
                     ? demandValue.PT_COLLECTED
@@ -2386,6 +2428,23 @@ class FormWizardDataEntry extends Component {
       hideSpinner();      
 
       const assessmentNumber= get(assessPropertyResponse, "Assessments[0].assessmentNumber",'');
+
+      if(assessPropertyResponse && assessPropertyResponse.Assessments.length > 0){
+
+        const queryObject = [
+          { key: "consumerCode", value: propertyId },
+          { key: "tenantId", value: getTenantId() },
+          { key: "businessService", value: "PT" },
+        ];
+        try {
+          showSpinner();
+          const payload = await httpRequest("billing-service/bill/v2/_fetchbill", "_search", queryObject);
+          hideSpinner();
+        } catch (e) {
+          hideSpinner();
+          console.log(e);
+        }
+      }
       
       switch (propertyMethodAction) {
         case "_update":
@@ -2651,7 +2710,15 @@ class FormWizardDataEntry extends Component {
           this.pay();
         }
       } else {
-        alert("Amount cannot be a fraction!");
+        this.props.toggleSnackbarAndSetText(
+          true,
+          {
+            labelName: "Amount cannot be a fraction",
+            labelKey: "ERR_DCB_FRACTION_VALIDATIONS_FAILED"
+          },
+          "error"
+        );
+       // alert("Amount cannot be a fraction!");
       }
     } catch (e) {
       hideSpinner();
@@ -2774,6 +2841,7 @@ class FormWizardDataEntry extends Component {
     );
 
     const wPropertyId = getQueryValue(search, "propertyId");
+    const tenantId = getQueryValue(search, "tenantId");
     return (
       <div className="wizard-form-main-cont">
         <div className="form-header">
@@ -2782,6 +2850,7 @@ class FormWizardDataEntry extends Component {
             subHeaderTitle="PT_PROPERTY_PTUID"
             headerValue={headerValue}
             subHeaderValue={subHeaderValue}
+            tenantId ={tenantId}
           />
         </div>
         <WizardComponent

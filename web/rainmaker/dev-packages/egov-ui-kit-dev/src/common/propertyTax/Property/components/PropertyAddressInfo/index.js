@@ -27,8 +27,8 @@ export const getAddressItems = (properties, OldProperty) => {
     address && [
       {
         key: getTranslatedLabel("PT_PROPERTY_ADDRESS_CITY", localizationLabelsData),
-        value: address.city || "NA",
-        oldValue: OldProperty && OldProperty.address && OldProperty.address.city
+        value: (getTranslatedLabel((`TENANT_TENANTS_PB_${address.city}`).toUpperCase(), localizationLabelsData)) || "NA",
+        oldValue: OldProperty && OldProperty.address &&  (getTranslatedLabel((`TENANT_TENANTS_PB_${address.city}`.toUpperCase()), localizationLabelsData)) || "NA"
       },
       {
         key: getTranslatedLabel("PT_COMMON_PROPERTY_LOCATION", localizationLabelsData),

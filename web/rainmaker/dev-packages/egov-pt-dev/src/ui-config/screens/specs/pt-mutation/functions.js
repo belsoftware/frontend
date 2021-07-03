@@ -72,6 +72,14 @@ const removeValidation = (state, dispatch, index) => {
       false
     )
   );
+  dispatch(
+    handleField(
+      "propertySearch",
+      "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.olPropertyId",
+      "props.error",
+      false
+    )
+  );
 
 
   dispatch(
@@ -122,6 +130,14 @@ const removeValidation = (state, dispatch, index) => {
       true
     )
   );
+  dispatch(
+    handleField(
+      "propertySearch",
+      "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.olPropertyId",
+      "isFieldValid",
+      true
+    )
+  );
 
 }
 
@@ -165,11 +181,11 @@ const searchApiCall = async (state, dispatch, index) => {
 
   let formValid = false;
   if (index == 0) {
-    if (searchScreenObject.ids != '' || searchScreenObject.mobileNumber != '' || searchScreenObject.oldpropertyids != '' || searchScreenObject.abasPropertyids != '') {
+    if (searchScreenObject.ids != '' || searchScreenObject.mobileNumber != '' || searchScreenObject.oldpropertyid != '' || searchScreenObject.abasPropertyids != '') {
       formValid = true;
     }
   } else {
-    if (searchScreenObject.ids != '' || searchScreenObject.mobileNumber != '' || searchScreenObject.acknowledgementIds != '') {
+    if (searchScreenObject.ids != '' || searchScreenObject.mobileNumber != '' || searchScreenObject.oldpropertyid != ''|| searchScreenObject.acknowledgementIds != '') {
       formValid = true;
     }
   }
@@ -225,7 +241,7 @@ const searchApiCall = async (state, dispatch, index) => {
     state,
     dispatch,
     "propertySearch"
-  ) || searchScreenObject.oldpropertyids == '';
+  ) || searchScreenObject.oldpropertyid == '';
  
   const isabasIdValid= validateFields(
     "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[0].tabContent.searchPropertyDetails.children.cardContent.children.ulbCityContainer.children.abasId",
@@ -251,7 +267,12 @@ const searchApiCall = async (state, dispatch, index) => {
     dispatch,
     "propertySearch"
   ) || searchScreenObject.ids == '';
-
+  const ispropertyTaxOldPropertyIdRowValid = validateFields(
+    "components.div.children.propertySearchTabs.children.cardContent.children.tabSection.props.tabs[1].tabContent.searchApplicationDetails.children.cardContent.children.appNumberContainer.children.olPropertyId",
+    state,
+    dispatch,
+    "propertySearch"
+  ) || searchScreenObject.oldpropertyid == '';
 
 
 
@@ -280,7 +301,7 @@ const searchApiCall = async (state, dispatch, index) => {
       )
     );
     return;
-  } else if (index == 1 && !(ispropertyTaxApplicationPidRowValid && ispropertyTaxApplicationOwnerNoRowValid && ispropertyTaxApplicationNoRowValid)) {
+  } else if (index == 1 && !(ispropertyTaxApplicationPidRowValid && ispropertyTaxApplicationOwnerNoRowValid && ispropertyTaxApplicationNoRowValid && ispropertyTaxOldPropertyIdRowValid)) {
     dispatch(
       toggleSnackbar(
         true,
@@ -334,7 +355,7 @@ const searchApiCall = async (state, dispatch, index) => {
     let queryObject = [];
     Object.keys(query).map(key => {
       queryObject.push({
-        key: key, value: query[key]
+        key: key, value: encodeURIComponent(query[key])
       })
     })
     try {

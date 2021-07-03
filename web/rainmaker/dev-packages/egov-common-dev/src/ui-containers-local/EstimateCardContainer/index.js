@@ -15,15 +15,12 @@ const sortBillDetails = (billDetails = []) => {
   sortedBillDetails = billDetails.sort((x, y) => y.fromPeriod - x.fromPeriod);
   return sortedBillDetails;
 }
-const formatTaxHeaders = (billDetail = {}) => {
+const formatTaxHeaders = (billDetail = {},businesService) => {
 
   let formattedFees = []
-  const { billAccountDetails = [] } = billDetail;
-const billAccountDetailsSorted=  orderBy(
-    billAccountDetails,
-    ["amount"],
-    ["asce"]);
-  formattedFees = billAccountDetailsSorted.map((taxHead) => {
+  const { billAccountDetails = [],fromPeriod, toPeriod } = billDetail;
+
+  formattedFees = billAccountDetails.map((taxHead) => {
     return {
       info: {
         labelKey: taxHead.taxHeadCode,
@@ -33,7 +30,7 @@ const billAccountDetailsSorted=  orderBy(
         labelKey: taxHead.taxHeadCode,
         labelName: taxHead.taxHeadCode
       },
-      value: taxHead.amount
+      value: ((fromPeriod < Date.now() && Date.now() < toPeriod) || businesService!="PT") ? billDetail.amount!==0 ? taxHead.amount : 0 :0
     }
   })
   formattedFees.reverse();
@@ -45,8 +42,9 @@ const mapStateToProps = (state, ownProps) => {
   const { screenConfiguration } = state;
 
 
+  const businesService=get(screenConfiguration, "preparedFinalObject.ReceiptTemp[0].Bill[0].businessService");
 
-  const fees = formatTaxHeaders(sortBillDetails(get(screenConfiguration, "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails", []))[0]);
+  const fees = formatTaxHeaders(sortBillDetails(get(screenConfiguration, "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails", []))[0],businesService);
   // const fees = get(screenConfiguration, "preparedFinalObject.applyScreenMdmsData.estimateCardData", []);
   const billDetails = get(screenConfiguration, "preparedFinalObject.ReceiptTemp[0].Bill[0].billDetails", []);
   let totalAmount = 0;

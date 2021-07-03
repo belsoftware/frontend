@@ -68,9 +68,10 @@ class CheckboxLabels extends React.Component {
     if (
       !_.isUndefined(tenantId) &&
       !_.isUndefined(city) &&
-      !_.isUndefined(locality) &&
-      !_.isUndefined(doorNo) &&
-      !_.isUndefined(buildingName)
+      !_.isUndefined(locality) 
+      // &&
+      // !_.isUndefined(doorNo) &&
+      // !_.isUndefined(buildingName)
     ) {
       return true
     } else {
@@ -108,8 +109,28 @@ class CheckboxLabels extends React.Component {
         preparedFinalObject,
         "Property.address.buildingName"
       );
-      console.log("TenantId : ", tenantId);
-      let finalAddress = doorNo + ", " + buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      let finalAddress = doorNo + ", " + buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      if((doorNo == null || doorNo =="")){
+        if(buildingName == null || buildingName == ""){
+          finalAddress = getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+        }else{
+          finalAddress = buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+        }
+      }else{
+        if(buildingName == null || buildingName == ""){
+          finalAddress =  doorNo + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+        }else{
+          finalAddress =  doorNo + ", " + buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+        }
+      }
+      // if((doorNo == null || doorNo =="") && (buildingName != null || buildingName != "")){
+      //   finalAddress = buildingName + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      // } else if((doorNo != null || doorNo !="") && (buildingName == null || buildingName == "")){
+      //   finalAddress = doorNo + ", " + getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      // } else if((doorNo == null || doorNo =="") && (buildingName == null || buildingName == "")){
+      //   finalAddress = getTextToLocalMapping(tenantId.toUpperCase().replace(/[.]/g, "_") + '_REVENUE_' + locality) + ", " + getTextToLocalMapping('TENANT_TENANTS_' + tenantId.toUpperCase().replace(/[.]/g, "_"));
+      // }
+
       this.setState({ [name]: event.target.checked }, () => {
         approveCheck(jsonPath, this.state.checkedG);
         finalAddress = (this.state.checkedG) ? finalAddress : ''
@@ -119,14 +140,15 @@ class CheckboxLabels extends React.Component {
 
     } else {
       raiseSnackbarAlert(
-        "PT_COMMON_PROPERTY_LOCATION_FIELD_REQUIRED",
+        "PT_COMMON_PROPERTY_LOCATION_FIELD_REQUIRED", 
         "warning"
       );
     }
   };
-
   render() {
-    const { classes, labelKey, required } = this.props;
+    const { classes, labelKey, required, preparedFinalObject, jsonPath } = this.props;
+     let fieldValue = this.state.checkedG
+    if (jsonPath) fieldValue = get(preparedFinalObject, jsonPath);
 
     return (
       <div
@@ -142,7 +164,7 @@ class CheckboxLabels extends React.Component {
               classes={{ label: "checkbox-button-label" }}
               control={
                 <Checkbox
-                  checked={this.state.checkedG}
+                  checked={fieldValue || this.state.checkedG}
                   onChange={this.handleChange("checkedG")}
                   classes={{
                     root: classes.radioRoot,

@@ -3,6 +3,7 @@ import { setDependentFields } from "./utils/enableDependentFields";
 import get from "lodash/get";
 import set from "lodash/set";
 import { setFieldProperty, handleFieldChange } from "egov-ui-kit/redux/form/actions";
+import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 
 const formConfig = {
   name: "ownerInfo",
@@ -60,7 +61,7 @@ const formConfig = {
       hintText: "PT_COMMON_AUTHORISED_ADDRESS_PLACEHOLDER",
       errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
       errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
-      pattern: /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,256}$/,
+      pattern: /^[^\$\"'<>?\\\\~`!@$%^+={}\[\]*:;“”‘’]{1,256}$/,
     //  errorMessage: "PT_ADDRESS_ERROR_MESSAGE",
     },
     ownerRelationship: {
@@ -68,8 +69,8 @@ const formConfig = {
       required: true,
       jsonPath: "Properties[0].propertyDetails[0].owners[0].relationship",
       type: "AutocompleteDropdown",
-      localePrefix: "PT_RELATION",
-      labelsFromLocalisation: false,
+      localePrefix: { moduleName: "PT", masterName: "RELATION" },
+      labelsFromLocalisation: true,
       floatingLabelText: "PT_FORM3_RELATIONSHIP",
       hintText: "",
       gridDefination: {
@@ -84,7 +85,8 @@ const formConfig = {
     ownerCategory: {
       id: "ownerCategory",
       required: true,
-      localePrefix: { moduleName: "PropertyTax", masterName: "OwnerType" },
+      localePrefix: { moduleName: "PROPERTYTAX", masterName: "OWNERTYPE" },
+      labelsFromLocalisation: true,
       jsonPath: "Properties[0].propertyDetails[0].owners[0].ownerType",
       type: "AutocompleteDropdown",
       floatingLabelText: "PT_OWNERSHIP_INFO_USER_CATEGORY",
@@ -186,7 +188,8 @@ const formConfig = {
       id: "ownerCategoryIdType",
       jsonPath: "Properties[0].propertyDetails[0].owners[0].document.documentType",
       required: true,
-      localePrefix: { moduleName: "PropertyTax", masterName: "OwnerTypeDocument" },
+      localePrefix: { moduleName: "PROPERTYTAX", masterName: "OWNERTYPEDOCUMENT" },
+      labelsFromLocalisation: true,
       type: "AutocompleteDropdown",
       floatingLabelText: "PT_FORM3_DOCUMENT_ID_TYPE",
       fullWidth: true,
@@ -207,8 +210,8 @@ const formConfig = {
           dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", /^[0-9]{12}$/i));
           dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter valid 12 digits aadhar no"));
         } else {
-          dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", /^[a-zA-Z0-9_.-]{1,20}$/i));
-          dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter upto 20 character ID number.Only Special characters allowed are _ . -"));
+          dispatch(setFieldProperty(formKey, "ownerCategoryId", "maxLength", 50));
+          dispatch(setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter upto 50 character ID number"));
         }
       },
     },
@@ -281,13 +284,26 @@ const formConfig = {
       // if (get(state, `form.${formKey}.fields.ownerRelationship.value`, "NONE") === "NONE") {
       //   dispatch(handleFieldChange(formKey, "ownerRelationship", "FATHER"));
       // }
+      if(getQueryArg(window.location.href,  "purpose") == 'update'){
+        dispatch(setFieldProperty(formKey, "ownerName", "disabled", true));
+      } else {
+        dispatch(setFieldProperty(formKey, "ownerName", "disabled", false));
 
+      }
       if (get(state, `form.${formKey}.fields.ownerCategory.value`, "NONE") === "NONE") {
         dispatch(setFieldProperty(formKey, "ownerCategoryId", "hideField", true));
         dispatch(setFieldProperty(formKey, "ownerCategoryIdType", "hideField", true));
       } else {
         dispatch(setFieldProperty(formKey, "ownerCategoryId", "hideField", false));
         dispatch(setFieldProperty(formKey, "ownerCategoryIdType", "hideField", false));
+      }
+
+      if (get(state, `form.${formKey}.fields.isSameAsPropertyAddress.value`, false)) {
+        dispatch(setFieldProperty(formKey, "ownerAddress", "disabled", true));
+
+      } else {
+        dispatch(setFieldProperty(formKey, "ownerAddress", "disabled", false));
+
       }
       const currentCategory = get(state, `form.${action.form.name}.fields.ownerCategory.value`, "NONE");
       let documentTypes = get(

@@ -14,6 +14,7 @@ import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configurat
 import get from "lodash/get";
 import set from "lodash/set";
 import Label from "egov-ui-kit/utils/translationNode";
+import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 class DemandCollection extends React.Component {
   render() {
     const { prepareFinalObject, preparedFinalObject,Properties = [] } = this.props;
@@ -61,7 +62,9 @@ class DemandCollection extends React.Component {
         finalData.map((data, index) => {
           return (
             <div>
-              <div key={index}>{data.financialYear}</div>
+              <div key={index}>{index == 0 ? data.financialYear : <Label
+              label={"PT_DEMAND_ARREARS"}
+              /> }</div>
               <Card
                 key={index}
                 style={{ backgroundColor: "white" }}
@@ -112,7 +115,15 @@ class DemandCollection extends React.Component {
                                   }
                                   else
                                   {
-                                    alert( "Integer numbers are only allowed and enter upto two decimal places.");  
+                                    this.props.toggleSnackbarAndSetText(
+                                      true,
+                                      {
+                                        labelName: "Integer numbers are only allowed and enter upto two decimal places.",
+                                        labelKey: "ERR_DCB_VALIDATIONS_FAILED"
+                                      },
+                                      "error"
+                                    );
+                                   // alert( "Integer numbers are only allowed and enter upto two decimal places.");  
                                     return value = "" ; 
                                   }
                                  
@@ -127,16 +138,34 @@ class DemandCollection extends React.Component {
                                   {
                                       if (Math.sign(e.target.value)===-1) 
                                       {  
-                                      alert( "Negative numbers are not allowed.");
+                                        this.props.toggleSnackbarAndSetText(
+                                          true,
+                                          {
+                                            labelName: "Negative numbers are not allowed..",
+                                            labelKey: "ERR_DCB_NEGATIVE_FAILED"
+                                          },
+                                          "error"
+                                        );
+                                      //alert( "Negative numbers are not allowed.");
                                       return value = "" ;
                                       }
                                   }
                                   if(taxData.code === 'PT_HOUSE_TAX' || taxData.code === 'PT_WATER_TAX' ||taxData.code === 'PT_CONSERVANCY_TAX'
-                                  || taxData.code === 'PT_LIGHTINING_TAX' || taxData.code === 'PT_EDUCATION_TAX' )
+                                  || taxData.code === 'PT_LIGHTINING_TAX' || taxData.code === 'PT_EDUCATION_TAX' || taxData.code === 'PT_CONSOLIDATED_PROPERTY_TAX'
+                                  || taxData.code === "PT_LIGHTING_TAX"|| taxData.code === "PT_DRAINAGE_TAX"|| taxData.code ==="PT_ADDL_WATER_TAX" 
+                                  || taxData.code === "PT_SANITARY_CESS"|| taxData.code === "PT_EDUCATION_CESS" )
                                   {
                                       if (Math.sign(e.target.value)===-1) 
                                       {  
-                                      alert( "Please enter valid value for House Taxax/Water Tax/Conservancy Tax/Lightining Tax/Education Tax");
+                                        this.props.toggleSnackbarAndSetText(
+                                          true,
+                                          {
+                                            labelName: "Please enter valid value for House Taxax/Water Tax/Conservancy Tax/Lightining Tax/Education Tax",
+                                            labelKey: "ERR_DCB_TAX_HEAD_FAILED"
+                                          },
+                                          "error"
+                                        ); 
+                                     // alert( "Please enter valid value for House Taxax/Water Tax/Conservancy Tax/Lightining Tax/Education Tax");
                                       return value = "" ;
                                       }
                                   }
@@ -149,7 +178,7 @@ class DemandCollection extends React.Component {
                                   }
 
                                 onWheel={event => { event.preventDefault(); }}
-                                disabled={taxData.code==='PT_TIME_REBATE' || taxData.code==='PT_TIME_INTEREST' || taxData.code==='PT_TIME_PENALTY'? true : false  }
+                                disabled={taxData.code==='PT_TIME_REBATE' || taxData.code==='PT_ADVANCE_CARRYFORWARD' || (index == 0  ? taxData.code==='PT_TIME_INTEREST' : false ) ||  taxData.code === 'PT_TIME_PENALTY' ||(index == 0 ? taxData.code==='PT_DEMANDNOTICE_CHARGE' : false) ? true : false  }
                                 
                               />
                             </div>
@@ -174,10 +203,12 @@ class DemandCollection extends React.Component {
                                 min={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
                                 max={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
                                 value={get(preparedFinalObject,`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`)}
+
                                 floatingLabelText={<Label label={taxData.code}/>}
                                 hintText={<Label label="PT_ENTER_AN_AMOUNT"/>}
 
                                 onChange={(e) => {
+
                                   let value = "";
                                   var NumbersOnly = /^\d{0,8}(\.(\d{1,2})?)?$/i
                                   let input = e.target.value ;
@@ -192,15 +223,26 @@ class DemandCollection extends React.Component {
                                    }
                                    else
                                    {
-                                     alert( "Integer numbers are only allowed and enter upto two decimal places.");  
+                                    this.props.toggleSnackbarAndSetText(
+                                      true,
+                                      {
+                                        labelName: "Integer numbers are only allowed and enter upto two decimal places.",
+                                        labelKey: "ERR_DCB_VALIDATIONS_FAILED"
+                                      },
+                                      "error"
+                                    );
+                                    // alert( "Integer numbers are only allowed and enter upto two decimal places.");  
                                      return value = "" ; 
                                    }
 
                                   prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_TAXHEAD`,taxData.code);
                                   prepareFinalObject(`DemandProperties[0].propertyDetails[0].demand[${index}].demand[${data.financialYear}][${parseInt(taxData.order)}].PT_COLLECTED`, e.target.value);
+
                                 }}
                                 onWheel={event => { event.preventDefault(); }}
-                                disabled={taxData.isDebit}
+                               // disabled={taxData.isDebit}
+                                disabled={taxData.code==='PT_TIME_REBATE' || taxData.code==='PT_ADVANCE_CARRYFORWARD' || (index == 0  ? taxData.code==='PT_TIME_INTEREST' : false ) ||(index == 0 ? taxData.code==='PT_DEMANDNOTICE_CHARGE' : false) ? true : false  }
+                                
                               />
                             </div>
                           );
@@ -242,7 +284,9 @@ const mapDispatchToProps = (dispatch) => {
     prepareFormData: (path, value) => dispatch(prepareFormData(path, value)),
     loadMDMSData: (requestBody, moduleName, masterName) => dispatch(loadMDMSData(requestBody, moduleName, masterName)),
     reset_property_reset: () => dispatch(reset_property_reset()),
-    prepareFinalObject: (jsonPath, value) => dispatch(prepareFinalObject(jsonPath, value))
+    prepareFinalObject: (jsonPath, value) => dispatch(prepareFinalObject(jsonPath, value)),
+    toggleSnackbarAndSetText: (open, message, error) =>
+    dispatch(toggleSnackbarAndSetText(open, message, error)),
   };
 };
 export default connect(

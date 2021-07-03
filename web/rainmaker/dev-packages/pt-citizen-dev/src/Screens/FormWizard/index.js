@@ -793,7 +793,7 @@ class FormWizard extends Component {
               const isPlotDetailsFormValid = validateForm(plotDetails);
               if (isPlotDetailsFormValid) {
                 const isTotalUnitSizeValid = plotDetails.fields.plotSize
-                  ? validateUnitandPlotSize(plotDetails, form)
+                  ? validateUnitandPlotSize(plotDetails, form,this.props.toggleSnackbarAndSetText)
                   : true;
                 if (isTotalUnitSizeValid) {
                   if (get(plotDetails, "fields.floorCount")) {

@@ -51,12 +51,19 @@ export const generatePTAcknowledgment = (property, generalMDMSDataById, UlbLogoF
     const ownerCard = getMultipleItemCard(ownerInfo, 'PT_OWNER');
     const assessmentCard = getAssessmentInfo(get(property, 'propertyDetails[0]', {}), generalMDMSDataById,property);
     let isLegacy =false;
+    let isDocAvbl =false;
 
-    if(property && property.source==='LEGACY_RECORD')
+    // if(property && property.source==='LEGACY_RECORD')
+    // {
+    //         isLegacy=true
+    // }
+    if(property && property.documentsUploaded && property.documentsUploaded.length > 0 )
     {
-            isLegacy=true
+        isDocAvbl = true;
+
     }
-    const documentCard = !isLegacy ? getDocumentsCard(property.documentsUploaded):"N/A";
+   const documentCard = isDocAvbl ? getDocumentsCard(property.documentsUploaded):"N/A";
+   //const documentCard = getDocumentsCard(property.documentsUploaded);
 
     let legacyPdfData = {
         header: "PT_ACKNOWLEDGEMENT", tenantId: property.tenantId,
@@ -83,6 +90,6 @@ export const generatePTAcknowledgment = (property, generalMDMSDataById, UlbLogoF
     }
 
     let pdfData ={} ;
-    pdfData = isLegacy ? legacyPdfData:assessmentPdfData;
+    pdfData = isDocAvbl ? assessmentPdfData:legacyPdfData;
     generatePDF(UlbLogoForPdf, pdfData, fileName);
 }

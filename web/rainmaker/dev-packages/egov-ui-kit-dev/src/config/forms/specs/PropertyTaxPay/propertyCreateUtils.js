@@ -39,9 +39,16 @@ export const createPropertyPayload = (properties, documentsUploadRedux) => {
   }
   
   properties[0].units.map((unit) => {
+    if(properties[0].propertyType=== "VACANT"){
+    unit.constructionDetail = {
+      builtUpArea: 1,
+    };
+  }
+  else {
     unit.constructionDetail = {
       builtUpArea: unit.unitArea,
     };
+  }
     unit.tenantId = properties[0].tenantId;
     unit.usageCategory =
       unit.usageCategoryMajor +

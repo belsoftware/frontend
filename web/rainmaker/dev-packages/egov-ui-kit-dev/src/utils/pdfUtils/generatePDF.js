@@ -2,13 +2,13 @@ import commonConfig from "config/common.js";
 import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import store from "egov-ui-framework/ui-redux/store";
 import { appendModulePrefix } from "egov-ui-framework/ui-utils/commons";
-import { getLocaleLabels } from "egov-ui-framework/ui-utils/commons.js";
+import { getLocaleLabels ,getDefaultFontStyle} from "egov-ui-framework/ui-utils/commons.js";
 import { set } from "lodash";
 import get from "lodash/get";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts";
 import { getFromObject } from "../PTCommon/FormWizardUtils/formUtils";
-import { localStorageGet } from "egov-ui-kit/utils/localStorageUtils";
+import { localStorageGet,getLocale } from "egov-ui-kit/utils/localStorageUtils";
 
 
 
@@ -26,7 +26,37 @@ const font = {
         bold: 'Roboto-Regular.ttf',
         italics: 'Roboto-Regular.ttf',
         bolditalics: 'Roboto-Regular.ttf',
-    }
+    },
+    kannada: {
+        bold: "tungab.ttf",
+        normal: "tunga.ttf",
+        italics: "tunga.ttf",
+      },
+    malyalam: {
+        bold: "kartika-bold.ttf",
+        normal: "kartika-regular.ttf",
+        italics: "kartika-regular.ttf",
+      },
+    tamil: {
+        bold: "lathab.ttf",
+        normal: "latha.ttf",
+        italics: "latha.ttf",
+      },
+    telugu: {
+        bold: "gautamib.ttf",
+        normal: "gautami.ttf",
+        italics: "gautami.ttf",
+      },
+      bangla: {
+        bold: "SolaimanLipi_Bold.ttf",
+        normal: "SolaimanLipi.ttf",
+        italics: "SolaimanLipi.ttf",
+      },
+    SakalBharati: {
+        bold: "SakalBharati.ttf",
+        normal: "SakalBharati.ttf",
+        italics: "SakalBharati.ttf",
+      }
 };
 pdfMake.vfs = vfs;
 pdfMake.fonts = font;
@@ -35,7 +65,7 @@ const getLabel = (value, type = 'key') => {
     switch (type) {
         case 'key':
             label = {
-                "text": value ? value : 'NA',
+                "text": value ? getLocaleLabels(value,value) : 'NA',
                 "style": "pdf-card-key",
                 "border": [
                     false,
@@ -47,7 +77,7 @@ const getLabel = (value, type = 'key') => {
             break;
         case 'value':
             label = {
-                "text": value ? value : 'NA',
+                "text": value ? getLocaleLabels(value,value) : 'NA',
                 "style": "pdf-card-value",
                 "border": [
                     false,
@@ -60,7 +90,7 @@ const getLabel = (value, type = 'key') => {
 
         case 'header':
             label = {
-                "text": value ? value : ' ',
+                "text": value ? getLocaleLabels(value,value) : ' ',
                 "style": "pdf-card-sub-header",
                 "border": [
                     false,
@@ -108,7 +138,7 @@ const getLabel = (value, type = 'key') => {
             break;
         default:
             label = {
-                "text": value ? value : ' ',
+                "text": value ? getLocaleLabels(value,value) : ' ',
                 "style": "pdf-card-key",
                 "border": [
                     false,
@@ -153,6 +183,15 @@ const getMultiCard = (items = [], color = 'grey') => {
         "layout": {}
     }
     return tableCard;
+}
+
+const getHeader = (header) => {
+    let cardWithHeader = header ? [{
+        "text": header == '-1' ? " " : getLocaleLabels(header, header),
+        "style": header == '-1' ? "pdf-card-no-title" : "pdf-card-title"
+    }] : [];
+  
+    return cardWithHeader;
 }
 const getCard = (keyValues = [], color = 'grey') => {
     let card = []
@@ -225,7 +264,7 @@ const getMultiItemCard = (header, items, color = 'grey') => {
 export const getMultiItems = (preparedFinalObject, cardInfo, sourceArrayJsonPath) => {
     let multiItem = [];
     let removedElements = [];
-    const arrayLength = get(preparedFinalObject, sourceArrayJsonPath, []).length;
+    const arrayLength = getFromObject(preparedFinalObject, sourceArrayJsonPath, []).length;
     for (let i = 0; i < arrayLength; i++) {
         let items = [];
         items = generateKeyValue(preparedFinalObject, cardInfo);
@@ -238,8 +277,8 @@ export const getMultiItems = (preparedFinalObject, cardInfo, sourceArrayJsonPath
     return multiItem;
 }
 export const getMultipleItemCard = (itemsInfo, itemHeader = "COMMON_OWNER", hideHeader = false) => {
-    let multipleItems = itemsInfo[0].items.filter(item => item);
-    if (itemsInfo.length > 1) {
+    let multipleItems = itemsInfo && itemsInfo[0].items.filter(item => item);
+    if (itemsInfo && itemsInfo.length > 1) {
         let items = [];
         itemsInfo.map((item, index) => {
             let rowElements = { header: `${getLocaleLabels(itemHeader, itemHeader)} - ${index+1}`, items: item.items.filter(element => element) };
@@ -257,10 +296,9 @@ export const getDocumentsCard = (documentsUploadRedux) => {
         return { key: getLocaleLabels(item.title, item.title), value: item.name }
     })
 }
-
-
 export const generateKeyValue = (preparedFinalObject, containerObject) => {
     let keyValue = []
+    //console.log("container object--"+getLocale());
     Object.keys(containerObject).map(keys => {
         const labelObject = getFromObject(containerObject[keys],'children.label.children.key.props', getFromObject(containerObject[keys],'children.label1.children.key.props',{}));
         const key = getLocaleLabels(labelObject.labelName, labelObject.labelKey)
@@ -313,13 +351,14 @@ const getCustomCard = (body = [], width = [], layout = {}, color = 'grey') => {
 }
 const totalAmount = (arr) => {
     return arr
-        .map(item => (item.value ? item.value : 0))
+        .map(item => (!isNaN(item.value) ? item.value : 0))
         .reduce((prev, next) => prev + next, 0);
 }
-export const getEstimateCardDetails = (fees = [], color) => {
+export const getEstimateCardDetails = (fees = [], color,demanddata=[]) => {
     let estimateCard = {};
 
     let total = totalAmount(fees);
+    let totaldemand = totalAmount(demanddata);
 
     let card = [];
     let row1 = []
@@ -336,17 +375,57 @@ export const getEstimateCardDetails = (fees = [], color) => {
     card.push(row2);
     let rowLast = []
 
-    rowLast.push(getLabel(getLocaleLabels('TL_COMMON_TOTAL_AMT', 'TL_COMMON_TOTAL_AMT'), 'totalAmount'))
-    rowLast.push(getLabel(total, 'totalAmount'))
-    rowLast.push(getLabel(' ', 'header'))
+    rowLast.push(getLabel(getLocaleLabels('TL_COMMON_TOTAL_AMT', 'TL_COMMON_TOTAL_AMT'), 'totalAmount')); 
+    if(demanddata.length>0 ){
+        rowLast.push(getLabel(totaldemand, 'totalAmount'))
+        rowLast.push(getLabel(total, 'totalAmount'))
+    }
+    else{
+        rowLast.push(getLabel(total, 'totalAmount'))
+        rowLast.push(getLabel(' ', 'header'))
+    }
+    
+    
 
-    fees.map(fee => {
-        let row = []
-        row.push(getLabel(getLocaleLabels(fee.name.labelName, fee.name.labelKey), 'value'))
-        row.push(getLabel(fee.value, 'nonZero'))
-        row.push(getLabel(' ', 'value'))
-        card.push(row);
-    })
+    if(demanddata.length >0 ){
+        demanddata.map(demand => {
+            let row = [];  
+            row.push(getLabel(getLocaleLabels(demand.name.labelName, demand.name.labelKey), 'value'))
+            row.push(getLabel(demand.value, 'nonZero'))
+            let found = false;
+            fees.map(fee => {
+               
+                if(demand.name.labelKey == fee.name.labelKey) 
+                { 
+                    found =true;
+                    row.push(getLabel(fee.value, 'nonZero'))
+                          
+                    
+                }
+
+            })
+            if(found==false){
+                row.push(getLabel(0, 'nonZero'))
+
+            }
+
+            
+            card.push(row);
+        })
+        }
+    
+        else{
+            fees.map(fee => {
+            let row = [];
+
+            row.push(getLabel(getLocaleLabels(fee.name.labelName, fee.name.labelKey), 'value'))
+            row.push(getLabel(fee.value, 'nonZero'))
+            row.push(getLabel(' ', 'value'))
+            card.push(row);
+            });
+        }
+
+   
 
     card.push(rowLast);
 
@@ -452,10 +531,26 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
     let borderKey = [true, true, false, true];
     let borderValue = [false, true, true, true];
     let receiptTableWidth = ["*", "*", "*", "*"];
+    let fontStyle = getDefaultFontStyle(getLocale());
+    console.log("fontStyle--",fontStyle); 
+    let applNo = "";
+    let addlHeader = "";
+    if(applicationData)
+    {
+        if(applicationData.applicationNoHeader){
+            applNo = getLocaleLabels(applicationData.applicationNoHeader, applicationData.applicationNoHeader);
+            applNo = applNo.indexOf("CB-AC") === -1?applNo + ":":applNo;
+        }
+        if(applicationData.additionalHeader){
+            addlHeader = getLocaleLabels(applicationData.additionalHeader, applicationData.additionalHeader)
+            addlHeader = addlHeader.indexOf("PT-") === -1?addlHeader + ":": addlHeader;
+
+        }
+    }
 
     data = {
         defaultStyle: {
-            font: "Camby"
+            font: fontStyle
         },
         content: [
 
@@ -467,13 +562,21 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                     {
                         "text": [
                             {
-                                "text": applicationData.applicationNoHeader ? getLocaleLabels(applicationData.applicationNoHeader, applicationData.applicationNoHeader) : '',
+                                "text": applicationData.applicationNoHeader ? applNo : '',
                                 bold: true
                             },
                             {
                                 "text": applicationData.applicationNoValue ? getLocaleLabels(applicationData.applicationNoValue, applicationData.applicationNoValue) : '',
                                 italics: true,
                                 "style": "pdf-application-no-value"
+                            },
+                            {
+                                "text": applicationData.applicationStatusValue ? getLocaleLabels(applicationData.applicationStatusValue, applicationData.applicationStatusValue) : '',
+                               
+                                "style": {
+                                    "color": "red"
+                                }
+                                
                             }
                         ],
                         "alignment": "left"
@@ -481,7 +584,7 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                     {
                         "text": [
                             {
-                                "text": applicationData.additionalHeader ? getLocaleLabels(applicationData.additionalHeader, applicationData.additionalHeader) : '',
+                                "text": applicationData.additionalHeader ?addlHeader : '',
                                 bold: true
                             },
                             {
@@ -504,7 +607,7 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                     nodeLength = ind;
                 }
             })
-            if (currentNode.startPosition.verticalRatio > 0.59 && currentNode.style == 'pdf-card-title') {
+            if (currentNode.startPosition.verticalRatio > 0.9 && currentNode.style == 'pdf-card-title') {
                 return true;
             }
             if (currentNode.startPosition.verticalRatio > 0.75 && currentNode.style == 'pdf-card-title' && nodeLength > 19) {
@@ -650,6 +753,11 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                 if (!card.hide) {
                     if(card.items.length>0)
                     data.content.push(...getCardWithHeader(card.header, card.items, card.color));
+                }
+                break;
+            case "header":
+                if (!card.hide && card.header) {
+                    data.content.push(...getHeader(card.header));
                 }
                 break;
             case "multiItem":

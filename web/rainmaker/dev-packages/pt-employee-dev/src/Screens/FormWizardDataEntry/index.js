@@ -39,7 +39,7 @@ import {
   getEstimateFromBill
 } from "egov-ui-kit/utils/PTCommon";
 import { get, set, isEqual } from "lodash";
-import { fetchFromLocalStorage } from "egov-ui-kit/utils/commons";
+import { fetchFromLocalStorage, isDocumentValid } from "egov-ui-kit/utils/commons";
 import range from "lodash/range";
 import { hideSpinner, showSpinner } from "egov-ui-kit/redux/common/actions";
 import {
@@ -154,7 +154,22 @@ class FormWizardDataEntry extends Component {
             }
           ]
         );
+        const purpose = getQueryValue(search, "purpose");
         searchPropertyResponse = getCreatePropertyResponse(searchPropertyResponse);
+        
+        console.log("purpose",purpose);
+        if(purpose == "update"){
+          if (
+            searchPropertyResponse.Properties &&
+            searchPropertyResponse.Properties.length > 0
+          ) {
+              if(searchPropertyResponse.Properties[0].propertyType=="VACANT"){
+                searchPropertyResponse.Properties[0].propertySubType=searchPropertyResponse.Properties[0].propertyType;
+                 console.log(" searchPropertyResponse.Properties[0].propertySubType", searchPropertyResponse.Properties[0].propertySubType);
+              }
+
+          }
+        }
         await prefillPTDocuments(
           searchPropertyResponse,
           "Properties[0].documents",
@@ -166,6 +181,9 @@ class FormWizardDataEntry extends Component {
           searchPropertyResponse.Properties[0].propertyDetails &&
           searchPropertyResponse.Properties[0].propertyDetails.length > 0
         ) {
+          if(purpose == "update" && searchPropertyResponse.Properties[0].propertyType=="VACANT"){
+            searchPropertyResponse.Properties[0].propertyDetails[0].propertySubType="VACANT"
+          }
           searchPropertyResponse.Properties[0].propertyDetails.forEach(item => {
             item.units = sortBy(
               item.units,
@@ -433,13 +451,15 @@ class FormWizardDataEntry extends Component {
     const { selected } = this.state;
     const {propertiesEdited}= this.props;
     const isReviewPage = selected === 3;
+    const purpose = getPurpose();
+    const disableOwner = !formWizardConstants[purpose].canEditOwner;
     // let ownerAr = this.state.ownerInfoArr;
     // ownerAr = ownerAr && ownerAr.length>1 && ownerAr.sort(function(item1,item2){
     // return ownerAr.indexOf(item2)-ownerAr.indexOf(item1);
     // })
     switch (ownerType) {
       case "SINGLEOWNER":
-        return <OwnerInfoHOC  />;
+        return <OwnerInfoHOC  disabled={disableOwner}/>;
       case "MULTIPLEOWNERS":
         return (
           <MultipleOwnerInfoHOC
@@ -448,13 +468,14 @@ class FormWizardDataEntry extends Component {
             }}
             handleRemoveOwner={this.handleRemoveOwner}
             ownerDetails={this.state.ownerInfoArr}
+            disabled={disableOwner}
           />
         );
       case "INSTITUTIONALPRIVATE":
       case "INSTITUTIONALGOVERNMENT":
         return (
           <div>
-            <InstitutionHOC/>
+            <InstitutionHOC disabled={disableOwner}/>
             <InstitutionAuthorityHOC
               cardTitle={
                 <Label
@@ -462,7 +483,7 @@ class FormWizardDataEntry extends Component {
                   defaultLabel="Details of authorised person"
                 />
               }
-              //disabled={propertiesEdited}
+              disabled={disableOwner}
             />
           </div>
         );
@@ -519,7 +540,8 @@ class FormWizardDataEntry extends Component {
     const { location ,propertiesEdited} = this.props;
     const { search } = location;
     const isCompletePayment = getQueryValue(search, "isCompletePayment");
-
+    const purpose = getPurpose();
+    const disableOwner = !formWizardConstants[purpose].canEditOwner;
     switch (selected) {
       case 0:
         return (
@@ -547,13 +569,13 @@ class FormWizardDataEntry extends Component {
         );
         return (
           <div>
-            <OwnershipTypeHOC />
+            <OwnershipTypeHOC disabled={disableOwner}/>
             {getOwnerDetails(ownerType)}
           </div>
         );
-      /* case 3:
+       case 3:
         return (<Card textChildren={<DocumentsUpload></DocumentsUpload>} />);
-      */ case 3:
+       case 4:
         return (
           <div className="review-pay-tab">
             <ReviewForm
@@ -626,7 +648,7 @@ class FormWizardDataEntry extends Component {
     let isAssesment = Boolean(getQueryValue(search, "isAssesment").replace('false', ''));
 
     let buttonLabel = "PT_COMMON_BUTTON_NEXT";
-    if (index == 3) {
+    if (index == 4) {
       propertyId ? buttonLabel = 'PT_UPDATE_PROPERTY' :  buttonLabel = "PT_ADD_ASSESS_PROPERTY" ;
     } else if (index == 5) {
       buttonLabel = 'PT_PROCEED_PAYMENT'
@@ -689,7 +711,7 @@ class FormWizardDataEntry extends Component {
               headerObj.subHeaderValue = '',
               headerObj.header = "PT_PROPERTY_CREATE_HEADER")));
         break;
-     /*  case 3:
+       case 3:
         headerObj.subHeaderValue = propertyId;
         headerObj.headerValue = '(' + assessmentYear + ')';
         (isAssesment ?
@@ -699,8 +721,8 @@ class FormWizardDataEntry extends Component {
             (headerObj.headerValue = "",
               headerObj.subHeaderValue = '',
               headerObj.header = "PT_PROPERTY_CREATE_HEADER")));
-        break; */
-      case 3:
+        break; 
+      case 4:
         headerObj.subHeaderValue = propertyId;
         headerObj.headerValue = '(' + assessmentYear + ')';
         (isAssesment ?
@@ -760,7 +782,7 @@ class FormWizardDataEntry extends Component {
       financialYearFromQuery,
       estimation
     } = this.state;
-    const { setRoute, displayFormErrorsAction, form } = this.props;
+    const { setRoute, displayFormErrorsAction, form, requiredDocCount } = this.props;
 
     switch (selected) {
       //validating property address is validated
@@ -814,9 +836,9 @@ class FormWizardDataEntry extends Component {
           if (isBasicInformationFormValid) {
             if (plotDetails) {
               const isPlotDetailsFormValid = validateForm(plotDetails);
-              if (isPlotDetailsFormValid) {
+              if (isPlotDetailsFormValid && basicInformation.fields.typeOfBuilding.value != "SHAREDPROPERTY") {
                 const isTotalUnitSizeValid = plotDetails.fields.plotSize
-                  ? validateUnitandPlotSize(plotDetails, form)
+                  ? validateUnitandPlotSize(plotDetails, form, this.props.toggleSnackbarAndSetText)
                   : true;
                 if (isTotalUnitSizeValid) {
                   if (get(plotDetails, "fields.floorCount")) {
@@ -850,7 +872,16 @@ class FormWizardDataEntry extends Component {
                     });
                   }
                 }
-              } else {
+              }
+              else if(isPlotDetailsFormValid && basicInformation.fields.typeOfBuilding.value == "SHAREDPROPERTY") {
+                callDraft(this);
+                window.scrollTo(0, 0);
+                this.setState({
+                  selected: index,
+                  formValidIndexArray: [...formValidIndexArray, selected]
+                });
+              }
+                else {
                 displayFormErrorsAction("plotDetails");
               }
             }
@@ -975,37 +1006,42 @@ class FormWizardDataEntry extends Component {
         }
 
         break;
-      /* case 3:
+       case 3:
         window.scrollTo(0, 0);
+        const newDocs = {};
         const uploadedDocs = get(this.props, "documentsUploadRedux");
-        let temp = 0;
-        let maxDocuments = 0;
-        if (uploadedDocs) {
-          let docsArray = [];
-          Object.keys(uploadedDocs).map(key => {
-            docsArray.push(uploadedDocs[key]);
-          })
-          docsArray.map(docs => {
-            if (docs && docs.isDocumentRequired) {
-              maxDocuments++;
-            }
-            if (docs && docs.isDocumentRequired && docs.documents && docs.dropdown) {
-              temp++;
-            }
-          });
-        }
-        if (!uploadedDocs || temp < maxDocuments) {
-          alert("Please upload all the required documents and documents type.")
+        if (!isDocumentValid(uploadedDocs, requiredDocCount)) {
+          this.props.toggleSnackbarAndSetText(
+                true,
+                {
+                  labelName: "Please upload all the required documents and documents type",
+                  labelKey: "ERR_PT_UPLOAD_REQUIRED_DOCUMENTS"
+                },
+                "error"
+              );
         } else {
           this.setState({
             selected: index,
             formValidIndexArray: [...formValidIndexArray, selected]
           });
+          if (Object.keys(uploadedDocs).length != requiredDocCount) {
+            Object.keys(uploadedDocs).map(key => {
+              if (key < requiredDocCount) {
+                newDocs[key] = uploadedDocs[key];
+              }
+            })
+            this.props.prepareFinalObject('documentsUploadRedux', newDocs)
+          }
         }
-
-        break; */
+        let prepareFormData = { ...this.props.prepareFormData };
+        let additionalDetails = get(
+          prepareFormData,
+          "Properties[0].additionalDetails", {})
+        this.props.prepareFinalObject('propertyAdditionalDetails', additionalDetails);
+       
+        break; 
       // createAndUpdate(index);
-      case 3:
+      case 4:
       /*   let { assessedPropertyDetails: asd = {} } = this.state;
         const { Properties: pts = [] } = asd;
         */
@@ -1540,6 +1576,7 @@ class FormWizardDataEntry extends Component {
       this
     );
     // Create/Update property call, action will be either create or update
+    showSpinner();
     propertySubmitAction(properties, action, this.props);
   };
 
@@ -2023,9 +2060,9 @@ class FormWizardDataEntry extends Component {
     const { search } = location;
     const propertyId = getQueryValue(search, "propertyId");
     // let proceedToPayment = Boolean(getQueryValue(search, "proceedToPayment").replace('false', ''));
-    if (propertyId && selected == 2&&!propertiesEdited) {
+    if (propertyId && selected == 3 &&!propertiesEdited) {
       this.setState({
-        selected: 3,
+        selected: 4,
         formValidIndexArray: [...formValidIndexArray, 3]
       });
     }
@@ -2125,7 +2162,8 @@ const mapStateToProps = state => {
     (propertyAddress && propertyAddress.fields && propertyAddress.fields) || {};
   const currentTenantId = (city && city.value) || commonConfig.tenantId;
   const { preparedFinalObject } = screenConfiguration;
-  const { documentsUploadRedux, newProperties = [], propertiesEdited = false } = preparedFinalObject;
+  const { documentsUploadRedux, newProperties = [], propertiesEdited = false, ptDocumentCount = 0 } = preparedFinalObject;
+  let requiredDocCount = ptDocumentCount;
   return {
     form,
     currentTenantId,
@@ -2134,7 +2172,8 @@ const mapStateToProps = state => {
     app,
     documentsUploadRedux,
     newProperties,
-    propertiesEdited
+    propertiesEdited,
+    requiredDocCount
   };
 };
 

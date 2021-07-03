@@ -22,7 +22,7 @@ for (var i = 1; i <= 17; i++) {
 export const plotSize = {
   plotSize: {
     id: "assessment-plot-size",
-    jsonPath: "Properties[0].propertyDetails[0].buildUpArea",
+    jsonPath: "Properties[0].propertyDetails[0].landArea",
     type: "number",
     floatingLabelText: "PT_ASSESMENT_INFO_PLOT_SIZE",
     hintText: "PT_FORM2_PLOT_SIZE_PLACEHOLDER",
@@ -92,7 +92,11 @@ export const subUsageType = {
     id: "assessment-subUsageType",
     jsonPath: "Properties[0].propertyDetails[0].units[0].usageCategoryDetail",
     type: "AutocompleteDropdown",
-    localePrefix: "PROPERTYTAX_BILLING_SLAB",
+    localePrefix: {
+      moduleName: "PROPERTYTAX",
+      masterName: "BILLING_SLAB"
+    },
+    labelsFromLocalisation: true,
     floatingLabelText: "PT_COMMON_SUB_USAGE_TYPE",
     hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
@@ -121,7 +125,11 @@ export const occupancy = {
     id: "assessment-occupancy",
     jsonPath: "Properties[0].propertyDetails[0].units[0].occupancyType",
     type: "AutocompleteDropdown",
-    localePrefix: { moduleName: "PropertyTax", masterName: "OccupancyType" },
+    localePrefix: {
+      moduleName: "PROPERTYTAX",
+      masterName: "OCCUPANCYTYPE"
+    },
+    labelsFromLocalisation: true,
     floatingLabelText: "PT_ASSESMENT_INFO_OCCUPLANCY",
     hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
     required: true,
@@ -132,18 +140,21 @@ export const occupancy = {
     },
     dropDownData: [],
     formName: "plotDetails",
-    updateDependentFields: ({ formKey, field: sourceField, dispatch }) => {
-      const { value } = sourceField;
-      const dependentFields1 = ["annualRent"];
-      switch (value) {
-        case "RENTED":
-          setDependentFields(dependentFields1, dispatch, formKey, false);
-          break;
-        default:
-          setDependentFields(dependentFields1, dispatch, formKey, true);
-          break;
-      }
-    },
+    // updateDependentFields: ({ formKey, field: sourceField, dispatch }) => {
+    //   const { value } = sourceField;
+    //   const dependentFields1 = ["annualRent"];
+    //   switch (value) {
+    //     case "RENTED":
+    //       setDependentFields(dependentFields1, dispatch, formKey, false);
+    //       break;
+    //       case "SELFOCCUPIED":
+    //         setDependentFields(dependentFields1, dispatch, formKey, false);
+    //         break;
+    //     default:
+    //       setDependentFields(dependentFields1, dispatch, formKey, true);
+    //       break;
+    //   }
+    // },
   },
 };
 
@@ -176,7 +187,7 @@ export const superArea = {
     ErrorText: "Enter a valid super built area size",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5, fontSize: "14px", lineHeight:"1px" },
     toolTip: true,
-    toolTipMessage: "Total Carpet Area + Total balcony area + Total thickness of outer walls + Total common area (lift, stairs, lobby etc.)",
+    toolTipMessage: "PT_BUILT_UP_AREA_TOOLTIP_MESSAGE",
     required: true,
     numcols: 4,
     hideField: false,
@@ -202,7 +213,7 @@ export const annualRent = {
     toolTipMessage: "PT_TOTAL_ANNUAL_RENT_TOOLTIP_MESSAGE",
     required: true,
     pattern: /^([1-9]\d{0,7})(\.\d+)?$/,
-    hideField: true,
+    hideField: false,
     numcols: 4,
     formName: "plotDetails",
   },
@@ -226,7 +237,8 @@ export const floorName = {
     id: "floorName",
     type: "AutocompleteDropdown",
     floatingLabelText: "PT_FLOOR_NO",
-    localePrefix: { moduleName: "PropertyTax", masterName: "Floor" },
+    localePrefix: { moduleName: "PROPERTYTAX", masterName: "FLOOR" },
+    labelsFromLocalisation: true,
     hintText: "PT_FLOOR_NO",
     numcols: 4,
     gridDefination: {
@@ -369,11 +381,15 @@ export const beforeInitForm = {
         )
       );
     }
-    if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED") {
+    // if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED") {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // } 
+    // else if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "SELFOCCUPIED") {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // }
+    // else {
       set(action, "form.fields.annualRent.hideField", false);
-    } else {
-      set(action, "form.fields.annualRent.hideField", true);
-    }
+    // }
     return action;
   },
 };
@@ -382,17 +398,29 @@ export const beforeInitFormForPlot = {
   beforeInitForm: (action, store) => {
     let state = store.getState();
     let { dispatch } = store;
+    // const { form } = action;
+   const { name: formKey, fields } = action;
     const propertyType = get(state, "form.basicInformation.fields.typeOfBuilding.value");
     const { Floor } = state.common && state.common.generalMDMSDataById;
+    const { localizationLabels } = state.app;
     if (get(action, "form.fields.floorName")) {
       if (propertyType === "SHAREDPROPERTY") {
         set(action, "form.fields.floorName.hideField", false);
         set(action, "form.fields.floorName.dropDownData", prepareDropDownData(Floor));
       } else {
         set(action, "form.fields.floorName.hideField", true);
+        
       }
     }
+    
     if (propertyType != "VACANT") {
+
+      let usageCategoryMajor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMajor");
+    if (usageCategoryMajor !== "MIXED") {
+      const usageTypeValue = get(action, "form.fields.usageType.value");
+      set(action, "form.fields.usageType.value", getTranslatedLabel(usageTypeValue, localizationLabels));
+      dispatch(setFieldProperty(formKey, "usageType", "value", getTranslatedLabel(usageTypeValue, localizationLabels)));
+    }
       var occupancy = get(state, "common.generalMDMSDataById.OccupancyType");
       var usageCategoryMinor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMinor");
       var usageCategoryMajor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMajor");
@@ -452,18 +480,29 @@ export const beforeInitFormForPlot = {
         );
       }
     }
-    if (propertyType == "VACANT") {
+     if (propertyType == "VACANT") {
+      var usageCategoryMinor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMinor");
+    var usageCategoryMajor = get(state, "common.prepareFormData.Properties[0].propertyDetails[0].usageCategoryMajor");
+     dispatch(prepareFormData("Properties[0].propertyDetails[0].units[0].usageCategoryMinor", usageCategoryMinor));
+     dispatch(prepareFormData("Properties[0].propertyDetails[0].units[0].usageCategoryMajor", usageCategoryMajor));
       dispatch(prepareFormData(`Properties[0].propertyDetails[0].noOfFloors`, 1));
-    }
+     dispatch(prepareFormData(`Properties[0].propertyDetails[0].units[0].occupancyType`, "SELFOCCUPIED"));
+      
+
+     }
     if (propertyType == "SHAREDPROPERTY") {
       dispatch(prepareFormData(`Properties[0].propertyDetails[0].noOfFloors`, 2));
+      //dispatch(prepareFormData(`Properties[0].propertyDetails[0].landArea`, 0));
       // dispatch(prepareFormData(`Properties[0].propertyDetails[0].units[0].floorNo`, -1));
     }
-    if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED") {
+    // if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "RENTED" ) {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // } else if (get(state, `common.prepareFormData.${get(action, "form.fields.occupancy.jsonPath")}`) === "SELFOCCUPIED" ) {
+    //   set(action, "form.fields.annualRent.hideField", false);
+    // }
+    // else {
       set(action, "form.fields.annualRent.hideField", false);
-    } else {
-      set(action, "form.fields.annualRent.hideField", true);
-    }
+    // }
     return action;
   },
 };
@@ -473,7 +512,8 @@ export const city = {
     id: "city",
     jsonPath: "Properties[0].address.city",
     required: true,
-    localePrefix: { moduleName: "tenant", masterName: "tenants" },
+    localePrefix: { moduleName: "TENANT", masterName: "TENANTS" },
+    labelsFromLocalisation: true,
     type: "AutocompleteDropdown",
     floatingLabelText: "CORE_COMMON_CITY",
     errorStyle: { position: "absolute", bottom: -8, zIndex: 5 },
@@ -521,7 +561,7 @@ export const dummy = {
     type: "singleValueList",
     floatingLabelText: "PT_COMMON_PROPERTY_LOCATION",
     hintText: "PT_COMMON_PROPERTY_LOCATION_PLACEHOLDER",
-    localePrefix: true,//{ moduleName: "PropertyTax", masterName: "PropertyLocation" },
+    localePrefix: "PT_COMMON_PROPERTY_LOCATION",//{ moduleName: "PropertyTax", masterName: "PropertyLocation" },
     numcols: 6,
     fullWidth: true,
     errorMessage: "PT_PROPERTY_DETAILS_DOOR_NUMBER_ERRORMSG",
@@ -697,6 +737,7 @@ export const mergeMaster = (masterOne, masterTwo, parentName = "") => {
   }
   let masterOneData = getAbsentMasterObj(prepareDropDownData(masterOne, true), prepareDropDownData(masterTwo, true), parentName);
   for (var i = 0; i < masterOneData.length; i++) {
+    if(masterOneData[i].code != "SLUM" )
     dropDownData.push({ label: masterOneData[i].name, value: masterOneData[i].code });
   }
   return dropDownData;

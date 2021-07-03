@@ -3,6 +3,7 @@ import { setFieldProperty, handleFieldChange } from "egov-ui-kit/redux/form/acti
 import { prepareFormData } from "egov-ui-kit/redux/common/actions";
 import set from "lodash/set";
 import get from "lodash/get";
+import { toggleSnackbarAndSetText } from "egov-ui-kit/redux/app/actions";
 
 const formConfig = {
   name: "customSelect",
@@ -33,7 +34,15 @@ const formConfig = {
           return floorvalue === value;
         });
         if (valueExists && get(state, `form[${action.formKey}].fields[${action.fieldKey}].value`) !== action.value) {
-          alert("This floor is already selected, please select another floor");
+          dispatch(toggleSnackbarAndSetText(
+            true,
+            {
+              labelName: "This floor is already selected, please select another floor.",
+              labelKey: "ERR_FLOOR_VALIDATIONS_FAILED"
+            },
+            "error"
+          ));
+          //alert("This floor is already selected, please select another floor");
           action.value = "";
         }
         return action;

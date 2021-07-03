@@ -760,7 +760,7 @@ class FormWizard extends Component {
               const isPlotDetailsFormValid = validateForm(plotDetails);
               if (isPlotDetailsFormValid) {
                 const isTotalUnitSizeValid = plotDetails.fields.plotSize
-                  ? validateUnitandPlotSize(plotDetails, form)
+                  ? validateUnitandPlotSize(plotDetails, form, this.props.toggleSnackbarAndSetText)
                   : true;
                 if (isTotalUnitSizeValid) {
                   if (get(plotDetails, "fields.floorCount")) {
@@ -1812,11 +1812,12 @@ class FormWizard extends Component {
       propertyId = pty.propertyId;
     }
     const { header, subHeaderValue, headerValue } = this.getHeader(selected, search, propertyId);
+    const tenantId = getQueryValue(search, "tenantId");
 
     return (
       <div className="wizard-form-main-cont">
         <div className='form-header'>
-          <PTHeader header={header} subHeaderTitle='PT_PROPERTY_PTUID' headerValue={headerValue} subHeaderValue={subHeaderValue} />
+          <PTHeader header={header} subHeaderTitle='PT_PROPERTY_PTUID' headerValue={headerValue} subHeaderValue={subHeaderValue} tenantId ={tenantId}/>
         </div>
         <WizardComponent
           downloadAcknowledgementForm={this.downloadAcknowledgementForm}

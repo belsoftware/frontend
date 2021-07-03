@@ -21,10 +21,16 @@
 }
 
 .button-toggle-container {
-  padding: 25px 0px;
-  display: block;
+  padding: 10px 0px;
+  display: flex;
   justify-content: center;
 }
+
+.fix-for-layout-break {
+  margin-bottom: 10px;
+  width: 80%;
+}
+
 
 @media only screen and (max-width: 360px) {
   .button-toggle-container button {

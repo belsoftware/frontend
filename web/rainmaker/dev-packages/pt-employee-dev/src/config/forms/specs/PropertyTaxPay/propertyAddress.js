@@ -15,6 +15,7 @@ const formConfig = {
       jsonPath: "PropertiesTemp[0].address.city",
       required: true,
       type: "singleValueList",
+      localePrefix: "TENANT_TENANTS",
       floatingLabelText: "CORE_COMMON_CITY",
       className: "pt-emp-property-address-city",
       disabled: true,

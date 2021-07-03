@@ -279,9 +279,9 @@ const formConfig = {
             )
           );
         } else {
-          dispatch(setFieldProperty(formKey, "ownerCategoryId", "pattern", /^[a-zA-Z0-9_.-]{1,20}$/i));
+          dispatch(setFieldProperty(formKey, "ownerCategoryId", "maxLength", 50));
           dispatch(
-            setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter upto 20 character ID number.Only Special characters allowed are _ . -")
+            setFieldProperty(formKey, "ownerCategoryId", "errorMessage", "Enter upto 50 character ID number.")
           );
         }
       },

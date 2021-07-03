@@ -1,5 +1,5 @@
 import { MDMS } from "egov-ui-kit/utils/endPoints";
-import { measuringUnit, annualRent, occupancy, subUsageType, beforeInitFormForPlot, superArea } from "../utils/reusableFields";
+import { measuringUnit, annualRent, occupancy, subUsageType, beforeInitFormForPlot, superArea,floorName } from "../utils/reusableFields";
 import { prepareFormData } from "egov-ui-kit/redux/common/actions";
 
 const formConfig = {
@@ -12,7 +12,7 @@ const formConfig = {
       floatingLabelText: "PT_COMMON_USAGE_TYPE",
       // value: "Other",
       hintText: "PT_COMMONS_SELECT_PLACEHOLDER",
-      value: "PROPERTYTAX_BILLING_SLAB_SHARED",
+      value: "PROPERTYTAX_BILLING_SLAB_OTHER",
       required: true,
       disabled: true,
       numcols: 4,
@@ -22,6 +22,7 @@ const formConfig = {
     ...occupancy,
     ...superArea,
     ...measuringUnit,
+    ...floorName,
     ...annualRent,
   },
   isFormValid: false,
