@@ -48,7 +48,7 @@ export const getBuildingTypeInfo = (generalMDMSDataById, propertyDetails) => {
 }
 
 export const getUsageTypeInfo = (propertyDetails) => {
-  return propertyDetails.usageCategoryMajor ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + propertyDetails.usageCategoryMajor, localizationLabelsData) : "NA";
+  return propertyDetails.usageCategoryMajor && propertyDetails.usageCategoryMajor==="MIXED" ? getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + propertyDetails.usageCategoryMajor, localizationLabelsData) :propertyDetails.usageCategoryMinor?getTranslatedLabel('PROPERTYTAX_BILLING_SLAB_' + propertyDetails.usageCategoryMinor, localizationLabelsData) : "NA";
 }
 
 export const getPlotSizeInfo = (propertyDetails) => {
