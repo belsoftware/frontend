@@ -17,26 +17,31 @@ const checkIfFormIsValid = async (state, dispatch) => {
   let isFormValid = true;
 
   const isBookingDetailsValid = validateFields(
-    //"components.div1.children.details.newApplicationDetailsCard.children.cardContent.children",
-    "components.div1.children.details.children.cardContent.children.optionSelection.children",
-    //"components.div.children.newCollectionConsumerDetailsCard.children.cardContent.children.ucConsumerContainer.children",
+    "components.bookingDetails.children.cardContent.children.bookingDetails",
     state,
     dispatch,
     "bookGuestHouse"
   );  
 
-  const isEmployeeDetailsValid = validateFields(
-    "components.div2.children.details.children.cardContent.children.ownerDetails.children.cardContent.children.ownerDetailsCardContainer.children",
+  const isBankDetailsValid = validateFields(
+    "components.bookingDetails.children.cardContent.children.bankDetails",
     state,
     dispatch,
-    "newApplication"
-  );  
+    "bookGuestHouse"
+  );
+
+  const isAppicantInfoValid = validateFields(
+    "components.bookingDetails.children.cardContent.children.applicantInfo.children.details.children.cardContent.children.applicantDetailsCardContainer.children",
+    state,
+    dispatch,
+    "bookGuestHouse"
+  );
 
   let isCompulsaryDocsUploaded = true;
 
   const uploadedDocsInRedux = get(
     state.screenConfiguration.preparedFinalObject,
-    "lamsStore.uploadedDocsInRedux",
+    "documentsUploadRedux",
     []
   );
   const requiredDocuments = get(

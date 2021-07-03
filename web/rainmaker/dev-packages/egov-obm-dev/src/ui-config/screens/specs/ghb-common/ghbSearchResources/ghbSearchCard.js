@@ -8,7 +8,7 @@ import "./index.css"
 import { getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
 import {disclaimerDialog} from "./disclaimerDialog";
-import { localStorageGet, localStorageSet } from "egov-ui-kit/utils/localStorageUtils";
+import { localStorageGet, localStorageSet }   from "egov-ui-kit/utils/localStorageUtils";
 
 // const tenantId = process.env.REACT_APP_NAME === "Employee" ?  getTenantId() : JSON.parse(getUserInfo()).permanentCity;
 // console.log("tenantId--- ", tenantId);

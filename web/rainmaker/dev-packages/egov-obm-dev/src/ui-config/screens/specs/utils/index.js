@@ -365,7 +365,7 @@ export const loadGuestHouseDetailsMdms = async (action, state, dispatch,data) =>
               "masterDetails": [
                 {
                   "name": "CommunityHalls",
-                  "filter": `[?(@.hallCode == "${data.id}")]`
+                  "filter": `[?(@.hallCode == "${data.guestHouseId}")]`
                 }
               ]
           }
