@@ -4,7 +4,12 @@ import get from "lodash/get";
 import set from "lodash/set";
 import { setFieldProperty, handleFieldChange } from "egov-ui-kit/redux/form/actions";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import { getTranslatedLabel } from "egov-ui-kit/utils/commons";
+import { initLocalizationLabels } from "egov-ui-kit/redux/app/utils";
+import { getLocale } from "egov-ui-kit/utils/localStorageUtils";
 
+const locale = getLocale() || "en_IN";
+const localizationLabelsData = initLocalizationLabels(locale);
 const formConfig = {
   name: "ownerInfo",
   fields: {
@@ -231,15 +236,14 @@ const formConfig = {
         const { city = "", colony = "", houseNumber = "", mohalla = "", pincode = "", street = "" } = get(state, "form.propertyAddress.fields", {});
         const mohallaDetails =
           mohalla && mohalla.dropDownData && mohalla.dropDownData.find((mohallaData) => mohallaData.value === get(mohalla, "value", ""));
+           const cityValue = (getTranslatedLabel((`TENANT_TENANTS_${city.value}`).replace('.','_').toUpperCase(), localizationLabelsData))
         if (iscorrAddrSameProp) {
           const correspondingAddress = [
             `${get(houseNumber, "value", "")}`,
             `${get(colony, "value", "")}`,
             `${get(street, "value", "")}`,
             `${get(mohallaDetails, "label", "")}`,
-            `${get(city, "value", "")
-              .split(".")
-              .pop()}`,
+            `${cityValue}`,
             `${get(pincode, "value", "")}`,
           ]
             .join(", ")
