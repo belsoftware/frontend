@@ -538,12 +538,11 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
     if(applicationData)
     {
         if(applicationData.applicationNoHeader){
-            applNo = getLocaleLabels(applicationData.applicationNoHeader, applicationData.applicationNoHeader);
-            applNo = applNo.indexOf("CB-AC") === -1?applNo + ":":applNo;
+            applNo = applicationData.applicationNoValue.indexOf("PT-") === -1? getLocaleLabels(applicationData.applicationNoHeader,applicationData.applicationNoHeader) + ":": getLocaleLabels(applicationData.applicationNoHeader,applicationData.applicationNoHeader);
         }
-        if(applicationData.additionalHeader){
-            addlHeader = getLocaleLabels(applicationData.additionalHeader, applicationData.additionalHeader)
-            addlHeader = addlHeader.indexOf("PT-") === -1?addlHeader + ":": addlHeader;
+        if(applicationData.additionalHeaderValue){
+           
+            addlHeader = applicationData.additionalHeaderValue.indexOf("CB-AC") === -1?getLocaleLabels(applicationData.additionalHeader,applicationData.additionalHeader) + ":": getLocaleLabels(applicationData.additionalHeader,applicationData.additionalHeader);
 
         }
     }

@@ -27,6 +27,7 @@ import YearDialogue from "../YearDialogue";
 import AmendmentDialogue from "../AmendmentDialogue"
 import PropertyInformation from "./components/PropertyInformation";
 import "./index.css";
+import { getUserInfo, getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
 
 const innerDivStyle = {
@@ -389,6 +390,17 @@ class Property extends Component {
     }
 
     let isCitizen = process.env.REACT_APP_NAME === "Citizen";
+    let userInfo = JSON.parse(getUserInfo());
+    const roles = get(userInfo, "roles");
+    const roleCodes = roles
+      ? roles.map((role) => {
+          if (role.tenantId == getTenantId() || role.tenantId.split(".")[0] == getTenantId()) {
+            return role.code;
+          }
+        })
+      : [];
+      console.log("roleCodes:"+roleCodes);
+      let isCounterEmp = roleCodes.indexOf("PT_CEMP") != -1 ? true:false;
 
  /*    let button;
     if(process.env.REACT_APP_NAME !='Citizen' && propertyDetails && propertyDetails[0] && propertyDetails[0].source ==='LEGACY_RECORD' && Payments.length <= 0){
@@ -443,7 +455,7 @@ class Property extends Component {
         }        
 
                       
-{isMigratedProperty && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
+{isMigratedProperty && isCounterEmp && !isCitizen && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
         || !payLen ) &&
            <Button
            className="tax-button"
@@ -459,7 +471,7 @@ class Property extends Component {
              style={{ lineHeight: "auto", minWidth: "inherit" , marginLeft: "10px"}}
              />   
             }
-               {isMigratedProperty && !isCitizen && Amendment.length<=0 && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
+               {isMigratedProperty && isCounterEmp && !isCitizen && Amendment.length<=0 && (Payments.length<=0 || Payments && Payments.length === 1 && Payments[0].instrumentStatus === "CANCELLED"  
               || !payLen ) && 
                 
               <Button
