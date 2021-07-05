@@ -214,7 +214,6 @@ export const annualRent = {
     required: true,
     pattern: /^([1-9]\d{0,11})(\.(\d{1,2})?)?$/,
     hideField: false,
-    errorMessage: "PT_ANNUAL_RENT_ERROR_MESSAGE",
     numcols: 4,
     formName: "plotDetails",
   },
