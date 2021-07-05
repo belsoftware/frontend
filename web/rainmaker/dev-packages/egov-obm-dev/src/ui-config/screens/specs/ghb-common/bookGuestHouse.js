@@ -11,6 +11,7 @@ import { split } from "lodash";
 import jp from "jsonpath";
 import { getDocumentsList } from "./ghbBookResources/DocumentList";
 import {patterns} from "../utils/constants";
+import {confirmationDialog} from "./bookGuestHouseConfirmDialog";
 
 const header = getCommonHeader({
   labelName: "Search Certificate",
@@ -22,7 +23,7 @@ const onPurposeChange = (action, state, dispatch) =>{
 }
 
 const onCategoryChange = (action, state, dispatch) =>{
-  let category = get(state,"screenConfiguration.preparedFinalObject.ghb.booking.category");
+  let category = get(state,"screenConfiguration.preparedFinalObject.ghb.booking[0].category");
   dispatch(prepareFinalObject("documentsContract", getDocumentsList(category)));
 }
 
@@ -31,6 +32,18 @@ const convertDate = (dateString) =>{
   let splits = dateString.split("-");
   return splits[2]+"-"+splits[1]+"-"+splits[0];
 }
+
+export const showHideConfirmationPopup = (state, dispatch) => {
+  let toggle = get(
+    state.screenConfiguration.screenConfig["bookGuestHouse"],
+   "components.confirmationDialog.props.open",
+   false
+ );
+ dispatch(
+   handleField("bookGuestHouse", 
+   "components.confirmationDialog", "props.open", !toggle)
+ );
+ };
 
 const bookGuestHouse = {
   uiFramework: "material-ui",
@@ -69,14 +82,12 @@ const bookGuestHouse = {
         });
         specialCategoryList.push({"id":"None","name":"None","code":"None"});
         dispatch(prepareFinalObject("ghb.specialCategoryList", specialCategoryList));
-
       }
-
     });
 
-    let fromDate = convertDate(localStorageGet("ghb.search.fromDate"));
-    let toDate = convertDate(localStorageGet("ghb.search.toDate"));
-    dispatch(prepareFinalObject("ghb.booking.fromToDateString", fromDate+" to "+toDate ));
+    let fromDate = localStorageGet("ghb.search.fromDate")? convertDate(localStorageGet("ghb.search.fromDate")):"";
+    let toDate = localStorageGet("ghb.search.toDate")? convertDate(localStorageGet("ghb.search.toDate")):"";
+    dispatch(prepareFinalObject("ghb.booking[0].fromToDateString", fromDate+" to "+toDate ));
 
     //Set the documents data for display
     dispatch(prepareFinalObject("documentsContract", getDocumentsList()));
@@ -123,7 +134,7 @@ const bookGuestHouse = {
               labelKey: "OBM_BOOKING_DATES"
             },
             {
-              jsonPath: "ghb.booking.fromToDateString",
+              jsonPath: "ghb.booking[0].fromToDateString",
               //callBack: getGenderStr
             }
           )
@@ -172,7 +183,7 @@ const bookGuestHouse = {
               xs: 12,
               sm: 4
             },
-            jsonPath: "ghb.booking.residentType",
+            jsonPath: "ghb.booking[0].residentType",
             autoSelect: true,
             visible: true,
             beforeFieldChange: (action, state, dispatch) => {
@@ -188,7 +199,7 @@ const bookGuestHouse = {
             componentPath: "AutosuggestContainer",
             visible:true,
             autoSelect:true,
-            jsonPath: "ghb.booking.category",
+            jsonPath: "ghb.booking[0].category",
             props:{
               autoSelect:true,
               //isClearable:true,
@@ -235,7 +246,7 @@ const bookGuestHouse = {
             componentPath: "AutosuggestContainer",
             visible:true,
             autoSelect:true,
-            jsonPath: "ghb.booking.purpose",
+            jsonPath: "ghb.booking[0].purpose",
             props:{
               sourceJsonPath: "ghb.purposeList",
               autoSelect:true,
@@ -311,7 +322,7 @@ const bookGuestHouse = {
                 },
                 required: true,
                 pattern: getPattern("MobileNo"),
-                jsonPath: "ghb.booking.userDetails[0].mobileNumber",
+                jsonPath: "ghb.booking[0].userDetails[0].mobileNumber",
                 iconObj: {
                   iconName: "search",
                   position: "end",
@@ -347,7 +358,7 @@ const bookGuestHouse = {
                 },
                 required: true,
                 pattern: getPattern("Name"),
-                jsonPath: "ghb.booking.userDetails[0].name",
+                jsonPath: "ghb.booking[0].userDetails[0].name",
                 gridDefination: {
                   xs: 12,
                   sm: 6
@@ -394,7 +405,7 @@ const bookGuestHouse = {
             required: true,
             type:"password",
             pattern: patterns["accountNumber"],
-            jsonPath: "ghb.booking.bankDetails.accountNumber",
+            jsonPath: "ghb.booking[0].bankDetails.accountNumber",
             gridDefination: {
               xs: 12,
               sm: 4
@@ -415,7 +426,7 @@ const bookGuestHouse = {
             required: true,
             type:"password",
             pattern: patterns["accountNumber"],
-            jsonPath: "ghb.booking.bankDetails.repeatAccountNumber",
+            jsonPath: "ghb.booking[0].bankDetails.repeatAccountNumber",
             gridDefination: {
               xs: 12,
               sm: 4
@@ -435,8 +446,8 @@ const bookGuestHouse = {
             },
             required: true,
             type:"password",
-            pattern: patterns["accountNumber"],
-            jsonPath: "ghb.booking.bankDetails.ifscCode",
+            pattern: patterns["ifscCode"],
+            jsonPath: "ghb.booking[0].bankDetails.ifscCode",
             gridDefination: {
               xs: 12,
               sm: 4
@@ -456,7 +467,7 @@ const bookGuestHouse = {
             },
             required: true,
             pattern: patterns["bankName"],
-            jsonPath: "ghb.booking.bankDetails.nameOfBank",
+            jsonPath: "ghb.booking[0].bankDetails.nameOfBank",
             gridDefination: {
               xs: 12,
               sm: 4
@@ -476,7 +487,7 @@ const bookGuestHouse = {
             },
             required: true,
             pattern: patterns["accountHolderName"],
-            jsonPath: "ghb.booking.bankDetails.accountHolderName",
+            jsonPath: "ghb.booking[0].bankDetails.accountHolderName",
             gridDefination: {
               xs: 12,
               sm: 4
@@ -528,8 +539,31 @@ const bookGuestHouse = {
       children: {
         details: footer
       },
+    },
+    confirmationDialog: {
+      componentPath: "Dialog",
+      props: {
+        open: false,
+        maxWidth: "sm",
+        disableValidation: true
+      },
+      children: {
+        dialogContent: {
+          componentPath: "DialogContent",
+          props: {
+            classes: {
+              root: "city-picker-dialog-style"
+            }
+            // style: { minHeight: "180px", minWidth: "365px" }
+          },
+          children: {
+            popup: confirmationDialog
+          }
+        }
+      }
     }
+   }
   }
-}
+
 
 export default bookGuestHouse;

@@ -354,6 +354,13 @@ export const getLabelOnlyValue = (value, props = {}) => {
   };
 };
 
+export const checkIfCitizenEditScreen = () =>{
+  const purpose = getQueryArg(window.location.href, "purpose");
+  const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
+  if(applicationNumber && purpose === "CITIZEN-REVIEW")
+    return true;
+  return false;
+}
 export const loadGuestHouseDetailsMdms = async (action, state, dispatch,data) => {
 
   let requestBody = {
@@ -527,7 +534,7 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
     const cardIndex = fieldInfo && fieldInfo.index ? fieldInfo.index : "0";
     const ownerNo = get(
       state.screenConfiguration.preparedFinalObject,
-      `ghb.booking.userDetails[${cardIndex}].mobileNumber`,
+      `ghb.booking[0].userDetails[${cardIndex}].mobileNumber`,
       ""
     );
     if(!ownerNo){
@@ -545,7 +552,7 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
     }
     const owners = get(
       state.screenConfiguration.preparedFinalObject,
-      `ghb.booking.userDetails`,
+      `ghb.booking[0].userDetails`,
       []
     );
     //owners from search call before modification.
@@ -663,7 +670,7 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
 
           dispatch(
             prepareFinalObject(
-              `ghb.booking.userDetails`,
+              `ghb.booking[0].userDetails`,
               currOwnersArr
             )
           );
