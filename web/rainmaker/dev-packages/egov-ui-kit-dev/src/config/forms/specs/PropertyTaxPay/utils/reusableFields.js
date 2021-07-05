@@ -213,6 +213,7 @@ export const annualRent = {
     toolTipMessage: "PT_TOTAL_ANNUAL_RENT_TOOLTIP_MESSAGE",
     required: true,
     pattern: /^([1-9]\d{0,11})(\.(\d{1,2})?)?$/,
+    errorMessage: "PT_ANNUAL_RENT_ERROR_MESSAGE",
     hideField: false,
     numcols: 4,
     formName: "plotDetails",
