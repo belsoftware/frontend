@@ -18,7 +18,28 @@ const Checkbox = Loadable({
   loading: () => <Loading />
 });
 
+const LocationOnIcon = Loadable({
+  loader: () => import("./icons/LocationOnIcon"),
+  loading: () => <Loading />
+});
+const MapOnIcon = Loadable({
+  loader: () => import("./icons/MapOnIcon"),
+  loading: () => <Loading />
+});
+const LocationLabelWithIcon = Loadable({
+  loader: () => import("./LocationLabelWithIcon"),
+  loading: () => <Loading />
+});
+const MapLabelWithIcon = Loadable({
+  loader: () => import("./MapLabelWithIcon"),
+  loading: () => <Loading />
+});
+
 export {
+  LocationOnIcon,
+  LocationLabelWithIcon,
+  MapLabelWithIcon,
+  MapOnIcon,
   TestAtoms,
   AutoSuggest,
   Checkbox
