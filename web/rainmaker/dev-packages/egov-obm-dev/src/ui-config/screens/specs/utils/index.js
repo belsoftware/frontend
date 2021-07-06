@@ -434,7 +434,7 @@ export const loadGuestHouseDetails = async (action, state, dispatch,data) => {
       "error"
     );
     console.error(e);
-    return [{"name":"Residency","tenantId":"pb.agra","address":"5th Cross, 85 Main Road, Agra","longitude":"12.972442","latitude":"77.580643","contactNo":"87412458652","id":"GH_1","priceText":"Starting at 1200/day","availability":"Available","fullDetails":{"maxAllowedBookingDays":20,"maxAllowedHalls":10},"halls":[{"hallId":"hall1","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}}]}];
+    return [{"name":"Residency","tenantId":"pb.agra","address":"Agra","contactDetails":"87412458652","headerImageUrl":"https://picsum.photos/id/1018/1000/600/","portalUrl":"https://picsum.photos/id/1018/1000/600/","hallDescription":"AC HALL with Dining Hall. 5000 sqft Area. Can accomodate 250 people.","id":"GH_1","geoLocation":"12.972442,77.580643","priceText":"Starting at 1200/day","availability":"Available","fullDetails":{"maxAllowedBookingDays":20,"maxAllowedHalls":10},"halls":[{"hallId":"hall1","dimension":"20 X 20","hallName":"Lakshya","hallCapacity":"400","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}},{"hallId":"hall2","dimension":"20 X 20","hallName":"Lakshya","hallCapacity":"400","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}}]}];
   }
 }
 
@@ -682,3 +682,35 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
     dispatch(toggleSnackbar(true, e.message, "info"));
   }
 };
+
+export const loadBookingDetails = (action, state, dispatch) =>{
+  try{
+    //dispatch(toggleSpinner());
+    let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
+    const tenantId = getQueryArg(window.location.href, "tenantId");
+    const queryParams = [{ key: "applicationNumber", value: applicationNumber },
+      { key: "tenantId", value: tenantId }
+    ];
+    let payload = null;
+    payload = await httpRequest(
+      "post",
+      "egov-obm/hallBooking /_search",
+      "_search",
+      queryParams,
+      {}
+    );
+    return payload;
+  }
+  catch(e)
+  {
+    toggleSnackbar(
+      true,
+      {
+        labelName: "Could not load lease Details",
+        labelKey: "LAMS_API_ERROR"
+      },
+      "error"
+    );
+  }
+  return null;
+}

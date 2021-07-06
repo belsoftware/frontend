@@ -28,11 +28,16 @@ const AutosuggestContainer = Loadable({
   loader: () => import("./AutosuggestContainer"),
   loading: () => <Loading />
 });
+const HallHeaderCard = Loadable({
+  loader: () => import("./HallHeaderCard"),
+  loading: () => <Loading />
+});
 
 export {
   TestContainer,
   ListCard,
   ListCard2,
   DocumentListContainer,
-  AutosuggestContainer
+  AutosuggestContainer,
+  HallHeaderCard
 };

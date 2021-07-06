@@ -2,16 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 import MapOnIcon from "../icons/MapOnIcon";
 import {LabelContainer} from "egov-ui-framework/ui-containers";
-import "./index.css";
+//import "./index.css";
 import get from "lodash/get";
 
 class MapLabelWithIcon extends React.Component {
   render() {
     let {labelKey,labelValue,jsonpath,preparedFinalObject} = this.props || [] ;
-    let longitude = get(preparedFinalObject,jsonpath+".longitude");
-    let latitude = get(preparedFinalObject,jsonpath+".latitude");
+    var  geoLocation =get(preparedFinalObject,jsonpath+".geoLocation");
+    var locationarray=geoLocation.split(',');
     return (
-      <div style={{paddingLeft : "15px",display: 'flex',alignItems: 'center', paddingTop : "10px"}}>
+      <div style={{paddingLeft : "5px",display: 'flex',alignItems: 'center', paddingTop : "10px"}}>
         <MapOnIcon/>
         <LabelContainer
           labelKey={labelKey}
@@ -23,9 +23,9 @@ class MapLabelWithIcon extends React.Component {
             marginLeft : 10
           }}
         />
-        <a href = {`https://www.google.com/maps?q=${longitude},${latitude}`} 
+        <a href = {`https://www.google.com/maps?q=${locationarray[0]},${locationarray[1]}`} 
                   target="_blank" 
-                  style={{marginLeft : "10px", padding:"6px",borderRadius:"8px",backgroundColor:"#e2e2e2"}}>{ `Lat: ${longitude} , Long:  ${latitude}`}</a>
+                  style={{marginLeft : "10px", padding:"6px",borderRadius:"8px",backgroundColor:"#e2e2e2"}}>{ `Lat: ${locationarray[0]} , Long:  ${locationarray[1]}`}</a>
       </div>
     );
   }

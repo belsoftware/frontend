@@ -1,11 +1,14 @@
 import React, { Component } from "react";
-import { Card, Icon, List, Image, AutoSuggest, Button } from "egov-ui-kit/components";
+import { connect } from "react-redux";
+import {Card,Button} from "egov-ui-framework/ui-atoms";
 import {Conatainer} from "egov-ui-framework/ui-atoms";
+import get from "lodash/get";
 import {LabelContainer} from "egov-ui-framework/ui-containers";
 import {RadioButtonsGroup} from "egov-ui-framework/ui-containers";
+import "./index.css";
 //import {Div} from "egov-ui-framework/ui-atoms/HtmlElements";
 
-export default class ListCard2 extends Component {
+class ListCard2 extends Component {
   
   state = {
     results: [],
@@ -36,26 +39,98 @@ export default class ListCard2 extends Component {
       boxShadow: "0 1px 4px 0 rgba(0, 0, 0, 0.14)"
     };
   };
+  hallCallFunction = (hallId)=>{
+    console.log(hallId);
+};
 
   render() {
-    let { listData } = this.props || [{"hallId":"hall1","dimension":"20 X 20","hallName":"Lakshya","hallCapacity":"400","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}},{"hallId":"hall2","dimension":"20 X 20","hallName":"Lakshya","hallCapacity":"400","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}}];   
-    listData = [{"hallId":"hall1","dimension":"20 X 20","hallName":"Lakshya","hallCapacity":"400","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}},{"hallId":"hall2","dimension":"20 X 20","hallName":"Lakshya","hallCapacity":"400","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}}];
+    let {jsonPath,preparedFinalObject } = this.props || [];
+    let listData = get(preparedFinalObject,jsonPath);
     return (
-      <div>Hey whatsupp
-        {/* <Conatainer id="check">
-          Test container
-        </Conatainer> */}
-        {/* <RadioButtonsGroup></RadioButtonsGroup> */}
-        
-        {listData && listData.map((listItem)=>{
-          //return (<div>{listItem.dimension}</div>)
-          // return (<Conatainer>
-          //    {listItem.dimension}
-          //  </Conatainer>)      
-          return (<LabelContainer labelKey={listItem.dimension} labelName={listItem.dimension}/>)
+      <div>
+          {listData && listData.map((listItem)=>
+          { 
+            return (
+                    <Card>
+                          <div>
+                              <LabelContainer
+                                labelKey={`   HallName :  ${listItem.hallId}`}
+                                style={{
+                                        fontSize: "20px",
+                                        fontWeigt: 400,
+                                        marginTop : 80,
+                                        marginLeft : "20px",
+                                        lineSpacing: "50px"
+                                      }}
+                             />
+                           </div>
+                          <div>
+                             <LabelContainer
+                                labelKey={`   Dimension :  ${listItem.dimension}`}
+                                style={{
+                                        color: "rgba(0, 0, 0, 0.6000000238418579)",
+                                        fontSize: "16px",
+                                        fontWeigt: 400,
+                                        marginLeft : "20px",
+                                        marginTop : "50px",
+                                        lineSpacing: 25
+                                      }}
 
-        })}
-      </div>
-    );
-  }
+                              />
+                              <Button
+                                id="map-close-button"
+                                className="pick responsive-action-button"
+                                children={"+  Add"}
+                                style={{
+                                  width: "20px",
+                                  height: "48px",
+                                  marginLeft: "600px"
+                                  }}
+                                variant={"outlined"}
+                                color={"primary"}
+                                onClick={()=> this.hallCallFunction(listItem.hallId)}
+                               />
+                               <Button
+                                id="map-close-button"
+                                className="pick responsive-action-button"
+                                children={"-  Remove"}
+                                style={{
+                                  minWidth: "20px",
+                                  height: "48px",
+                                  marginLeft: "100px"
+                                  }}
+                                variant={"outlined"}
+                                color={"primary"}
+                                onClick={()=> this.hallCallFunction(listItem.hallId)}
+                               />
+                            </div>
+                          <div>
+                              <LabelContainer
+                                labelKey={`   HallCapacity :  ${listItem.hallCapacity}`}
+                                style={{
+                                        fontSize: "14px",
+                                        marginLeft : "20px",
+                                        fontWeigt: 400,
+                                        marginTop : "50px",
+                                        marginBottom : "50px",
+                                        lineSpacing: "25px"
+                                      }}
+                              />
+                            </div>
+                    </Card>
+                  )
+          }
+          )}
+       </div> );
+};
 }
+const mapStateToProps = (state, ownprops) => {
+  const { screenConfiguration } = state;
+  const { jsonPath } = ownprops;
+  const { preparedFinalObject } = screenConfiguration;
+  return { preparedFinalObject, jsonPath };
+};
+
+export default connect(
+    mapStateToProps
+  )(ListCard2);
