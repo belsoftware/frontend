@@ -64,6 +64,7 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
 };
 
 const cbChanged = (action, state, dispatch) => {
+    localStorageSet("ghb.search.tenantId",get(state,"screenConfiguration.preparedFinalObject.ghb.search.tenantId"));
 }
 
 const setVisibilityOptionsSet1 = (state, dispatch, visible) => {

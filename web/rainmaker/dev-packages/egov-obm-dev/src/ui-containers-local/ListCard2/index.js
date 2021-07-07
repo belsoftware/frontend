@@ -5,7 +5,7 @@ import {Conatainer} from "egov-ui-framework/ui-atoms";
 import get from "lodash/get";
 import {LabelContainer} from "egov-ui-framework/ui-containers";
 import {RadioButtonsGroup} from "egov-ui-framework/ui-containers";
-import "./index.css";
+//import "./index.css";
 //import {Div} from "egov-ui-framework/ui-atoms/HtmlElements";
 
 class ListCard2 extends Component {

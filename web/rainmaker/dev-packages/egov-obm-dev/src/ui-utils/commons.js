@@ -13,6 +13,8 @@ import get from "lodash/get";
 import set from "lodash/set";
 import store from "ui-redux/store";
 import { getTranslatedLabel } from "../ui-config/screens/specs/utils";
+import { getFileUrlFromAPI, getFileUrl } from "egov-ui-framework/ui-utils/commons";
+import cloneDeep from "lodash/cloneDeep";
 
 const handleDeletedCards = (jsonObject, jsonPath, key) => {
   let originalArray = get(jsonObject, jsonPath, []);
@@ -488,4 +490,202 @@ export const setApplicationNumberBox = (state, dispatch, applicationNo) => {
       )
     );
   }
+};
+
+export const validateActionFormFields = (preparedFinalObject) => {
+
+  const  termNo = get(
+    preparedFinalObject,
+    `lamsStore.Lease[0].leaseDetails.termNo`,
+    []
+  );
+  if(!termNo || !(new RegExp(/^[0-9]*$/)).test(termNo) || termNo < 1)
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Invalid Term No !", labelKey: "INVALID_TERMNO_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+
+  const annualRent = get(
+    preparedFinalObject,
+    `lamsStore.Lease[0].leaseDetails.annualRent`,
+    []
+  );
+  if(!annualRent || !(new RegExp(/^[0-9]*$/)).test(annualRent) || annualRent < 0)
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Invalid Annual Rent !", labelKey: "INVALID_ANNUALRENT_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+
+  const lesseAsPerGLR = get(
+    preparedFinalObject,
+    `lamsStore.Lease[0].leaseDetails.lesseAsPerGLR`,
+    []
+  );
+  if(!lesseAsPerGLR || lesseAsPerGLR.length > 2000)
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Lesse As per GLR should have less than 2000 charecters", labelKey: "INVALID_LESSEASPERGLR_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+
+  const termExpiryDate = get(preparedFinalObject,`lamsStore.Lease[0].leaseDetails.termExpiryDate`,[]);
+  const finalTermExpiryDate = get(preparedFinalObject,`lamsStore.Lease[0].leaseDetails.finalTermExpiryDate`,[]);
+  const applicationType = get(preparedFinalObject,`lamsStore.Lease[0].applicationType`,[]);
+
+  if(!termExpiryDate)
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Invalid Term Expiry Date", labelKey: "INVALID_TERMEXPDATE_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+
+  if(!finalTermExpiryDate)
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Invalid Final Term Expiry Date", labelKey: "INVALID_FINALTERMEXPDATE_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+
+  if(termExpiryDate && finalTermExpiryDate && termExpiryDate>finalTermExpiryDate)
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Term Expiry cannot be after Final term Expiry Date", labelKey: "LAMS_DATEDIFF_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+
+  if(!validateActionFormForComments(preparedFinalObject))
+    return false;
+    
+  return true;
+}
+
+export const getWorkflowCodeFromRoles = (tenantId) => {
+
+  if(!tenantId)
+    tenantId=getTenantId();
+  let lamsRoles = getLamsRoles();
+  let queryParams = [];
+  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1 && lamsRoles.indexOf('LR_APPROVER_DEO') > -1 )
+  { 
+    alert("Looks like DEO and CEO are same. Please correct this.");
+  }
+  else
+  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1)
+  {
+    return "LAMS_NewLR_CEO_V3";
+  }
+  else
+  if(lamsRoles.indexOf('LR_APPROVER_DEO') > -1)
+  {
+    return "LAMS_NewLR_DEO_V3";
+  }
+
+  return queryParams;
+}
+
+export const validateActionFormForComments = (preparedFinalObject) => {
+
+  const  comment = get(
+    preparedFinalObject,
+    `lamsStore.Lease[0].comment`,
+    []
+  );
+
+  if(!comment)
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Please fill all mandatory fields !", labelKey: "COMMON_MANDATORY_MISSING_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+  if(comment && comment.length > 80)
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Comments should be less than 80 Charecters", labelKey: "LAMS_COMMENTS_LEN_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+
+  let pattern = commentsPattern;
+  if(!(new RegExp(pattern)).test(comment))
+  {
+    store.dispatch(toggleSnackbar(
+      true,
+      { labelName: "Comments to only have : Alphabets, Numbers and , . - _", labelKey: "LAMS_COMMENTS_PATTERN_ERROR" },
+      "error"
+    ));
+    return false;
+  }
+
+  return true;
+}
+
+const getAllFileStoreIds = async ProcessInstances => {
+  return (
+    ProcessInstances &&
+    ProcessInstances.reduce((result, eachInstance) => {
+      if (eachInstance.documents) {
+        let fileStoreIdArr = eachInstance.documents.map(item => {
+          return item.fileStoreId;
+        });
+        result[eachInstance.id] = fileStoreIdArr.join(",");
+      }
+      return result;
+    }, {})
+  );
+};
+
+export const addWflowFileUrl = async (ProcessInstances, prepareFinalObject) => {
+  const fileStoreIdByAction = await getAllFileStoreIds(ProcessInstances);
+  const fileUrlPayload = await getFileUrlFromAPI(
+    Object.values(fileStoreIdByAction).join(",")
+  );
+  const processInstances = cloneDeep(ProcessInstances);
+    processInstances.map(item => {
+    if (item.documents && item.documents.length > 0) {
+      let nonEmptyDoc = [];
+      item.documents.forEach(i => {
+        if (i.fileStoreId && fileUrlPayload[i.fileStoreId]) {        
+          i.link = getFileUrl(fileUrlPayload[i.fileStoreId]);
+          i.title = `OBM_${i.documentType}`;
+          i.name = decodeURIComponent(
+            getFileUrl(fileUrlPayload[i.fileStoreId])
+              .split("?")[0]
+              .split("/")
+              .pop()
+              .slice(13)
+          );
+          i.linkText = "View";
+          nonEmptyDoc.push(i);
+        }        
+      });
+      item.documents = nonEmptyDoc;
+    }
+  });  
+  console.log("Process instance now is ", processInstances);
+  prepareFinalObject("workflow.ProcessInstances", processInstances);
 };

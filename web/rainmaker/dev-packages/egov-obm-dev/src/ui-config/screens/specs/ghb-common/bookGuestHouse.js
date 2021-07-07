@@ -61,6 +61,7 @@ const bookGuestHouse = {
       }
     });
 
+    //Load Guest House Mdms
     loadGuestHouseDetailsMdms(action, state, dispatch, data).then((response) => {
 
       if (response && response.MdmsRes && response.MdmsRes.CommunityHallBooking 
@@ -85,9 +86,21 @@ const bookGuestHouse = {
       }
     });
 
+  
     let fromDate = localStorageGet("ghb.search.fromDate")? convertDate(localStorageGet("ghb.search.fromDate")):"";
     let toDate = localStorageGet("ghb.search.toDate")? convertDate(localStorageGet("ghb.search.toDate")):"";
+    //let tenantId = localStorageGet("ghb.search.tenantId")? convertDate(localStorageGet("ghb.search.tenantId")):"";
     dispatch(prepareFinalObject("ghb.booking[0].fromToDateString", fromDate+" to "+toDate ));
+
+    //Set the intial booking date and tenantId
+    dispatch(prepareFinalObject("ghb.booking[0].fromDate", fromDate));
+    dispatch(prepareFinalObject("ghb.booking[0].toDate", toDate));
+    dispatch(prepareFinalObject("ghb.booking[0].tenantId", tenantId));
+    dispatch(prepareFinalObject("ghb.booking[0].hallId", guestHouseId));
+
+    //Set the workflow code and action
+    dispatch(prepareFinalObject("ghb.booking[0].workflowCode", "OBM_HALLBOOKING_V1"));
+    dispatch(prepareFinalObject("ghb.booking[0].action", "APPLY"));
 
     //Set the documents data for display
     dispatch(prepareFinalObject("documentsContract", getDocumentsList()));
@@ -199,7 +212,7 @@ const bookGuestHouse = {
             componentPath: "AutosuggestContainer",
             visible:true,
             autoSelect:true,
-            jsonPath: "ghb.booking[0].category",
+            jsonPath: "ghb.booking[0].specialCategory",
             props:{
               autoSelect:true,
               //isClearable:true,
@@ -529,39 +542,7 @@ const bookGuestHouse = {
         },
         type: "array"
       }
-    }),
-    div: {
-      uiFramework: "custom-atoms",
-      componentPath: "Div",
-      props: {
-        className: "common-div-css"
-      },
-      children: {
-        details: footer
-      },
-    },
-    confirmationDialog: {
-      componentPath: "Dialog",
-      props: {
-        open: false,
-        maxWidth: "sm",
-        disableValidation: true
-      },
-      children: {
-        dialogContent: {
-          componentPath: "DialogContent",
-          props: {
-            classes: {
-              root: "city-picker-dialog-style"
-            }
-            // style: { minHeight: "180px", minWidth: "365px" }
-          },
-          children: {
-            popup: confirmationDialog
-          }
-        }
-      }
-    }
+    })
    }
   }
 

@@ -18,8 +18,14 @@ const UploadSingleFile = Loadable({
   loading: () => <Loading />
 });
 
+const Footer = Loadable({
+  loader: () => import("./Footer"),
+  loading: () => <Loading />
+});
+
 export {
   TestMolecules,
   DocumentList,
-  UploadSingleFile
+  UploadSingleFile,
+  Footer
 };

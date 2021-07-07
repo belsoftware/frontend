@@ -28,8 +28,24 @@ const AutosuggestContainer = Loadable({
   loader: () => import("./AutosuggestContainer"),
   loading: () => <Loading />
 });
+
 const HallHeaderCard = Loadable({
   loader: () => import("./HallHeaderCard"),
+  loading: () => <Loading />
+});
+
+const DownloadFileContainer = Loadable({
+  loader: () => import("./DownloadFileContainer"),
+  loading: () => <Loading />
+});
+
+const WorkFlowContainer = Loadable({
+  loader: () => import("./WorkFlowContainer"),
+  loading: () => <Loading />
+});
+
+const TaskStatusContainer = Loadable({
+  loader: () => import("./TaskStatusContainer"),
   loading: () => <Loading />
 });
 
@@ -39,5 +55,8 @@ export {
   ListCard2,
   DocumentListContainer,
   AutosuggestContainer,
-  HallHeaderCard
+  HallHeaderCard,
+  DownloadFileContainer,
+  WorkFlowContainer,
+  TaskStatusContainer
 };

@@ -2,7 +2,7 @@ import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 import { validate } from "egov-ui-framework/ui-redux/screen-configuration/utils";
 import { getUserInfo } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
-import { getQueryArg,getTransformedLocalStorgaeLabels ,getLocaleLabels} from "egov-ui-framework/ui-utils/commons";
+import { getFileUrl, getQueryArg,getTransformedLocalStorgaeLabels ,getLocaleLabels} from "egov-ui-framework/ui-utils/commons";
 import { handleScreenConfigurationFieldChange as handleField, toggleSpinner , toggleSnackbar} from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {
   getCommonCard,
@@ -14,7 +14,7 @@ import {prepareFinalObject} from "egov-ui-framework/ui-redux/screen-configuratio
 import store from "ui-redux/store";
 import { openPdf, printPdf } from "egov-ui-kit/utils/commons";
 import { getFileUrlFromAPI } from "egov-ui-framework/ui-utils/commons";
-
+import { localStorageSet } from "egov-ui-kit/utils/localStorageUtils";
 
 export const downloadPdf = (link, openIn = '_blank') => {
   var win = window.open(link, '_self');
@@ -103,7 +103,7 @@ export const transformById = (payload, id) => {
   );
 };
 
-export const getMdmsData = async  requestBody=> {
+export const getMdmsData = async (requestBody)=> {
   try {
     const response = await httpRequest(
       "post",
@@ -683,7 +683,7 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
   }
 };
 
-export const loadBookingDetails = (action, state, dispatch) =>{
+export const loadBookingDetails = async (action, state, dispatch) =>{
   try{
     //dispatch(toggleSpinner());
     let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
@@ -694,7 +694,7 @@ export const loadBookingDetails = (action, state, dispatch) =>{
     let payload = null;
     payload = await httpRequest(
       "post",
-      "egov-obm/hallBooking /_search",
+      "egov-obm/hallBooking/_search",
       "_search",
       queryParams,
       {}
@@ -706,11 +706,99 @@ export const loadBookingDetails = (action, state, dispatch) =>{
     toggleSnackbar(
       true,
       {
-        labelName: "Could not load lease Details",
-        labelKey: "LAMS_API_ERROR"
+        labelName: "Could not load Booking Details",
+        labelKey: "ERR_API_ERROR"
       },
       "error"
     );
   }
   return null;
 }
+
+export const loadWorkflowMasterData = async (action, state, dispatch) => {
+  try{
+    const queryParams = constructQueryParamsBasedOnCurrentWorkflowType(state);
+    //console.log("The query params is ", queryParams);
+    let payload = null;
+    payload = await httpRequest(
+      "post",
+      "egov-workflow-v2/egov-wf/businessservice/_search",
+      "_search",
+      queryParams,
+      {}
+    );
+    let businessServiceData = payload;
+    localStorageSet("businessServiceData", JSON.stringify(businessServiceData.BusinessServices));
+  }
+  catch(e)
+  {
+    toggleSnackbar(
+      true,
+      {
+        labelName: "Could not load Workflow Master Details",
+        labelKey: "ERR_API_ERROR"
+      },
+      "error"
+    );
+    let businessServiceData = {"ResponseInfo":{"apiId":"Mihy","ver":".01","ts":null,"resMsgId":"uief87324","msgId":"20170310130900|en_IN","status":"successful"},"BusinessServices":[{"tenantId":"pb.agra","uuid":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","businessService":"LAMS_NewLR_CEO_V3","business":"LAMS","businessServiceSla":2592000000,"states":[{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"50a1366e-ce14-4163-bb08-fd304b1aa5b6","tenantId":"pb.agra","businessServiceId":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","sla":null,"state":null,"applicationStatus":null,"docUploadRequired":false,"isStartState":true,"isTerminateState":false,"isStateUpdatable":true,"actions":[{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"d6dbd0f0-94b4-4a95-b0f4-9c4810d51792","tenantId":"pb.agra","currentState":"50a1366e-ce14-4163-bb08-fd304b1aa5b6","action":"APPLY","nextState":"5c20de8d-67cc-403f-80f8-28ae470bca27","roles":["CITIZEN","LR_CEMP"]}]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"5c20de8d-67cc-403f-80f8-28ae470bca27","tenantId":"pb.agra","businessServiceId":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","sla":null,"state":"APPLIED","applicationStatus":"APPLIED","docUploadRequired":false,"isStartState":false,"isTerminateState":false,"isStateUpdatable":true,"actions":[{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"89ce7d14-ecd1-4492-b5c4-048280a2e9bf","tenantId":"pb.agra","currentState":"5c20de8d-67cc-403f-80f8-28ae470bca27","action":"SENDBACK","nextState":"6f4c0a2f-9859-4563-b3b5-7e7c817c5a82","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"4f96efac-e3ad-45e2-ab5f-b7964501eda3","tenantId":"pb.agra","currentState":"5c20de8d-67cc-403f-80f8-28ae470bca27","action":"APPROVE","nextState":"4b270402-937c-422a-ae51-bdd5bdf6b310","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"00ee84f5-187a-4adb-a4d1-7f422bc5e8ba","tenantId":"pb.agra","currentState":"5c20de8d-67cc-403f-80f8-28ae470bca27","action":"REJECT","nextState":"cefe5b31-cb56-4aad-a014-eb528fc81cdc","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"59f2d550-7c9c-4d24-b8e1-febd5863c995","tenantId":"pb.agra","currentState":"5c20de8d-67cc-403f-80f8-28ae470bca27","action":"DGDE-EXAMINATION","nextState":"bff5f407-5076-460c-9fd2-45161d89b27a","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"ca822b73-3cee-4caf-a0e8-5881cca4f929","tenantId":"pb.agra","currentState":"5c20de8d-67cc-403f-80f8-28ae470bca27","action":"MOD-EXAMINATION","nextState":"a2a89111-327f-41fd-a817-6cd2125d9ba0","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"bf58061c-a828-4105-be47-37a6be5dad16","tenantId":"pb.agra","currentState":"5c20de8d-67cc-403f-80f8-28ae470bca27","action":"PDDE-EXAMINATION","nextState":"730c04d2-e152-4bfc-bc01-b8d266f581e5","roles":["LR_APPROVER_CEO"]}]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"6f4c0a2f-9859-4563-b3b5-7e7c817c5a82","tenantId":"pb.agra","businessServiceId":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","sla":null,"state":"CITIZEN-REVIEW","applicationStatus":"CITIZEN-REVIEW","docUploadRequired":false,"isStartState":false,"isTerminateState":false,"isStateUpdatable":true,"actions":[{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"d757bb44-db9e-47d0-a0c1-e26659cb1b95","tenantId":"pb.agra","currentState":"6f4c0a2f-9859-4563-b3b5-7e7c817c5a82","action":"APPLY","nextState":"5c20de8d-67cc-403f-80f8-28ae470bca27","roles":["CITIZEN","LR_CEMP"]}]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"4b270402-937c-422a-ae51-bdd5bdf6b310","tenantId":"pb.agra","businessServiceId":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","sla":null,"state":"APPROVED","applicationStatus":"APPROVED","docUploadRequired":false,"isStartState":false,"isTerminateState":true,"isStateUpdatable":false,"actions":null},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"cefe5b31-cb56-4aad-a014-eb528fc81cdc","tenantId":"pb.agra","businessServiceId":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","sla":null,"state":"REJECTED","applicationStatus":"REJECTED","docUploadRequired":false,"isStartState":false,"isTerminateState":true,"isStateUpdatable":false,"actions":null},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"730c04d2-e152-4bfc-bc01-b8d266f581e5","tenantId":"pb.agra","businessServiceId":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","sla":null,"state":"PDDE-EXAMINATION","applicationStatus":"PDDE-EXAMINATION","docUploadRequired":false,"isStartState":false,"isTerminateState":false,"isStateUpdatable":true,"actions":[{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"cde7e2d5-afed-4e71-8ef4-a5b391112db3","tenantId":"pb.agra","currentState":"730c04d2-e152-4bfc-bc01-b8d266f581e5","action":"REJECT","nextState":"cefe5b31-cb56-4aad-a014-eb528fc81cdc","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"f0e68fd9-0254-4637-87e5-9b6a289bcc3d","tenantId":"pb.agra","currentState":"730c04d2-e152-4bfc-bc01-b8d266f581e5","action":"DGDE-EXAMINATION","nextState":"bff5f407-5076-460c-9fd2-45161d89b27a","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"d759338a-7622-4954-b51b-8f8580a5df63","tenantId":"pb.agra","currentState":"730c04d2-e152-4bfc-bc01-b8d266f581e5","action":"MOD-EXAMINATION","nextState":"a2a89111-327f-41fd-a817-6cd2125d9ba0","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"482e328c-8813-4521-aff7-fb46a809022e","tenantId":"pb.agra","currentState":"730c04d2-e152-4bfc-bc01-b8d266f581e5","action":"APPROVE","nextState":"4b270402-937c-422a-ae51-bdd5bdf6b310","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"87f79a95-5830-40bd-bb19-f6a8373ffebf","tenantId":"pb.agra","currentState":"730c04d2-e152-4bfc-bc01-b8d266f581e5","action":"SENDBACK","nextState":"6f4c0a2f-9859-4563-b3b5-7e7c817c5a82","roles":["LR_APPROVER_CEO"]}]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"bff5f407-5076-460c-9fd2-45161d89b27a","tenantId":"pb.agra","businessServiceId":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","sla":null,"state":"DGDE-EXAMINATION","applicationStatus":"DGDE-EXAMINATION","docUploadRequired":false,"isStartState":false,"isTerminateState":false,"isStateUpdatable":true,"actions":[{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"fe16e2b4-569d-4fbe-88c0-ecbabce08196","tenantId":"pb.agra","currentState":"bff5f407-5076-460c-9fd2-45161d89b27a","action":"REJECT","nextState":"cefe5b31-cb56-4aad-a014-eb528fc81cdc","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"01bab03b-2fe9-42e0-b14d-e5bd6bf8946d","tenantId":"pb.agra","currentState":"bff5f407-5076-460c-9fd2-45161d89b27a","action":"PDDE-EXAMINATION","nextState":"730c04d2-e152-4bfc-bc01-b8d266f581e5","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"ce81f064-b38c-47be-8281-3c964b44a9f7","tenantId":"pb.agra","currentState":"bff5f407-5076-460c-9fd2-45161d89b27a","action":"MOD-EXAMINATION","nextState":"a2a89111-327f-41fd-a817-6cd2125d9ba0","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"2c81637d-58a6-46cd-9fea-4106ec9fbf41","tenantId":"pb.agra","currentState":"bff5f407-5076-460c-9fd2-45161d89b27a","action":"SENDBACK","nextState":"6f4c0a2f-9859-4563-b3b5-7e7c817c5a82","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"8173a265-b520-4f08-96d0-b54f445a7014","tenantId":"pb.agra","currentState":"bff5f407-5076-460c-9fd2-45161d89b27a","action":"APPROVE","nextState":"4b270402-937c-422a-ae51-bdd5bdf6b310","roles":["LR_APPROVER_CEO"]}]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"a2a89111-327f-41fd-a817-6cd2125d9ba0","tenantId":"pb.agra","businessServiceId":"9c9e29ec-b6f7-4f60-b60a-51c7e71e66e2","sla":null,"state":"MOD-EXAMINATION","applicationStatus":"MOD-EXAMINATION","docUploadRequired":false,"isStartState":false,"isTerminateState":false,"isStateUpdatable":true,"actions":[{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"c66ed12c-d95f-4a6e-83a2-ae858d3167a8","tenantId":"pb.agra","currentState":"a2a89111-327f-41fd-a817-6cd2125d9ba0","action":"REJECT","nextState":"cefe5b31-cb56-4aad-a014-eb528fc81cdc","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"5b32bbee-3715-4cd9-8401-dcd3d59c92be","tenantId":"pb.agra","currentState":"a2a89111-327f-41fd-a817-6cd2125d9ba0","action":"PDDE-EXAMINATION","nextState":"730c04d2-e152-4bfc-bc01-b8d266f581e5","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"16321a56-ce37-4a10-9e57-acd560de59f0","tenantId":"pb.agra","currentState":"a2a89111-327f-41fd-a817-6cd2125d9ba0","action":"DGDE-EXAMINATION","nextState":"bff5f407-5076-460c-9fd2-45161d89b27a","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"e92e4e97-e3f4-473c-a86c-59c6606a496b","tenantId":"pb.agra","currentState":"a2a89111-327f-41fd-a817-6cd2125d9ba0","action":"SENDBACK","nextState":"6f4c0a2f-9859-4563-b3b5-7e7c817c5a82","roles":["LR_APPROVER_CEO"]},{"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165},"uuid":"e1f77a65-0f57-4fbe-943f-d96188aefd1e","tenantId":"pb.agra","currentState":"a2a89111-327f-41fd-a817-6cd2125d9ba0","action":"APPROVE","nextState":"4b270402-937c-422a-ae51-bdd5bdf6b310","roles":["LR_APPROVER_CEO"]}]}],"auditDetails":{"createdBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","lastModifiedBy":"16eb93da-53a1-46a6-9bef-5d4dabf111ce","createdTime":1609392239165,"lastModifiedTime":1609392239165}}]};
+    localStorageSet("businessServiceData", JSON.stringify(businessServiceData.BusinessServices));
+  }
+};
+
+//This function can be used on both Employee and Citizen side functionality.
+export const constructQueryParamsBasedOnCurrentWorkflowType = (state) => {
+
+  let workflowCode = get(state, "screenConfiguration.preparedFinalObject.ghb.booking[0].workflowCode");
+  let tenantId = get(state, "screenConfiguration.preparedFinalObject.ghb.booking[0].tenantId");
+
+  let queryParams = [
+    { key: "tenantId", value: tenantId }
+  ];
+  queryParams.push({ key: "businessServices", value: workflowCode })
+
+  return queryParams;
+}
+
+export const setDocumentsInfo = async (state, dispatch) => {
+  let applicationDocuments = get(
+    state.screenConfiguration.preparedFinalObject,
+    "ghb.booking[0].wfDocuments",
+    []
+  );
+
+  let uploadedDocuments = {};
+  let fileStoreIds =
+    applicationDocuments &&
+    applicationDocuments.map(item => item.fileStoreId).join(",");
+  const fileUrlPayload =
+    fileStoreIds && (await getFileUrlFromAPI(fileStoreIds));
+  applicationDocuments &&
+    applicationDocuments.forEach((item, index) => {
+      uploadedDocuments[index] = [
+        {
+          name:
+            (fileUrlPayload &&
+              fileUrlPayload[item.fileStoreId] &&
+              decodeURIComponent(
+                getFileUrl(fileUrlPayload[item.fileStoreId])
+                  .split("?")[0]
+                  .split("/")
+                  .pop()
+                  .slice(13)
+              )) ||
+            `Document - ${index + 1}`,
+          fileStoreId: item.fileStoreId,
+          link: fileUrlPayload[item.fileStoreId],
+          title: item.documentType,
+          tenantId: item.tenantId,
+          id: item.id,
+          linkText: 'OBM_VIEW'
+        }
+      ];
+    });
+  let documentArray = Object.keys(uploadedDocuments).map((k) => uploadedDocuments[k][0]);
+  dispatch(
+    prepareFinalObject("BookingDocumentsData", documentArray)
+  );
+};
+
