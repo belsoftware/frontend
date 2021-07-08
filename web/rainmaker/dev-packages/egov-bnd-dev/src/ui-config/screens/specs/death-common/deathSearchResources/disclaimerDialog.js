@@ -20,6 +20,29 @@ export const disclaimerDialog = getCommonContainer({
   
   header: getCommonHeader({
       labelName: "Confirm Download",
+      labelKey: "BND_IMPORTANT"
+    },
+    {
+      style: {
+        fontSize: "20px"
+      }
+    }),
+  divider1: getDivider(),
+  downloadNote: getCommonContainer({
+    value0: getCommonCaption({
+      labelName: "",
+      labelKey: "BND_DOWNLOAD_NOTE"
+      },
+      {
+        style: {
+          fontSize: "14px"
+      }
+      }),
+      break1 : getBreak()
+  }),
+  confirmationContents: getCommonContainer({
+    header: getCommonHeader({
+      labelName: "Confirm Download",
       labelKey: "BND_DOWNLOAD_TERMS"
     },
     {
@@ -27,31 +50,19 @@ export const disclaimerDialog = getCommonContainer({
         fontSize: "20px"
       }
     }),
-  confirmationContents: getCommonContainer({
-    // header: getCommonHeader({
-    //   labelName: "Confirm Download",
-    //   labelKey: "BND_DOWNLOAD_TERMS"
-    // },
-    // {
-    //   style: {
-    //     fontSize: "20px"
-    //   }
-    // }),
     //break0:getDivider(),
     termsContainer: getCommonGrayCard({
-      // info1: getCommonCaption({
-      //   labelName: "*Note",
-      //   labelKey: "LAMS_DSIGN_NOTE"
-      // }),
-      // info1: getCommonCaption({
-      //   labelName: "Death Cert Dowload terms",
-      //   labelKey: "BND_DOWNLOAD_TERMS"
-      // }),
-      // divider1: getDivider(),
-      value0: getCommonParagraph({
+      value0: getCommonCaption({
         labelName:
           "Important : The application form is to be signed by the original lessee or his/her successors/heir. Otherwise considered invalid.",
         labelKey: "BND_DOWNLOAD_TERMS_CONTENT1"
+      },
+      {
+        style: {
+          fontSize: "14px"
+      }
+      }),  
+      break2 : getBreak()
       }),
       // value1: getCommonParagraph({
       //   labelName:
@@ -90,8 +101,8 @@ export const disclaimerDialog = getCommonContainer({
     //     content: "Test"
     //   }
     // },
-    break1: getBreak,
-    checkBox:{
+  break2: getBreak,
+  checkBox:{
       required: true,
       uiFramework: "custom-atoms-local",
       moduleName: "egov-lams",
@@ -133,7 +144,7 @@ export const disclaimerDialog = getCommonContainer({
     //   visible: true,
     //   jsonPath: "Challan.additionalDetail.cancellComment"
     // }),
-    div: {
+  div: {
       uiFramework: "custom-atoms",
       componentPath: "Div",
       props: {
@@ -206,5 +217,5 @@ export const disclaimerDialog = getCommonContainer({
         }
       }
     }
-  })
+  
 });
