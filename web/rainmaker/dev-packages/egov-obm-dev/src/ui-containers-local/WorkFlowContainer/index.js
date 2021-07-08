@@ -11,10 +11,10 @@ import orderBy from "lodash/orderBy";
 import set from "lodash/set";
 import React from "react";
 import { connect } from "react-redux";
-import { Footer } from "../../ui-molecules-local";
-//import { Footer } from "egov-workflow/ui-molecules-local";
-import TaskStatusContainer from "../TaskStatusContainer";
-//import TaskStatusContainer from "egov-workflow/ui-containers-local/TaskStatusContainer";
+//import { Footer } from "../../ui-molecules-local";
+import { Footer } from "egov-workflow/ui-molecules-local";
+//import TaskStatusContainer from "../TaskStatusContainer";
+import TaskStatusContainer from "egov-workflow/ui-containers-local/TaskStatusContainer";
 import  {validateActionFormFields, validateActionFormForComments} from "../../ui-utils/commons";
 
 
@@ -665,9 +665,9 @@ class WorkFlowContainer extends React.Component {
     //console.log(" Check the values here.",ProcessInstances[0].documents[0].title, moduleName, showFooter);
     return (
       <div>
-        {/* {ProcessInstances && ProcessInstances.length > 0 && (
+        {ProcessInstances && ProcessInstances.length > 0 && (
           <TaskStatusContainer ProcessInstances={ProcessInstances} moduleName={moduleName}/>
-        )} */}
+        )}
         {showFooter &&
           <Footer
             handleFieldChange={prepareFinalObject}
