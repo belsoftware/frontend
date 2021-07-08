@@ -23,9 +23,15 @@ const Footer = Loadable({
   loading: () => <Loading />
 });
 
+const ActionDialog = Loadable({
+  loader: () => import("./ActionDialog"),
+  loading: () => <Loading />
+});
+
 export {
   TestMolecules,
   DocumentList,
   UploadSingleFile,
-  Footer
+  Footer,
+  ActionDialog
 };
