@@ -34,7 +34,10 @@ const MapLabelWithIcon = Loadable({
   loader: () => import("./MapLabelWithIcon"),
   loading: () => <Loading />
 });
-
+const ApplicationNo = Loadable({
+  loader: () => import("./ApplicationNo"),
+  loading: () => <Loading />
+});
 export {
   LocationOnIcon,
   LocationLabelWithIcon,
@@ -42,5 +45,6 @@ export {
   MapOnIcon,
   TestAtoms,
   AutoSuggest,
-  Checkbox
+  Checkbox,
+  ApplicationNo
 };

@@ -11,6 +11,8 @@ const header = getCommonHeader({
   labelKey: "BND_BIRTH_SEARCH_DOWNLOAD"
 });
 
+const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
+
 const viewGuestHouse = {
   uiFramework: "material-ui",
   name: "viewGuestHouse",
@@ -65,6 +67,46 @@ const viewGuestHouse = {
         className: "common-div-css search-preview"
       },
       children: {
+        headerDiv: {
+          uiFramework: "custom-atoms",
+          componentPath: "Container",
+          children: {
+            header1: {
+              gridDefination: {
+                xs: 12,
+                sm: 8
+              },
+              ...getCommonContainer({
+
+              })
+            },
+            helpSection: {
+              uiFramework: "custom-atoms",
+              componentPath: "Container",
+              props: {
+                color: "primary",
+                style: { justifyContent: "flex-end" }
+              },
+              gridDefination: {
+                xs: 12,
+                sm: 4,
+                align: "right"
+              }
+            }
+          }
+        },
+        applicationNumber: {
+          uiFramework: "custom-atoms-local",
+          moduleName: "egov-obm",
+          componentPath: "ApplicationNo",
+          props: {
+            number: applicationNumber,
+            label:{
+              labelKey:"OBM_APPL_NUMBER",
+              labelValue:"Appl No: "
+            } 
+          }
+        },
         taskStatus: {
           uiFramework: "custom-containers-local",
           componentPath: "WorkFlowContainer",
