@@ -49,6 +49,21 @@ const TaskStatusContainer = Loadable({
   loading: () => <Loading />
 });
 
+const TaskStatusComponents = Loadable({
+  loader: () => import("./TaskStatusComponents"),
+  loading: () => <Loading />
+});
+
+const TaskDialog = Loadable({
+  loader: () => import("./TaskDialog"),
+  loading: () => <Loading />
+});
+
+const Stepper = Loadable({
+  loader: () => import("./Stepper"),
+  loading: () => <Loading />
+});
+
 export {
   TestContainer,
   ListCard,
@@ -58,5 +73,8 @@ export {
   HallHeaderCard,
   DownloadFileContainer,
   WorkFlowContainer,
-  TaskStatusContainer
+  TaskStatusContainer,
+  Stepper,
+  TaskDialog,
+  TaskStatusComponents
 };

@@ -237,25 +237,19 @@ class ActionDialog extends React.Component {
     } else {
       wfDocumentsPath = `${dataPath}.wfDocuments`
     }
+
+    //tobeadded for water tanker
     const status = get(
       state.screenConfiguration.preparedFinalObject,
-      `lamsStore.Lease[0].status`
-    );
-    const applicationType = get(
-      state.screenConfiguration.preparedFinalObject,
-      `lamsStore.Lease[0].applicationType`
+      `ghb.booking[0].status`
     );
 
     //alert("Status is "+status+" " +applicationType);
     switch (status) {
       case "APPLIED":
+      case "DOC_VERIFICATION":
+      case "PENDING_PAYMENT":
       case "APPROVED":
-      case "REJECTED":
-      case "CEO-EXAMINATION":
-      case "DEO-EXAMINATION":
-      case "PDDE-EXAMINATION":
-      case "DGDE-EXAMINATION":
-      case "MOD-EXAMINATION":
         return (
           <Dialog
             fullScreen={fullscreen}
@@ -433,6 +427,18 @@ class ActionDialog extends React.Component {
                             handleFieldChange(`${dataPath}.comment`, e.target.value)
                           }
                           jsonPath={`${dataPath}.comment`}
+                          required={true}
+                          placeholder={fieldConfig.comments.placeholder}
+                        />
+                        <TextFieldContainer
+                          InputLabelProps={{ shrink: true }}
+                          label={fieldConfig.comments.label}
+                          onChange={function(e){
+                            handleFieldChange(`${dataPath}.comment2`, e.target.value)
+                            console.log(handleFieldChange,`${dataPath}.comment2`, e.target.value);
+                          }
+                          }
+                          jsonPath={`${dataPath}.comment2`}
                           required={true}
                           placeholder={fieldConfig.comments.placeholder}
                         />

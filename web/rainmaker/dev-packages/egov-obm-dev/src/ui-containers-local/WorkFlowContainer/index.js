@@ -11,8 +11,8 @@ import orderBy from "lodash/orderBy";
 import set from "lodash/set";
 import React from "react";
 import { connect } from "react-redux";
-//import { Footer } from "../../ui-molecules-local";
-import { Footer } from "egov-workflow/ui-molecules-local";
+import { Footer } from "../../ui-molecules-local";
+//import { Footer } from "egov-workflow/ui-molecules-local";
 //import TaskStatusContainer from "../TaskStatusContainer";
 import TaskStatusContainer from "egov-workflow/ui-containers-local/TaskStatusContainer";
 import  {validateActionFormFields, validateActionFormForComments} from "../../ui-utils/commons";
@@ -366,9 +366,8 @@ class WorkFlowContainer extends React.Component {
       const { ghb } = preparedFinalObject;
       const status = ghb.booking[0].status;
     
-      alert("Status checko "+status);
+      //alert("Status checko "+status);
       switch(status){
-        
         case "APPLIED":
         case "DOC_VERIFICATION":
         case "PENDING_APPROVAL":
@@ -461,7 +460,7 @@ class WorkFlowContainer extends React.Component {
     const businessServiceData = JSON.parse(
       localStorageGet("businessServiceData")
     );
-    alert("Module Name is "+moduleName);
+    //alert("Module Name is "+moduleName);
     const data = find(businessServiceData, { businessService: moduleName });
     let roles = [];
     if (nextAction === currentAction) {
