@@ -683,14 +683,25 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
   }
 };
 
-export const loadBookingDetails = async (action, state, dispatch) =>{
+export const loadBookingDetails = async (state, dispatch, data) =>{
   try{
     //dispatch(toggleSpinner());
-    let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
-    const tenantId = getQueryArg(window.location.href, "tenantId");
-    const queryParams = [{ key: "applicationNumber", value: applicationNumber },
-      { key: "tenantId", value: tenantId }
-    ];
+    let {applicationNumber, tenantId, fromDate, toDate, status, hallId, phoneNo} = data; 
+  
+    const queryParams = [{ key: "tenantId", value: tenantId }];
+    if(applicationNumber)
+      queryParams.push({key: "applicationNumber", value: applicationNumber});
+    if(fromDate)
+      queryParams.push({key: "fromDate", value: fromDate});
+    if(toDate)
+      queryParams.push({key: "toDate", value: toDate});
+    if(status)
+      queryParams.push({key: "status", value: status});
+    if(hallId)
+      queryParams.push({key: "hallId", value: hallId});
+    if(phoneNo)
+      queryParams.push({key: "phoneNo", value: phoneNo});
+
     let payload = null;
     payload = await httpRequest(
       "post",
