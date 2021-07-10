@@ -38,6 +38,10 @@ const ApplicationNo = Loadable({
   loader: () => import("./ApplicationNo"),
   loading: () => <Loading />
 });
+const Calendar = Loadable({
+  loader: () => import("./Calendar"),
+  loading: () => <Loading />
+});
 export {
   LocationOnIcon,
   LocationLabelWithIcon,
@@ -46,5 +50,6 @@ export {
   TestAtoms,
   AutoSuggest,
   Checkbox,
-  ApplicationNo
+  ApplicationNo,
+  Calendar
 };

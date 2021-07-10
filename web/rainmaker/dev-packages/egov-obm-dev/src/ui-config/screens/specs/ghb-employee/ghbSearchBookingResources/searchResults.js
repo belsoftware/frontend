@@ -101,7 +101,7 @@ export const searchResults = {
       }
     ],
     title: {
-      labelName: "Search Results for Birth",
+      labelName: "Search Results for Booking Search",
       labelKey: "OBM_SEARCH_TABLE_HEADER"
     },
     rows : "",

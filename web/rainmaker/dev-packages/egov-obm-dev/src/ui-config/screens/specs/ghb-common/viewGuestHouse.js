@@ -107,6 +107,15 @@ const bookGuestHouse = {
     //     labelKey: "OBM_SELECTED_DETAILS"
     //   })
     // }),
+    bookingCalender: {
+      uiFramework: "custom-atoms-local",
+      moduleName: "egov-obm",
+      componentPath: "Calender",
+      props: {
+        content: "For this property",
+        jsonPath : "ghb.viewGuestHouseDetails.calender",
+      },
+    },
     bookingDetails: getCommonCard({
       subHeader: getCommonTitle({
         labelName: "Booking Details",
