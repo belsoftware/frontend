@@ -155,7 +155,7 @@ class Footer extends React.Component {
         if(bill){             
           due = bill.Bill[0].totalAmount
         }
-         
+       console.log("due---"+due); 
        // let due = getQueryArg(window.location.href, "due");
         let errLabel =
           applicationNo && applicationNo.includes("WS")
@@ -205,7 +205,7 @@ class Footer extends React.Component {
     //if(applicationType === "MODIFY"){
     downloadMenu && downloadMenu.push(editButton);
     ifUserRoleExists('WS_FIELD_INSPECTOR')
-   // downloadMenu && downloadMenu.push(deactivateButton); 
+    downloadMenu && downloadMenu.push(deactivateButton); 
    /* if (
       businessService.includes("ws-services-calculation") ||
       businessService.includes("sw-services-calculation")

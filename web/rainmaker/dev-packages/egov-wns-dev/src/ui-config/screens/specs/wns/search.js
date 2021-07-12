@@ -86,6 +86,10 @@ const getBusinessService=async(businessService, dispatch)=>{
         const applicationStatus=commonGetAppStatus(payload);
           dispatch(prepareFinalObject("applyScreenMdmsData.searchScreen.applicationStatusModifySW", applicationStatus));
       }
+      if ( payload.BusinessServices[0].businessService === "DeactivateWSConnection") {
+        const applicationStatus=commonGetAppStatus(payload);
+          dispatch(prepareFinalObject("applyScreenMdmsData.searchScreen.applicationStatusDeactivateWS", applicationStatus));
+      }
     }
 }
 const ifUserRoleExists = () => {

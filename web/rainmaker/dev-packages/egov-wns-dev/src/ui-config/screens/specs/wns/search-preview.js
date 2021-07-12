@@ -3,7 +3,7 @@ import {
   getCommonContainer, getCommonGrayCard, getCommonHeader,
   getCommonSubHeader, getCommonTitle,
   getLabelWithValueForModifiedLabel,
- 
+  ifUserRoleExists
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, unMountScreen } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getQueryArg, setBusinessServiceDataToLocalStorage, setDocuments } from "egov-ui-framework/ui-utils/commons";
@@ -100,14 +100,18 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
     { key: "history", value: true },
     { key: "tenantId", value: tenantId }
   ];
+  //console.log("service data--"+getQueryArg(window.location.href, "service", null));
   if (getQueryArg(window.location.href, "service", null) != null) {
     resetData();
   }
 
   let Response = await getWorkFlowData(queryObj);
+  //console.log("Response data--"+Response);
   let processInstanceAppStatus = Response.ProcessInstances[0].state.applicationStatus;
   let workflowName = Response.ProcessInstances[0].businessService ;
-  
+  //console.log("applicationNumber data--"+applicationNumber);
+  //console.log("processInstanceAppStatus data--"+processInstanceAppStatus);
+  //console.log("workflowName data--"+workflowName);
   //Search details for given application Number
   if (applicationNumber) {
 
@@ -118,10 +122,12 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
         { display: "none" }
       );
     }
-
+    //console.log("edited data--"+getQueryArg(window.location.href, "edited"));
     if (!getQueryArg(window.location.href, "edited")) {
+      //console.log("search result");
       (await searchResults(action, state, dispatch, applicationNumber, processInstanceAppStatus));
     } else {
+      //console.log("going in else--------");
       let applyScreenObject = get(state.screenConfiguration.preparedFinalObject, "applyScreen");
       applyScreenObject.applicationNo.includes("WS") ? applyScreenObject.service = serviceConst.WATER : applyScreenObject.service = serviceConst.SEWERAGE;
       let parsedObject = parserFunction(findAndReplace(applyScreenObject, "NA", null));
@@ -185,7 +191,9 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
               dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
             }
           }
-          billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);            
+
+          ifUserRoleExists('WS_FIELD_INSPECTOR')
+            billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);          
           if (billEstimate !== null && billEstimate !== undefined) {
             if (billEstimate.BillEstimation != undefined) {              
               dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
@@ -219,6 +227,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
 
 
     let connectionType = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].connectionType");
+    //console.log("connectionType "+connectionType);
     if (connectionType === "Metered") {
       set(
         action.screenConfig,
@@ -290,6 +299,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
     const status = getTransformedStatus(
       get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus")
     );
+    //console.log("status  val "+status);
     if (process.env.REACT_APP_NAME !== "Citizen" && (processInstanceAppStatus !== 'PENDING_FOR_PAYMENT' && processInstanceAppStatus !== "PENDING_FOR_CONNECTION_ACTIVATION" && processInstanceAppStatus !== 'CONNECTION_ACTIVATED')) {
 
       dispatch(
@@ -318,9 +328,10 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
     }
 
     let data = get(state, "screenConfiguration.preparedFinalObject");
-
+    //console.log("data  val "+data);
     const obj = setStatusBasedValue(status);
-
+    //console.log("obj "+obj);
+    //console.log("status again "+status);
     // Get approval details based on status and set it in screenconfig
 
     if (
@@ -392,7 +403,7 @@ const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
 
  
 
-
+  //console.log("flag---"+flag);
   //If Road cutting is not entered
   
    if(flag){
@@ -656,6 +667,7 @@ const screenConfig = {
   name: "search-preview",
   beforeInitScreen: (action, state, dispatch) => {
     const status = getQueryArg(window.location.href, "status");
+    //console.log("beforeInitScreen status----"+status)
     const tenantId = getQueryArg(window.location.href, "tenantId");
     let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
     const queryObject = [
@@ -736,7 +748,8 @@ const screenConfig = {
             bserviceTemp: (service === serviceConst.WATER) ? "WS.ONE_TIME_FEE" : "SW.ONE_TIME_FEE",
             redirectQueryString: redirectQueryString,
             editredirect: editredirect,
-            beforeSubmitHook: (data) => {              
+            beforeSubmitHook: (data) => {    
+              //console.log("data inside hook---"+data);          
               data = data[0];
               data && data.wsTaxHeads && data.wsTaxHeads.forEach(item => {
                 if (!item.amount || item.length === null) {
@@ -789,7 +802,7 @@ const screenConfig = {
         taskDetails,
       }
     },
-    breakUpDialog: {
+  /*  breakUpDialog: {
       uiFramework: "custom-containers-local",
       moduleName: "egov-wns",
       componentPath: "ViewBreakupContainer",
@@ -827,7 +840,7 @@ const screenConfig = {
       children: {
         popup: {}
       }
-    },
+    },*/
   }
 };
 

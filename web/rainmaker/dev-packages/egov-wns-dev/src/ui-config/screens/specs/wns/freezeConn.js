@@ -4,7 +4,8 @@ import {
     getCommonHeader,
     getCommonTitle,
     getCommonGrayCard,
-    getCommonSubHeader,convertEpochToDate
+    getCommonSubHeader,convertEpochToDate, getTextField,getPattern,getDateField
+ 
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { 
     createEstimateData,
@@ -14,7 +15,7 @@ import {
    } from "../utils";
 //import { getSearchResults, getSearchResultsForSewerage, fetchBill, getDescriptionFromMDMS, getConsumptionDetails, billingPeriodMDMS, serviceConst } from "../../../../ui-utils/commons";
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, unMountScreen } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
+import { getQueryArg,getTodaysDateInYMD } from "egov-ui-framework/ui-utils/commons";
 import get from "lodash/get";
 import set from "lodash/set";
 import { httpRequest } from "../../../../ui-utils";
@@ -22,15 +23,139 @@ import { freezeConnDetailsFooter } from "./freezeConnection/freezeConnDetailsFoo
 import './freezeConnection/index.css'
 import { getSearchResults, getSearchResultsForSewerage, fetchBill, getDescriptionFromMDMS, getConsumptionDetails, billingPeriodMDMS, serviceConst } from "../../../../ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-import { additionDetails } from "./applyResource/additionalDetails";
+//import { additionDetails } from "./applyResource/additionalDetails";
 
 
 
 const getConnectionDetailsFooterAction =  freezeConnDetailsFooter;
 
+const getPlumberRadioButton = {
+  uiFramework: "custom-containers-local",
+  moduleName: "egov-wns",
+  componentPath: "RadioGroupContainer",
+  gridDefination: { xs: 12, sm: 12 },
+  jsonPath: "applyScreen.additionalDetails.detailsProvidedBy",
+  props: {
+    label: { key: "WS_ADDN_DETAILS_PLUMBER_PROVIDED_BY" },
+    buttons: [
+      { labelKey: "WS_PLUMBER_ULB", value: "ULB" },
+      { labelKey: "WS_PLUMBER_SELF", value: "Self" },
+    ],
+    required: false
+  },
+  type: "array"
+};
+
+const additionDetails = getCommonCard({
+  header: getCommonHeader({
+    labelKey: "WS_COMMON_ADDN_DETAILS_HEADER"
+  }),
+  
+  plumberDetailsContainer: getCommonGrayCard({
+    subHeader: getCommonTitle({
+      labelKey: "WS_COMMON_PLUMBER_DETAILS"
+    }),
+     plumberDetails: getCommonContainer({
+      getPlumberRadioButton,
+      plumberLicenceNo: getTextField({
+        label: {
+          labelKey: "WS_ADDN_DETAILS_PLUMBER_LICENCE_NO_LABEL"
+        },
+        placeholder: {
+          labelKey: "WS_ADDN_DETAILS_PLUMBER_LICENCE_NO_PLACEHOLDER"
+        },
+        gridDefination: {
+          xs: 12,
+          sm: 6
+        },
+        required: false,
+        pattern:  /^[a-zA-Z0-9/-]*$/i,
+        errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+        jsonPath: "applyScreen.plumberInfo[0].licenseNo"
+      }),
+      plumberName: getTextField({
+        label: {
+          labelKey: "WS_ADDN_DETAILS_PLUMBER_NAME_LABEL"
+        },
+        placeholder: {
+          labelKey: "WS_ADDN_DETAILS_PLUMBER_NAME_PLACEHOLDER"
+        },
+        gridDefination: {
+          xs: 12,
+          sm: 6
+        },
+        required: false,
+        pattern: getPattern("Name"),
+        errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+        jsonPath: "applyScreen.plumberInfo[0].name"
+      }),
+      plumberMobNo: getTextField({
+        label: {
+          labelKey: "WS_ADDN_DETAILS_PLUMBER_MOB_NO_LABEL"
+        },
+        placeholder: {
+          labelKey: "WS_ADDN_DETAILS_PLUMBER_MOB_NO_LABEL_PLACEHOLDER"
+        },
+        gridDefination: { xs: 12, sm: 6 },
+        iconObj: { label: "+91 |", position: "start" },
+        required: false,
+        pattern: getPattern("MobileNo"),
+        errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+        jsonPath: "applyScreen.plumberInfo[0].mobileNumber"
+      }),
+     // visible:true,
+    })
+  }),
+   
+  activationDetailsContainer: getCommonGrayCard({
+    subHeader: getCommonTitle({
+      labelKey: "WS_DEACTIVATION_DETAILS"
+    }),
+    activeDetails: getCommonContainer({
+      connectionExecutionDate: getDateField({
+        label: { labelName: "connectionDeactivationDate", labelKey: "WS_SERV_DETAIL_CONN_FREEZING_DATE" },
+        // placeholder: {
+        //   labelName: "Select From Date",
+        //   labelKey: "WS_FROM_DATE_PLACEHOLDER"
+        // },
+        gridDefination: {
+          xs: 12,
+          sm: 6
+        },
+        required: true,
+        pattern: getPattern("Date"),
+        errorMessage: "ERR_INVALID_DATE",
+        jsonPath: "applyScreen.connectionDeactivationDate",
+        props: {
+          inputProps: {
+            min: getTodaysDateInYMD()
+          }
+        }
+      }), 
+      initialMeterReading: getTextField({
+        label: {
+          labelKey: "WS_ADDN_DETAILS_LAST_METER_READING"
+        },
+        placeholder: {
+          labelKey: "WS_ADDN_DETAILS_LAST_METER_READING_PLACEHOLDER"
+        },
+        gridDefination: {
+          xs: 12,
+          sm: 6
+        },
+        required: false,
+        pattern: /^[0-9]\d{0,9}(\.\d{1,3})?%?$/,
+        errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
+        jsonPath: "applyScreen.additionalDetails.lastMeterReading"
+      })
+    })
+  })
+});
 
 const pageReset = (dispatch) => {
-  dispatch(handleField("freezeConn",
+
+  dispatch(prepareFinalObject("applyScreen", {}));
+  /*dispatch(handleField("freezeConn",
     "components",
     "div", {}));
 
@@ -86,7 +211,7 @@ const pageReset = (dispatch) => {
         "visible",
         false
       )
-    );
+    );*/
   console.log("setting all cards as false");
   // dispatch(handleField("search",
   // "components",
@@ -98,7 +223,7 @@ const pageReset = (dispatch) => {
  // dispatch(unMountScreen("search-preview"));
  // dispatch(prepareFinalObject("WaterConnection", []));
  // dispatch(prepareFinalObject("SewerageConnection", []));
-  dispatch(prepareFinalObject("applyScreen", {}));
+  //dispatch(prepareFinalObject("applyScreen", {}));
   //dispatch(prepareFinalObject("searchScreen", {}));
  // dispatch(prepareFinalObject("connectionHolders", []));
  // dispatch(prepareFinalObject("documentsUploadRedux", {}));
@@ -392,6 +517,7 @@ const screenConfig = {
     beforeInitScreen: (action, state, dispatch) => {
        // pageReset(dispatch);
        console.log("in this paage ---------->>>");
+       let consumerCode = getQueryArg(window.location.href, "connectionNumber");
        beforeInitFn(action, state, dispatch, consumerCode);
         set(
       action.screenConfig,
