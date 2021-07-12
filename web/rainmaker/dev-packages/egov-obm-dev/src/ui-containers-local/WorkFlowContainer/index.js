@@ -33,7 +33,6 @@ class WorkFlowContainer extends React.Component {
   }
 
   componentDidMount = async () => {
-    alert("Hey component mounted");
     const { prepareFinalObject, toggleSnackbar } = this.props;
     const applicationNumber = getQueryArg(
       window.location.href,
@@ -77,7 +76,6 @@ class WorkFlowContainer extends React.Component {
           payload.ProcessInstances
         );
         console.log("Check now",processInstances);
-        alert("Hey i am here");
         addWflowFileUrl(processInstances, prepareFinalObject);
       } else {
         toggleSnackbar(
@@ -504,7 +502,8 @@ class WorkFlowContainer extends React.Component {
       return isLastState;
     }
       catch(e){
-        location.reload();
+        console.error(e);
+        //location.reload();
       }
   };
 
@@ -524,7 +523,8 @@ class WorkFlowContainer extends React.Component {
     }
     catch(e)
     {
-      location.reload();
+      console.error(e);
+      //location.reload();
     }
   };
 
@@ -562,7 +562,8 @@ class WorkFlowContainer extends React.Component {
       return editAction;
     }
     catch(e){
-      location.reload();
+      console.error(e);
+      //location.reload();
     }
   };
 

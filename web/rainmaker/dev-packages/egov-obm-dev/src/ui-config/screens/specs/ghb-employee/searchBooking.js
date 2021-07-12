@@ -12,7 +12,7 @@ import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
 const header = getCommonHeader({
   labelName: "Search Guest House",
-  labelKey: "OBM_GHB_SEARCH"
+  labelKey: "OBM_SEARCH_BOOKINGS"
 });
 
 const searchBooking = {

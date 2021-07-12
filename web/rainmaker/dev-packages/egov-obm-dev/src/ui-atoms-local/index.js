@@ -38,8 +38,8 @@ const ApplicationNo = Loadable({
   loader: () => import("./ApplicationNo"),
   loading: () => <Loading />
 });
-const Calendar = Loadable({
-  loader: () => import("./Calendar"),
+const Calender = Loadable({
+  loader: () => import("./Calender"),
   loading: () => <Loading />
 });
 export {
@@ -51,5 +51,5 @@ export {
   AutoSuggest,
   Checkbox,
   ApplicationNo,
-  Calendar
+  Calender
 };

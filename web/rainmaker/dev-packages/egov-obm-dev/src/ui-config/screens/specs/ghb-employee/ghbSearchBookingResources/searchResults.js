@@ -12,6 +12,7 @@ import {
   prepareFinalObject,
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import {showHideConfirmationPopup} from "./ghbSearchCard";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
 export const searchResults = {
   uiFramework: "custom-molecules",
@@ -60,7 +61,13 @@ export const searchResults = {
       },
       {
         labelName: "Application Number",
-        labelKey: "OBM_APPL_NO"
+        labelKey: "OBM_APPL_NO",
+        options: {
+          filter: false,
+          customBodyRender: (value, tableMeta) => (
+              <a href="javascript:void(0)" onClick={() => onRowClick(tableMeta.rowData)}>{value}</a>
+          )
+        }
       },
       {
         labelName: "Application Date",
@@ -90,15 +97,15 @@ export const searchResults = {
       //     customBodyRender: (value, tableMeta) => value === "PAY" ? (tableMeta.rowData[4] > 0 ? getActionButton(value, tableMeta):(tableMeta.rowData[4] <= 0 && tableMeta.rowData[13] ? getActionButton(value, tableMeta) : "")) : getActionButton(value, tableMeta)
       //   }
       // },
-      {
-        labelName: "OBM_ACTION",
-        labelKey: "OBM_ACTION",
-        options: {
-          display: true,
-          viewColumns  :true,
-          customBodyRender: (value, tableMeta) => getViewButton(value, tableMeta)
-        }
-      }
+      // {
+      //   labelName: "OBM_ACTION",
+      //   labelKey: "OBM_ACTION",
+      //   options: {
+      //     display: true,
+      //     viewColumns  :true,
+      //     customBodyRender: (value, tableMeta) => getViewButton(value, tableMeta)
+      //   }
+      // }
     ],
     title: {
       labelName: "Search Results for Booking Search",
@@ -171,3 +178,11 @@ const getViewButton = (value, tableMeta) => {
     </a>
   )
 }
+
+const onRowClick = rowData => {
+
+  store.dispatch(
+    setRoute(`/ghb-common/viewBooking?applicationNumber=${rowData[2]}&tenantId=${rowData[1]}`)
+  );
+
+};

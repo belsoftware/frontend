@@ -28,10 +28,28 @@ const ActionDialog = Loadable({
   loading: () => <Loading />
 });
 
+const TaskDialog = Loadable({
+  loader: () => import("./TaskDialog"),
+  loading: () => <Loading />
+});
+
+const Stepper = Loadable({
+  loader: () => import("./Stepper"),
+  loading: () => <Loading />
+});
+
+const TaskStatusComponents = Loadable({
+  loader: () => import("./TaskStatusComponents"),
+  loading: () => <Loading />
+});
+
 export {
   TestMolecules,
   DocumentList,
   UploadSingleFile,
   Footer,
-  ActionDialog
+  ActionDialog,
+  TaskDialog,
+  Stepper,
+  TaskStatusComponents
 };

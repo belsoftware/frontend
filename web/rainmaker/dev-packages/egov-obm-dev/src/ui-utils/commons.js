@@ -689,3 +689,56 @@ export const addWflowFileUrl = async (ProcessInstances, prepareFinalObject) => {
   console.log("Process instance now is ", processInstances);
   prepareFinalObject("workflow.ProcessInstances", processInstances);
 };
+
+//This function should be used only on the employee side.
+export const constructQueryParamsBasedOnLamsRoles = (tenantId) => {
+
+  if(!tenantId)
+    tenantId=getTenantId();
+  let lamsRoles = getLamsRoles();
+  let queryParams = [];
+  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1 && lamsRoles.indexOf('LR_APPROVER_DEO') > -1 )
+  { 
+    alert("Looks like DEO and CEO are same. Please correct this.");
+  }
+  else
+  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1)
+  {
+    queryParams.push({ key: "tenantId", value: tenantId})
+    queryParams.push({ key: "role", value: "LR_APPROVER_CEO"})
+  }
+  else
+  if(lamsRoles.indexOf('LR_APPROVER_DEO') > -1)
+  {
+    let deoRoleName = lamsRoles.find(x => x.indexOf("DEO_") >= 0)
+    queryParams.push({ key: "role", value: deoRoleName})
+  }
+
+  return queryParams;
+}
+
+export const constructQueryParamsBasedOnLamsRoles2 = (tenantId) => {
+
+  if(!tenantId)
+    tenantId=getTenantId();
+  let lamsRoles = getLamsRoles();
+  let queryParams = [];
+  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1 && lamsRoles.indexOf('LR_APPROVER_DEO') > -1 )
+  { 
+    alert("Looks like DEO and CEO are same. Please correct this.");
+  }
+  else
+  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1)
+  {
+    queryParams.push({ key: "tenantId", value: tenantId})
+    queryParams.push({ key: "businessServices", value: "LAMS_NewLR_CEO_V3"})
+  }
+  else
+  if(lamsRoles.indexOf('LR_APPROVER_DEO') > -1)
+  {
+    queryParams.push({ key: "tenantId", value: tenantId})
+    queryParams.push({ key: "businessServices", value: "LAMS_NewLR_DEO_V3"})
+  }
+
+  return queryParams;
+}

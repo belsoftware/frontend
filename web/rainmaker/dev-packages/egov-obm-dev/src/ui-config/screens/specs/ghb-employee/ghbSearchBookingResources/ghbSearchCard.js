@@ -16,22 +16,22 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
 
  //Clear advanced Search
  let componentPath = "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer2.children.details.children";
- for(var child in get(state,"screenConfiguration.screenConfig.searchGuestHouse."+componentPath))
+ for(var child in get(state,"screenConfiguration.screenConfig.searchBooking."+componentPath))
  {
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchBooking",
      componentPath+"."+child,
      "props.value",
      ""
    ));
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchBooking",
      componentPath+"."+child,
      "props.helperText",
      ""
    ));
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchBooking",
      componentPath+"."+child,
      "props.error",
      false
@@ -40,22 +40,22 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
 
  //Clear Mandatory Search Attributes
  componentPath = "components.div.children.ghbSearchCard.children.cardContent.children.searchContainerCommon.children";
- for(var child in get(state,"screenConfiguration.screenConfig.searchGuestHouse."+componentPath))
+ for(var child in get(state,"screenConfiguration.screenConfig.searchBooking."+componentPath))
  {
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchBooking",
      componentPath+"."+child,
      "props.value",
      ""
    ));
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchBooking",
      componentPath+"."+child,
      "props.helperText",
      ""
    ));
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchBooking",
      componentPath+"."+child,
      "props.error",
      false
@@ -70,7 +70,7 @@ const cbChanged = (action, state, dispatch) => {
 const setVisibilityOptionsSet1 = (state, dispatch, visible) => {
  dispatch(
    handleField(
-     "searchGuestHouse",
+     "searchBooking",
      "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer1",
      "visible",
      visible
@@ -81,7 +81,7 @@ const setVisibilityOptionsSet1 = (state, dispatch, visible) => {
 const setVisibilityOptionsSet2 = (state, dispatch, visible) => {
  dispatch(
    handleField(
-     "searchGuestHouse",
+     "searchBooking",
      "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer2",
      "visible",
      visible
@@ -91,12 +91,12 @@ const setVisibilityOptionsSet2 = (state, dispatch, visible) => {
 
 export const showHideConfirmationPopup = (state, dispatch) => {
  let toggle = get(
-   state.screenConfiguration.screenConfig["searchGuestHouse"],
+   state.screenConfiguration.screenConfig["searchBooking"],
   "components.div.children.ghbSearchCard.children.cardContent.children.disclaimerDialog.props.open",
   false
 );
 dispatch(
-  handleField("searchGuestHouse", 
+  handleField("searchBooking", 
   "components.div.children.ghbSearchCard.children.cardContent.children.disclaimerDialog", "props.open", !toggle)
 );
 };
