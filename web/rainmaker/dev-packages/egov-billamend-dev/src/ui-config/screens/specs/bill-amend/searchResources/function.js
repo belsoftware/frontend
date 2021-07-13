@@ -3,7 +3,7 @@ import get from "lodash/get";
 import { getLocaleLabels } from "egov-ui-framework/ui-utils/commons";
 import { getBillAmendSearchResult, searchBill } from "../../../../../ui-utils/commons";
 import { validateFields } from "../../utils";
-
+import {getPropertyDetails } from "../../bill-amend/utils";
 export const getAddress=(tenantId,locality)=>{
   if(!tenantId&&!locality){
     return'NA';
@@ -35,7 +35,7 @@ export const searchApiCall = async (state, dispatch) => {
     "search"
   );
   if (isSearchBoxFirstRowValid) {
-    isSearchBoxFirstRowValid = get(searchScreenObject, 'mobileNumber', '') == "" && get(searchScreenObject, 'amendmentId', '') == "" && get(searchScreenObject, 'consumerCode', '') == "" ? false : true;
+    isSearchBoxFirstRowValid = get(searchScreenObject, 'mobileNumber', '') == "" && get(searchScreenObject, 'amendmentId', '') == "" && get(searchScreenObject, 'consumerCode', '') == "" && get(searchScreenObject, 'oldpropertyid', '') == ""? false : true;
   }
 
   if (!isSearchBoxFirstRowValid) {
@@ -81,6 +81,19 @@ export const searchApiCall = async (state, dispatch) => {
       "searchScreenMdmsData.BillingService.BusinessService"
     ).filter(item => item.code === searchScreenObject.businesService);
 
+    if(get(searchScreenObject, 'oldpropertyid', '')!= ""){
+      const resp1 = await getPropertyDetails(queryObject)
+      const propertyId = resp1 && resp1.Properties && resp1.Properties[0].propertyId;
+      console.log("propertyId::",propertyId)
+      queryObject.push({
+        "key": 'consumerCode',
+        "value": propertyId
+      });
+      delete queryObject["oldpropertyid"];
+    }
+    
+console.log("queryObject==",queryObject)
+    
     const responseFromAPI = await getBillAmendSearchResult(queryObject, dispatch)
     const Amendments = (responseFromAPI && responseFromAPI.Amendments) || [];
 
@@ -89,7 +102,7 @@ export const searchApiCall = async (state, dispatch) => {
         "key": 'consumerCode',
         "value": get(responseFromAPI, 'Amendments[0].consumerCode', '')
       })
-    } else if (get(searchScreenObject, 'mobileNumber', '') == "" &&get(searchScreenObject, 'consumerCode', '') == "" && get(searchScreenObject, 'amendmentId', '') != "") {
+    } else if (get(searchScreenObject, 'mobileNumber', '') == "" && get(searchScreenObject, 'oldpropertyid', '') == "" &&get(searchScreenObject, 'consumerCode', '') == "" && get(searchScreenObject, 'amendmentId', '') != "") {
       dispatch(
         handleField(
           "search",

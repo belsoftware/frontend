@@ -42,6 +42,14 @@ const resetFields = (state, dispatch) => {
   dispatch(
     handleField(
       "search",
+      "components.div.children.searchCard.children.cardContent.children.searchContainer.children.oldPropertyId",
+      "props.value",
+      ""
+    )
+  );
+  dispatch(
+    handleField(
+      "search",
       "components.div.children.searchCard.children.cardContent.children.searchContainer.children.serviceCategory",
       "props.value",
       ""
@@ -63,7 +71,7 @@ const resetFields = (state, dispatch) => {
       ""
     )
   );
-  dispatch(prepareFinalObject("searchScreen", { tenantId: tenantId, businessService: "", mobileNumber: "", amendmentId: "", consumerCode: "" }));
+  dispatch(prepareFinalObject("searchScreen", { tenantId: tenantId, businessService: "", mobileNumber: "", amendmentId: "", consumerCode: "", oldpropertyid: "" }));
 };
 
 export const searchCard = getCommonCard({
@@ -221,6 +229,24 @@ export const searchCard = getCommonCard({
       visible: true,
       pattern: /^[a-zA-Z0-9-/]*$/i,
       jsonPath: "searchScreenBillAmend.consumerCode",
+      gridDefination: {
+        xs: 12,
+        sm: 4
+      }
+    }),
+    oldPropertyId: getTextField({
+      label: {
+        labelName: "Old Property No",
+        labelKey: "BILL_OLDPROPERTY_CODE_LABEL"
+      },
+      placeholder: {
+        labelName: "Enter Old Property Code",
+        labelKey: "BILL_OLDPROPERTY_CODE_PLACEHOLDER"
+      },
+      required: false,
+      visible: true,
+      
+      jsonPath: "searchScreenBillAmend.oldpropertyid",
       gridDefination: {
         xs: 12,
         sm: 4

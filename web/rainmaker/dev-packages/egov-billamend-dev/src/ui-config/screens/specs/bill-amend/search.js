@@ -93,7 +93,7 @@ const screenConfig = {
     getData(action, state, dispatch);
     const tenantId = getTenantId();
     if (tenantId) {
-      dispatch(prepareFinalObject("searchScreenBillAmend", { tenantId: tenantId, businessService: "", mobileNumber: "", amendmentId: "", consumerCode: "" }));
+      dispatch(prepareFinalObject("searchScreenBillAmend", { tenantId: tenantId, businessService: "", mobileNumber: "", amendmentId: "", consumerCode: "" ,oldpropertyid: ""}));
       const ulbComponentJsonPath = "components.div.children.searchCard.children.cardContent.children.searchContainer.children.ulb";
 
       dispatch(
