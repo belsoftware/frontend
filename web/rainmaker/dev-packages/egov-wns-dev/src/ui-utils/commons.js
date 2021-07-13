@@ -663,6 +663,10 @@ const parserFunction = (state) => {
                 queryObject.additionalDetails.detailsProvidedBy !== undefined &&
                 queryObject.additionalDetails.detailsProvidedBy !== null
             ) ? queryObject.additionalDetails.detailsProvidedBy : "",
+            lastMeterReading:(
+                queryObject.additionalDetails !== undefined &&
+                queryObject.additionalDetails.lastmeterreading !== undefined
+            ) ? parseFloat(queryObject.additionalDetails.lastmeterreading) : null,
         }
     }
     queryObject = { ...queryObject, ...parsedObject }
