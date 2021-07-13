@@ -17,7 +17,7 @@ const mapStateToProps = (state, ownProps) => {
   const estimate = {
     fees,
     extra: [
-      { textLeft: "The approval note amount will be automatically applied in the upcoming bill" },
+      { textLeft: "BILL_TOOLTIP_NOTE_MSG" },
     ],
     amountType
   };

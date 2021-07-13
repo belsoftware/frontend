@@ -60,6 +60,15 @@ const styles = {
     }
 };
 
+function totalCurrentDemandAmount(arr) {
+    if(Array.isArray(arr)) {
+        return arr
+        .map(item => (item.demand ? item.demand : 0))
+        .reduce((prev, next) => prev + next, 0);
+    } else {
+        return 0;
+    }
+}
 function totalAmount(arr) {
     if(Array.isArray(arr)) {
         return arr
@@ -81,6 +90,7 @@ function totalAmount(arr) {
 function FeesEstimateCard(props) {
     const { classes, estimate } = props;
     const total = totalAmount(estimate.fees);
+    const totalDemand = totalCurrentDemandAmount(estimate.fees)
     // const amountType = getAmountType(estimate.fees);
     return (
 
@@ -151,10 +161,13 @@ function FeesEstimateCard(props) {
                     </Grid>
                     <Divider style={{ marginBottom: 5 }} />
                     <Grid container>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                         <LabelContainer labelName="Reduced Amount(Rs)" labelKey="BILL_ADJUSTMENT_AMOUNT_TOTAL" style={{fontWeight:"bold"}}/>
                         </Grid>
-                        <Grid item xs={6} align="right" style={{ paddingRight: 0 }}>
+                        <Grid item xs={4} align="right" style={{ paddingRight: 0 }}>
+                            <Typography variant="body2">{totalDemand}</Typography>
+                        </Grid>
+                        <Grid item xs={4} align="right" style={{ paddingRight: 0 }}>
                             <Typography variant="body2">{total}</Typography>
                         </Grid>
                     </Grid>

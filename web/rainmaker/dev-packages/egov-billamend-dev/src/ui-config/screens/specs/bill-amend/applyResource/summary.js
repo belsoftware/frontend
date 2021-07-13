@@ -244,9 +244,13 @@ const summary = getCommonCard({
                             labelKey: "PT_LOCATION"
                         },
                         {
-                            jsonPath: "Properties[0].address.location"
+                            jsonPath: "Properties[0].address.location",
+                            localePrefix: {
+                                moduleName: "PT_COMMON",
+                                masterName: "PROPERTY_LOCATION"
 
                         }
+                    }
                     ),
                     ward: getLabelWithValue(
                         {
