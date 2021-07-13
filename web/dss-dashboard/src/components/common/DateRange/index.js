@@ -121,6 +121,17 @@ class DateRange extends React.Component {
           }
         }
 
+        case 'FROM BEGINNING':
+        return {
+          title: "FROM BEGINNING",
+          value: {
+            startDate: moment().set('year', 2020).set('month', 10).set('date', 1).unix(),
+            endDate: moment().month(2).endOf('month').add(1, 'years').unix(),
+            interval: 'week'
+          }
+        }
+
+
       default:
         return this.getFinancialYearObj(value)
     }
