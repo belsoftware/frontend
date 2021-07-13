@@ -111,8 +111,8 @@ const renderSearchConnectionTable = async (state, dispatch) => {
             }); 
           }
 
-          let billResults = await fetchBill(queryObjectForWaterFetchBill, dispatch)
-          billResults ? billResults.Bill.map(bill => {
+          let billResults = await fetchBill(queryObjectForWaterFetchBill, dispatch)         
+          billResults && billResults.length >0 ? billResults.Bill.map(bill => {
             let updatedDueDate = 0;
             if(element.service === serviceConst.WATER) {
               updatedDueDate = (element.connectionType === 'Metered' ?
