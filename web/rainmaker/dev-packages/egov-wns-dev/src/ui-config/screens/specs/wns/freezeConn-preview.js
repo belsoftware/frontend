@@ -339,11 +339,11 @@ import {
     service = getQueryArg(window.location.href, "service");
     serviceModuleName = service === serviceConst.WATER ? "NewWS1" : "NewSW1";
     serviceUrl = serviceModuleName === "NewWS1" ? "/ws-services/wc/_update" : "/sw-services/swc/_update";
-    redirectQueryString = `applicationNumber=${applicationNumber}&tenantId=${tenantId}`;
-    editredirect = `apply?${redirectQueryString}&action=edit`;
+     redirectQueryString = `applicationNumber=${applicationNumber}&tenantId=${tenantId}&connectionNumber=${consumerCode}`;
+     editredirect = `freezeConn?${redirectQueryString}&action=edit`;
     if (isFreezeMode()) {
       redirectQueryString += '&mode=FREEZE';
-      editredirect += '&mode=MODIFY&modeaction=edit';
+      editredirect += '&mode=FREEZE&service=WATER';
       if (service === serviceConst.WATER) {
         headerLabel = "WS_MODIFY_TASK_DETAILS"
       } else {
