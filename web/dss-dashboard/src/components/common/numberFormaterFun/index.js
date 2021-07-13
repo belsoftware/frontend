@@ -54,6 +54,10 @@ export default function NFormatterTest(value, type, symbol, commaSeparated = fal
         case "Percentage":
             const Pformatter = new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 });
             return `${Pformatter.format(value)} %`;
+        case "averageTime":
+        case "averagetime":
+            const Aformatter = new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 1 });
+            return `${Aformatter.format(value)}`;
         case "text":
         case "Text":
             return value;
