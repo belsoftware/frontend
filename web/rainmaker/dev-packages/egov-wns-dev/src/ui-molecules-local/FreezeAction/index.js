@@ -6,10 +6,12 @@ import MenuButton from "egov-ui-framework/ui-molecules/MenuButton";
 import { getQueryArg } from "egov-ui-framework/ui-utils/commons";
 import { toggleSnackbar,prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import get from "lodash/get";
+import set from "lodash/set";
 import {
   getWorkFlowData,
   getDomainLink,
   isWorkflowExists,
+  getWaterSource,getSearchResults,findAndReplace
 } from "../../ui-utils/commons";
 import { httpRequest } from "../../ui-utils/api";
 import store from "ui-redux/store";
@@ -72,10 +74,10 @@ const parserFunction = (state) => {
               queryObject.additionalDetails.initialMeterReading !== undefined
           ) ? parseFloat(queryObject.additionalDetails.initialMeterReading) : null,
           detailsProvidedBy: (
-              queryObject.additionalDetails !== undefined &&
-              queryObject.additionalDetails.detailsProvidedBy !== undefined &&
-              queryObject.additionalDetails.detailsProvidedBy !== null
-          ) ? queryObject.additionalDetails.detailsProvidedBy : "",
+            applyScreenData.additionalDetails !== undefined &&
+            applyScreenData.additionalDetails.detailsProvidedBy !== undefined &&
+            applyScreenData.additionalDetails.detailsProvidedBy !== null
+          ) ? applyScreenData.additionalDetails.detailsProvidedBy : "",
           lastMeterReading:(
             applyScreenData.additionalDetails !== undefined &&
             applyScreenData.additionalDetails.lastMeterReading !== undefined
@@ -93,7 +95,7 @@ const parserFunction = (state) => {
   console.log("parsedObject.additionalDetails.locality---"+JSON.stringify(parsedObject.additionalDetails))
    let input = JSON.stringify(queryObject);
    input = input.replace(/"NA"/g, null);
-   console.log("input data---"+input);
+  // console.log("input data---"+input);
    let output = JSON.parse(input);
   queryObject = { ...output, ...parsedObject }
   return queryObject;
@@ -102,16 +104,14 @@ const parserFunction = (state) => {
 
 const getWaterObjectForOperations = (state,queryObject) =>{     
   let queryObjectForUpdate =  get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0]");
-  let waterSource = get(state,"screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType", null);
-  let waterSubSource = get(state, "screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource", null);
-  queryObjectForUpdate.waterSource = queryObjectForUpdate.waterSource ? queryObjectForUpdate.waterSource : waterSource;
-  queryObjectForUpdate.waterSubSource = queryObjectForUpdate.waterSubSource ? queryObjectForUpdate.waterSubSource : waterSubSource;
+ // let waterSource = get(state,"screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType", null);
+ // let waterSubSource = get(state, "screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource", null);
   set(queryObjectForUpdate, "tenantId", get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].property.tenantId"));
   queryObjectForUpdate = { ...queryObjectForUpdate, ...queryObject }
-  set(queryObjectForUpdate, "processInstance.action", "SUBMIT_APPLICATION");
-  let finalWaterSource = getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource);
-  set(queryObjectForUpdate, "waterSource",finalWaterSource);
-  set(queryObjectForUpdate, "waterSourceSubSource", finalWaterSource);
+  set(queryObjectForUpdate, "processInstance.action", "VERIFY_AND_FORWARD");
+ // let finalWaterSource = getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource);
+ // set(queryObjectForUpdate, "waterSource",finalWaterSource);
+ // set(queryObjectForUpdate, "waterSourceSubSource", finalWaterSource);
   //set(queryObjectForUpdate, "waterSource", getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource));
    if (typeof queryObjectForUpdate.additionalDetails !== 'object') {
       queryObjectForUpdate.additionalDetails = {};
@@ -166,9 +166,25 @@ class Footer extends React.Component {
       labelKey: "WF_EMPLOYEE_NEWWS1_SUBMIT_APPLICATION",
       link: async () => {     
      // console.log("submit clicked---");
+     let deactivationDate = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].deactivationDate");
+     let method = deactivationDate ? "UPDATE" : "CREATE";
      let queryObject = parserFunction(state);
+     try {
      //console.log("queryObject object---" + JSON.stringify(queryObject));
-     //console.log("last---"+JSON.stringify(queryObject))
+     console.log("method------"+method)
+     if (method === "UPDATE") {
+          
+        let queryObjectForUpdate = getWaterObjectForOperations(state,queryObject);
+        console.log("queryObjectForUpdate------"+queryObjectForUpdate)
+        await httpRequest("post", "/ws-services/wc/_update", "", [], { WaterConnection: queryObjectForUpdate });
+        let searchQueryObject = [{ key: "tenantId", value: queryObjectForUpdate.tenantId }, { key: "applicationNumber", value: queryObjectForUpdate.applicationNo }];
+        let searchResponse = await getSearchResults(searchQueryObject);
+        store.dispatch(prepareFinalObject("WaterConnection", searchResponse.WaterConnection));
+        let combinedArray = get(state.screenConfiguration.preparedFinalObject, "WaterConnection");
+        moveToSuccess(combinedArray, store.dispatch)
+     }
+     else
+     {
      let response = await httpRequest("post", "/ws-services/wc/_create", "", [], { WaterConnection: queryObject });
      store.dispatch(prepareFinalObject("WaterConnection", response.WaterConnection));
      store.dispatch(prepareFinalObject("applyScreen.motorInfo", response.WaterConnection[0].motorInfo));
@@ -179,6 +195,7 @@ class Footer extends React.Component {
       let combinedArray = get(state.screenConfiguration.preparedFinalObject, "WaterConnection");
 
       if (true) { moveToSuccess(combinedArray, store.dispatch) }
+     }
      /* if (isFormValid) {
         changeStep(state, dispatch);
       } else if (hasFieldToaster) {
@@ -193,7 +210,11 @@ class Footer extends React.Component {
               `/wns/freezeConn?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&service=${service}&action=edit&mode=FREEZE`
             )
           );*/
- 
+      }catch (error) {
+        store.dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
+        console.log(error);
+        return false;
+    }
       },
     };
 

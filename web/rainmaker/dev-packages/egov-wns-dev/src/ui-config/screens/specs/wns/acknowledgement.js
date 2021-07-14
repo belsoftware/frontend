@@ -604,6 +604,49 @@ const getAcknowledgementCard = (
         tenant
       )
     };
+  }else if (purpose === "deactivate" && status === "success") {
+    return {
+      commonHeader: commonHeader(state,
+        dispatch,
+        applicationNumber,
+        tenant,
+        consumerNo),
+      applicationSuccessCard: {
+        uiFramework: "custom-atoms",
+        componentPath: "Div",
+        children: {
+          card: acknowledgementCard({
+            icon: "done",
+            backgroundColor: "#39CB74",
+            header: {
+              labelName: "Connection Deactivated Successfully ",
+              labelKey: "WS_APPLICATION_DEACTIVATE_SUCCESS_MESSAGE_MAIN"
+            },
+            body: {
+              labelName:
+                "A notification regarding above application status has been sent to registered Mobile No.",
+              labelKey: "WS_CONNECTION_ACTIVATE_SUCCESS_SUBHEAD"
+            },
+            tailText: {
+              labelName: "Application No.",
+              labelKey: "WS_ACK_COMMON_APP_NO_LABEL"
+            },
+            number: applicationNumber,
+            tailTextOne: {
+              labelName: "Consumer No",
+              labelKey: "WS_COMMON_CONSUMER_NO_LABEL"
+            },
+            newNumber: consumerNo,
+          })
+        }
+      },
+      applicationSuccessFooter: applicationSuccessFooter(
+        state,
+        dispatch,
+        applicationNumber,
+        tenant
+      )
+    };
   }
 };
 
@@ -883,6 +926,7 @@ const getWaterData = async (dispatch, applicationNumber, tenantId) => {
   let waterResponse = [];
   let queryObject = [{ key: "tenantId", value: tenantId }, { key: "applicationNumber", value: applicationNumber }];
   try { waterResponse = await getSearchResults(queryObject); } catch (error) { console.log(error); waterResponse = [] };
+  console.log("water response---",waterResponse);
   if (waterResponse && waterResponse.WaterConnection !== undefined && waterResponse.WaterConnection.length > 0) {
     waterResponse.WaterConnection[0].service = serviceConst.WATER;
     dispatch(prepareFinalObject("WaterConnection", findAndReplace(waterResponse.WaterConnection, "NA", null)));

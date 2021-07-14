@@ -22,7 +22,7 @@ import {
   import { getReviewOwner } from "./applyResource/review-owner";
   import { getReviewConnectionDetails } from "./applyResource/review-trade";
   import { snackbarWarningMessage } from "./applyResource/reviewConnectionDetails";
-  import { reviewModificationsEffective } from "./applyResource/reviewModificationsEffective";
+  import { reviewDeactivationEffective } from "./applyResource/reviewDeactivationEffective";
   
   const tenantId = getQueryArg(window.location.href, "tenantId");
   let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
@@ -303,7 +303,7 @@ import {
   
 
   export const reviewOwnerDetails = getReviewOwner(false);
-  export const reviewModificationsDetails = reviewModificationsEffective(process.env.REACT_APP_NAME !== "Citizen");
+ const reviewModificationsDetails = reviewDeactivationEffective(process.env.REACT_APP_NAME !== "Citizen");
 
  export const reviewDocumentDetails = getReviewDocuments(false);
 
@@ -336,6 +336,7 @@ import {
 
   const resetData = () => {
     applicationNumber = getQueryArg(window.location.href, "applicationNumber");
+     consumerCode = getQueryArg(window.location.href, "connectionNumber");
     service = getQueryArg(window.location.href, "service");
     serviceModuleName = service === serviceConst.WATER ? "NewWS1" : "NewSW1";
     serviceUrl = serviceModuleName === "NewWS1" ? "/ws-services/wc/_update" : "/sw-services/swc/_update";
@@ -353,7 +354,7 @@ import {
   
   }
 
-  const estimate = getCommonGrayCard({
+  const estimateCard = getCommonGrayCard({
     header: getCommonSubHeader({ labelKey: "WS_TASK_DETAILS_FEE_ESTIMATE" }),
     estimateSection: getFeesEstimateOverviewCard({
       sourceJsonPath: "dataCalculation",
@@ -394,9 +395,8 @@ import {
 
   export const taskDetails = getCommonCard({
     title,
-    estimate, 
+    estimateCard, 
     reviewConnectionDetails,
-    reviewDocumentDetails,
     reviewOwnerDetails,
     reviewModificationsDetails
   });
@@ -451,9 +451,15 @@ import {
         tenantId: tenantId,
         waterConnection: convPayload.WaterConnection[0]
       }]
+      
       set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFour.props.items[0].item0.children.cardContent.children.serviceCardContainerForSW.visible", false);
       set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFour.props.items[0].item0.children.cardContent.children.serviceCardContainerForWater.visible", true);
-      set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.props.items[0].item0.children.cardContent.children.connHoldDetail.visible", false);
+      set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewSix.visible", false);
+      set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewThirteen.visible", false);
+      set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.visible", false);
+      set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.headerDiv.children.header.children.key.props.labelKey", "WS_ADDL_DTL");
+      set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.headerDiv.children.header.children.key.props.labelName", "Additional Details");
+      set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewNine.visible", false);
       set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSixVS.visible", false);
       set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSixWS.visible", true);
       if (payload !== undefined && payload !== null) {
@@ -464,7 +470,7 @@ import {
         }
         if (!payload.WaterConnection[0].connectionHolders || payload.WaterConnection[0].connectionHolders === 'NA') {
           set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.visible", false);
-          set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewSix.visible", true);
+         // set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewSix.visible", true);
         } else {
           set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewSix.visible", false);
           set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.reviewConnectionDetails.children.cardContent.children.viewFive.visible", true);
@@ -903,9 +909,9 @@ import {
         dispatch(
           handleField(
             "freezeConn-preview",
-            "components.div.children.taskDetails.children.cardContent.children.estimate.children.cardContent.children.addPenaltyRebateButton",
+            "components.div.children.taskDetails.children.cardContent.children.estimateCard.children.cardContent.children.addPenaltyRebateButton",
             "visible",
-            true
+            false
           )
         );
       }

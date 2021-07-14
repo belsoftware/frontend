@@ -48,7 +48,7 @@ const getPlumberRadioButton = {
 
 const additionDetails = getCommonCard({
   header: getCommonHeader({
-    labelKey: "WS_COMMON_ADDN_DETAILS_HEADER"
+    labelKey: "WS_ADDN_DTL"
   }),
   
   plumberDetailsContainer: getCommonGrayCard({
@@ -529,8 +529,22 @@ const screenConfig = {
       "components.div.children.getConnectionDetailsFooterAction.children.takeAction.props.connectionNumber",
       consumerCode
     );
-   
     pageReset(dispatch);
+    if(get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].deactivationDate"))
+    {
+      console.log("setting plumber details")
+      let deactivationDate = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].deactivationDate");
+      console.log("deactivationDate---------------"+convertEpochToDate(deactivationDate))
+      let lastMeterReading = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].additionalDetails.lastMeterReading");
+      let plumberLicenceNo = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].plumberInfo[0].licenseNo");
+      let plumberName = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].plumberInfo[0].name");
+      let plumberMobNo = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].plumberInfo[0].mobileNumber");
+      dispatch(prepareFinalObject("applyScreen.plumberInfo[0].licenseNo", plumberLicenceNo));
+      dispatch(prepareFinalObject("applyScreen.plumberInfo[0].mobileNumber", plumberMobNo));
+      dispatch(prepareFinalObject("applyScreen.plumberInfo[0].name", plumberName));
+      dispatch(prepareFinalObject("applyScreen.connectionDeactivationDate", (deactivationDate)));
+      dispatch(prepareFinalObject("applyScreen.additionalDetails.lastMeterReading", lastMeterReading));
+    }
         return action;
     },
     components: {
