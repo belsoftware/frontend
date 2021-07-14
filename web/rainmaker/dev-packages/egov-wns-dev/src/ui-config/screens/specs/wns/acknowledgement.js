@@ -20,7 +20,8 @@ import {
   prepareDocUploadRedux,
   downloadAndPrintForNonApply,
   serviceConst,
-  isModifyMode
+  isModifyMode,
+  isFreezeMode
 } from "../../../../ui-utils/commons";
 import { generateWSAcknowledgement } from "egov-ui-kit/utils/pdfUtils/generateWSAcknowledgement";
 import set from "lodash/set";
@@ -34,6 +35,14 @@ let headerLabel = "WS_APPLICATION_NEW_CONNECTION_HEADER";
 const applicationNo = getQueryArg(window.location.href, "applicationNumber");
 if(isModifyMode()){
   headerLabel = "WS_MODIFY_CONNECTION_HEADER";
+  // if(applicationNo.includes("WS")){
+  // headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
+  // }else{
+  // headerLabel = "SW_APPLICATION_MODIFY_CONNECTION_HEADER";
+  // }
+}
+if(isFreezeMode()){
+  headerLabel = "WS_DEACTIVATION_APPLICATION_HEADER";
   // if(applicationNo.includes("WS")){
   // headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
   // }else{
