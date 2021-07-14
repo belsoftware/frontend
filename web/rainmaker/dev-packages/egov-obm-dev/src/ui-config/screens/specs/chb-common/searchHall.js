@@ -3,21 +3,21 @@ import { prepareFinalObject,  handleScreenConfigurationFieldChange as handleFiel
   from "egov-ui-framework/ui-redux/screen-configuration/actions";   //returns action object
 import { getCommonCard, getCommonContainer, getCommonHeader, getCommonParagraph, getCommonTitle, getStepperObject, getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
 //import { getLocaleLabelsforTL } from "../../../../ui-utils/commons";
-import {ghbSearchCard} from "./ghbSearchResources/ghbSearchCard";
-import {searchResults} from "./ghbSearchResources/searchResults";
+import {chbSearchCard} from "./chbSearchResources/chbSearchCard";
+import {searchResults} from "./chbSearchResources/searchResults";
 import {loadMdmsData} from "./../utils";
 import {get,set} from "lodash";
 import jp from "jsonpath";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 
 const header = getCommonHeader({
-  labelName: "Search Guest House",
-  labelKey: "OBM_GHB_SEARCH"
+  labelName: "Search Hall",
+  labelKey: "OBM_CHB_SEARCH"
 });
 
-const searchGuestHouse = {
+const searchHall = {
   uiFramework: "material-ui",
-  name: "searchGuestHouse",
+  name: "searchHall",
   beforeInitScreen:(action, state, dispatch) => {
   
     loadMdmsData(action, state, dispatch).then((response) => {
@@ -32,7 +32,7 @@ const searchGuestHouse = {
         onlyCBs = jp.query(onlyCBs, currentCbFilter );
       } 
       onlyCBs.sort((a, b) => (a.code > b.code) ? 1 : -1)
-      dispatch(prepareFinalObject("ghb.allTenants", onlyCBs));
+      dispatch(prepareFinalObject("chb.allTenants", onlyCBs));
     });
     return action;
 
@@ -77,7 +77,7 @@ const searchGuestHouse = {
             },
             onClickDefination: {
               action: "page_change",
-              path:`/ghb-common/how-it-works-ghb`
+              path:`/chb-common/how-it-works-chb`
             },
             children:{
               helpButtonIcon:{
@@ -95,7 +95,7 @@ const searchGuestHouse = {
            }, 
         }
       },
-      ghbSearchCard,
+      chbSearchCard,
       breakAfterSearch: getBreak(),
       searchResults
     }
@@ -103,4 +103,4 @@ const searchGuestHouse = {
 }
 }
 
-export default searchGuestHouse;
+export default searchHall;

@@ -9,7 +9,7 @@ import { toggleSpinner , toggleSnackbar} from "egov-ui-framework/ui-redux/screen
 import { httpRequest } from "egov-ui-framework/ui-utils/api";
 import get from "lodash/get";
 import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
-import { showHideConfirmationPopup } from "./bookGuestHouse";
+import { showHideConfirmationPopup } from "./bookHall";
 import { checkIfCitizenEditScreen } from "../utils";
 
 const checkIfFormIsValid = async (state, dispatch) => {
@@ -20,7 +20,7 @@ const checkIfFormIsValid = async (state, dispatch) => {
     "components.bookingDetails.children.cardContent.children.bookingDetails.children.cardContent.children.applicantDetailsCardContainer.children",
     state,
     dispatch,
-    "bookGuestHouse"
+    "bookHall"
   );  
 
   const isBankDetailsValid = validateFields(
@@ -28,14 +28,14 @@ const checkIfFormIsValid = async (state, dispatch) => {
     
     state,
     dispatch,
-    "bookGuestHouse"
+    "bookHall"
   );
 
   const isAppicantInfoValid = validateFields(
     "components.bookingDetails.children.cardContent.children.applicantInfo.children.details.children.cardContent.children.applicantDetailsCardContainer.children",
     state,
     dispatch,
-    "bookGuestHouse"
+    "bookHall"
   );
   const uploadedDocsInRedux = get(
     state.screenConfiguration.preparedFinalObject,
@@ -113,22 +113,23 @@ export const postBookingData = async (state,dispatch) =>{
     }
 
     console.log("List of docs for API", docListToBeSentToApi);
-    dispatch(prepareFinalObject("ghb.booking[0].wfDocuments", docListToBeSentToApi));
+    dispatch(prepareFinalObject("chb.booking[0].wfDocuments", docListToBeSentToApi));
+    dispatch(prepareFinalObject("chb.booking[0].applicationDocuments", docListToBeSentToApi));
 
     const booking = get(
       state.screenConfiguration.preparedFinalObject,
-      "ghb.booking[0]"
+      "chb.booking[0]"
     );
     
     let payload = {
-      booking: [booking],
+      booking: booking,
     };
 
     if(checkIfCitizenEditScreen()) //If its citizen-edit screen for citizen-review call update.
       {
         payload = await httpRequest(
           "post",
-          "egov-obm/hallBooking/_update",
+          "obm-services/chb/_create",
           "_update",
           [],
           payload
@@ -138,7 +139,7 @@ export const postBookingData = async (state,dispatch) =>{
       {
         payload = await httpRequest(
           "post",
-          "egov-obm/hallBooking/_create",
+          "obm-services/chb/_create",
           "_create",
           [],
           payload

@@ -15,7 +15,7 @@ const screenConfig = {
         labelName: "From Date",
         labelKey: "COMMON_FROM_DATE"
       },
-      jsonPath: "ghb.fromDate",
+      jsonPath: "chb.fromDate",
       gridDefination: {
         xs: 12,
         sm: 4

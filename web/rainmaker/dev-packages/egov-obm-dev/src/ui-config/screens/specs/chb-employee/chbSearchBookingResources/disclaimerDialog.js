@@ -12,7 +12,7 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import get from "lodash/get";
-import {showHideConfirmationPopup } from "./ghbSearchCard";
+import {showHideConfirmationPopup } from "./chbSearchCard";
 import {triggerDownload} from "../../utils"; 
 
 const dSignAgreePath =  "bnd.birth.iAgree"

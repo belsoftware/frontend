@@ -361,7 +361,7 @@ export const checkIfCitizenEditScreen = () =>{
     return true;
   return false;
 }
-export const loadGuestHouseDetailsMdms = async (action, state, dispatch,data) => {
+export const loadHallDetailsMdms = async (action, state, dispatch,data) => {
 
   let requestBody = {
     "MdmsCriteria": {
@@ -369,15 +369,19 @@ export const loadGuestHouseDetailsMdms = async (action, state, dispatch,data) =>
       "moduleDetails": [
          {
             "moduleName": "CommunityHallBooking",
-              "masterDetails": [
-                {
-                  "name": "CommunityHalls",
-                  "filter": `[?(@.hallCode == "${data.guestHouseId}")]`
-                }
-              ]
+            "masterDetails": [
+              {
+                "name": "CommunityHalls",
+              }
+            ]
           }
         ]
       }
+  }
+  
+  if(data && data.hallId)
+  {
+    requestBody.MdmsCriteria.moduleDetails[0].masterDetails[0].filter = `[?(@.hallCode == "${data.hallId}")]`;
   }
 
   try{
@@ -405,7 +409,7 @@ export const loadGuestHouseDetailsMdms = async (action, state, dispatch,data) =>
   }
 }
 
-export const loadGuestHouseDetails = async (action, state, dispatch,data) => {
+export const loadHallDetails = async (action, state, dispatch,data) => {
 
   let requestBody = {};
   const queryParams = [
@@ -417,7 +421,7 @@ export const loadGuestHouseDetails = async (action, state, dispatch,data) => {
     let payload = null;
     payload = await httpRequest(
       "post",
-      `/obm-services/guestHouse/_search`,
+      `/obm-services/hall/_search`,
       "_search",
       queryParams,
       requestBody
@@ -490,12 +494,12 @@ export const loadMdmsData = async (action, state, dispatch) => {
   }
 }
 
-export const searchForGuestHouse = async (dispatch,queryParams,queryObject) => {
+export const searchForHall = async (dispatch,queryParams,queryObject) => {
   try {
     dispatch(toggleSpinner());
     const response = await httpRequest(
       "post",
-      "obm-services/guestHouseBooking/_search",
+      "obm-services/hallBooking/_search",
       "_search",
       queryParams,
       {}//{ searchCriteria: queryObject }
@@ -536,7 +540,7 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
     const cardIndex = fieldInfo && fieldInfo.index ? fieldInfo.index : "0";
     const ownerNo = get(
       state.screenConfiguration.preparedFinalObject,
-      `ghb.booking[0].userDetails[${cardIndex}].mobileNumber`,
+      `chb.booking[0].userDetails[${cardIndex}].mobileNumber`,
       ""
     );
     if(!ownerNo){
@@ -554,7 +558,7 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
     }
     const owners = get(
       state.screenConfiguration.preparedFinalObject,
-      `ghb.booking[0].userDetails`,
+      `chb.booking[0].userDetails`,
       []
     );
     //owners from search call before modification.
@@ -672,7 +676,7 @@ export const getDetailsOfApplicant = async (state, dispatch, fieldInfo) => {
 
           dispatch(
             prepareFinalObject(
-              `ghb.booking[0].userDetails`,
+              `chb.booking[0].userDetails`,
               currOwnersArr
             )
           );
@@ -763,8 +767,8 @@ export const loadWorkflowMasterData = async (action, state, dispatch) => {
 //This function can be used on both Employee and Citizen side functionality.
 export const constructQueryParamsBasedOnCurrentWorkflowType = (state) => {
 
-  let workflowCode = get(state, "screenConfiguration.preparedFinalObject.ghb.booking[0].workflowCode");
-  let tenantId = get(state, "screenConfiguration.preparedFinalObject.ghb.booking[0].tenantId");
+  let workflowCode = get(state, "screenConfiguration.preparedFinalObject.chb.booking[0].workflowCode");
+  let tenantId = get(state, "screenConfiguration.preparedFinalObject.chb.booking[0].tenantId");
 
   let queryParams = [
     { key: "tenantId", value: tenantId }
@@ -777,7 +781,7 @@ export const constructQueryParamsBasedOnCurrentWorkflowType = (state) => {
 export const setDocumentsInfo = async (state, dispatch) => {
   let applicationDocuments = get(
     state.screenConfiguration.preparedFinalObject,
-    "ghb.booking[0].wfDocuments",
+    "chb.booking[0].wfDocuments",
     []
   );
 

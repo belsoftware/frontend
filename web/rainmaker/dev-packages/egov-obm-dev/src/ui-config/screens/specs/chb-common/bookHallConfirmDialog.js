@@ -4,8 +4,8 @@ import {
   getLabel,
   getDivider
 } from "egov-ui-framework/ui-config/screens/specs/utils";
-import {showHideConfirmationPopup } from "./bookGuestHouse";
-import { postBookingData } from "./bookGuestHouseFooter";
+import {showHideConfirmationPopup } from "./bookHall";
+import { postBookingData } from "./bookHallFooter";
 
 export const confirmationDialog = getCommonContainer({
   
@@ -77,7 +77,7 @@ export const confirmationDialog = getCommonContainer({
           onClickDefination: {
             action: "condition",
             callBack: (state, dispatch) => {
-              showHideConfirmationPopup(state, dispatch, "bookGuestHouse")
+              showHideConfirmationPopup(state, dispatch, "bookHall")
             }
           }
         }

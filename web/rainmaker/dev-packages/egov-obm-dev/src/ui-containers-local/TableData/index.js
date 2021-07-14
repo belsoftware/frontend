@@ -25,8 +25,10 @@ import InboxData from "../Table";
 import "./index.css";
 import jp from "jsonpath";
 import { toggleSpinner } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import {getWorkflowFilterBasedOnLamsRoles, constructQueryParamsBasedOnLamsRoles,
-  constructQueryParamsBasedOnLamsRoles2} from "../../ui-utils/commons";
+import {getWorkflowFilterBasedOnRoles, constructQueryParamsBasedOnRoles,
+  constructQueryParamsBasedOnRoles2,
+  getObmRolesOfCurrentUser,
+  getRoles} from "../../ui-utils/commons";
 
 
 const getWFstatus = (status) => {
@@ -499,14 +501,12 @@ class TableData extends Component {
     }
   };
 
-  checkIfAssignedToMe(lamsRoles,statesEligibleRoles )
+  checkIfAssignedToMe(roles,statesEligibleRoles )
   {
     var assignedToMe = false;
-    // const check = elem => lamsRoles.indexOf(elem) > -1 ? true:false;
-    // return statesEligibleRoles.every(check);
     for(var i=0; i<statesEligibleRoles.length; i++)
     {
-      if(lamsRoles.indexOf(statesEligibleRoles[i]) > -1)
+      if(roles.indexOf(statesEligibleRoles[i]) > -1)
       {
         assignedToMe = true;
         break;
@@ -520,27 +520,26 @@ class TableData extends Component {
     let userInfo = JSON.parse(localStorageGet("user-info"));
     let businessServiceData = JSON.parse(localStorageGet("businessServiceData"));
     //tobechanged remove employee role here.
-    let jpExpression = "$.roles[?(@.code=='LR_APPROVER_CEO' || @.code=='LR_APPROVER_DEO')].code";
-    let lamsRoles = jp.query(userInfo, jpExpression );
-    console.log("Check Lams Roles  ", lamsRoles);
+    let obmRoles = getObmRolesOfCurrentUser();
     
     const assignedData = orderBy(
       filter(responseData.ProcessInstances, (item) => {
-        let currentState = get(item,'state.state');
-        if(currentState != "APPLIED")  //List in this tab only if the status is "APPLIED"
-          return false;
-        else
-          return true;
-        // let filter = getWorkflowFilterBasedOnLamsRoles();
-        // let eligibleRolesToTakeAction = jp.query(businessServiceData, "$[?("+filter+")].states[?(@.state=='"+
-        //   currentState+"' )].actions[*].roles[*]" );
-        // console.log("Check first ",eligibleRolesToTakeAction);
-        // let eligibleRolesToTakeActionUnique = eligibleRolesToTakeAction.filter((v, i, a) => a.indexOf(v) === i); 
-        // console.log("Check Eligible roles to take action ", eligibleRolesToTakeActionUnique);
-        // console.log("Lams roles are ",lamsRoles);
-        // let isAssignedToMe = this.checkIfAssignedToMe(lamsRoles, eligibleRolesToTakeActionUnique);
-        // //alert("IsAssigned to me is "+isAssignedToMe);
-        // return isAssignedToMe;
+        return true;
+        // let currentState = get(item,'state.state');
+        // if(currentState != "APPLIED")  //List in this tab only if the status is "APPLIED"
+        //   return false;
+        // else
+        //   return true;
+        let filter = getWorkflowFilterBasedOnRoles();
+        let eligibleRolesToTakeAction = jp.query(businessServiceData, "$[?("+filter+")].states[?(@.state=='"+
+          currentState+"' )].actions[*].roles[*]" );
+        console.log("Check first ",eligibleRolesToTakeAction);
+        let eligibleRolesToTakeActionUnique = eligibleRolesToTakeAction.filter((v, i, a) => a.indexOf(v) === i); 
+        console.log("Check Eligible roles to take action ", eligibleRolesToTakeActionUnique);
+        console.log("Obm roles are ",obmRoles);
+        let isAssignedToMe = this.checkIfAssignedToMe(obmRoles, eligibleRolesToTakeActionUnique);
+        //alert("IsAssigned to me is "+isAssignedToMe);
+        return isAssignedToMe;
       }),
       ["businesssServiceSla"]
     );
@@ -558,19 +557,19 @@ class TableData extends Component {
       this.showLoading();
       //this.setBusinessServiceDataToLocalStorage([{ key: "tenantId", value: getTenantId() }]);
 
-      const queryParams = [{ key: "tenantId", value: tenantId }];//constructQueryParamsBasedOnLamsRoles();
+      const queryParams = [{ key: "tenantId", value: tenantId }];//constructQueryParamsBasedOnRoles ();
       //console.log("The query params is ", queryParams);
 
       this.setBusinessServiceDataToLocalStorage(queryParams);
-      const requestBody = constructQueryParamsBasedOnLamsRoles();//[{ key: "tenantId", value: tenantId }];
+      const requestBody = constructQueryParamsBasedOnRoles();//[{ key: "tenantId", value: tenantId }];
       showBusy();
       let responseData = await httpRequest("egov-workflow-v2/egov-wf/process/_search", "_search", requestBody);
 
       //tobechanged
       //responseData = {"ResponseInfo":null,"ProcessInstances":[{"id":"4bfcb3a8-1a65-4704-a52d-35f676e22b65","tenantId":"pb.agra","businessService":"LAMS_NewLR_V2","businessId":"TL-APP-AGRA-2020-10-21-004168","action":"APPLY","moduleName":"lams-services","state":{"auditDetails":null,"uuid":"27427134-ffef-416b-9e1b-66d4c4fa7bc1","tenantId":"pb.agra","businessServiceId":"fdb95498-99fd-43b3-9ab7-d76f6ab6a36c","sla":null,"state":"APPLIED","applicationStatus":"APPLIED","docUploadRequired":false,"isStartState":true,"isTerminateState":false,"isStateUpdatable":null,"actions":[{"auditDetails":null,"uuid":"6c2f40b9-f31e-41b6-8c47-7de5f666c1dd","tenantId":"pb.agra","currentState":"27427134-ffef-416b-9e1b-66d4c4fa7bc1","action":"APPROVE","nextState":"7ba8cac7-731f-4057-9757-ed336e77626c","roles":["CEO","DEO"]},{"auditDetails":null,"uuid":"5d09730a-b267-4577-9ebe-36bddf1b41cf","tenantId":"pb.agra","currentState":"27427134-ffef-416b-9e1b-66d4c4fa7bc1","action":"FORWARD","nextState":"27427134-ffef-416b-9e1b-66d4c4fa7bc1","roles":["CEO","DEO"]}]},"comment":null,"documents":null,"assigner":{"id":486,"userName":"TL_AGRA","name":"tl all permission agra","type":"EMPLOYEE","mobileNumber":"7022225111","emailId":"","roles":[{"id":null,"name":"Employee","code":"EMPLOYEE","tenantId":"pb.agra"},{"id":null,"name":"TL Counter Employee","code":"TL_CEMP","tenantId":"pb.agra"},{"id":null,"name":"TL doc verifier","code":"TL_DOC_VERIFIER","tenantId":"pb.agra"},{"id":null,"name":"TL Approver","code":"TL_APPROVER","tenantId":"pb.agra"},{"id":null,"name":"TL Field Inspector","code":"TL_FIELD_INSPECTOR","tenantId":"pb.agra"}],"tenantId":"pb.agra","uuid":"9d39d685-edbe-45a7-8dc5-1166a4236b98"},"assignes":null,"nextActions":[{"auditDetails":null,"uuid":"6c2f40b9-f31e-41b6-8c47-7de5f666c1dd","tenantId":"pb.agra","currentState":"27427134-ffef-416b-9e1b-66d4c4fa7bc1","action":"APPROVE","nextState":"7ba8cac7-731f-4057-9757-ed336e77626c","roles":["CEO","DEO"]},{"auditDetails":null,"uuid":"5d09730a-b267-4577-9ebe-36bddf1b41cf","tenantId":"pb.agra","currentState":"27427134-ffef-416b-9e1b-66d4c4fa7bc1","action":"FORWARD","nextState":"27427134-ffef-416b-9e1b-66d4c4fa7bc1","roles":["CEO","DEO"]}],"stateSla":null,"businesssServiceSla":2505424584,"previousStatus":null,"entity":null,"auditDetails":{"createdBy":"9d39d685-edbe-45a7-8dc5-1166a4236b98","lastModifiedBy":"9d39d685-edbe-45a7-8dc5-1166a4236b98","createdTime":1603267787589,"lastModifiedTime":1603267787589}}]};
 
-      let filter = getWorkflowFilterBasedOnLamsRoles();
-      responseData.ProcessInstances = jp.query(responseData, "$.ProcessInstances[?("+filter+")]"); //Filter only LAMS Workflow instances
+      let filter = getWorkflowFilterBasedOnRoles();
+      responseData.ProcessInstances = jp.query(responseData, "$.ProcessInstances[?("+filter+")]"); //Filter only Booking Workflow instances
 
       let allTenantIds =[];
       responseData.ProcessInstances.forEach(function(p,i){
@@ -585,7 +584,7 @@ class TableData extends Component {
       uniqueTenantIds.forEach(function(tenantId,idx){
         let getWfBusinessServiceData = async () => {
           let wfBusinessDataUrl = "/egov-workflow-v2/egov-wf/businessservice/_search";
-          let queryObject = constructQueryParamsBasedOnLamsRoles2(tenantId);
+          let queryObject = constructQueryParamsBasedOnRoles2(tenantId);
           let payload = null;
           payload = await httpRequest2("post",wfBusinessDataUrl, "_search", queryObject,[]);
           let response = payload;

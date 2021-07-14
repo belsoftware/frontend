@@ -14,7 +14,7 @@ class Calender extends React.Component {
   
   render() {
     const {state}= this.props || []
-    let DateDetails=get(state.screenConfiguration.preparedFinalObject,"ghb.viewGuestHouseDetails.calender")
+    let DateDetails=get(state.screenConfiguration.preparedFinalObject,"chb.viewHallDetails.calender")
     // Convertion of EpochToDate
     let ConvertedDate=[];
 

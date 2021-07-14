@@ -2,9 +2,9 @@ const onPopupOpen = () => {
   //this.setState({ filterPopupOpen: true });
 }
 
-const ghbHome = {
+const chbHome = {
   uiFramework: "material-ui",
-  name: "ghbHome",
+  name: "chbHome",
   beforeInitScreen:(action, state, dispatch) => {
     //const queryValue = getQueryArg(window.location.href, "applicationNumber");
     // const tenantId = getQueryArg(window.location.href, "tenantId");
@@ -31,4 +31,4 @@ const ghbHome = {
 };
 
 
-export default ghbHome;
+export default chbHome;

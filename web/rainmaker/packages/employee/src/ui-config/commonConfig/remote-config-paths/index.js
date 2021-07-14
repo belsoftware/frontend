@@ -53,8 +53,8 @@ const remoteConfigPath = (path, screenKey) => {
       config = require(`egov-bnd/ui-config/screens/specs/${path}/${screenKey}`).default;
       break;
     case "obm":
-    case "ghb-common":
-    case "ghb-employee":
+    case "chb-common":
+    case "chb-employee":
       config = require(`egov-obm/ui-config/screens/specs/${path}/${screenKey}`).default;
       break;
     case "bill-amend":

@@ -8,13 +8,17 @@ import {
 import { httpRequest } from "egov-ui-framework/ui-utils/api";
 import { getTransformedLocale } from "egov-ui-framework/ui-utils/commons";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
-import jp from "jsonpath";
+import jp, { parse } from "jsonpath";
 import get from "lodash/get";
 import set from "lodash/set";
 import store from "ui-redux/store";
 import { getTranslatedLabel } from "../ui-config/screens/specs/utils";
 import { getFileUrlFromAPI, getFileUrl } from "egov-ui-framework/ui-utils/commons";
 import cloneDeep from "lodash/cloneDeep";
+import {localStorageGet} from "egov-ui-kit/utils/localStorageUtils";
+
+export const workflowEligibleObmRoles = ["OBM_CHB_APPROVER","OBM_CHB_DOC_VERIFIER"];
+//tobechanged : For Water Tanker and Guest House continue extend the above list
 
 const handleDeletedCards = (jsonObject, jsonPath, key) => {
   let originalArray = get(jsonObject, jsonPath, []);
@@ -690,55 +694,119 @@ export const addWflowFileUrl = async (ProcessInstances, prepareFinalObject) => {
   prepareFinalObject("workflow.ProcessInstances", processInstances);
 };
 
+export const getRoles = () =>{
+  let userInfo = JSON.parse(localStorageGet("user-info"));
+  return userInfo["roles"];
+}
+
 //This function should be used only on the employee side.
-export const constructQueryParamsBasedOnLamsRoles = (tenantId) => {
+export const constructQueryParamsBasedOnRoles = (tenantId) => {
 
   if(!tenantId)
     tenantId=getTenantId();
-  let lamsRoles = getLamsRoles();
+  let roles = getRoles();
   let queryParams = [];
-  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1 && lamsRoles.indexOf('LR_APPROVER_DEO') > -1 )
+
+  if(roles.indexOf('OBM_CHB_DOC_VERIFIER') > -1 && roles.indexOf('OBM_CHB_APPROVER') > -1 )
   { 
-    alert("Looks like DEO and CEO are same. Please correct this.");
+    alert("Looks like Hall Manager (Doc Verifier) and the Approver are same. Please correct this.");
+    return;
   }
+
+  queryParams.push({ key: "tenantId", value: tenantId})
+  if(roles.indexOf('OBM_CHB_DOC_VERIFIER') > -1)
+    queryParams.push({ key: "role", value: "OBM_CHB_DOC_VERIFIER"})
   else
-  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1)
-  {
-    queryParams.push({ key: "tenantId", value: tenantId})
-    queryParams.push({ key: "role", value: "LR_APPROVER_CEO"})
-  }
-  else
-  if(lamsRoles.indexOf('LR_APPROVER_DEO') > -1)
-  {
-    let deoRoleName = lamsRoles.find(x => x.indexOf("DEO_") >= 0)
-    queryParams.push({ key: "role", value: deoRoleName})
-  }
+  if(roles.indexOf('OBM_CHB_APPROVER') > -1)
+    queryParams.push({ key: "role", value: "OBM_CHB_APPROVER"})
+
+  //tobechanged : For Water Tanker and Guest House continue if else here.
 
   return queryParams;
 }
 
-export const constructQueryParamsBasedOnLamsRoles2 = (tenantId) => {
+export const constructQueryParamsBasedOnRoles2 = (tenantId) => {
 
   if(!tenantId)
     tenantId=getTenantId();
-  let lamsRoles = getLamsRoles();
+  let roles = getRoles();
   let queryParams = [];
-  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1 && lamsRoles.indexOf('LR_APPROVER_DEO') > -1 )
+  queryParams.push({ key: "tenantId", value: tenantId});
+
+  if(roles.indexOf('OBM_CHB_DOC_VERIFIER') > -1 && roles.indexOf('OBM_CHB_APPROVER') > -1 )
   { 
-    alert("Looks like DEO and CEO are same. Please correct this.");
+    alert("Looks like Hall Manager (Doc Verifier) and the Approver are same. Please correct this.");
+    return;
   }
   else
-  if(lamsRoles.indexOf('LR_APPROVER_CEO') > -1)
+  if(roles.indexOf('OBM_CHB_DOC_VERIFIER') > -1 && roles.indexOf('OBM_CHB_APPROVER') > -1)
   {
-    queryParams.push({ key: "tenantId", value: tenantId})
-    queryParams.push({ key: "businessServices", value: "LAMS_NewLR_CEO_V3"})
-  }
-  else
-  if(lamsRoles.indexOf('LR_APPROVER_DEO') > -1)
-  {
-    queryParams.push({ key: "tenantId", value: tenantId})
-    queryParams.push({ key: "businessServices", value: "LAMS_NewLR_DEO_V3"})
+    queryParams.push({ key: "businessServices", value: "OBM_CHB_V1"})
   }
 
+  //tobechanged : For Water Tanker and Guest House continue if else here.
+
   return queryParams;
+}
+
+export const getWorkflowFilterBasedOnRoles = () => {
+  let roles = getRoles();
+  let businessServices = []
+  if(roles.indexOf('OBM_CHB_DOC_VERIFIER') || roles.indexOf('OBM_CHB_APPROVER'))
+  {
+    businessServices.push("OBM_CHB_V1");
+  }
+  //tobechanged : For Water Tanker and Guest House continue and extend with if here.
+
+  let filter = "(";
+  for(var i=0; i<businessServices.length; i++)
+  {
+    if(i!=0)
+      filter+=" || ";
+    filter+=`@.businessService== '${businessServices[i]}'`;
+  }
+  filter += ")";
+
+  return filter;
+}
+
+//The function gives the eligible roles of all the Online Booking Module, of the current user.
+export const getObmRolesOfCurrentUser = () => {
+  let roles = getRoles();
+  let obmRoles = [];
+  roles.forEach(role => {
+    if(workflowEligibleObmRoles.indexOf(role) > -1)
+      obmRoles.push(role);
+  });
+
+  let eligibleRoles = []
+  if(roles.indexOf('OBM_CHB_DOC_VERIFIER') || roles.indexOf('OBM_CHB_APPROVER'))
+  {
+    eligibleRoles.push("OBM_CHB_V1");
+  }
+  //tobechanged : For Water Tanker and Guest House continue and extend with if here.
+
+  return eligibleRoles;
+}
+
+export const getSlotText = (slot, dateReference) =>{
+  let slotText = "";
+  if(slot.from)
+  {
+    let fromDate = new Date(dateReference.getTime());
+    fromDate.setHours(parseInt(slot.from.split(":")[0]));
+    fromDate.setMinutes(parseInt(slot.from.split(":")[1]));
+
+    let toDate = new Date(fromDate.getTime());
+    toDate.setHours(toDate.getHours() + parseInt(slot.duration.split(":")[0]));
+    toDate.setMinutes(toDate.getMinutes() + parseInt(slot.duration.split(":")[1]));
+
+    let splitFromDate = fromDate.toDateString().split(" ");
+    let splitTodate = toDate.toDateString().split(" ");
+  
+    slotText = ""+splitFromDate[2]+"-"+splitFromDate[1]+"-"+splitFromDate[3]+" ("+fromDate.getHours().toString().padStart(2,"0")+":"+fromDate.getMinutes().toString().padStart(2,"0")+")"+
+      " to "+splitTodate[2]+"-"+splitTodate[1]+"-"+splitTodate[3]+" ("+toDate.getHours().toString().padStart(2,"0")+":"+toDate.getMinutes().toString().padStart(2,"0")+")";
+
+    return slotText;
+  }
 }

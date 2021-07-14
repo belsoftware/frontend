@@ -6,7 +6,7 @@ import {
 } from "egov-ui-framework/ui-config/screens/specs/utils";
 import { convertEpochToDate, checkValueForNA } from "egov-ui-framework/ui-config/screens/specs/utils";
 
-export const getGuestHouseHeaderCard = (inJsonPath) => {
+export const getHallHeaderCard = (inJsonPath) => {
 
   return getCommonGrayCard({
 

@@ -241,7 +241,7 @@ class ActionDialog extends React.Component {
     //tobeadded for water tanker
     const status = get(
       state.screenConfiguration.preparedFinalObject,
-      `ghb.booking[0].status`
+      `chb.booking[0].status`
     );
 
     //alert("Status is "+status+" " +applicationType);

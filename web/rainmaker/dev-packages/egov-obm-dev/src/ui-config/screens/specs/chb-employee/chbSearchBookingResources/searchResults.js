@@ -11,7 +11,8 @@ import store from "ui-redux/store";
 import {
   prepareFinalObject,
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import {showHideConfirmationPopup} from "./ghbSearchCard";
+import {showHideConfirmationPopup} from "./chbSearchCard";
+import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
 
 export const searchResults = {
   uiFramework: "custom-molecules",
@@ -59,16 +60,22 @@ export const searchResults = {
         }
       },
       {
-        labelName: "Name",
-        labelKey: "CORE_COMMON_NAME"
+        labelName: "Application Number",
+        labelKey: "OBM_APPL_NO",
+        options: {
+          filter: false,
+          customBodyRender: (value, tableMeta) => (
+              <a href="javascript:void(0)" onClick={() => onRowClick(tableMeta.rowData)}>{value}</a>
+          )
+        }
       },
       {
-        labelName: "Price",
-        labelKey: "OBM_PRICE",
+        labelName: "Application Date",
+        labelKey: "OBM_APPLICATION_DATE",
       },
       {
-        labelName: "Availability",
-        labelKey: "OBM_AVAILABILITY"
+        labelName: "Application Status",
+        labelKey: "OBM_APPLICATION_STATUS"
       },
       // {
       //   labelName: "Status",
@@ -90,18 +97,18 @@ export const searchResults = {
       //     customBodyRender: (value, tableMeta) => value === "PAY" ? (tableMeta.rowData[4] > 0 ? getActionButton(value, tableMeta):(tableMeta.rowData[4] <= 0 && tableMeta.rowData[13] ? getActionButton(value, tableMeta) : "")) : getActionButton(value, tableMeta)
       //   }
       // },
-      {
-        labelName: "OBM_ACTION",
-        labelKey: "OBM_ACTION",
-        options: {
-          display: true,
-          viewColumns  :true,
-          customBodyRender: (value, tableMeta) => getViewButton(value, tableMeta)
-        }
-      }
+      // {
+      //   labelName: "OBM_ACTION",
+      //   labelKey: "OBM_ACTION",
+      //   options: {
+      //     display: true,
+      //     viewColumns  :true,
+      //     customBodyRender: (value, tableMeta) => getViewButton(value, tableMeta)
+      //   }
+      // }
     ],
     title: {
-      labelName: "Search Results for Birth",
+      labelName: "Search Results for Booking Search",
       labelKey: "OBM_SEARCH_TABLE_HEADER"
     },
     rows : "",
@@ -143,8 +150,8 @@ const getActionButton = (value, tableMeta) => {
           let tenantId = tableMeta.rowData[1];
           let id = tableMeta.rowData[0];
 
-          store.dispatch(prepareFinalObject("ghb.search.guestHouseId", id));
-          store.dispatch(prepareFinalObject("ghb.search.tenantId", tenantId));
+          store.dispatch(prepareFinalObject("chb.search.hallId", id));
+          store.dispatch(prepareFinalObject("chb.search.tenantId", tenantId));
 
       }}
     >
@@ -163,7 +170,7 @@ const getViewButton = (value, tableMeta) => {
       onClick={value => {
           let id = tableMeta.rowData[0];
           let tenantId = tableMeta.rowData[1];
-          let url = `/ghb-common/viewGuestHouse?tenantId=${tenantId}&guestHouseId=${id}`;
+          let url = `/chb-common/viewHall?tenantId=${tenantId}&hallId=${id}`;
           document.location.href = `${document.location.origin}${url}`;
       }}
     >
@@ -171,3 +178,11 @@ const getViewButton = (value, tableMeta) => {
     </a>
   )
 }
+
+const onRowClick = rowData => {
+
+  store.dispatch(
+    setRoute(`/chb-common/viewBooking?applicationNumber=${rowData[2]}&tenantId=${rowData[1]}`)
+  );
+
+};

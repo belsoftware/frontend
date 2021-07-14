@@ -2,7 +2,7 @@ import {getCommonCardWithHeader,getLabel} from "egov-ui-framework/ui-config/scre
 import { prepareFinalObject,  handleScreenConfigurationFieldChange as handleField} 
   from "egov-ui-framework/ui-redux/screen-configuration/actions";   //returns action object
 import { getLabelWithValue, getCommonCard, getCommonContainer, getCommonHeader,getCommonGrayCard,getDivider,getCommonCaption, getCommonSubHeader,getCommonParagraph, getCommonTitle, getStepperObject, getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
-import {loadBookingDetails, loadGuestHouseDetailsMdms } from "../utils";
+import {loadBookingDetails, loadHallDetailsMdms } from "../utils";
 import { getQueryArg, setBusinessServiceDataToLocalStorage, setDocuments } from "egov-ui-framework/ui-utils/commons";
 import { setDocumentsInfo, convertEpochToDate, loadWorkflowMasterData} from "../utils";
 
@@ -13,9 +13,9 @@ const header = getCommonHeader({
 
 const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
 
-const viewGuestHouse = {
+const viewHall = {
   uiFramework: "material-ui",
-  name: "viewGuestHouse",
+  name: "viewHall",
   beforeInitScreen:(action, state, dispatch) => {
 
     const tenantId = getQueryArg(window.location.href, "tenantId");
@@ -27,21 +27,21 @@ const viewGuestHouse = {
       response = {"booking":[{"status":"APPLIED","hallId":"HALL1","specialCategory":"CANTT_STAFF","fromDate":"1622902988000","toDate":"1622989388000","tenantId":"pb.agra","workflowCode":"LAMS_NewLR_CEO_V3","action":"APPLY","residentType":"canttResident","category":"Office Staff","purpose":"Marriage","userDetails":[{"id":2034,"userName":"9480734475","salutation":null,"name":"विवेक बिष्ट","gender":"MALE","mobileNumber":"9480734475","emailId":"test@test.com","altContactNumber":"4567891045","pan":"bchfb7634l","aadhaarNumber":null,"permanentAddress":"asdf,,streetname,asdf,city","permanentCity":"pb.agra","permanentPinCode":"512465","correspondenceAddress":null,"correspondenceCity":null,"correspondencePinCode":null,"active":true,"locale":null,"type":"CITIZEN","accountLocked":false,"accountLockedDate":0,"fatherOrHusbandName":"Jayas kk","signature":null,"bloodGroup":null,"photo":null,"identificationMark":null,"createdBy":2032,"lastModifiedBy":1,"tenantId":"pb","roles":[{"code":"CITIZEN","name":"Citizen","tenantId":"pb"}],"uuid":"cfd640e6-b19e-4429-a710-86fa41e51cf9","createdDate":1597937400000,"lastModifiedDate":1625332380000,"dob":"1990-01-01","pwdExpiryDate":1607554800000}],"bankDetails":{"accountNumber":"123412341234","repeatAccountNumber":"12341234123412","ifscCode":"SBIN0191911","nameOfBank":"asdfasdfasd","accountHolderName":"fasdfasdfa"},"wfDocuments":[{"documentType":"APPLICANT","documentCode":"APPLICANT.IDENTITYPROOF","isDocumentRequired":true,"isDocumentTypeRequired":true,"dropdown":{"value":"APPLICANT.IDENTITYPROOF.AADHAAR"},"fileName":"s.jpg","fileStoreId":"f2684e01-d949-487d-b50b-546091f74743","fileUrl":"https://13.71.65.215.nip.io/filestore/v1/files/id?fileStoreId=f2684e01-d949-487d-b50b-546091f74743&tenantId=pb"},{"documentType":"APPLICANT","documentCode":"APPLICANT.ADDRESSPROOF","isDocumentRequired":true,"isDocumentTypeRequired":true,"dropdown":{"value":"APPLICANT.ADDRESSPROOF.ELECTRICITYBILL"},"fileName":"s.jpg","fileStoreId":"733e996b-2899-440e-9897-865286e43e25","fileUrl":"https://13.71.65.215.nip.io/filestore/v1/files/id?fileStoreId=733e996b-2899-440e-9897-865286e43e25&tenantId=pb"}]}]};
       if(response && response.booking && response.booking.length > 0)
       {
-        dispatch(prepareFinalObject("ghb.booking", response.booking));
-        dispatch(prepareFinalObject("ghb.booking[0].fromToDateString", 
+        dispatch(prepareFinalObject("chb.booking", response.booking));
+        dispatch(prepareFinalObject("chb.booking[0].fromToDateString", 
           convertEpochToDate(response.booking[0].fromDate + " to "+convertEpochToDate(response.booking[0].toDate))));
 
         let tenantId = getQueryArg(window.location.href, "tenantId");
-        let guestHouseId = getQueryArg(window.location.href, response.booking[0].hallId);
+        let hallId = getQueryArg(window.location.href, response.booking[0].hallId);
 
-        let data = {tenantId:tenantId, guestHouseId:guestHouseId};
-        //Load Guest House Mdms
-        loadGuestHouseDetailsMdms(action, state, dispatch, data).then((response) => {
+        let data = {tenantId:tenantId, hallId:hallId};
+        //Load Hall Mdms
+        loadHallDetailsMdms(action, state, dispatch, data).then((response) => {
 
           if (response && response.MdmsRes && response.MdmsRes.CommunityHallBooking 
             && response.MdmsRes.CommunityHallBooking.CommunityHalls && response.MdmsRes.CommunityHallBooking.CommunityHalls.length >0 ) {
-            let guestHouseMdms = response.MdmsRes.CommunityHallBooking.CommunityHalls[0];
-            dispatch(prepareFinalObject("ghb.viewGuestHouseDetailsMdms", guestHouseMdms));
+            let hallMdms = response.MdmsRes.CommunityHallBooking.CommunityHalls[0];
+            dispatch(prepareFinalObject("chb.viewHallDetailsMdms", hallMdms));
           }
         });
       }
@@ -116,7 +116,7 @@ const viewGuestHouse = {
           moduleName: "egov-obm",//"egov-workflow",//"egov-lams",
           // visible: process.env.REACT_APP_NAME === "Citizen" ? false : true,
           props: {
-            dataPath:"ghb.booking",
+            dataPath:"chb.booking",
             moduleName:  "", //"LAMS_NewLR_CEO_V3",//get(state, "screenConfiguration.preparedFinalObject.lamsStore.Lease[0].workflowCode"),//"LAMS_NewLR_V2",  //tobechanged
             //Dont send moduleName here. Pick this up from the state inside WorkflowContainer 
             //For this to work, the application data should be loaded and data should be ready.(Done in beforeInitScreen)
@@ -136,7 +136,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_HALL_NAME"
                 },
                 {
-                  jsonPath: "ghb.viewGuestHouseDetails.name",
+                  jsonPath: "chb.viewHallDetails.name",
                 }
               ),
               bookedTime: getLabelWithValue(
@@ -145,7 +145,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_BOOKING_DATES"
                 },
                 {
-                  jsonPath: "ghb.booking[0].fromToDateString",
+                  jsonPath: "chb.booking[0].fromToDateString",
                 }
               )
             }),
@@ -168,7 +168,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_RESIDENT_TYPE"
                 },
                 {
-                  jsonPath: "ghb.booking[0].isCanttResident",
+                  jsonPath: "chb.booking[0].isCanttResident",
                   localePrefix: {
                     moduleName: "OBM",
                     masterName: "CHB"
@@ -184,7 +184,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_SPECIAL_CATEGORY"
                 },
                 {
-                  jsonPath: "ghb.booking[0].specialCategory",
+                  jsonPath: "chb.booking[0].specialCategory",
                   localePrefix: {
                     moduleName: "OBM",
                     masterName: "CATEGORY"
@@ -197,7 +197,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_PURPOSE"
                 },
                 {
-                  jsonPath: "ghb.booking[0].purpose",
+                  jsonPath: "chb.booking[0].purpose",
                 }
               ),
             })
@@ -227,7 +227,7 @@ const viewGuestHouse = {
                       labelKey: "OBM_APPLICANT_MOB_NO"
                     },
                     {
-                      jsonPath: "ghb.booking[0].userDetails[0].mobileNumber",
+                      jsonPath: "chb.booking[0].userDetails[0].mobileNumber",
                     }
                   ),
                   applicantName: getLabelWithValue(
@@ -236,7 +236,7 @@ const viewGuestHouse = {
                       labelKey: "OBM_APPLICANT_NAME_LABEL"
                     },
                     {
-                      jsonPath: "ghb.booking[0].userDetails[0].name",
+                      jsonPath: "chb.booking[0].userDetails[0].name",
                     }
                   )
                 })
@@ -262,7 +262,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_ACCOUNT_NO"
                 },
                 {
-                  jsonPath: "ghb.booking[0].bankDetails.accountNumber",
+                  jsonPath: "chb.booking[0].bankDetails.accountNumber",
                 }
               ),
               ifscCode: getLabelWithValue(
@@ -271,7 +271,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_IFSC_CODE"
                 },
                 {
-                  jsonPath: "ghb.booking[0].bankDetails.ifscCode",
+                  jsonPath: "chb.booking[0].bankDetails.ifscCode",
                 }
               ),
               nameOfTheBank: getLabelWithValue(
@@ -280,7 +280,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_BANK_NAME"
                 },
                 {
-                  jsonPath: "ghb.booking[0].bankDetails.nameOfBank",
+                  jsonPath: "chb.booking[0].bankDetails.nameOfBank",
                 }
               ),
               accountHolderName: getLabelWithValue(
@@ -289,7 +289,7 @@ const viewGuestHouse = {
                   labelKey: "OBM_ACCOUNT_HOLDER_NMAE"
                 },
                 {
-                  jsonPath: "ghb.booking[0].bankDetails.accountHolderName",
+                  jsonPath: "chb.booking[0].bankDetails.accountHolderName",
                 }
               ),
             })
@@ -324,4 +324,4 @@ const viewGuestHouse = {
   }
 }
 
-export default viewGuestHouse;
+export default viewHall;

@@ -1,7 +1,7 @@
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
-import { loadBookingDetails, searchForGuestHouse } from "../../utils";
+import { loadBookingDetails, searchForHall } from "../../utils";
 // import { genderValues } from "../../../../../ui-utils/constants";
 import { validateFields } from "../../utils";
 import { convertEpochToDate } from "egov-ui-framework/ui-config/screens/specs/utils";
@@ -20,7 +20,7 @@ export const searchApiCall = async (state, dispatch) => {
   ];
 
   const isSearchSetValid = validateFields(
-    "components.div.children.ghbSearchCard.children.cardContent.children.searchContainerCommon.children",
+    "components.div.children.chbSearchCard.children.cardContent.children.searchContainerCommon.children",
     state,
     dispatch,
     "searchBooking"
@@ -41,12 +41,12 @@ export const searchApiCall = async (state, dispatch) => {
   }
   let tenantId = getTenantId();
 
-  let fromDate = get(state.screenConfiguration.preparedFinalObject,"ghb.search.fromDate");
-  let toDate = get(state.screenConfiguration.preparedFinalObject,"ghb.search.toDate");
+  let fromDate = get(state.screenConfiguration.preparedFinalObject,"chb.search.fromDate");
+  let toDate = get(state.screenConfiguration.preparedFinalObject,"chb.search.toDate");
 
   if (fromDate && toDate ) {
-    let fromDateofsearch=get(state.screenConfiguration.preparedFinalObject,"ghb.search.fromDate")
-    let toDateepochofsearch=get(state.screenConfiguration.preparedFinalObject,"ghb.search.toDate")
+    let fromDateofsearch=get(state.screenConfiguration.preparedFinalObject,"chb.search.fromDate")
+    let toDateepochofsearch=get(state.screenConfiguration.preparedFinalObject,"chb.search.toDate")
     if(fromDateofsearch>toDateepochofsearch)
     {
       dispatch(
@@ -63,9 +63,9 @@ export const searchApiCall = async (state, dispatch) => {
     }
   }
  
-  let applicationNumber = get(state.screenConfiguration.preparedFinalObject,"ghb.search.applicationNumber");
-  let status = get(state.screenConfiguration.preparedFinalObject,"ghb.search.status");
-  let hallId = get(state.screenConfiguration.preparedFinalObject,"ghb.search.hallId");
+  let applicationNumber = get(state.screenConfiguration.preparedFinalObject,"chb.search.applicationNumber");
+  let status = get(state.screenConfiguration.preparedFinalObject,"chb.search.status");
+  let hallId = get(state.screenConfiguration.preparedFinalObject,"chb.search.hallId");
 
   let data = {fromDate: fromDate, 
               toDate: toDate, 
@@ -94,7 +94,7 @@ export const searchApiCall = async (state, dispatch) => {
   });
 
   dispatch(
-    prepareFinalObject("ghb.bookingSearchResponse", bookingData)
+    prepareFinalObject("chb.bookingSearchResponse", bookingData)
   );
 
   // const uiConfigs = get(state.screenConfiguration.preparedFinalObject, "searchScreenMdmsData.common-masters.uiCommonPay");

@@ -11,8 +11,7 @@ import store from "ui-redux/store";
 import {
   prepareFinalObject,
 } from "egov-ui-framework/ui-redux/screen-configuration/actions";
-import {showHideConfirmationPopup} from "./ghbSearchCard";
-import { setRoute } from "egov-ui-framework/ui-redux/app/actions";
+import {showHideConfirmationPopup} from "./chbSearchCard";
 
 export const searchResults = {
   uiFramework: "custom-molecules",
@@ -60,23 +59,33 @@ export const searchResults = {
         }
       },
       {
-        labelName: "Application Number",
-        labelKey: "OBM_APPL_NO",
+        labelName: "Name",
+        labelKey: "CORE_COMMON_NAME"
+      },
+      {
+        labelName: "Address",
+        labelKey: "OBM_ADDRESS",
+      },
+      {
+        labelName: "Geolocation",
+        labelKey: "OBM_GEOLOCATION",
         options: {
           filter: false,
-          customBodyRender: (value, tableMeta) => (
-              <a href="javascript:void(0)" onClick={() => onRowClick(tableMeta.rowData)}>{value}</a>
+          customBodyRender: (value, tableMeta, updateValue) => (
+            <a href={`https://www.google.com/maps?q=${value}`} target="_blank" >
+              {getLocaleLabels("OBM_LOCATE_ON_MAP","OBM_LOCATE_ON_MAP")}
+            </a>
           )
         }
       },
-      {
-        labelName: "Application Date",
-        labelKey: "OBM_APPLICATION_DATE",
-      },
-      {
-        labelName: "Application Status",
-        labelKey: "OBM_APPLICATION_STATUS"
-      },
+      // {
+      //   labelName: "Price",
+      //   labelKey: "OBM_PRICE",
+      // },
+      // {
+      //   labelName: "Availability",
+      //   labelKey: "OBM_AVAILABILITY"
+      // },
       // {
       //   labelName: "Status",
       //   labelKey: "ABG_COMMON_TABLE_COL_STATUS",
@@ -97,18 +106,18 @@ export const searchResults = {
       //     customBodyRender: (value, tableMeta) => value === "PAY" ? (tableMeta.rowData[4] > 0 ? getActionButton(value, tableMeta):(tableMeta.rowData[4] <= 0 && tableMeta.rowData[13] ? getActionButton(value, tableMeta) : "")) : getActionButton(value, tableMeta)
       //   }
       // },
-      // {
-      //   labelName: "OBM_ACTION",
-      //   labelKey: "OBM_ACTION",
-      //   options: {
-      //     display: true,
-      //     viewColumns  :true,
-      //     customBodyRender: (value, tableMeta) => getViewButton(value, tableMeta)
-      //   }
-      // }
+      {
+        labelName: "OBM_ACTION",
+        labelKey: "OBM_ACTION",
+        options: {
+          display: true,
+          viewColumns  :true,
+          customBodyRender: (value, tableMeta) => getViewButton(value, tableMeta)
+        }
+      }
     ],
     title: {
-      labelName: "Search Results for Booking Search",
+      labelName: "Search Results for Birth",
       labelKey: "OBM_SEARCH_TABLE_HEADER"
     },
     rows : "",
@@ -150,8 +159,8 @@ const getActionButton = (value, tableMeta) => {
           let tenantId = tableMeta.rowData[1];
           let id = tableMeta.rowData[0];
 
-          store.dispatch(prepareFinalObject("ghb.search.guestHouseId", id));
-          store.dispatch(prepareFinalObject("ghb.search.tenantId", tenantId));
+          store.dispatch(prepareFinalObject("chb.search.hallId", id));
+          store.dispatch(prepareFinalObject("chb.search.tenantId", tenantId));
 
       }}
     >
@@ -168,21 +177,13 @@ const getViewButton = (value, tableMeta) => {
         cursor: "pointer"
       }}
       onClick={value => {
-          let id = tableMeta.rowData[0];
-          let tenantId = tableMeta.rowData[1];
-          let url = `/ghb-common/viewGuestHouse?tenantId=${tenantId}&guestHouseId=${id}`;
-          document.location.href = `${document.location.origin}${url}`;
+            let id = tableMeta.rowData[0];
+            let tenantId = tableMeta.rowData[1];
+            let url = `/chb-common/bookHall?tenantId=${tenantId}&hallId=${id}`; //Can be changed to viewHall also
+            document.location.href = `${document.location.origin}${url}`;
       }}
     >
       {getLocaleLabels(value,value)}
     </a>
   )
 }
-
-const onRowClick = rowData => {
-
-  store.dispatch(
-    setRoute(`/ghb-common/viewBooking?applicationNumber=${rowData[2]}&tenantId=${rowData[1]}`)
-  );
-
-};

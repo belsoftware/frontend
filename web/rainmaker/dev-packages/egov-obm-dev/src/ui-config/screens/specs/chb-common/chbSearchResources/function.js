@@ -1,7 +1,7 @@
 import { handleScreenConfigurationFieldChange as handleField, prepareFinalObject, toggleSnackbar } from "egov-ui-framework/ui-redux/screen-configuration/actions";
 import { getTenantId } from "egov-ui-kit/utils/localStorageUtils";
 import get from "lodash/get";
-import { searchForGuestHouse } from "../../utils";
+import { searchForHall } from "../../utils";
 // import { genderValues } from "../../../../../ui-utils/constants";
 import { validateFields } from "../../utils";
 // import {
@@ -9,6 +9,7 @@ import { validateFields } from "../../utils";
 //   convertDateToEpoch,
 //   getTextToLocalMapping
 // } from "../../utils";
+import { loadHallDetailsMdms } from "../../utils";
 
 
 export const searchApiCall = async (state, dispatch) => {
@@ -19,18 +20,18 @@ export const searchApiCall = async (state, dispatch) => {
     //{ key: "limit", value: "10" }
   ];
 
-  let tenantId = get(state.screenConfiguration.preparedFinalObject,"ghb.search.tenantId");
+  let tenantId = get(state.screenConfiguration.preparedFinalObject,"chb.search.tenantId");
   if(tenantId)
     queryParams.push({ key: "tenantId",value: tenantId});
 
-  let fromdate = get(state.screenConfiguration.preparedFinalObject,"ghb.search.fromdate");
-  let todate = get(state.screenConfiguration.preparedFinalObject,"ghb.search.toDate");
+  let fromdate = get(state.screenConfiguration.preparedFinalObject,"chb.search.fromdate");
+  let todate = get(state.screenConfiguration.preparedFinalObject,"chb.search.toDate");
 
   const isSearchSetValid = validateFields(
-    "components.div.children.ghbSearchCard.children.cardContent.children.searchContainerCommon.children",
+    "components.div.children.chbSearchCard.children.cardContent.children.searchContainerCommon.children",
     state,
     dispatch,
-    "searchGuestHouse"
+    "searchHall"
   );
 
   if (!isSearchSetValid) {
@@ -47,8 +48,8 @@ export const searchApiCall = async (state, dispatch) => {
     return;
   }
   if (fromdate && todate ) {
-    let fromdateofsearch=get(state.screenConfiguration.preparedFinalObject,"ghb.search.fromdate")
-    let todateepochofsearch=get(state.screenConfiguration.preparedFinalObject,"ghb.search.toDate")
+    let fromdateofsearch=get(state.screenConfiguration.preparedFinalObject,"chb.search.fromdate")
+    let todateepochofsearch=get(state.screenConfiguration.preparedFinalObject,"chb.search.toDate")
     if(fromdateofsearch>todateepochofsearch)
     {
     dispatch(
@@ -65,37 +66,42 @@ export const searchApiCall = async (state, dispatch) => {
       }
   }
 
-  const responseFromAPI = await searchForGuestHouse(dispatch, queryParams)
-  const guestHouseList = (responseFromAPI && responseFromAPI.size > 0) || [{"name":"Residency","tenantId":"pb.agra","priceText":"Starting at 1200/day", "availability":"Available", "id":"GH_1","available":true,"fullDetails":{"maxAllowedBookingDays":20,"maxAllowedHalls":10},"halls":[{"hallId":"hall1","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}}]}];
+  const responseFromAPI = await loadHallDetailsMdms(null, state, dispatch, {tenantId:tenantId});
+  const hallList = (responseFromAPI && responseFromAPI.MdmsRes && responseFromAPI.MdmsRes.CommunityHallBooking
+     && responseFromAPI.MdmsRes.CommunityHallBooking.CommunityHalls); //|| [{"geoLocation":"12.972442,77.580643","address":"Palace Grounds, 10th Main, Agra - 589120","name":"Residency","tenantId":"pb.agra","priceText":"Starting at 1200/day", "availability":"Available", "id":"GH_1","available":true,"fullDetails":{"maxAllowedBookingDays":20,"maxAllowedHalls":10},"halls":[{"hallId":"hall1","taxHeadBreakup":{"deposit":200,"water":20},"bookedSlots":{"booked":[[1234133134,3413413342],[12341234,1234123413]],"blocked":[[1234133134,3413413342],[12341234,1234123413]]}}]}];
 
-  const guestHouseData = guestHouseList.map(item => {
+  const hallData = hallList.map(item => {
     return {
-      id: get(item, "id"),
+      id: get(item, "hallCode"),
       name: get(item, "name"),
       price: get(item, "priceText"),
       availability: get(item, "availability"),
-      tenantId: get(item, "tenantId")
+      tenantId: tenantId, //get(item, "tenantId"),
+      address: get(item, "address"),
+      geoLocation: get(item, "geoLocation")
     };
   });
   dispatch(
-    prepareFinalObject("ghb.guestHouseSearchResponse", guestHouseData)
+    prepareFinalObject("chb.hallSearchResponse", hallData)
   );
 
   // const uiConfigs = get(state.screenConfiguration.preparedFinalObject, "searchScreenMdmsData.common-masters.uiCommonPay");
   // const configObject = uiConfigs.filter(item => item.code === searchScreenObject.businesService);
     
   try {
-    let data = guestHouseData.map(item => ({
+    let data = hallData.map(item => ({
       ["TENANT_ID"]: item.tenantId,
       ['OBM_TABLE_ID']: item.id || "-",
       ['CORE_COMMON_NAME']: item.name || "-",
       ["OBM_PRICE"]: item.price || "-",
       ["OBM_AVAILABILITY"]: item.availability || "-",
+      ["OBM_GEOLOCATION"]: item.geoLocation || "-",
+      ["OBM_ADDRESS"]: item.address || "-",
       ["OBM_ACTION"]: "OBM_VIEW_DETAILS",
     }));
     dispatch(
       handleField(
-        "searchGuestHouse",
+        "searchHall",
         "components.div.children.searchResults",
         "props.data",
         data
@@ -103,18 +109,18 @@ export const searchApiCall = async (state, dispatch) => {
     );
     dispatch(
       handleField(
-        "searchGuestHouse",
+        "searchHall",
         "components.div.children.searchResults",
         "props.tableData",
-        guestHouseData
+        hallData
       )
     );
     dispatch(
       handleField(
-        "searchGuestHouse",
+        "searchHall",
         "components.div.children.searchResults",
         "props.rows",
-        guestHouseData.length
+        hallData.length
       )
     );
 
@@ -128,7 +134,7 @@ export const searchApiCall = async (state, dispatch) => {
 const showHideTable = (booleanHideOrShow, dispatch) => {
   dispatch(
     handleField(
-      "searchGuestHouse",
+      "searchHall",
       "components.div.children.searchResults",
       "visible",
       booleanHideOrShow

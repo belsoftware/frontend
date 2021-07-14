@@ -15,23 +15,23 @@ import { localStorageGet, localStorageSet }   from "egov-ui-kit/utils/localStora
 const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_APP_NAME === "Employee" ? getTenantId() : JSON.parse(getUserInfo()).permanentCity;
 
  //Clear advanced Search
- let componentPath = "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer2.children.details.children";
- for(var child in get(state,"screenConfiguration.screenConfig.searchGuestHouse."+componentPath))
+ let componentPath = "components.div.children.chbSearchCard.children.cardContent.children.searchContainer2.children.details.children";
+ for(var child in get(state,"screenConfiguration.screenConfig.searchHall."+componentPath))
  {
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchHall",
      componentPath+"."+child,
      "props.value",
      ""
    ));
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchHall",
      componentPath+"."+child,
      "props.helperText",
      ""
    ));
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchHall",
      componentPath+"."+child,
      "props.error",
      false
@@ -39,23 +39,23 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
  }
 
  //Clear Mandatory Search Attributes
- componentPath = "components.div.children.ghbSearchCard.children.cardContent.children.searchContainerCommon.children";
- for(var child in get(state,"screenConfiguration.screenConfig.searchGuestHouse."+componentPath))
+ componentPath = "components.div.children.chbSearchCard.children.cardContent.children.searchContainerCommon.children";
+ for(var child in get(state,"screenConfiguration.screenConfig.searchHall."+componentPath))
  {
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchHall",
      componentPath+"."+child,
      "props.value",
      ""
    ));
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchHall",
      componentPath+"."+child,
      "props.helperText",
      ""
    ));
    dispatch(handleField(
-     "searchGuestHouse",
+     "searchHall",
      componentPath+"."+child,
      "props.error",
      false
@@ -64,14 +64,14 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
 };
 
 const cbChanged = (action, state, dispatch) => {
-    localStorageSet("ghb.search.tenantId",get(state,"screenConfiguration.preparedFinalObject.ghb.search.tenantId"));
+    localStorageSet("chb.search.tenantId",get(state,"screenConfiguration.preparedFinalObject.chb.search.tenantId"));
 }
 
 const setVisibilityOptionsSet1 = (state, dispatch, visible) => {
  dispatch(
    handleField(
-     "searchGuestHouse",
-     "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer1",
+     "searchHall",
+     "components.div.children.chbSearchCard.children.cardContent.children.searchContainer1",
      "visible",
      visible
    )
@@ -81,8 +81,8 @@ const setVisibilityOptionsSet1 = (state, dispatch, visible) => {
 const setVisibilityOptionsSet2 = (state, dispatch, visible) => {
  dispatch(
    handleField(
-     "searchGuestHouse",
-     "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer2",
+     "searchHall",
+     "components.div.children.chbSearchCard.children.cardContent.children.searchContainer2",
      "visible",
      visible
    )
@@ -91,71 +91,71 @@ const setVisibilityOptionsSet2 = (state, dispatch, visible) => {
 
 export const showHideConfirmationPopup = (state, dispatch) => {
  let toggle = get(
-   state.screenConfiguration.screenConfig["searchGuestHouse"],
-  "components.div.children.ghbSearchCard.children.cardContent.children.disclaimerDialog.props.open",
+   state.screenConfiguration.screenConfig["searchHall"],
+  "components.div.children.chbSearchCard.children.cardContent.children.disclaimerDialog.props.open",
   false
 );
 dispatch(
-  handleField("searchGuestHouse", 
-  "components.div.children.ghbSearchCard.children.cardContent.children.disclaimerDialog", "props.open", !toggle)
+  handleField("searchHall", 
+  "components.div.children.chbSearchCard.children.cardContent.children.disclaimerDialog", "props.open", !toggle)
 );
 };
 
 export const searchSetCommon = getCommonContainer({
- fromDate: getDateField({
-   label: { labelName: "fromDate", labelKey: "COMMON_FROM_DATE" },
-   placeholder: {
-     labelName: "From Date",
-     labelKey: "COMMON_FROM_DATE"
-   },
-   jsonPath: "ghb.search.fromDate",
-   gridDefination: {
-     xs: 12,
-     sm: 4
-   },
-   pattern: getPattern("Date"),
-   errorMessage: "ERR_INVALID_DATE",
-   required: true,
-   props: {
-     inputProps: {
-       max: getTodaysDateInYMD()
-     }
-   },
-   afterFieldChange: (action, state, dispatch) => {
-    localStorageSet("ghb.search.fromDate",get(state,"screenConfiguration.preparedFinalObject.ghb.search.fromDate"));
-   },
-   visible: true,
- }),
- todate: getDateField({
-   label: { labelName: "ToDate", labelKey: "COMMON_TO_DATE" },
-   placeholder: {
-     labelName: "To Date",
-     labelKey: "COMMON_TO_DATE"
-   },
-   jsonPath: "ghb.search.toDate",
-   gridDefination: {
-     xs: 12,
-     sm: 4
-   },
-   pattern: getPattern("Date"),
-   errorMessage: "ERR_INVALID_DATE",
-   required: true,
-   props: {
-     inputProps: {
-       max: getTodaysDateInYMD()
-     }
-   },
-   afterFieldChange: (action, state, dispatch) => {
-    localStorageSet("ghb.search.toDate",get(state,"screenConfiguration.preparedFinalObject.ghb.search.toDate"));
-   },
-   visible: true
- }),
+//  fromDate: getDateField({
+//    label: { labelName: "fromDate", labelKey: "COMMON_FROM_DATE" },
+//    placeholder: {
+//      labelName: "From Date",
+//      labelKey: "COMMON_FROM_DATE"
+//    },
+//    jsonPath: "chb.search.fromDate",
+//    gridDefination: {
+//      xs: 12,
+//      sm: 4
+//    },
+//    pattern: getPattern("Date"),
+//    errorMessage: "ERR_INVALID_DATE",
+//    required: true,
+//    props: {
+//      inputProps: {
+//        max: getTodaysDateInYMD()
+//      }
+//    },
+//    afterFieldChange: (action, state, dispatch) => {
+//     localStorageSet("chb.search.fromDate",get(state,"screenConfiguration.preparedFinalObject.chb.search.fromDate"));
+//    },
+//    visible: true,
+//  }),
+//  todate: getDateField({
+//    label: { labelName: "ToDate", labelKey: "COMMON_TO_DATE" },
+//    placeholder: {
+//      labelName: "To Date",
+//      labelKey: "COMMON_TO_DATE"
+//    },
+//    jsonPath: "chb.search.toDate",
+//    gridDefination: {
+//      xs: 12,
+//      sm: 4
+//    },
+//    pattern: getPattern("Date"),
+//    errorMessage: "ERR_INVALID_DATE",
+//    required: true,
+//    props: {
+//      inputProps: {
+//        max: getTodaysDateInYMD()
+//      }
+//    },
+//    afterFieldChange: (action, state, dispatch) => {
+//     localStorageSet("chb.search.toDate",get(state,"screenConfiguration.preparedFinalObject.chb.search.toDate"));
+//    },
+//    visible: true
+//  }),
  cantonmentSelect: {
    uiFramework: "custom-containers",
      //moduleName: "egov-lams",
      componentPath: "AutosuggestContainer",
-     jsonPath: "ghb.search.tenantId",
-     sourceJsonPath: "ghb.allTenants",
+     jsonPath: "chb.search.tenantId",
+     sourceJsonPath: "chb.allTenants",
      visible:true,
      autoSelect:true,
      props:{
@@ -178,8 +178,8 @@ export const searchSetCommon = getCommonContainer({
        },
        labelsFromLocalisation: true,
        required: true,
-       jsonPath: "ghb.search.tenantId",
-       sourceJsonPath: "ghb.allTenants",
+       jsonPath: "chb.search.tenantId",
+       sourceJsonPath: "chb.allTenants",
        inputLabelProps: {
          shrink: true
        },
@@ -280,16 +280,16 @@ export const buttonContainer = getCommonContainer({
  }
 });
 
-export const ghbSearchCard = getCommonCard({
+export const chbSearchCard = getCommonCard({
  header: getCommonHeader({
    labelName: "Search",
-   labelKey: "OBM_GHB_SEARCH"
+   labelKey: "OBM_CHB_SEARCH"
  }),
  break1:getBreak(),
  searchContainerCommon: searchSetCommon,
  //break1: getBreak(),
- divider1: getDivider(),
- break2:getBreak(),
+ //divider1: getDivider(),
+ //break2:getBreak(),
  buttonContainer: buttonContainer,
  disclaimerDialog: {
    componentPath: "Dialog",

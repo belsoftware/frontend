@@ -15,7 +15,7 @@ import { localStorageGet, localStorageSet }   from "egov-ui-kit/utils/localStora
 const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_APP_NAME === "Employee" ? getTenantId() : JSON.parse(getUserInfo()).permanentCity;
 
  //Clear advanced Search
- let componentPath = "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer2.children.details.children";
+ let componentPath = "components.div.children.chbSearchCard.children.cardContent.children.searchContainer2.children.details.children";
  for(var child in get(state,"screenConfiguration.screenConfig.searchBooking."+componentPath))
  {
    dispatch(handleField(
@@ -39,7 +39,7 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
  }
 
  //Clear Mandatory Search Attributes
- componentPath = "components.div.children.ghbSearchCard.children.cardContent.children.searchContainerCommon.children";
+ componentPath = "components.div.children.chbSearchCard.children.cardContent.children.searchContainerCommon.children";
  for(var child in get(state,"screenConfiguration.screenConfig.searchBooking."+componentPath))
  {
    dispatch(handleField(
@@ -64,14 +64,14 @@ const resetFields = (state, dispatch) => {//const tenantId = process.env.REACT_A
 };
 
 const cbChanged = (action, state, dispatch) => {
-    localStorageSet("ghb.search.tenantId",get(state,"screenConfiguration.preparedFinalObject.ghb.search.tenantId"));
+    localStorageSet("chb.search.tenantId",get(state,"screenConfiguration.preparedFinalObject.chb.search.tenantId"));
 }
 
 const setVisibilityOptionsSet1 = (state, dispatch, visible) => {
  dispatch(
    handleField(
      "searchBooking",
-     "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer1",
+     "components.div.children.chbSearchCard.children.cardContent.children.searchContainer1",
      "visible",
      visible
    )
@@ -82,7 +82,7 @@ const setVisibilityOptionsSet2 = (state, dispatch, visible) => {
  dispatch(
    handleField(
      "searchBooking",
-     "components.div.children.ghbSearchCard.children.cardContent.children.searchContainer2",
+     "components.div.children.chbSearchCard.children.cardContent.children.searchContainer2",
      "visible",
      visible
    )
@@ -92,12 +92,12 @@ const setVisibilityOptionsSet2 = (state, dispatch, visible) => {
 export const showHideConfirmationPopup = (state, dispatch) => {
  let toggle = get(
    state.screenConfiguration.screenConfig["searchBooking"],
-  "components.div.children.ghbSearchCard.children.cardContent.children.disclaimerDialog.props.open",
+  "components.div.children.chbSearchCard.children.cardContent.children.disclaimerDialog.props.open",
   false
 );
 dispatch(
   handleField("searchBooking", 
-  "components.div.children.ghbSearchCard.children.cardContent.children.disclaimerDialog", "props.open", !toggle)
+  "components.div.children.chbSearchCard.children.cardContent.children.disclaimerDialog", "props.open", !toggle)
 );
 };
 
@@ -118,7 +118,7 @@ export const searchSetCommon = getCommonContainer({
     required: false,
     pattern: /^[a-zA-Z0-9-]{0,32}$/i,
     errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
-    jsonPath: "ghb.search.applicationNumber"
+    jsonPath: "chb.search.applicationNumber"
   }),
   applicantMobNo: getTextField({
     label: {
@@ -139,7 +139,7 @@ export const searchSetCommon = getCommonContainer({
     },
     required: false,
     pattern: getPattern("MobileNo"),
-    jsonPath: "ghb.search.mobileNumber",
+    jsonPath: "chb.search.mobileNumber",
     errorMessage: "ERR_INVALID_MOBILE_NUMBER"
   }),
   applicationStatus: {
@@ -187,7 +187,7 @@ export const searchSetCommon = getCommonContainer({
         }
       ],
     },
-    jsonPath: "ghb.search.status",
+    jsonPath: "chb.search.status",
     gridDefination: {
       xs: 12,
       sm: 4
@@ -199,7 +199,7 @@ export const searchSetCommon = getCommonContainer({
       labelName: "From Date",
       labelKey: "COMMON_FROM_DATE"
     },
-    jsonPath: "ghb.search.fromDate",
+    jsonPath: "chb.search.fromDate",
     gridDefination: {
       xs: 12,
       sm: 4
@@ -213,7 +213,7 @@ export const searchSetCommon = getCommonContainer({
       }
     },
     afterFieldChange: (action, state, dispatch) => {
-      localStorageSet("ghb.search.fromDate",get(state,"screenConfiguration.preparedFinalObject.ghb.search.fromDate"));
+      localStorageSet("chb.search.fromDate",get(state,"screenConfiguration.preparedFinalObject.chb.search.fromDate"));
     },
     visible: true,
   }),
@@ -223,7 +223,7 @@ export const searchSetCommon = getCommonContainer({
      labelName: "To Date",
      labelKey: "COMMON_TO_DATE"
    },
-   jsonPath: "ghb.search.toDate",
+   jsonPath: "chb.search.toDate",
    gridDefination: {
      xs: 12,
      sm: 4
@@ -237,7 +237,7 @@ export const searchSetCommon = getCommonContainer({
      }
    },
    afterFieldChange: (action, state, dispatch) => {
-    localStorageSet("ghb.search.toDate",get(state,"screenConfiguration.preparedFinalObject.ghb.search.toDate"));
+    localStorageSet("chb.search.toDate",get(state,"screenConfiguration.preparedFinalObject.chb.search.toDate"));
    },
    visible: true
  }),
@@ -245,8 +245,8 @@ export const searchSetCommon = getCommonContainer({
 //    uiFramework: "custom-containers",
 //      //moduleName: "egov-lams",
 //      componentPath: "AutosuggestContainer",
-//      jsonPath: "ghb.search.tenantId",
-//      sourceJsonPath: "ghb.allTenants",
+//      jsonPath: "chb.search.tenantId",
+//      sourceJsonPath: "chb.allTenants",
 //      visible:true,
 //      autoSelect:true,
 //      props:{
@@ -269,8 +269,8 @@ export const searchSetCommon = getCommonContainer({
 //        },
 //        labelsFromLocalisation: true,
 //        required: false,
-//        jsonPath: "ghb.search.tenantId",
-//        sourceJsonPath: "ghb.allTenants",
+//        jsonPath: "chb.search.tenantId",
+//        sourceJsonPath: "chb.allTenants",
 //        inputLabelProps: {
 //          shrink: true
 //        },
@@ -371,10 +371,10 @@ export const buttonContainer = getCommonContainer({
  }
 });
 
-export const ghbSearchCard = getCommonCard({
+export const chbSearchCard = getCommonCard({
  header: getCommonHeader({
    labelName: "Search",
-   labelKey: "OBM_GHB_SEARCH"
+   labelKey: "OBM_CHB_SEARCH"
  }),
  break1:getBreak(),
  searchContainerCommon: searchSetCommon,

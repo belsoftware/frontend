@@ -361,8 +361,8 @@ class WorkFlowContainer extends React.Component {
         );
       }
     } else {
-      const { ghb } = preparedFinalObject;
-      const status = ghb.booking[0].status;
+      const { chb } = preparedFinalObject;
+      const status = chb.booking[0].status;
     
       //alert("Status checko "+status);
       switch(status){
@@ -638,7 +638,7 @@ class WorkFlowContainer extends React.Component {
     //const {ProcessInstances} = workflow;
     console.log("ProcessItance is ",ProcessInstances, preparedFinalObject,screenConfiguration);
 
-    let moduleName = get(screenConfiguration, "preparedFinalObject.ghb.booking[0].workflowCode");
+    let moduleName = get(screenConfiguration, "preparedFinalObject.chb.booking[0].workflowCode");
 
     const workflowContract =
       ProcessInstances &&
