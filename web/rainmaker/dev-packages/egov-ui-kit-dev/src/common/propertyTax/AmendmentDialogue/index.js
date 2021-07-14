@@ -7,6 +7,7 @@ import { prepareFinalObject } from "egov-ui-framework/ui-redux/screen-configurat
 import { httpRequest as httpRequestnew } from "egov-ui-framework/ui-utils/api";
 import { get } from "lodash";
 import { Card } from "components";
+import { LabelContainer } from "egov-ui-framework/ui-containers";
 
 
 
@@ -129,10 +130,16 @@ class AmendmentDialogue extends Component {
         actions={[
           <div style={{ position: "sticky" }}>
             <Button onClick={closeDialogue} color="primary">
-              CANCEL
+            <LabelContainer
+                  labelName="Cancel"
+                  labelKey="BILLAMEND_CANCEL_BUTTON"
+                />
           </Button>
             <Button onClick={onAmendBtnClick} color="primary">
-              APPLY
+            <LabelContainer
+                  labelName="Apply"
+                  labelKey="BILLAMEND_APPLY_BUTTON"
+                />
           </Button>
           </div>
         ]}

@@ -3,7 +3,7 @@ import FeesEstimateCard  from "../../ui-molecules-local/FeeEstimateCard"
 
 import { connect } from "react-redux";
 import get from "lodash/get";
-
+import { LabelContainer } from "egov-ui-framework/ui-containers";
 class EstimateCardContainer extends Component {
   render() {
     return <FeesEstimateCard estimate={this.props.estimate} />;
@@ -17,7 +17,10 @@ const mapStateToProps = (state, ownProps) => {
   const estimate = {
     fees,
     extra: [
-      { textLeft: "BILL_TOOLTIP_NOTE_MSG" },
+      { textLeft:   <LabelContainer
+        labelName="The approval note amount will be automatically applied in the upcoming bill"
+        labelKey="BILL_TOOLTIP_NOTE_MSG"
+      /> },
     ],
     amountType
   };

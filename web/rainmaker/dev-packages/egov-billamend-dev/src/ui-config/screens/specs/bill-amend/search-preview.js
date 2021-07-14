@@ -550,6 +550,9 @@ export const setSearchResponse = async (state, dispatch, action) => {
     }
 }
 
+export const checkValueForNA = value => {
+    return value == null || value == undefined || value == '' ? "NA" : value;
+  };
 export const billAmendDemandRevisionContainer = {
     demandRevisionBasis: getLabelWithValue(
         {
@@ -687,9 +690,7 @@ export const getData = async (action, state, dispatch) => {
    
 }
 
-export const checkValueForNA = value => {
-    return value == null || value == undefined || value == '' ? "NA" : value;
-  };
+
   
 const screenConfig = {
     uiFramework: "material-ui",
