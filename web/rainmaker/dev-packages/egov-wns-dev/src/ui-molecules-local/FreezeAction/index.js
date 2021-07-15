@@ -24,8 +24,10 @@ import { showHideAdhocPopup ,ifUserRoleExists,convertDateToEpoch} from "../../ui
 
 const moveToSuccess = (combinedArray, dispatch) => {
   const tenantId = get(combinedArray[0].property, "tenantId") || getQueryArg(window.location.href, "tenantId");
-  const purpose = "apply";
+  let purpose = "apply";
   const status = "success";
+  if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" && ifUserRoleExists('WS_CLERK'))
+  purpose = "deactivate";
   const applicationNoWater = get(combinedArray[0], "applicationNo");
   const applicationNoSewerage = get(combinedArray[1], "applicationNo");
   let mode = (isModifyMode()) ? "&mode=MODIFY" : (isFreezeMode()) ? "&mode=FREEZE" : ""
@@ -104,11 +106,18 @@ const parserFunction = (state) => {
 
 const getWaterObjectForOperations = (state,queryObject) =>{     
   let queryObjectForUpdate =  get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0]");
+  let applicationStatus =  get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
  // let waterSource = get(state,"screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType", null);
  // let waterSubSource = get(state, "screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource", null);
   set(queryObjectForUpdate, "tenantId", get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].property.tenantId"));
   queryObjectForUpdate = { ...queryObjectForUpdate, ...queryObject }
-  set(queryObjectForUpdate, "processInstance.action", "VERIFY_AND_FORWARD");
+  if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" && ifUserRoleExists('WS_CLERK'))
+  set(queryObjectForUpdate, "processInstance.action", "DEACTIVATE_CONNECTION");
+  else
+  {
+    console.log("else conition---")
+    set(queryObjectForUpdate, "processInstance.action", "VERIFY_AND_FORWARD");
+  }
  // let finalWaterSource = getWaterSource(queryObjectForUpdate.waterSource, queryObjectForUpdate.waterSubSource);
  // set(queryObjectForUpdate, "waterSource",finalWaterSource);
  // set(queryObjectForUpdate, "waterSourceSubSource", finalWaterSource);
@@ -233,6 +242,12 @@ class Footer extends React.Component {
     };
     //if(applicationType === "MODIFY"){
     console.log("downloadMenu---"+downloadMenu)
+    let applicationStatus = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
+    if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" && ifUserRoleExists('WS_CLERK'))
+    {
+      submitButton.label = "Deactivate Connection";
+      submitButton.labelKey = "WS_DEACTIVATE_CONNECTION_BUTTON";
+    }
     downloadMenu && downloadMenu.push(submitButton,cancelButton);
    
    /* if (

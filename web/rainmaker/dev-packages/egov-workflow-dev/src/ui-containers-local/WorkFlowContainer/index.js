@@ -554,7 +554,7 @@ class WorkFlowContainer extends React.Component {
       if (actions.indexOf(item.code) > -1) return true;
     });
     
-    if((moduleName === "NewWS1" || moduleName === "ModifyWSConnection" || moduleName === "ModifySWConnection" || moduleName === "NewSW1" || moduleName === "DeactivateWSConnection") && (applicationState==='PENDING_APPROVAL_FOR_CONNECTION' || applicationState=== 'PENDING_FOR_APPROVAL' ||  applicationState === 'PENDING_FOR_CONNECTION_DEACTIVATION')){
+    if((moduleName === "NewWS1" || moduleName === "ModifyWSConnection" || moduleName === "ModifySWConnection" || moduleName === "NewSW1" || moduleName === "DeactivateWSConnection") && (applicationState==='PENDING_APPROVAL_FOR_CONNECTION' || applicationState=== 'PENDING_FOR_APPROVAL')){
       state.isStateUpdatable = false;
     }
     let editAction = {};
