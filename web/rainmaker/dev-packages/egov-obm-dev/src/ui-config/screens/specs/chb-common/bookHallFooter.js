@@ -37,36 +37,39 @@ const checkIfFormIsValid = async (state, dispatch) => {
     dispatch,
     "bookHall"
   );
-  const uploadedDocsInRedux = get(
-    state.screenConfiguration.preparedFinalObject,
-    "documentsUploadRedux",
-    []
-  );
 
-  let isMandatoryDocsUploaded = true;
-  for(var key in uploadedDocsInRedux){
-    if(uploadedDocsInRedux[key].isDocumentRequired && 
-      (!uploadedDocsInRedux[key].documents || (uploadedDocsInRedux[key].documents && uploadedDocsInRedux[key].documents.length<1)))
-    {
-      isMandatoryDocsUploaded = false;
-      break;
-    }
-  }
+  const isDocumentSelectValid = checkCorrectnessOfDocs(state, dispatch);
 
-  console.log("Check ",isAppicantInfoValid,isBankDetailsValid,isBookingDetailsValid,isMandatoryDocsUploaded);
+  // const uploadedDocsInRedux = get(
+  //   state.screenConfiguration.preparedFinalObject,
+  //   "documentsUploadRedux",
+  //   []
+  // );
 
-  isFormValid = isAppicantInfoValid && isBankDetailsValid && isBookingDetailsValid && isMandatoryDocsUploaded;
+  //let isMandatoryDocsUploaded = true;
+  // for(var key in uploadedDocsInRedux){
+  //   if(uploadedDocsInRedux[key].isDocumentRequired && 
+  //     (!uploadedDocsInRedux[key].documents || (uploadedDocsInRedux[key].documents && uploadedDocsInRedux[key].documents.length<1)))
+  //   {
+  //     isMandatoryDocsUploaded = false;
+  //     break;
+  //   }
+  // }
+
+  console.log("Check ",isAppicantInfoValid,isBankDetailsValid,isBookingDetailsValid, isDocumentSelectValid);
+
+  isFormValid = isAppicantInfoValid && isBankDetailsValid && isBookingDetailsValid && isDocumentSelectValid;
 
   //If form is invalid show message and return.
   if(!isFormValid)
   {
-    if(!isMandatoryDocsUploaded)
+    if(!isAppicantInfoValid || !isBankDetailsValid || !isBookingDetailsValid)
     {
-      dispatch(toggleSnackbar(
+        dispatch(toggleSnackbar(
           true,
           {
             labelName: "Please fill the required fields.",
-            labelKey: "LAMS_REQUIRED_FIELDS_ERROR_MSG"
+            labelKey: "ERR_FILL_ALL_FIELDS"
           },
           "info"
         )
@@ -74,11 +77,11 @@ const checkIfFormIsValid = async (state, dispatch) => {
     }
     else
     {
-      dispatch(toggleSnackbar(
+        dispatch(toggleSnackbar(
           true,
           {
             labelName: "Please upload mandatory documents.",
-            labelKey: "LAMS_REQUIRED_DOCS_ERROR_MSG"
+            labelKey: "ERR_UPLOAD_REQUIRED_DOCUMENTS"
           },
           "info"
         )
@@ -187,6 +190,77 @@ const getCommonApplyFooter = children => {
     },
     children
   };
+};
+
+const checkCorrectnessOfDocs = (state, dispatch) => {
+  const documentsFormat = Object.values(
+    get(state.screenConfiguration.preparedFinalObject, "documentsUploadRedux")
+  );
+
+  let validateDocumentField = false;    
+  for (let i = 0; i < documentsFormat.length; i++) {
+    let isDocumentRequired = get(documentsFormat[i], "isDocumentRequired");
+    let isDocumentTypeRequired = get(documentsFormat[i], "isDocumentTypeRequired");    
+    if (isDocumentRequired) {
+      let documents = get(documentsFormat[i], "documents");      
+      if(documents != undefined){
+          if (documents && documents.length > 0) {           
+            if (isDocumentTypeRequired) {             
+              let dropdownData = get(documentsFormat[i], "dropdown.value");
+              if (dropdownData) {
+                // if (get(documentsFormat[i], "dropdown.value") !== null && get(documentsFormat[i]).dropdown !==undefined ){
+                validateDocumentField = true;
+              } else {
+                dispatch(
+                  toggleSnackbar(
+                    true,
+                    { labelName: "Please select type of Document!", labelKey: "" },
+                    "warning"
+                  )
+                );
+                validateDocumentField = false;
+                break;
+              }
+            } else {
+              validateDocumentField = true;
+            }
+          } 
+          // else if (!isModifyMode()) {
+           
+          //   dispatch(
+          //     toggleSnackbar(
+          //       true,
+          //       { labelName: "Please upload mandatory documents!", labelKey: "" },
+          //       "warning"
+          //     )
+          //   );
+          //   validateDocumentField = false;
+          //   break;
+          // } 
+          else {
+            validateDocumentField = true;
+          }
+        }
+        else{
+         
+          dispatch(
+            toggleSnackbar(
+              true,
+              { labelName: "Please upload mandatory documents!", labelKey: "" },
+              "warning"
+            )
+          );
+          validateDocumentField = false;
+          break;
+        }
+    }
+    
+    else {
+      validateDocumentField = true;
+    }
+  }
+
+  return validateDocumentField;
 };
 
 export const footer = getCommonApplyFooter({

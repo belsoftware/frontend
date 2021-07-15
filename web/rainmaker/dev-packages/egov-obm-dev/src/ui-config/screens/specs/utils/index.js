@@ -421,7 +421,7 @@ export const loadHallDetails = async (action, state, dispatch,data) => {
     let payload = null;
     payload = await httpRequest(
       "post",
-      `/obm-services/hall/_search`,
+      `/obm-services/chb/_search`,
       "_search",
       queryParams,
       requestBody

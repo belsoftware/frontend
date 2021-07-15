@@ -42,7 +42,7 @@ const onPurposeChange = (action, state, dispatch) =>{
 }
 
 const onCategoryChange = (action, state, dispatch) =>{
-  let category = get(state,"screenConfiguration.preparedFinalObject.chb.booking[0].category");
+  let category = get(state,"screenConfiguration.preparedFinalObject.chb.booking[0].specialCategory");
   dispatch(prepareFinalObject("documentsContract", getDocumentsList(category)));
 }
 
@@ -454,6 +454,26 @@ const bookHall = {
               onPurposeChange(action, state, dispatch);
             },
           },
+          purposeString: getTextField({
+            label: {
+              labelName: "Purpose",
+              labelKey: "OBM_PURPOSE_DESC"
+            },
+            props:{
+              className:"applicant-details-error"
+            },
+            placeholder: {
+              labelName: "Enter Purspose Description",
+              labelKey: "OBM_PURPOSE_DESC"
+            },
+            required: true,
+            pattern: patterns["purposeDescription"],
+            jsonPath: "chb.booking[0].userDetails[0].purposeDescription",
+            gridDefination: {
+              xs: 12,
+              sm: 6
+            }
+          }),
         })
       }),
       applicantInfo:{

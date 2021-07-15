@@ -200,6 +200,15 @@ const viewHall = {
                   jsonPath: "chb.booking[0].purpose",
                 }
               ),
+              purposeDescription: getLabelWithValue(
+                {
+                  labelName: "Purpose",
+                  labelKey: "OBM_PURPOSE_DESC"
+                },
+                {
+                  jsonPath: "chb.booking[0].purposeDescription",
+                }
+              ),
             })
           }),
           applicantInfo:{

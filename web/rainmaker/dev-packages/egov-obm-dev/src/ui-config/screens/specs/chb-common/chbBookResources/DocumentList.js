@@ -72,6 +72,21 @@ const commonDocuments = [
         // }
       ]
     }
+  },
+  {
+    "name": "APPLICANT.BANKACCOUNTPROOF",
+    "code": "APPLICANT.BANKACCOUNTPROOF",
+    "required": true,
+    "dropdown": {
+      "label": "OBM_SELECT_DOC_LABEL",
+      "required": true,
+      "menu": [
+        {
+          "code": "APPLICANT.BANKACCOUNTPROOF.PASSBOOKPHOTO",
+          "label": "APPLICANT_BANKACCOUNTPROOF_PASSBOOKPHOTO"
+        }
+      ]
+    }
   }
 ];
 
@@ -119,12 +134,12 @@ export const getDocumentsList = (type) =>{
   let cards = [];
   switch(type)
   {
-    case 'BPL':
+    case 'CATEGORY.BPL':
       cards = [...commonDocuments,...bplDocuments];
       break;
-    case 'CANTT_STAFF':
-    case 'RETD_CANTT_STAFF':
-    case 'ELECTED_MEMBER':
+    case 'CATEGORY.ELECTED_MEMBER':
+    case 'CATEGORY.RETD_CANTT_STAFF':
+    case 'CATEGORY.CANTT_STAFF':
       cards = [...commonDocuments,...specialCategoryDocuments]
       break;
     default:
