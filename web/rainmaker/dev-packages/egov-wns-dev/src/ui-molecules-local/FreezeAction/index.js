@@ -175,8 +175,13 @@ class Footer extends React.Component {
       labelKey: "WF_EMPLOYEE_NEWWS1_SUBMIT_APPLICATION",
       link: async () => {     
      // console.log("submit clicked---");
-     let deactivationDate = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].deactivationDate");
-     let method = deactivationDate ? "UPDATE" : "CREATE";
+    // let deactivationDate = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].deactivationDate");
+     let method;
+     let applicationStatus = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
+     if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" || applicationStatus === "PENDING_FOR_CLERK_APPROVAL" && ifUserRoleExists('WS_CLERK'))
+      method =  "UPDATE"
+      else
+      method = "CREATE";
      let queryObject = parserFunction(state);
      try {
      //console.log("queryObject object---" + JSON.stringify(queryObject));
