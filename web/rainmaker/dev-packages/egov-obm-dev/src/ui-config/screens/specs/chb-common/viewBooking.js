@@ -184,7 +184,7 @@ const viewHall = {
                   labelKey: "OBM_SPECIAL_CATEGORY"
                 },
                 {
-                  jsonPath: "chb.booking[0].specialCategory",
+                  jsonPath: "chb.booking[0].category",
                   localePrefix: {
                     moduleName: "OBM",
                     masterName: "CATEGORY"

@@ -42,7 +42,7 @@ const onPurposeChange = (action, state, dispatch) =>{
 }
 
 const onCategoryChange = (action, state, dispatch) =>{
-  let category = get(state,"screenConfiguration.preparedFinalObject.chb.booking[0].specialCategory");
+  let category = get(state,"screenConfiguration.preparedFinalObject.chb.booking[0].category");
   dispatch(prepareFinalObject("documentsContract", getDocumentsList(category)));
 }
 
@@ -115,7 +115,7 @@ const bookHall = {
         try{
           jp.query(hallMdms, "$.timeSlots.*").forEach(slot => {
             let timeSlotText = getSlotText(slot, new Date());
-            timeSlotList.push({"id":slot.id,"name":timeSlotText,"code":timeSlotText});
+            timeSlotList.push({"id":slot.id,"name":timeSlotText,"code":slot.id});
           });
           dispatch(prepareFinalObject("chb.timeSlotList", timeSlotList));
         }
@@ -141,7 +141,7 @@ const bookHall = {
     dispatch(prepareFinalObject("chb.booking[0].hallId", hallId));
 
     //Set the workflow code and action
-    dispatch(prepareFinalObject("chb.booking[0].workflowCode", "OBM_HALLBOOKING_V1"));
+    dispatch(prepareFinalObject("chb.booking[0].workflowCode", "OBM_CHB_V1"));
     dispatch(prepareFinalObject("chb.booking[0].action", "APPLY"));
     dispatch(prepareFinalObject("chb.booking[0].businessService", "obm-services"));
 
@@ -205,7 +205,7 @@ const bookHall = {
               content: "For this property",
               jsonPath : "chb.viewHallDetails.calender",
               sourceJsonPath: "chb.viewHallDetails.calender",
-              outJsonPath: "chb.booking[0].tempSelectedDate",
+              outJsonPath: "chb.booking[0].selectedDate",
               onChange: (action, state, dispatch) => {
                 prepareSlotDetails();
               }
@@ -366,7 +366,7 @@ const bookHall = {
             componentPath: "AutosuggestContainer",
             visible:true,
             autoSelect:true,
-            jsonPath: "chb.booking[0].specialCategory",
+            jsonPath: "chb.booking[0].category",
             props:{
               autoSelect:true,
               //isClearable:true,

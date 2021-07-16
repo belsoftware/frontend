@@ -45,7 +45,7 @@ export const confirmationDialog = getCommonContainer({
           children: {
             previousButtonLabel: getLabel({
               labelName: "YES",
-              labelKey: "BND_DOWNLOAD_PROCEED"
+              labelKey: "OBM_CONFIRM"
             })
           },
           onClickDefination: {

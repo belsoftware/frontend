@@ -31,12 +31,16 @@ const checkIfFormIsValid = async (state, dispatch) => {
     "bookHall"
   );
 
-  const isAppicantInfoValid = validateFields(
+  let isAppicantInfoValid = validateFields(
     "components.bookingDetails.children.cardContent.children.applicantInfo.children.details.children.cardContent.children.applicantDetailsCardContainer.children",
     state,
     dispatch,
     "bookHall"
   );
+  isAppicantInfoValid = (process.env.REACT_APP_NAME === "Citizen")?
+                          isAppicantInfoValid?
+                            true:false:
+                          true; 
 
   const isDocumentSelectValid = checkCorrectnessOfDocs(state, dispatch);
 
@@ -118,6 +122,16 @@ export const postBookingData = async (state,dispatch) =>{
     console.log("List of docs for API", docListToBeSentToApi);
     dispatch(prepareFinalObject("chb.booking[0].wfDocuments", docListToBeSentToApi));
     dispatch(prepareFinalObject("chb.booking[0].applicationDocuments", docListToBeSentToApi));
+
+    //Conver userDetails from Array to Object as expected by the API
+    const userDetails = get(state.screenConfiguration.preparedFinalObject,"chb.booking[0].userDetails",[]);
+    if(userDetails.length > 0)
+    {
+      dispatch(prepareFinalObject("chb.booking[0].userDetails", userDetails[0]));
+    }
+
+    //toberemoved
+    dispatch(prepareFinalObject("chb.booking[0].selectedDate", 1629124721000));
 
     const booking = get(
       state.screenConfiguration.preparedFinalObject,
