@@ -197,7 +197,7 @@ class TableChart extends Component {
         if(k.name != "S.N."){
           colSortRow[k.name] = '';
           let yes = v < 0;
-          let isNumeric = _.toLower(k.symbol) === 'amount' || _.toLower(k.symbol) === "number" || _.toLower(k.symbol) === "percentage";          
+          let isNumeric = _.toLower(k.symbol) === 'amount' || _.toLower(k.symbol) === "number" || _.toLower(k.symbol) === "percentage" || _.toLower(k.symbol) === "averagetime";          
           return { id: k.name, numeric: isNumeric, stickyHeader: yes, disablePadding: false, label: k.name, colType: k.symbol }          
         }
       }).value();
