@@ -175,7 +175,10 @@ function FeesEstimateCard(props) {
             </Grid>
             <Grid xs={12} sm={5}>
                 <Typography variant="body2" align="right">
-                    Total Amount
+                <LabelContainer
+                  labelName="Total Amount"
+                  labelKey="BILL_PT_TOTAL_AMT"
+                />
         </Typography>
                 <Typography className={classes.bigheader} align="right">
                     Rs {total}

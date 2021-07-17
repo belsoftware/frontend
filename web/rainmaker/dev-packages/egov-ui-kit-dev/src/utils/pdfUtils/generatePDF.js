@@ -365,7 +365,7 @@ export const getEstimateCardDetails = (fees = [], color,demanddata=[]) => {
 
     row1.push(getLabel(' ', 'amount'))
     row1.push(getLabel(' ', 'amount'))
-    row1.push({ ...getLabel(getLocaleLabels('TL_COMMON_TOTAL_AMT', 'TL_COMMON_TOTAL_AMT'), 'amount'), "alignment": "right" })
+    row1.push({ ...getLabel(getLocaleLabels('BILL_PT_TOTAL_AMT', 'BILL_PT_TOTAL_AMT'), 'amount'), "alignment": "right" })
     card.push(row1);
     let row2 = []
 
