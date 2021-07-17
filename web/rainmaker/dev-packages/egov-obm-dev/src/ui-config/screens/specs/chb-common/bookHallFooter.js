@@ -162,10 +162,9 @@ export const postBookingData = async (state,dispatch) =>{
           payload
         );
       }
-    dispatch(toggleSpinner());
-
 
     if (payload.booking && payload.booking.length>0 && payload.booking[0].applicationNumber) {
+      dispatch(toggleSpinner());
       const applicationNumber = payload.booking[0].applicationNumber;
       const status = "success";
       const purpose = "apply"

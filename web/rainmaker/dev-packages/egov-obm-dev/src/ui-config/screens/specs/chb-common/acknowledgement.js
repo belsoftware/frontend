@@ -52,7 +52,6 @@ const acknowledgement = {
   name: "acknowledgement",
   beforeInitScreen:(action, state, dispatch) => {
     let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
-    dispatch(toggleSpinner());
 
     const data = getAcknowledgementCard(
       state,

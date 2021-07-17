@@ -4,7 +4,7 @@ import { prepareFinalObject,  handleScreenConfigurationFieldChange as handleFiel
 import { getLabelWithValue, getCommonCard, getCommonContainer, getCommonHeader,getCommonGrayCard,getDivider,getCommonCaption, getCommonSubHeader,getCommonParagraph, getCommonTitle, getStepperObject, getBreak } from "egov-ui-framework/ui-config/screens/specs/utils";
 import {loadBookingDetails, loadHallDetailsMdms } from "../utils";
 import { getQueryArg, setBusinessServiceDataToLocalStorage, setDocuments } from "egov-ui-framework/ui-utils/commons";
-import { setDocumentsInfo, convertEpochToDate, loadWorkflowMasterData} from "../utils";
+import { setDocumentsInfo, convertEpochToDateWithTimeIST, loadWorkflowMasterData} from "../utils";
 
 const header = getCommonHeader({
   labelName: "Search Certificate",
@@ -23,25 +23,25 @@ const viewHall = {
     let data = {tenantId: tenantId, applicationNumber: applicationNumber};
 
     loadBookingDetails(state, dispatch,data).then((response)=>{
-      //tobechanged - NewWS1 to OBM_HALLBOOKING_V1
-      response = {"booking":[{"status":"APPLIED","hallId":"HALL1","specialCategory":"CANTT_STAFF","fromDate":"1622902988000","toDate":"1622989388000","tenantId":"pb.agra","workflowCode":"LAMS_NewLR_CEO_V3","action":"APPLY","residentType":"canttResident","category":"Office Staff","purpose":"Marriage","userDetails":[{"id":2034,"userName":"9480734475","salutation":null,"name":"विवेक बिष्ट","gender":"MALE","mobileNumber":"9480734475","emailId":"test@test.com","altContactNumber":"4567891045","pan":"bchfb7634l","aadhaarNumber":null,"permanentAddress":"asdf,,streetname,asdf,city","permanentCity":"pb.agra","permanentPinCode":"512465","correspondenceAddress":null,"correspondenceCity":null,"correspondencePinCode":null,"active":true,"locale":null,"type":"CITIZEN","accountLocked":false,"accountLockedDate":0,"fatherOrHusbandName":"Jayas kk","signature":null,"bloodGroup":null,"photo":null,"identificationMark":null,"createdBy":2032,"lastModifiedBy":1,"tenantId":"pb","roles":[{"code":"CITIZEN","name":"Citizen","tenantId":"pb"}],"uuid":"cfd640e6-b19e-4429-a710-86fa41e51cf9","createdDate":1597937400000,"lastModifiedDate":1625332380000,"dob":"1990-01-01","pwdExpiryDate":1607554800000}],"bankDetails":{"accountNumber":"123412341234","repeatAccountNumber":"12341234123412","ifscCode":"SBIN0191911","nameOfBank":"asdfasdfasd","accountHolderName":"fasdfasdfa"},"wfDocuments":[{"documentType":"APPLICANT","documentCode":"APPLICANT.IDENTITYPROOF","isDocumentRequired":true,"isDocumentTypeRequired":true,"dropdown":{"value":"APPLICANT.IDENTITYPROOF.AADHAAR"},"fileName":"s.jpg","fileStoreId":"f2684e01-d949-487d-b50b-546091f74743","fileUrl":"https://13.71.65.215.nip.io/filestore/v1/files/id?fileStoreId=f2684e01-d949-487d-b50b-546091f74743&tenantId=pb"},{"documentType":"APPLICANT","documentCode":"APPLICANT.ADDRESSPROOF","isDocumentRequired":true,"isDocumentTypeRequired":true,"dropdown":{"value":"APPLICANT.ADDRESSPROOF.ELECTRICITYBILL"},"fileName":"s.jpg","fileStoreId":"733e996b-2899-440e-9897-865286e43e25","fileUrl":"https://13.71.65.215.nip.io/filestore/v1/files/id?fileStoreId=733e996b-2899-440e-9897-865286e43e25&tenantId=pb"}]}]};
       if(response && response.booking && response.booking.length > 0)
       {
         dispatch(prepareFinalObject("chb.booking", response.booking));
+        let fromDateStr = convertEpochToDateWithTimeIST(response.booking[0].fromDate);
+        let toDateStr = convertEpochToDateWithTimeIST(response.booking[0].toDate);
         dispatch(prepareFinalObject("chb.booking[0].fromToDateString", 
-          convertEpochToDate(response.booking[0].fromDate + " to "+convertEpochToDate(response.booking[0].toDate))));
+          fromDateStr+ " to "+toDateStr));
 
         let tenantId = getQueryArg(window.location.href, "tenantId");
-        let hallId = getQueryArg(window.location.href, response.booking[0].hallId);
+        let hallId = response.booking[0].hallId;
 
         let data = {tenantId:tenantId, hallId:hallId};
         //Load Hall Mdms
         loadHallDetailsMdms(action, state, dispatch, data).then((response) => {
-
+          //response = {"booking":[{"status":"APPLIED","hallId":"HALL1","specialCategory":"CANTT_STAFF","fromDate":"1622902988000","toDate":"1622989388000","tenantId":"pb.agra","workflowCode":"LAMS_NewLR_CEO_V3","action":"APPLY","residentType":"canttResident","category":"Office Staff","purpose":"Marriage","userDetails":[{"id":2034,"userName":"9480734475","salutation":null,"name":"विवेक बिष्ट","gender":"MALE","mobileNumber":"9480734475","emailId":"test@test.com","altContactNumber":"4567891045","pan":"bchfb7634l","aadhaarNumber":null,"permanentAddress":"asdf,,streetname,asdf,city","permanentCity":"pb.agra","permanentPinCode":"512465","correspondenceAddress":null,"correspondenceCity":null,"correspondencePinCode":null,"active":true,"locale":null,"type":"CITIZEN","accountLocked":false,"accountLockedDate":0,"fatherOrHusbandName":"Jayas kk","signature":null,"bloodGroup":null,"photo":null,"identificationMark":null,"createdBy":2032,"lastModifiedBy":1,"tenantId":"pb","roles":[{"code":"CITIZEN","name":"Citizen","tenantId":"pb"}],"uuid":"cfd640e6-b19e-4429-a710-86fa41e51cf9","createdDate":1597937400000,"lastModifiedDate":1625332380000,"dob":"1990-01-01","pwdExpiryDate":1607554800000}],"bankDetails":{"accountNumber":"123412341234","repeatAccountNumber":"12341234123412","ifscCode":"SBIN0191911","nameOfBank":"asdfasdfasd","accountHolderName":"fasdfasdfa"},"wfDocuments":[{"documentType":"APPLICANT","documentCode":"APPLICANT.IDENTITYPROOF","isDocumentRequired":true,"isDocumentTypeRequired":true,"dropdown":{"value":"APPLICANT.IDENTITYPROOF.AADHAAR"},"fileName":"s.jpg","fileStoreId":"f2684e01-d949-487d-b50b-546091f74743","fileUrl":"https://13.71.65.215.nip.io/filestore/v1/files/id?fileStoreId=f2684e01-d949-487d-b50b-546091f74743&tenantId=pb"},{"documentType":"APPLICANT","documentCode":"APPLICANT.ADDRESSPROOF","isDocumentRequired":true,"isDocumentTypeRequired":true,"dropdown":{"value":"APPLICANT.ADDRESSPROOF.ELECTRICITYBILL"},"fileName":"s.jpg","fileStoreId":"733e996b-2899-440e-9897-865286e43e25","fileUrl":"https://13.71.65.215.nip.io/filestore/v1/files/id?fileStoreId=733e996b-2899-440e-9897-865286e43e25&tenantId=pb"}]}]};
           if (response && response.MdmsRes && response.MdmsRes.CommunityHallBooking 
             && response.MdmsRes.CommunityHallBooking.CommunityHalls && response.MdmsRes.CommunityHallBooking.CommunityHalls.length >0 ) {
             let hallMdms = response.MdmsRes.CommunityHallBooking.CommunityHalls[0];
-            dispatch(prepareFinalObject("chb.viewHallDetailsMdms", hallMdms));
+            dispatch(prepareFinalObject("chb.viewHallDetails", hallMdms));
           }
         });
       }
@@ -120,7 +120,7 @@ const viewHall = {
             moduleName:  "", //"LAMS_NewLR_CEO_V3",//get(state, "screenConfiguration.preparedFinalObject.lamsStore.Lease[0].workflowCode"),//"LAMS_NewLR_V2",  //tobechanged
             //Dont send moduleName here. Pick this up from the state inside WorkflowContainer 
             //For this to work, the application data should be loaded and data should be ready.(Done in beforeInitScreen)
-            updateUrl: "/egov-obm/hallBooking/_update"
+            updateUrl: "/obm-services/chb/_update"
           }
         },
         bookingDetails: getCommonCard({
@@ -137,7 +137,11 @@ const viewHall = {
                 },
                 {
                   jsonPath: "chb.viewHallDetails.name",
-                }
+                  gridDefination: {
+                    xs: 12,
+                    sm: 4
+                  },
+                },
               ),
               bookedTime: getLabelWithValue(
                 {
@@ -146,7 +150,11 @@ const viewHall = {
                 },
                 {
                   jsonPath: "chb.booking[0].fromToDateString",
-                }
+                  gridDefination: {
+                    xs: 12,
+                    sm: 6
+                  },
+                },
               )
             }),
           bookingDetails: getCommonGrayCard({
@@ -236,7 +244,7 @@ const viewHall = {
                       labelKey: "OBM_APPLICANT_MOB_NO"
                     },
                     {
-                      jsonPath: "chb.booking[0].userDetails[0].mobileNumber",
+                      jsonPath: "chb.booking[0].userDetails.mobileNumber",
                     }
                   ),
                   applicantName: getLabelWithValue(
@@ -245,7 +253,7 @@ const viewHall = {
                       labelKey: "OBM_APPLICANT_NAME_LABEL"
                     },
                     {
-                      jsonPath: "chb.booking[0].userDetails[0].name",
+                      jsonPath: "chb.booking[0].userDetails.name",
                     }
                   )
                 })
