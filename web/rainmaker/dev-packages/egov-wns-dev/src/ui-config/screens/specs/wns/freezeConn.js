@@ -466,51 +466,7 @@ const estimate = getCommonGrayCard({
      
   });
 
-/*const screenConfig = {
-    uiFramework: "material-ui",
-    name: "freezeConn",
-    beforeInitScreen: (action, state, dispatch) => {
-       // pageReset(dispatch);
-       console.log("in this paage ---------->>>");
-       beforeInitFn(action, state, dispatch, consumerCode);
-        set(
-      action.screenConfig,
-      "components.div.children.headerDiv.children.header1.children.consumerCode.props.number",
-      consumerCode
-    );
-        return action;
-    },
-    components: {
-        div: {
-            uiFramework: "custom-atoms",
-            componentPath: "Div",
-            props: { className: "common-div-css search-preview" },
-            children: {
-                headerDiv: {
-                    uiFramework: "custom-atoms",
-                    componentPath: "Container"
-                   
-                },
-                formwizardFirstStep: {
-                    uiFramework: "custom-atoms",
-                    componentPath: "Div",
-                    children: {
-                        paymentDetails: getCommonCard({
-                            header: getCommonTitle({
-                                labelName: "Payment Collection Details",
-                                labelKey: "NOC_PAYMENT_HEAD"
-                            }),
-                             estimate
-                        })
-                    }
-                }
-             
-              
-            }
-          },
-    }
-};*/
-
+ 
 const screenConfig = {
     uiFramework: "material-ui",
     name: "freezeConn",

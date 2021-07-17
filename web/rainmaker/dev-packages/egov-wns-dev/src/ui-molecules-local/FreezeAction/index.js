@@ -22,10 +22,13 @@ import {
 import { showHideAdhocPopup ,ifUserRoleExists,convertDateToEpoch} from "../../ui-config/screens/specs/utils";
 // import { getRequiredDocData, showHideAdhocPopup } from "egov-billamend/ui-config/screens/specs/utils"
 
-const moveToSuccess = (combinedArray, dispatch) => {
+let applicationStatus;
+
+const moveToSuccess = (state,combinedArray, dispatch) => {
   const tenantId = get(combinedArray[0].property, "tenantId") || getQueryArg(window.location.href, "tenantId");
   let purpose = "apply";
   const status = "success";
+  //let applicationStatus = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
   if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" && ifUserRoleExists('WS_CLERK'))
   purpose = "deactivate";
   const applicationNoWater = get(combinedArray[0], "applicationNo");
@@ -56,6 +59,7 @@ const moveToSuccess = (combinedArray, dispatch) => {
 const parserFunction = (state) => {
   let queryObject = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "WaterConnection[0]", {})));
   let applyScreenData = JSON.parse(JSON.stringify(get(state.screenConfiguration.preparedFinalObject, "applyScreen", {})));
+  console.log("plumber info---"+JSON.stringify(applyScreenData.plumberInfo));
   let parsedObject = {
       roadCuttingArea: parseInt(queryObject.roadCuttingArea),
       meterInstallationDate: convertDateToEpoch(queryObject.meterInstallationDate),
@@ -94,11 +98,21 @@ const parserFunction = (state) => {
     parsedObject.additionalDetails = {};
   }
   parsedObject.additionalDetails.locality = queryObject.property.address.locality.code;
-  console.log("parsedObject.additionalDetails.locality---"+JSON.stringify(parsedObject.additionalDetails))
+  if(!parsedObject.additionalDetails.detailsProvidedBy) 
+  {
+    if(applyScreenData.plumberInfo)
+    parsedObject.additionalDetails.detailsProvidedBy = "ULB";
+  } 
+  else
+  {
+    if(parsedObject.additionalDetails.detailsProvidedBy ==="Self")
+    parsedObject.plumberInfo = [];
+
+  }
+   console.log("parsedObject.additionalDetails.locality---"+JSON.stringify(parsedObject.additionalDetails))
    let input = JSON.stringify(queryObject);
    input = input.replace(/"NA"/g, null);
-  // console.log("input data---"+input);
-   let output = JSON.parse(input);
+   let output = JSON.parse(input);  
   queryObject = { ...output, ...parsedObject }
   return queryObject;
 }
@@ -106,7 +120,7 @@ const parserFunction = (state) => {
 
 const getWaterObjectForOperations = (state,queryObject) =>{     
   let queryObjectForUpdate =  get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0]");
-  let applicationStatus =  get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
+  //let applicationStatus =  get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
  // let waterSource = get(state,"screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSourceType", null);
  // let waterSubSource = get(state, "screenConfiguration.preparedFinalObject.DynamicMdms.ws-services-masters.waterSource.selectedValues[0].waterSubSource", null);
   set(queryObjectForUpdate, "tenantId", get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].property.tenantId"));
@@ -177,7 +191,8 @@ class Footer extends React.Component {
      // console.log("submit clicked---");
     // let deactivationDate = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].deactivationDate");
      let method;
-     let applicationStatus = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
+     applicationStatus = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
+     console.log("application status data---"+applicationStatus);
      if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" || applicationStatus === "PENDING_FOR_CLERK_APPROVAL" && ifUserRoleExists('WS_CLERK'))
       method =  "UPDATE"
       else
@@ -195,7 +210,7 @@ class Footer extends React.Component {
         let searchResponse = await getSearchResults(searchQueryObject);
         store.dispatch(prepareFinalObject("WaterConnection", searchResponse.WaterConnection));
         let combinedArray = get(state.screenConfiguration.preparedFinalObject, "WaterConnection");
-        moveToSuccess(combinedArray, store.dispatch)
+        moveToSuccess(state,combinedArray, store.dispatch)
      }
      else
      {
@@ -208,7 +223,7 @@ class Footer extends React.Component {
      store.dispatch(prepareFinalObject("applyScreen.noOfTaps", response.WaterConnection[0].noOfTaps));
       let combinedArray = get(state.screenConfiguration.preparedFinalObject, "WaterConnection");
 
-      if (true) { moveToSuccess(combinedArray, store.dispatch) }
+      if (true) { moveToSuccess(state,combinedArray, store.dispatch) }
      }
      /* if (isFormValid) {
         changeStep(state, dispatch);
@@ -246,8 +261,7 @@ class Footer extends React.Component {
       },
     };
     //if(applicationType === "MODIFY"){
-    console.log("downloadMenu---"+downloadMenu)
-    let applicationStatus = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
+    //let applicationStatus = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
     if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" && ifUserRoleExists('WS_CLERK'))
     {
       submitButton.label = "Deactivate Connection";
