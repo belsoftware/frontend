@@ -278,7 +278,8 @@ export const searchCard = getCommonCard({
           border: "#FE7A51 solid 1px",
           borderRadius: "2px",
           width: window.innerWidth > 480 ? "80%" : "100%",
-          height: "48px"
+          height: "48px",
+          marginBottom: "10px"
         }
       },
       children: {
@@ -307,7 +308,8 @@ export const searchCard = getCommonCard({
           backgroundColor: "#696969",
           borderRadius: "2px",
           width: window.innerWidth > 480 ? "80%" : "100%",
-          height: "48px"
+          height: "48px",
+          marginBottom: "10px"
         }
       },
       children: {

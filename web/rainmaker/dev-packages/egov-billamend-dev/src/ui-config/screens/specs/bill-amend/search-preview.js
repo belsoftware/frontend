@@ -24,7 +24,7 @@ import jp from "jsonpath";
 import get from "lodash/get";
 import set from "lodash/set";
 import commonConfig from "../../../../config/common";
-import { getBillAmdSearchResult, searchBill,searchDemand } from "../../../../ui-utils/commons";
+import { getBillAmdSearchResult,getBillAmendSearchResult, searchBill,searchDemand } from "../../../../ui-utils/commons";
 import { getReviewDocuments } from "./document-review";
 import { generateBillAmendPdf } from "./utils";
 import "./index.css";
@@ -236,67 +236,61 @@ const headerrow = getCommonContainer({
     },
 });
 
-export const adjustmentAmountDetails = async (state, dispatch, amendment,demandobj) => {
-    let amountType = amendment && amendment.demandDetails &&
-        amendment.demandDetails.length > 0 && amendment.demandDetails.filter(details => details.taxAmount < 0);
-    if (amountType && amountType.length > 0) {
-        amountType = "reducedAmount"
-    } else {
-        amountType = "additionalAmount"
-    }
+export const adjustmentAmountDetails = async (state, dispatch, amendment ,amendmentt ,demandobj) => { 
+
+    let amountType = amendmentt && amendmentt.demandDetails &&
+    amendmentt.demandDetails.length > 0 && amendmentt.demandDetails.filter(details => details.taxAmount < 0);
+if (amountType && amountType.length > 0) {
+    amountType = "reducedAmount"
+} else {
+    amountType = "additionalAmount"
+}
     let billDetails = [];
-    demandobj.demandDetails.map(dem => {
-        let found = false;
-        amendment.demandDetails.map(bill => {
-            if (bill && bill.taxAmount) {
+    let currentTaxAmount = demandobj.demandDetails.filter((elem) => !amendment.find( id1 => id1.demandDetails[0].id === elem.id));
+   
+    currentTaxAmount.map(dem => {
+    amendmentt.demandDetails.map(bill => {
+     if (bill && bill.taxAmount) {
                 if(dem && dem.taxAmount
-                    && dem.taxHeadMasterCode ==bill.taxHeadMasterCode) {
-                        found = true;
+                     && dem.taxHeadMasterCode == bill.taxHeadMasterCode) {
+    
                     if( dem.id!= bill.id ){
-                        billDetails.push({
+                         billDetails.push({
                             taxHeadMasterCode: bill.taxHeadMasterCode,
-                            taxAmount: Math.abs(parseFloat(bill.taxAmount)),
-                            amountType: amountType,
+                         taxAmount: Math.abs(parseFloat(bill.taxAmount)),
+                              amountType: amountType,
                             demand:dem.taxAmount
             
-                        });
-                    }
-                    
-                }
-               else if(!demandobj.demandDetails.find(element => element.taxHeadMasterCode === bill.taxHeadMasterCode)){
+                      });
+                     }
+                 }
+               else {
                 billDetails.push({
-                    taxHeadMasterCode: bill.taxHeadMasterCode,
-                    taxAmount: Math.abs(parseFloat(bill.taxAmount)),
-                    amountType: amountType,
-                    demand:0
+                     taxHeadMasterCode: dem.taxHeadMasterCode,
+                     taxAmount:0,
+                     amountType: amountType,
+                     demand:Math.abs(parseFloat(dem.taxAmount))
                 })
                
-            }
-            }
+             
+             }
            
               
-               
-        });
+            }       
+        
+     });
       
-        if(found == false){
-            billDetails.push({
-                taxHeadMasterCode: dem.taxHeadMasterCode,
-                taxAmount: 0,
-                amountType: amountType,
-                demand:dem.taxAmount
+    
+     });
+  
 
-            });
-           
-
-        }
-    });
+// });
+console.log("currentTaxAmountt" + JSON.stringify(currentTaxAmount))
     console.log("Bill Details" + JSON.stringify(billDetails))
-    const unique =  billDetails.map(e => e.taxHeadMasterCode)
-    .map((e, i, final) => final.indexOf(e) === i && i)
-   .filter((e) => billDetails[e]).map(e => billDetails[e]);
 
 
-    dispatch(prepareFinalObject("AmendmentTemp[0].estimateCardData", unique, []));
+
+    dispatch(prepareFinalObject("AmendmentTemp[0].estimateCardData", billDetails, []));
 }
 
 const documentMaping = async (documentsPreview) => {
@@ -508,6 +502,34 @@ export const setSearchResponse = async (state, dispatch, action) => {
         }
     ], dispatch);
     let amendments = get(billAMDSearch, "Amendments", []);
+    console.log("Amendd"+ JSON.stringify(amendments))
+    let billAMDSearch1 = await getBillAmendSearchResult([
+        {
+            key: "tenantId",
+            value: tenantId
+        },
+        {
+            key: "consumerCode",
+            value: get(amendments[0], "consumerCode")
+        },
+        {
+            key: "businessService",
+            value: businessService
+        }
+    ], dispatch);
+    let amendments1 = get(billAMDSearch1, "Amendments", []);
+    let CurrentDemand = [];
+    if(amendments1.forEach(demandd => {
+        if(demandd.status == "CONSUMED")
+        {
+            CurrentDemand.push({
+                demandDetails: demandd.demandDetails
+            })
+        }
+
+    }))
+    
+  console.log(CurrentDemand+ "CurrentDemandd")
     if (amendments && amendments.length > 0) {
         let newQuery = [{
             key: "tenantId",
@@ -538,7 +560,8 @@ export const setSearchResponse = async (state, dispatch, action) => {
         dispatch(prepareFinalObject("Properties[0]", connectionDetail));
         let demandResponse = get(demandresp, "Demands", []), demandDetails;
         console.log("Demand Details:",demandResponse)
-        adjustmentAmountDetails(state, dispatch, amendments[0],demandResponse[0]);
+        console.log(JSON.stringify(CurrentDemand)+ "CurrentDemandd")
+        adjustmentAmountDetails(state, dispatch, CurrentDemand,amendments[0] ,demandResponse[0]);
         documentDetailsPreview(state, dispatch, amendments[0]);
         onDemandRevisionBasisHidendShowFields(state, dispatch, action, amendments[0]);
         setDownloadMenu(state, dispatch, applicationNumber);
