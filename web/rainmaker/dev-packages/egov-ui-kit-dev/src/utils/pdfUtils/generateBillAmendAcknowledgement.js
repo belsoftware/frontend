@@ -20,7 +20,7 @@ export const generateBillAmendAcknowledgement = (preparedFinalObject, fileName =
  
     let UlbLogoForPdf = getFromObject(preparedFinalObject, 'UlbLogoForPdf', '');
     let Amendment = getFromObject(preparedFinalObject, 'Amendment', {});
-   let status1 = (Amendment.status === "INACTIVE" ? " " + "(" +'BILL_INACTIVE' + " )": " ");
+   let status1 = (Amendment.status === "INACTIVE" ? " " + "(" +getLocaleLabels('BILL_INACTIVE','BILL_INACTIVE') + " )": " ");
     const modifiedDemand = { ...billAmendDemandRevisionContainer };
     const propertydetails = { ...billAmendpropertyContainer };
     let demandRevisionBasis = getFromObject(Amendment, "amendmentReason", "");
