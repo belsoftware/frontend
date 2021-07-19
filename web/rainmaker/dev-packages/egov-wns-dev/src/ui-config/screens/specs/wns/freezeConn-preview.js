@@ -32,8 +32,7 @@ import {
   let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
   let consumerCode = getQueryArg(window.location.href, "connectionNumber");
   let service = getQueryArg(window.location.href, "service");
-  let serviceModuleName = service === serviceConst.WATER ? "NewWS1" : "NewSW1";
-  let serviceUrl = serviceModuleName === "NewWS1" ? "/ws-services/wc/_update" : "/sw-services/swc/_update";
+  let serviceModuleName,serviceUrl;
   let redirectQueryString = `applicationNumber=${applicationNumber}&tenantId=${tenantId}&connectionNumber=${consumerCode}`;
   let editredirect = `freezeConn?${redirectQueryString}&action=edit`;
   let headerLabel = "WS_TASK_DETAILS"
@@ -624,12 +623,7 @@ import {
   };
 
   const beforeInitFn = async (action, state, dispatch, applicationNumber) => {
-    // dispatch(handleField("apply",
-    // "components",
-    // "div", {}));
-    // dispatch(handleField("search",
-    // "components",
-    // "div", {}));
+     
     dispatch(unMountScreen("apply"));
     dispatch(unMountScreen("search"));
     dispatch(unMountScreen("meter-reading"));
@@ -651,7 +645,7 @@ import {
     let workflowName = Response.ProcessInstances[0].businessService ;
     
     //Search details for given application Number
-    console.log("applicationNumber---"+applicationNumber);
+    
     if (applicationNumber) {
   
       // hiding the Additional details for citizen. ,,
@@ -661,7 +655,7 @@ import {
           { display: "none" }
         );
       }
-      console.log("edited---"+getQueryArg(window.location.href, "edited"));
+       
       if (!getQueryArg(window.location.href, "edited")) {
         (await searchResults(action, state, dispatch, applicationNumber, processInstanceAppStatus));
       } else {
@@ -723,32 +717,7 @@ import {
             await processBills(state,billData, viewBillTooltip, dispatch);
             
             dispatch(prepareFinalObject("billData", billData.Bill[0]));
-           
-            // estimate = await waterEstimateCalculation(queryObjectForEst, dispatch);
-            // let viewBillTooltip = [];
-            // if (estimate !== null && estimate !== undefined) {
-            //   if (estimate.Calculation.length > 0) {
-            //     await processBills(estimate, viewBillTooltip, dispatch);
-            //     // viewBreakUp 
-            //     estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
-            //     estimate.Calculation[0].appStatus = processInstanceAppStatus;
-            //     dispatch(prepareFinalObject("dataCalculation", estimate.Calculation[0]));
-            //   }
-            // }
             
-            // ifUserRoleExists('WS_FIELD_INSPECTOR')
-            //   billEstimate = await waterBillEstimateCalculation(queryObjectForEst, dispatch);          
-            // if (billEstimate !== null && billEstimate !== undefined) {
-             
-            //   if (billEstimate.BillEstimation != undefined) {
-                
-            //     //estimate.Calculation[0].billSlabData = _.groupBy(estimate.Calculation[0].taxHeadEstimates, 'category')
-            //     //estimate.Calculation[0].appStatus = processInstanceAppStatus;
-            //     dispatch(prepareFinalObject("billEstimation", billEstimate.BillEstimation));
-            //   }
-            // }
-  
-  
           } else {
             let queryObjectForEst = [{
               applicationNo: applicationNumber,
@@ -811,39 +780,13 @@ import {
         );
       }
   
-      if (isFreezeMode()) {
-        // set(
-        //   action.screenConfig,
-        //   "components.div.children.taskDetails.children.cardContent.children.estimate.visible",
-        //   false
-        // );
-        // set(
-        //   action.screenConfig,
-        //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewSeven.visible",
-        //   false
-        // );
-        // set(
-        //   action.screenConfig,
-        //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewEight.visible",
-        //   false
-        // );
-        // set(
-        //   action.screenConfig,
-        //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewNine.visible",
-        //   false
-        // );
-        // set(
-        //   action.screenConfig,
-        //   "components.div.children.taskDetails.children.cardContent.children.reviewOwnerDetails.children.cardContent.children.viewTen.visible",
-        //   false
-        // );
-      } else {
+      
         set(
           action.screenConfig,
           "components.div.children.taskDetails.children.cardContent.children.reviewModificationsDetails.visible",
           false
         );
-      }
+      
   
       const status = getTransformedStatus(
         get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus")
@@ -974,26 +917,22 @@ import {
     uiFramework: "material-ui",
     name: "freezeConn-preview",
     beforeInitScreen: (action, state, dispatch) => {
-      const status = getQueryArg(window.location.href, "status");
-      console.log("beforeInitScreen status----"+status)
+       
       const tenantId = getQueryArg(window.location.href, "tenantId");
       let applicationNumber = getQueryArg(window.location.href, "applicationNumber");
       const queryObject = [
         { key: "tenantId", value: tenantId },
       ];
-  
       setBusinessServiceDataToLocalStorage(queryObject, dispatch);
       //To set the application no. at the  top
       set(action.screenConfig, "components.div.children.headerDiv.children.header1.children.application.children.applicationNumber.props.number", applicationNumber);
-      // if (status !== "pending_payment") {
-      //   set(action.screenConfig, "components.div.children.taskDetails.children.cardContent.children.viewBreakupButton.visible", false);
-      // }
+      
       if (isFreezeMode()) {
         serviceModuleName = "DeactivateWSConnection"
       }
   
-      //set(action, "screenConfig.components.adhocDialog.children.popup", adhocPopup);
-      loadUlbLogo(tenantId);
+      
+       
       beforeInitFn(action, state, dispatch, applicationNumber);
       set(
         action,

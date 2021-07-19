@@ -149,6 +149,19 @@ class Footer extends React.Component {
       labelKey: "WS_DEACTIVATE_CONNECTION_BUTTON",
       link: async () => {     
         const connectionObj = get(state.screenConfiguration.preparedFinalObject,"WaterConnection[0]");  
+        if (connectionObj.status === "Inactive") {
+          console.log("Inactive connection---"); 
+          toggleSnackbar(
+            true,
+            {
+              labelName: "Connection Already Deactivated!",
+              labelKey: "WS_CONN_DEACTIVATED",
+            },
+            "error"
+          );
+
+          return false;
+        }
         let connectionNumber = connectionObj.connectionNo
         let applicationNo = connectionObj.applicationNo
          let service = getQueryArg(window.location.href, "service");
@@ -156,16 +169,16 @@ class Footer extends React.Component {
         //let applicationNos = connectionObj.applicationNo
         
         let due = 0;
-        if(bill){             
+        if(bill.Bill && bill.Bill.length){       
           due = bill.Bill[0].totalAmount
         }
        console.log("due---"+due); 
+       console.log("parseInt(due)---"+parseInt(due)); 
        // let due = getQueryArg(window.location.href, "due");
-        let errLabel =
-          applicationNo && applicationNo.includes("WS")
-            ? "WS_DUE_AMOUNT_SHOULD_BE_ZERO"
-            : "SW_DUE_AMOUNT_SHOULD_BE_ZERO";
-        if (due && parseInt(due) <= 0) {
+        let errLabel =applicationNo && applicationNo.includes("WS") ? "WS_DUE_AMOUNT_SHOULD_NOT_BE_ZERO" : "SW_DUE_AMOUNT_SHOULD_NOT_BE_ZERO";
+        console.log("errLabel---"+errLabel)
+        if (parseInt(due) === 0) {
+          console.log("due in toggle---"+due); 
           toggleSnackbar(
             true,
             {
@@ -185,8 +198,6 @@ class Footer extends React.Component {
         ];
 
         let isApplicationApproved = await isWorkflowExists(queryObj);
-
-         
           if (!isApplicationApproved ) {
             toggleSnackbar(
               true,

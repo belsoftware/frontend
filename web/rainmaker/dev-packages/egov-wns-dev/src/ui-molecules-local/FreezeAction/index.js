@@ -117,6 +117,19 @@ const parserFunction = (state) => {
   return queryObject;
 }
 
+const validateConnection = (queryObject) =>{   
+
+if(queryObject.plumberInfo && queryObject.deactivationDate && queryObject.additionalDetails.lastMeterReading)
+{
+  console.log("returning true");
+return true;
+}
+else
+{ 
+  console.log("returning false");
+return false;
+}
+}
 
 const getWaterObjectForOperations = (state,queryObject) =>{     
   let queryObjectForUpdate =  get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0]");
@@ -126,7 +139,11 @@ const getWaterObjectForOperations = (state,queryObject) =>{
   set(queryObjectForUpdate, "tenantId", get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].property.tenantId"));
   queryObjectForUpdate = { ...queryObjectForUpdate, ...queryObject }
   if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" && ifUserRoleExists('WS_CLERK'))
+  {
   set(queryObjectForUpdate, "processInstance.action", "DEACTIVATE_CONNECTION");
+  set(queryObjectForUpdate, "status", "Inactive");
+  console.log("setting status----");
+  }
   else
   {
     console.log("else conition---")
@@ -204,8 +221,24 @@ class Footer extends React.Component {
      if (method === "UPDATE") {
           
         let queryObjectForUpdate = getWaterObjectForOperations(state,queryObject);
-        console.log("queryObjectForUpdate------"+queryObjectForUpdate)
+        console.log("queryObjectForUpdate------"+JSON.stringify(queryObjectForUpdate))
+        if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" && ifUserRoleExists('WS_CLERK'))
+        {
+        if(validateConnection(queryObject))
+        {
         await httpRequest("post", "/ws-services/wc/_update", "", [], { WaterConnection: queryObjectForUpdate });
+        }
+        else
+        {
+          store.dispatch(toggleSnackbar(true, { labelName: "Enter Plumber details and meter reading" }, "error"));
+          console.log(error);
+          return false;
+        }
+        }
+        else
+        {
+        await httpRequest("post", "/ws-services/wc/_update", "", [], { WaterConnection: queryObjectForUpdate });
+        }
         let searchQueryObject = [{ key: "tenantId", value: queryObjectForUpdate.tenantId }, { key: "applicationNumber", value: queryObjectForUpdate.applicationNo }];
         let searchResponse = await getSearchResults(searchQueryObject);
         store.dispatch(prepareFinalObject("WaterConnection", searchResponse.WaterConnection));
@@ -244,6 +277,8 @@ class Footer extends React.Component {
         console.log(error);
         return false;
     }
+  
+ 
       },
     };
 
