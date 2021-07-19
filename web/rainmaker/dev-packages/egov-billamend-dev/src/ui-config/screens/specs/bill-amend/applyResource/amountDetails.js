@@ -109,6 +109,7 @@ export const AddDemandRevisionBasis = getCommonCard({
             visible: false,
             required: true,
             jsonPath: "Amendment.reasonDocumentNumber",
+            pattern: "^[ A-Za-z0-9_/():-]{1,30}$",
             gridDefination: {
                 xs: 12,
                 sm: 12,
@@ -127,6 +128,7 @@ export const AddDemandRevisionBasis = getCommonCard({
             visible: false,
             required: true,
             jsonPath: "Amendment.reasonDocumentNumber",
+            pattern: "^[ A-Za-z0-9_/():-]{1,30}$",
             gridDefination: {
                 xs: 12,
                 sm: 12,
@@ -165,6 +167,7 @@ export const AddDemandRevisionBasis = getCommonCard({
             visible: false,
             required: true,
             jsonPath: "Amendment.reasonDocumentNumber",
+            pattern: "^[ A-Za-z0-9_/():-]{1,30}$",
             gridDefination: {
                 xs: 12,
                 sm: 12,
