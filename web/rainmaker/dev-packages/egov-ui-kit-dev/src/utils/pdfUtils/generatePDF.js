@@ -583,7 +583,7 @@ export const generatePDF = (logo, applicationData = {}, fileName) => {
                 ]
             }
         ],
-        pageBreakBefore: function (currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
+        pageBreakAfter: function (currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
             //check if signature part is completely on the last page, add pagebreak if not
 
             let nodeLength = followingNodesOnPage.length;
