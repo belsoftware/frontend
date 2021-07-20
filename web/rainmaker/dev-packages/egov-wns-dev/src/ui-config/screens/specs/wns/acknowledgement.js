@@ -102,7 +102,9 @@ const getAcknowledgementCard = (
   tenant,
   consumerNo
 ) => {
+  
   if (purpose === "apply" && status === "success" && applicationNumberWater && applicationNumberSewerage) {
+    
     return {
       commonHeader: commonHeader(state,
         dispatch,
@@ -728,6 +730,44 @@ export const downloadPrintContainer = (
     // },
     leftIcon: "assignment"
   };
+  let redNoticeDownloadObject = {
+    label: { labelKey: "WS_RED_NOTICE_LETTER" },
+    link: () => {
+      const { WaterConnection } = state.screenConfiguration.preparedFinalObject;
+      const appUserType = process.env.REACT_APP_NAME === "Citizen" ? "To Citizen" : "Department Use";
+      WaterConnection[0].appUserType = appUserType;
+      WaterConnection[0].commissionerName = "S.Ravindra Babu";
+      const inputString = [
+        {
+          key: 'applicationNumber',
+          value: applicationNumber
+        },
+        { key: 'tenantId',value: tenantId },
+        { key: 'service', value:service },
+      ];
+      downloadApp(inputString, 'ws-red-notice',"download",dispatch);
+    },
+    leftIcon: "receipt"
+  };
+  let redNoticePrintObject = {
+    label: { labelKey: "WS_RED_NOTICE_LETTER" },
+    link: () => {
+      const { WaterConnection } = state.screenConfiguration.preparedFinalObject;
+      const appUserType = process.env.REACT_APP_NAME === "Citizen" ? "Department Use" : "To Citizen";
+      WaterConnection[0].appUserType = appUserType;
+      WaterConnection[0].commissionerName = "S.Ravindra Babu";
+      const inputString = [
+        {
+          key: 'applicationNumber',
+          value: applicationNumber
+        },
+        { key: 'tenantId',value: tenantId },
+        { key: 'service', value:service },
+      ];
+      downloadApp(inputString, 'ws-red-notice', 'print',dispatch);
+    },
+    leftIcon: "receipt"
+  };
   switch (appStatus) {
     case "PENDING_FOR_DOCUMENT_VERIFICATION":
     case "PENDING_FOR_CITIZEN_ACTION":
@@ -757,6 +797,18 @@ export const downloadPrintContainer = (
       downloadMenu = [applicationDownloadObject];
       printMenu = [applicationPrintObject];
       break;
+    case "PENDING_FOR_CLERK_APPROVAL":
+        downloadMenu = [redNoticeDownloadObject];
+        printMenu = [redNoticePrintObject];
+        break;
+    case "PENDING_FOR_CONNECTION_DEACTIVATION":
+          downloadMenu = [redNoticeDownloadObject];
+          printMenu = [redNoticePrintObject];
+          break;
+    case "PENDING_FOR_APPROVAL":
+            downloadMenu = [redNoticeDownloadObject];
+            printMenu = [redNoticePrintObject];
+            break;
     default: downloadMenu = [applicationDownloadObject];
       printMenu = [applicationPrintObject];
       break;
@@ -872,11 +924,13 @@ const screenConfig = {
     pageReset(dispatch);
     fetchData(dispatch)
     .then(() => {
+     
         const purpose = getQueryArg(window.location.href, "purpose");
         const status = getQueryArg(window.location.href, "status");
         // const service = getQueryArg(window.location.href, "service");
         const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
         const applicationNumberWater = getQueryArg(window.location.href, "applicationNumberWater");
+        
         const applicationNumberSewerage = getQueryArg(window.location.href, "applicationNumberSewerage");
         const secondNumber = getQueryArg(window.location.href, "secondNumber");
         const tenant = getQueryArg(window.location.href, "tenantId");
@@ -886,10 +940,14 @@ const screenConfig = {
         } else if (applicationNumber && applicationNumber.includes("SW")) {
           consumerNo = get(state,"screenConfiguration.preparedFinalObject.SewerageConnection[0].connectionNo");
         }
+       
         if (applicationNumberSewerage && applicationNumberWater) {
+         
           const cardOne = getAcknowledgementCard(state, dispatch, purpose, status, applicationNumber, applicationNumberWater, applicationNumberSewerage, secondNumber, tenant);
+         
           set(action, "screenConfig.components.div.children", cardOne);
         } else {
+         
           const data = getAcknowledgementCard(
             state,
             dispatch,
@@ -903,6 +961,7 @@ const screenConfig = {
             tenant,
             consumerNo
           );
+          
           set(action, "screenConfig.components.div.children", data);
         }
       })
@@ -911,7 +970,6 @@ const screenConfig = {
       .then(() => prepareDocUploadRedux(state, dispatch))
       .then(() => prepareDocumentsUploadRedux(state, dispatch))
       .then(() => downloadAndPrintForNonApply(state, dispatch))
-      
       .catch(error => console.log(error))    
     return action;
   }

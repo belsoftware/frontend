@@ -493,7 +493,7 @@ export const additionDetails = getCommonCard({
           sm: 6
         },
         required: false,
-        pattern: /^[0-9]\d{0,9}(\.\d{1,3})?%?$/,
+        pattern: getPattern("meterReading"),
         errorMessage: "ERR_DEFAULT_INPUT_FIELD_MSG",
         jsonPath: "applyScreen.additionalDetails.initialMeterReading"
       })

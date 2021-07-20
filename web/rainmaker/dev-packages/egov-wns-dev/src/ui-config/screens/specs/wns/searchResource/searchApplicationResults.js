@@ -121,6 +121,13 @@ const getApplicationDetails = data => {
     store.dispatch(
       setRoute(`search-preview?applicationNumber=${data.rowData[1]}&tenantId=${data.rowData[6]}&history=true&service=${data.rowData[7]}&mode=MODIFY`)
     )
+  }
+  if(connectionNo && connectionNo !== 'NA' && (data.rowData[2].includes('DEACTIVATE') || data.rowData[2].includes('FREEZE'))) {
+    store.dispatch(
+      setRoute(
+        `freezeConn-preview?applicationNumber=${data.rowData[1]}&connectionNumber=${connectionNo}&tenantId=${data.rowData[6]}&history=true&service=${data.rowData[7]}&mode=FREEZE`
+      )
+    )
   } else {
     store.dispatch(
       setRoute(`search-preview?applicationNumber=${data.rowData[1]}&tenantId=${data.rowData[6]}&history=true&service=${data.rowData[7]}`)
