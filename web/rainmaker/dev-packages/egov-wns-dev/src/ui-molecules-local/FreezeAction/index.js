@@ -205,8 +205,7 @@ class Footer extends React.Component {
       label: "Submit",
       labelKey: "WF_EMPLOYEE_NEWWS1_SUBMIT_APPLICATION",
       link: async () => {     
-     // console.log("submit clicked---");
-    // let deactivationDate = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].deactivationDate");
+     
      let method;
      applicationStatus = get(state, "screenConfiguration.preparedFinalObject.WaterConnection[0].applicationStatus");
      console.log("application status data---"+applicationStatus);
@@ -221,7 +220,7 @@ class Footer extends React.Component {
      if (method === "UPDATE") {
           
         let queryObjectForUpdate = getWaterObjectForOperations(state,queryObject);
-        console.log("queryObjectForUpdate------"+JSON.stringify(queryObjectForUpdate))
+       // console.log("queryObjectForUpdate------"+JSON.stringify(queryObjectForUpdate))
         if(applicationStatus === "PENDING_FOR_CONNECTION_DEACTIVATION" && ifUserRoleExists('WS_CLERK'))
         {
         if(validateConnection(queryObject))
@@ -258,20 +257,7 @@ class Footer extends React.Component {
 
       if (true) { moveToSuccess(state,combinedArray, store.dispatch) }
      }
-     /* if (isFormValid) {
-        changeStep(state, dispatch);
-      } else if (hasFieldToaster) {
-        let errorMessage = {
-          labelName: "Please fill all mandatory fields!",
-          labelKey: "WS_FILL_REQUIRED_FIELDS"
-        };
-        store.dispatch(toggleSnackbar(true, errorMessage, "warning"));
-      }*/
-          /* store.dispatch(
-            setRoute(
-              `/wns/freezeConn?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&service=${service}&action=edit&mode=FREEZE`
-            )
-          );*/
+      
       }catch (error) {
         store.dispatch(toggleSnackbar(true, { labelName: error.message }, "error"));
         console.log(error);
