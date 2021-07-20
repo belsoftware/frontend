@@ -1101,7 +1101,7 @@ export const applyForWater = async (state, dispatch) => {
             if (typeof queryObject.additionalDetails !== 'object') {
                 queryObject.additionalDetails = {};
             }
-            console.log("query object---" + JSON.stringify(queryObject));
+             
             queryObject.additionalDetails.locality = queryObject.property.address.locality.code;
             set(queryObject, "processInstance.action", "INITIATE")
 
@@ -1123,12 +1123,12 @@ export const applyForWater = async (state, dispatch) => {
             set(queryObject, "authorizedConnection",defaultAuthorizedConnection[0].code);
 
             queryObject = findAndReplace(queryObject, "NA", null);
-            console.log("query after object---" + JSON.stringify(queryObject));
+            
             if (isModifyMode()) {
                 set(queryObject, "waterSource", getWaterSource(queryObject.waterSource, queryObject.waterSubSource));
-                console.log("isModifyMode object---" + JSON.stringify(queryObject));
+               
             }
-            console.log("final object---" + JSON.stringify(queryObject));
+            
             response = await httpRequest("post", "/ws-services/wc/_create", "", [], { WaterConnection: queryObject });
                                 
             dispatch(prepareFinalObject("WaterConnection", response.WaterConnection));
