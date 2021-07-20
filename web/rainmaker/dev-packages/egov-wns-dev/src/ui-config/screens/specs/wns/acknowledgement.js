@@ -20,7 +20,8 @@ import {
   prepareDocUploadRedux,
   downloadAndPrintForNonApply,
   serviceConst,
-  isModifyMode
+  isModifyMode,
+  isFreezeMode
 } from "../../../../ui-utils/commons";
 import { generateWSAcknowledgement } from "egov-ui-kit/utils/pdfUtils/generateWSAcknowledgement";
 import set from "lodash/set";
@@ -34,6 +35,14 @@ let headerLabel = "WS_APPLICATION_NEW_CONNECTION_HEADER";
 const applicationNo = getQueryArg(window.location.href, "applicationNumber");
 if(isModifyMode()){
   headerLabel = "WS_MODIFY_CONNECTION_HEADER";
+  // if(applicationNo.includes("WS")){
+  // headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
+  // }else{
+  // headerLabel = "SW_APPLICATION_MODIFY_CONNECTION_HEADER";
+  // }
+}
+if(isFreezeMode()){
+  headerLabel = "WS_DEACTIVATION_APPLICATION_HEADER";
   // if(applicationNo.includes("WS")){
   // headerLabel = "WS_APPLICATION_MODIFY_CONNECTION_HEADER";
   // }else{
@@ -102,7 +111,9 @@ const getAcknowledgementCard = (
   tenant,
   consumerNo
 ) => {
+  
   if (purpose === "apply" && status === "success" && applicationNumberWater && applicationNumberSewerage) {
+    
     return {
       commonHeader: commonHeader(state,
         dispatch,
@@ -602,6 +613,49 @@ const getAcknowledgementCard = (
         tenant
       )
     };
+  }else if (purpose === "deactivate" && status === "success") {
+    return {
+      commonHeader: commonHeader(state,
+        dispatch,
+        applicationNumber,
+        tenant,
+        consumerNo),
+      applicationSuccessCard: {
+        uiFramework: "custom-atoms",
+        componentPath: "Div",
+        children: {
+          card: acknowledgementCard({
+            icon: "done",
+            backgroundColor: "#39CB74",
+            header: {
+              labelName: "Connection Deactivated Successfully ",
+              labelKey: "WS_APPLICATION_DEACTIVATE_SUCCESS_MESSAGE_MAIN"
+            },
+            body: {
+              labelName:
+                "A notification regarding above application status has been sent to registered Mobile No.",
+              labelKey: "WS_CONNECTION_ACTIVATE_SUCCESS_SUBHEAD"
+            },
+            tailText: {
+              labelName: "Application No.",
+              labelKey: "WS_ACK_COMMON_APP_NO_LABEL"
+            },
+            number: applicationNumber,
+            tailTextOne: {
+              labelName: "Consumer No",
+              labelKey: "WS_COMMON_CONSUMER_NO_LABEL"
+            },
+            newNumber: consumerNo,
+          })
+        }
+      },
+      applicationSuccessFooter: applicationSuccessFooter(
+        state,
+        dispatch,
+        applicationNumber,
+        tenant
+      )
+    };
   }
 };
 
@@ -728,6 +782,44 @@ export const downloadPrintContainer = (
     // },
     leftIcon: "assignment"
   };
+  let redNoticeDownloadObject = {
+    label: { labelKey: "WS_RED_NOTICE_LETTER" },
+    link: () => {
+      const { WaterConnection } = state.screenConfiguration.preparedFinalObject;
+      const appUserType = process.env.REACT_APP_NAME === "Citizen" ? "To Citizen" : "Department Use";
+      WaterConnection[0].appUserType = appUserType;
+      WaterConnection[0].commissionerName = "S.Ravindra Babu";
+      const inputString = [
+        {
+          key: 'applicationNumber',
+          value: applicationNumber
+        },
+        { key: 'tenantId',value: tenantId },
+        { key: 'service', value:service },
+      ];
+      downloadApp(inputString, 'ws-red-notice',"download",dispatch);
+    },
+    leftIcon: "receipt"
+  };
+  let redNoticePrintObject = {
+    label: { labelKey: "WS_RED_NOTICE_LETTER" },
+    link: () => {
+      const { WaterConnection } = state.screenConfiguration.preparedFinalObject;
+      const appUserType = process.env.REACT_APP_NAME === "Citizen" ? "Department Use" : "To Citizen";
+      WaterConnection[0].appUserType = appUserType;
+      WaterConnection[0].commissionerName = "S.Ravindra Babu";
+      const inputString = [
+        {
+          key: 'applicationNumber',
+          value: applicationNumber
+        },
+        { key: 'tenantId',value: tenantId },
+        { key: 'service', value:service },
+      ];
+      downloadApp(inputString, 'ws-red-notice', 'print',dispatch);
+    },
+    leftIcon: "receipt"
+  };
   switch (appStatus) {
     case "PENDING_FOR_DOCUMENT_VERIFICATION":
     case "PENDING_FOR_CITIZEN_ACTION":
@@ -757,6 +849,18 @@ export const downloadPrintContainer = (
       downloadMenu = [applicationDownloadObject];
       printMenu = [applicationPrintObject];
       break;
+    case "PENDING_FOR_CLERK_APPROVAL":
+        downloadMenu = [redNoticeDownloadObject];
+        printMenu = [redNoticePrintObject];
+        break;
+    case "PENDING_FOR_CONNECTION_DEACTIVATION":
+          downloadMenu = [redNoticeDownloadObject];
+          printMenu = [redNoticePrintObject];
+          break;
+    case "PENDING_FOR_APPROVAL":
+            downloadMenu = [redNoticeDownloadObject];
+            printMenu = [redNoticePrintObject];
+            break;
     default: downloadMenu = [applicationDownloadObject];
       printMenu = [applicationPrintObject];
       break;
@@ -831,6 +935,7 @@ const getWaterData = async (dispatch, applicationNumber, tenantId) => {
   let waterResponse = [];
   let queryObject = [{ key: "tenantId", value: tenantId }, { key: "applicationNumber", value: applicationNumber }];
   try { waterResponse = await getSearchResults(queryObject); } catch (error) { console.log(error); waterResponse = [] };
+  console.log("water response---",waterResponse);
   if (waterResponse && waterResponse.WaterConnection !== undefined && waterResponse.WaterConnection.length > 0) {
     waterResponse.WaterConnection[0].service = serviceConst.WATER;
     dispatch(prepareFinalObject("WaterConnection", findAndReplace(waterResponse.WaterConnection, "NA", null)));
@@ -872,11 +977,13 @@ const screenConfig = {
     pageReset(dispatch);
     fetchData(dispatch)
     .then(() => {
+     
         const purpose = getQueryArg(window.location.href, "purpose");
         const status = getQueryArg(window.location.href, "status");
         // const service = getQueryArg(window.location.href, "service");
         const applicationNumber = getQueryArg(window.location.href, "applicationNumber");
         const applicationNumberWater = getQueryArg(window.location.href, "applicationNumberWater");
+        
         const applicationNumberSewerage = getQueryArg(window.location.href, "applicationNumberSewerage");
         const secondNumber = getQueryArg(window.location.href, "secondNumber");
         const tenant = getQueryArg(window.location.href, "tenantId");
@@ -886,10 +993,14 @@ const screenConfig = {
         } else if (applicationNumber && applicationNumber.includes("SW")) {
           consumerNo = get(state,"screenConfiguration.preparedFinalObject.SewerageConnection[0].connectionNo");
         }
+       
         if (applicationNumberSewerage && applicationNumberWater) {
+         
           const cardOne = getAcknowledgementCard(state, dispatch, purpose, status, applicationNumber, applicationNumberWater, applicationNumberSewerage, secondNumber, tenant);
+         
           set(action, "screenConfig.components.div.children", cardOne);
         } else {
+         
           const data = getAcknowledgementCard(
             state,
             dispatch,
@@ -903,6 +1014,7 @@ const screenConfig = {
             tenant,
             consumerNo
           );
+          
           set(action, "screenConfig.components.div.children", data);
         }
       })
@@ -911,7 +1023,6 @@ const screenConfig = {
       .then(() => prepareDocUploadRedux(state, dispatch))
       .then(() => prepareDocumentsUploadRedux(state, dispatch))
       .then(() => downloadAndPrintForNonApply(state, dispatch))
-      
       .catch(error => console.log(error))    
     return action;
   }

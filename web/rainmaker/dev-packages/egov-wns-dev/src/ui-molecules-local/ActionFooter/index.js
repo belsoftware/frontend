@@ -10,6 +10,7 @@ import {
   getWorkFlowData,
   getDomainLink,
   isWorkflowExists,
+  serviceConst
 } from "../../ui-utils/commons";
 import { httpRequest } from "../../ui-utils/api";
 import store from "ui-redux/store";
@@ -41,54 +42,57 @@ class Footer extends React.Component {
         let applicationNo = connectionObj.applicationNo
         //let applicationNos = connectionObj.applicationNo
         
-        let due = 0;
-        if(bill){             
-          due = bill.Bill[0].totalAmount
-        }
-         
-       // let due = getQueryArg(window.location.href, "due");
-        let errLabel =
-          applicationNo && applicationNo.includes("WS")
-            ? "WS_DUE_AMOUNT_SHOULD_BE_ZERO"
-            : "SW_DUE_AMOUNT_SHOULD_BE_ZERO";
-        if (due && parseInt(due) > 0) {
-          toggleSnackbar(
-            true,
-            {
-              labelName: "Due Amount should be zero!",
-              labelKey: errLabel,
-            },
-            "error"
-          );
-
-          return false;
-        }
-
-        // check for the WF Exists
-        const queryObj = [
-          { key: "businessIds", value: applicationNos },
-          { key: "tenantId", value: tenantId },
-        ];
-
-        let isApplicationApproved = await isWorkflowExists(queryObj);
-
-         
-          if (!isApplicationApproved ) {
+       if(connectionNumber.includes("WS")){
+          let due = 0;       
+          if(bill.Bill && bill.Bill.length){             
+            due = bill.Bill[0].totalAmount
+          }
+           
+         // let due = getQueryArg(window.location.href, "due");
+          let errLabel =
+            applicationNo && applicationNo.includes("WS")
+              ? "WS_DUE_AMOUNT_SHOULD_BE_ZERO"
+              : "SW_DUE_AMOUNT_SHOULD_BE_ZERO";
+          if (due && parseInt(due) > 0) {
             toggleSnackbar(
               true,
               {
-                labelName: "WorkFlow already Initiated",
-                labelKey: "WS_WORKFLOW_ALREADY_INITIATED",
+                labelName: "Due Amount should be zero!",
+                labelKey: errLabel,
               },
               "error"
             );
+  
             return false;
           }
-          store.dispatch(
-            setRoute(
-              `/wns/apply?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=MODIFY`
-            )
-          );
+  
+          // check for the WF Exists
+          const queryObj = [
+            { key: "businessIds", value: applicationNos },
+            { key: "tenantId", value: tenantId },
+          ];
+  
+          let isApplicationApproved = await isWorkflowExists(queryObj);
+  
+           
+            if (!isApplicationApproved ) {
+              toggleSnackbar(
+                true,
+                {
+                  labelName: "WorkFlow already Initiated",
+                  labelKey: "WS_WORKFLOW_ALREADY_INITIATED",
+                },
+                "error"
+              );
+              return false;
+            }
+            store.dispatch(
+              setRoute(
+                `/wns/apply?applicationNumber=${applicationNo}&connectionNumber=${connectionNumber}&tenantId=${tenantId}&action=edit&mode=MODIFY`
+              )
+            );
+        }
+      
  
       },
     };
@@ -145,6 +149,19 @@ class Footer extends React.Component {
       labelKey: "WS_DEACTIVATE_CONNECTION_BUTTON",
       link: async () => {     
         const connectionObj = get(state.screenConfiguration.preparedFinalObject,"WaterConnection[0]");  
+        if (connectionObj.status === "Inactive") {
+          console.log("Inactive connection---"); 
+          toggleSnackbar(
+            true,
+            {
+              labelName: "Connection Already Deactivated!",
+              labelKey: "WS_CONN_DEACTIVATED",
+            },
+            "error"
+          );
+
+          return false;
+        }
         let connectionNumber = connectionObj.connectionNo
         let applicationNo = connectionObj.applicationNo
          let service = getQueryArg(window.location.href, "service");
@@ -152,16 +169,16 @@ class Footer extends React.Component {
         //let applicationNos = connectionObj.applicationNo
         
         let due = 0;
-        if(bill){             
+        if(bill.Bill && bill.Bill.length){       
           due = bill.Bill[0].totalAmount
         }
-         
+       console.log("due---"+due); 
+       console.log("parseInt(due)---"+parseInt(due)); 
        // let due = getQueryArg(window.location.href, "due");
-        let errLabel =
-          applicationNo && applicationNo.includes("WS")
-            ? "WS_DUE_AMOUNT_SHOULD_BE_ZERO"
-            : "SW_DUE_AMOUNT_SHOULD_BE_ZERO";
-        if (due && parseInt(due) <= 0) {
+        let errLabel =applicationNo && applicationNo.includes("WS") ? "WS_DUE_AMOUNT_SHOULD_NOT_BE_ZERO" : "SW_DUE_AMOUNT_SHOULD_NOT_BE_ZERO";
+        console.log("errLabel---"+errLabel)
+        if (parseInt(due) === 0) {
+          console.log("due in toggle---"+due); 
           toggleSnackbar(
             true,
             {
@@ -181,8 +198,6 @@ class Footer extends React.Component {
         ];
 
         let isApplicationApproved = await isWorkflowExists(queryObj);
-
-         
           if (!isApplicationApproved ) {
             toggleSnackbar(
               true,
@@ -204,14 +219,16 @@ class Footer extends React.Component {
     };
     //if(applicationType === "MODIFY"){
     downloadMenu && downloadMenu.push(editButton);
-    // if (
-    //   businessService.includes("ws-services-calculation") ||
-    //   businessService.includes("sw-services-calculation")
-    // ) {
-    //   if (bill.Bill && bill.Bill.length > 0) {
-    //     downloadMenu && downloadMenu.push(BillAmendment);
-    //   }
-    // }
+    ifUserRoleExists('WS_FIELD_INSPECTOR')
+    downloadMenu && downloadMenu.push(deactivateButton); 
+   /* if (
+      businessService.includes("ws-services-calculation") ||
+      businessService.includes("sw-services-calculation")
+    ) {
+      if (bill.Bill && bill.Bill.length > 0) {
+        downloadMenu && downloadMenu.push(BillAmendment);
+      }
+    }*/
 
     //}
     const buttonItems = {
@@ -231,15 +248,22 @@ class Footer extends React.Component {
       menu: downloadMenu,
     };
 
-    return (
-      <div className="wf-wizard-footer" id="custom-atoms-footer">
-        <Container>
-          <Item xs={12} sm={12} className="wf-footer-container">
-            <MenuButton data={buttonItems} />
-          </Item>
-        </Container>
-      </div>
-    );
+    let service = getQueryArg(window.location.href, "service");
+    if(service === serviceConst.WATER){
+      console.info("Water connection")
+      return (
+        <div className="wf-wizard-footer" id="custom-atoms-footer">
+          <Container>
+            <Item xs={12} sm={12} className="wf-footer-container">
+              <MenuButton data={buttonItems} />
+            </Item>
+          </Container>
+        </div>
+      );
+    }
+    else
+      return null; 
+    
   }
 }
 
@@ -249,8 +273,6 @@ const mapStateToProps = (state) => {
     "WaterConnection",
     []
   );
-
-
 
   /* For WorkFlow check */
   let applicationNos = get(
@@ -283,7 +305,7 @@ const mapStateToProps = (state) => {
       : "";
  
    
-  const businessService = connectDetailsData.BillingService.BusinessService.map(
+  const businessService = connectDetailsData && connectDetailsData.BillingService && connectDetailsData.BillingService.BusinessService.map(
     (item) => {
       return item.businessService;
     }

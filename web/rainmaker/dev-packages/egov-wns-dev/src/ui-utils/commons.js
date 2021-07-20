@@ -1101,6 +1101,7 @@ export const applyForWater = async (state, dispatch) => {
             if (typeof queryObject.additionalDetails !== 'object') {
                 queryObject.additionalDetails = {};
             }
+            console.log("query object---" + JSON.stringify(queryObject));
             queryObject.additionalDetails.locality = queryObject.property.address.locality.code;
             set(queryObject, "processInstance.action", "INITIATE")
 
@@ -1122,9 +1123,12 @@ export const applyForWater = async (state, dispatch) => {
             set(queryObject, "authorizedConnection",defaultAuthorizedConnection[0].code);
 
             queryObject = findAndReplace(queryObject, "NA", null);
+            console.log("query after object---" + JSON.stringify(queryObject));
             if (isModifyMode()) {
                 set(queryObject, "waterSource", getWaterSource(queryObject.waterSource, queryObject.waterSubSource));
+                console.log("isModifyMode object---" + JSON.stringify(queryObject));
             }
+            console.log("final object---" + JSON.stringify(queryObject));
             response = await httpRequest("post", "/ws-services/wc/_create", "", [], { WaterConnection: queryObject });
                                 
             dispatch(prepareFinalObject("WaterConnection", response.WaterConnection));
@@ -1279,6 +1283,7 @@ export const applyForBothWaterAndSewerage = async (state, dispatch) => {
                 queryObjectForUpdateSewerage.additionalDetails = {};
             }
             queryObjectForUpdateSewerage.additionalDetails.locality = queryObjectForUpdateSewerage.property.address.locality.code;
+            console.info("DC-update ws con")
             await httpRequest("post", "/ws-services/wc/_update", "", [], { WaterConnection: queryObjectForUpdateWater });
             await httpRequest("post", "/sw-services/swc/_update", "", [], { SewerageConnection: queryObjectForUpdateSewerage });
             let searchQueryObjectWater = [
@@ -2205,7 +2210,8 @@ export const showHideFieldsFirstStep = (dispatch, propertyId, value) => {
       );
 }
 
-export const getWaterSource = (waterSource, waterSubSource) => {
+export const getWaterSource = 
+(waterSource, waterSubSource) => {
     //Check waterSource has both major and minor
     if (waterSource && waterSource != "NA") {
         let source = waterSource.split(".");

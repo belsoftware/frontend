@@ -78,7 +78,7 @@ class WorkFlowContainer extends React.Component {
   getPurposeString = action => {
     switch (action) {
       case "APPLY":
-        return "purpose=apply&status=success";
+        return "purpose=apply&status=success";  
       case "FORWARD":
       case "RESUBMIT":
         return "purpose=forward&status=success";
@@ -90,6 +90,7 @@ class WorkFlowContainer extends React.Component {
         return "purpose=application&status=rejected";
       case "CANCEL":
         return "purpose=application&status=cancelled";
+      case "APPROVE_DEACTIVATION":  
       case "APPROVE":
         return "purpose=approve&status=success";
       case "SENDBACK":
@@ -116,6 +117,8 @@ class WorkFlowContainer extends React.Component {
         return "purpose=approve&status=success";
       case "ACTIVATE_CONNECTION":
         return "purpose=activate&status=success";
+      case "DEACTIVATE_CONNECTION":
+        return "purpose=deactivate&status=success";  
       case "REVOCATE":
         return "purpose=application&status=revocated"
       case "VOID":
@@ -568,7 +571,7 @@ class WorkFlowContainer extends React.Component {
       if (actions.indexOf(item.code) > -1) return true;
     });
     
-    if((moduleName === "NewWS1" || moduleName === "ModifyWSConnection" || moduleName === "ModifySWConnection" || moduleName === "NewSW1") && (applicationState==='PENDING_APPROVAL_FOR_CONNECTION' || applicationState=== 'PENDING_FOR_APPROVAL')){
+    if((moduleName === "NewWS1" || moduleName === "ModifyWSConnection" || moduleName === "ModifySWConnection" || moduleName === "NewSW1" || moduleName === "DeactivateWSConnection") && (applicationState==='PENDING_APPROVAL_FOR_CONNECTION' || applicationState=== 'PENDING_FOR_APPROVAL')){
       state.isStateUpdatable = false;
     }
     let editAction = {};

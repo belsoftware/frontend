@@ -1,5 +1,5 @@
 import set from "lodash/set";
-import { isModifyMode } from "./../../ui-utils/commons";
+import { isFreezeMode, isModifyMode } from "./../../ui-utils/commons";
 
 export const toggleWater = (onFieldChange, value) => {
   let isMode = isModifyMode();
@@ -303,6 +303,32 @@ export const toggleSewerage = (onFieldChange, value) => {
 export const togglePlumberFeilds = (onFieldChange, value) => {
   let isMode = isModifyMode();
  // let mStep = (isMode) ? 'formwizardSecondStep' : 'formwizardThirdStep';
+ if(isFreezeMode)
+ {
+  onFieldChange(
+      "freezeConn",
+      `components.div.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children.plumberLicenceNo`,
+      "visible",
+      value
+    
+  );
+  onFieldChange(
+      "freezeConn",
+      `components.div.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children.plumberName`,
+      "visible",
+      value
+    
+  );
+  onFieldChange(
+      "freezeConn",
+      `components.div.children.additionDetails.children.cardContent.children.plumberDetailsContainer.children.cardContent.children.plumberDetails.children.plumberMobNo`,
+      "visible",
+      value
+    
+  );
+ }
+ else
+ {
  let mStep = 'formwizardThirdStep';
   onFieldChange(
     "apply",
@@ -340,6 +366,7 @@ export const togglePlumberFeilds = (onFieldChange, value) => {
     "visible",
     value
   );
+ }
 }
 
 export const toggleConnHolderDetails = (onFieldChange, value) => {
